@@ -1,0 +1,15 @@
+{
+  "name": "@sp/ts-config",
+  "version": "1.0.0",
+  "private": true,
+  "files": [
+    "base.json",
+    "node.json",
+    "vue-app.json",
+    "node-server.json"
+  ],
+  "dependencies": {
+    "@types/node": "^20.4.0",
+    "vite": "^4.4.0"
+  }
+}

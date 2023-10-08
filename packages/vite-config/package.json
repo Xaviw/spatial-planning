@@ -1,0 +1,30 @@
+{
+  "name": "@sp/vite-config",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "pnpm rimraf node_modules dist",
+    "lint": "pnpm eslint .",
+    "stub": "pnpm unbuild --stub"
+  },
+  "peerDependencies": {
+    "vite": "^4.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.0.2"
+  }
+}

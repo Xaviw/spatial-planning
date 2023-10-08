@@ -1,0 +1,17 @@
+{
+  "name": "@sp/components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "stub": "vite build"
+  },
+  "dependencies": {
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@sp/vite-config": "workspace:^",
+    "vite": "^4.4.0"
+  }
+}
