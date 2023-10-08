@@ -2,10 +2,13 @@
   "name": "@sp/components",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/components.mjs",
+  "exports": {
+    ".": "./dist/components.mjs"
+  },
   "scripts": {
     "dev": "vite",
-    "stub": "vite build"
+    "build": "vite build -w"
   },
   "dependencies": {
     "vue": "^3.3.4"

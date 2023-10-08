@@ -1,0 +1,22 @@
+{
+  "name": "@sp/client",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@sp/components": "workspace:^",
+    "@sp/vite-config": "workspace:^",
+    "typescript": "^5.0.2",
+    "unocss": "^0.56.5",
+    "vite": "^4.4.5",
+    "vue-tsc": "^1.8.5"
+  }
+}

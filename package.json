@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "空间规划系统",
-  "keywords": [],
   "license": "MIT",
   "author": "xavi",
   "main": "index.js",
@@ -19,15 +18,19 @@
     "dev:client": "pnpm -F @sp/client dev",
     "postinstall": "pnpm -r run stub"
   },
-  "engines": {
-    "node": ">=16",
-    "pnpm": ">=7"
-  },
   "devDependencies": {
     "@sp/eslint-config": "workspace:^",
     "@sp/stylelint-config": "workspace:^",
     "@sp/ts-config": "workspace:^",
     "@sp/types": "workspace:^",
     "unbuild": "^2.0.0"
+  },
+  "packageManager": "pnpm@8.6.9",
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=7"
+  },
+  "dependencies": {
+    "typescript": "^5.0.2"
   }
 }

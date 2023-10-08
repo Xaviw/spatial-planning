@@ -21,7 +21,8 @@
     "stub": "pnpm unbuild --stub"
   },
   "peerDependencies": {
-    "vite": "^4.4.0"
+    "vite": "^4.4.0",
+    "unocss": "^0.56.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

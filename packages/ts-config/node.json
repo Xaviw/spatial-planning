@@ -6,7 +6,6 @@
     "lib": ["ESNext"],
     "noImplicitAny": true,
     "sourceMap": true,
-    "noEmit": true,
-    "baseUrl": "./"
+    "noEmit": true
   }
 }
