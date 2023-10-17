@@ -5,7 +5,6 @@
   "compilerOptions": {
     "lib": ["ESNext"],
     "noImplicitAny": true,
-    "sourceMap": true,
-    "noEmit": true
+    "sourceMap": true
   }
 }

@@ -1,1 +1,1 @@
-export { default } from '@sp/vite-config'
+export { webConfig as default } from '@sp/vite-config'

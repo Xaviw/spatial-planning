@@ -2,19 +2,13 @@
   "name": "@sp/components",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/components.mjs",
-  "exports": {
-    ".": "./dist/components.mjs"
-  },
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
+    "build": "vite build",
+    "build:watch": "vite build -w",
+    "clean": "rimraf node_modules dist",
     "dev": "vite",
-    "build": "vite build -w"
-  },
-  "dependencies": {
-    "vue": "^3.3.4"
-  },
-  "devDependencies": {
-    "@sp/vite-config": "workspace:^",
-    "vite": "^4.4.0"
+    "lint": "eslint --cache --max-warnings 0 \"src/**/*.{vue,ts,tsx}\" --fix && prettier --write . && stylelint \"src/**/*.{vue,css,less,scss}\" --fix --cache --cache-location node_modules/.cache/stylelint/"
   }
 }

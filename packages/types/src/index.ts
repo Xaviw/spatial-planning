@@ -1,5 +1,5 @@
 interface Test {
-  a: number;
+  a: number
 }
 
-export type { Test };
+export type { Test }

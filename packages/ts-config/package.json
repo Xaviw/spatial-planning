@@ -5,11 +5,10 @@
   "files": [
     "base.json",
     "node.json",
-    "vue-app.json",
-    "node-server.json"
+    "vue-app.json"
   ],
-  "dependencies": {
-    "@types/node": "^20.4.0",
-    "vite": "^4.4.0"
+  "scripts": {
+    "clean": "rimraf node_modules",
+    "lint": "eslint --cache --max-warnings 0 --fix && prettier --write ."
   }
 }

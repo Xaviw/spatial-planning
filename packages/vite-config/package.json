@@ -16,16 +16,13 @@
     "dist"
   ],
   "scripts": {
-    "clean": "pnpm rimraf node_modules dist",
-    "lint": "pnpm eslint .",
-    "stub": "pnpm unbuild --stub"
-  },
-  "peerDependencies": {
-    "vite": "^4.4.0",
-    "unocss": "^0.56.5"
+    "clean": "rimraf node_modules dist",
+    "lint": "eslint --cache --max-warnings 0 --fix && prettier --write .",
+    "stub": "unbuild --stub"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
-    "@vitejs/plugin-vue-jsx": "^3.0.2"
+    "@vitejs/plugin-vue-jsx": "^3.0.2",
+    "vite-plugin-dts": "^3.6.0"
   }
 }

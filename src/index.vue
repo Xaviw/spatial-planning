@@ -3,9 +3,6 @@
     SFC Button
     <i class="i-mdi-alarm"></i>
   </button>
-  <div class="mx-auto h-16 h-16 max-w-6xl flex items-center justify-between">
-    <p>Hello World</p>
-  </div>
 </template>
 
 <script lang="ts">
@@ -16,7 +13,10 @@ export default {
 
 <style>
 .test {
-  display: flex;
   color: red;
+
+  display: flex;
+
+  font-size: 12px;
 }
 </style>

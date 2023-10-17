@@ -1,0 +1,66 @@
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    es2022: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:vue/vue3-essential',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:jsdoc/recommended-typescript',
+    '@unocss',
+    'prettier',
+  ],
+  overrides: [
+    {
+      env: {
+        node: true,
+      },
+      files: ['.*rc.{js,cjs}'],
+      parserOptions: {
+        sourceType: 'script',
+      },
+    },
+  ],
+  parserOptions: {
+    ecmaVersion: 'latest',
+    parser: '@typescript-eslint/parser',
+    sourceType: 'module',
+    jsx: true,
+  },
+  plugins: ['@typescript-eslint', 'vue', 'import', 'jsdoc'],
+  rules: {
+    indent: ['error', 2],
+    quotes: ['error', 'single'],
+    semi: ['error', 'never'],
+    '@typescript-eslint/no-explicit-any': 'off',
+    'import/no-unresolved': 'off',
+    'import/namespace': 'off',
+    'import/no-empty-named-blocks': 'error',
+    'import/first': 'error',
+    'import/newline-after-import': 'error',
+    'import/order': [
+      'error',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+          'object',
+          'type',
+        ],
+        alphabetize: {
+          order: 'asc',
+          orderImportKind: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
+  },
+}

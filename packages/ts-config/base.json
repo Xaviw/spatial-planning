@@ -21,6 +21,7 @@
     "preserveWatchOutput": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "removeComments": true
+    "removeComments": true,
+    "noEmit": true
   }
 }

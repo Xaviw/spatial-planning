@@ -13,8 +13,8 @@
     "dist"
   ],
   "scripts": {
-    "stub": "pnpm unbuild --stub",
-    "clean": "pnpm rimraf node_modules dist",
-    "lint": "pnpm eslint ."
+    "clean": "rimraf node_modules dist",
+    "lint": "eslint --cache --max-warnings 0 --fix && prettier --write .",
+    "stub": "unbuild --stub"
   }
 }

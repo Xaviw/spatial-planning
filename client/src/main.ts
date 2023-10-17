@@ -1,5 +1,8 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import components from '@sp/components'
+import 'virtual:uno.css'
 
-createApp(App).use(components).mount('#app')
+import spComponents from '@sp/components'
+import { createApp } from 'vue'
+
+import App from './App.vue'
+
+createApp(App).use(spComponents).mount('#app')

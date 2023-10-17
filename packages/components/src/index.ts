@@ -1,8 +1,16 @@
-import { createApp } from "vue";
-import 'virtual:uno.css'
-import 'uno.css'
+import _JSXButton from './JSXButton/index'
+import _SFCButton from './SFCButton/index.vue'
+import type { App, Plugin } from 'vue'
 
-// import SButton from "./button/index.vue";
-import JSXButton from "./JSXButton";
+type WithInstall<T> = T & Plugin
 
-createApp(JSXButton).mount("#app");
+const withInstall = <T>(comp: T) => {
+  ;(comp as WithInstall<T>).install = (app: App) => {
+    const name = (comp as any).name
+    app.component(name, comp as WithInstall<T>)
+  }
+  return comp as WithInstall<T>
+}
+
+export const JSXButton = withInstall(_JSXButton)
+export const SFCButton = withInstall(_SFCButton)

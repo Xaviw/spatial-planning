@@ -1,1 +1,1 @@
-export { default } from "@sp/vite-config";
+export { libConfig as default } from '@sp/vite-config'
