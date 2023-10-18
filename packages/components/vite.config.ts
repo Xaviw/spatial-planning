@@ -1,1 +1,1 @@
-export { libConfig as default } from '@sp/vite-config'
+export { appConfig as default } from '@sp/vite-config'

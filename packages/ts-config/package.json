@@ -4,11 +4,10 @@
   "private": true,
   "files": [
     "base.json",
-    "node.json",
-    "vue-app.json"
+    "vue.json"
   ],
   "scripts": {
-    "clean": "rimraf node_modules",
-    "lint": "eslint --cache --max-warnings 0 --fix && prettier --write ."
+    "clean": "rimraf --force node_modules",
+    "lint": "eslint --max-warnings 0 --fix && prettier --write ."
   }
 }

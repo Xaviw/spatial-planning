@@ -5,10 +5,8 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "build": "vite build",
-    "build:watch": "vite build -w",
-    "clean": "rimraf node_modules dist",
+    "clean": "rimraf --force node_modules dist",
     "dev": "vite",
-    "lint": "eslint --cache --max-warnings 0 \"src/**/*.{vue,ts,tsx}\" --fix && prettier --write . && stylelint \"src/**/*.{vue,css,less,scss}\" --fix --cache --cache-location node_modules/.cache/stylelint/"
+    "lint": "eslint --max-warnings 0 \"src/**/*.{vue,ts,tsx}\" --fix && prettier --write ."
   }
 }

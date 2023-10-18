@@ -1,27 +1,21 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Base",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "strict": true,
+    "allowImportingTsExtensions": true,
     "declaration": true,
-    "noImplicitOverride": true,
-    "noUnusedLocals": true,
-    "esModuleInterop": true,
-    "useUnknownInCatchVariables": false,
-    "composite": false,
-    "declarationMap": false,
-    "forceConsistentCasingInFileNames": true,
-    "inlineSources": false,
-    "isolatedModules": true,
-    "skipLibCheck": true,
-    "noUnusedParameters": false,
-    "preserveWatchOutput": true,
     "experimentalDecorators": true,
+    "isolatedModules": true,
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "resolveJsonModule": true,
-    "removeComments": true,
-    "noEmit": true
-  }
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext"
+  },
+  "exclude": ["**/node_modules/**", "**/dist/**"]
 }

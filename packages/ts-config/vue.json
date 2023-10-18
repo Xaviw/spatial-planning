@@ -1,11 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Vue Application",
-  "extends": "./base.json",
   "compilerOptions": {
     "jsx": "preserve",
-    "lib": ["ESNext", "DOM"],
-    "noImplicitAny": false,
+    "lib": ["DOM", "DOM.Iterable"],
     "types": ["vite/client"]
-  }
+  },
+  "extends": "./base.json"
 }

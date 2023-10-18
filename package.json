@@ -16,36 +16,28 @@
   },
   "scripts": {
     "build:packages": "pnpm -r run stub",
-    "clean": "pnpm -r run clean && rimraf node_modules",
     "dev:client": "pnpm -F @sp/client dev",
+    "dev:manage": "pnpm -F @sp/manage dev",
     "lint": "pnpm -r run lint",
     "lint:lint-staged": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky install && pnpm build:packages",
+    "reinstall": "pnpm -r run clean && rimraf --force node_modules && pnpm install"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "*.{cjs,ts,tsx,vue}": [
       "eslint --fix",
       "prettier --write"
     ],
-    "{!(package)*.json,*.code-snippets,.!(browserslist)*rc}": [
-      "prettier --write--parser json"
-    ],
-    "package.json": [
-      "prettier --write"
-    ],
-    "*.vue": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{scss,less,styl,html}": [
-      "prettier --write"
-    ],
-    "*.md": [
+    "*.{html,css,json,md}": [
       "prettier --write"
     ]
   },
   "dependencies": {
-    "vue": "^3.3.4"
+    "ant-design-vue": "^4.0.6",
+    "pinia": "^2.1.7",
+    "unplugin-vue-components": "^0.25.2",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.8.0",

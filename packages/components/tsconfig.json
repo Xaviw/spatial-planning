@@ -1,5 +1,4 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@sp/ts-config/vue-app.json",
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts", "src/index.ts"]
+  "extends": "@sp/ts-config/vue.json"
 }

@@ -12,6 +12,7 @@ module.exports = {
     'plugin:import/typescript',
     'plugin:jsdoc/recommended-typescript',
     '@unocss',
+    './.eslintrc-auto-import.json',
     'prettier',
   ],
   overrides: [

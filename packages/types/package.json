@@ -13,8 +13,8 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rimraf node_modules dist",
-    "lint": "eslint --cache --max-warnings 0 --fix && prettier --write .",
+    "clean": "rimraf --force node_modules dist",
+    "lint": "eslint --max-warnings 0 --fix && prettier --write .",
     "stub": "unbuild --stub"
   }
 }
