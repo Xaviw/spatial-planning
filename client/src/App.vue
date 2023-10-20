@@ -1,13 +1,19 @@
-<script setup lang="ts">
-import type { Test } from '@sp/types'
+<template>
+  <AConfigProvider :locale="zhCN">
+    <RouterView />
+  </AConfigProvider>
+</template>
 
-const a = ref<Test>({ a: 1 })
+<script setup lang="ts">
+import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
+
+dayjs.locale('zh-cn')
 </script>
 
-<template>
-  <SFCButton />
-  <JSXButton />
-  <button class="rounded border-none bg-green-500 px-4 py-2 text-white shadow">
-    {{ a.a }}
-  </button>
-</template>
+<style>
+.shadow-basic {
+  --uno: shadow shadow-light shadow-opacity-50;
+}
+</style>

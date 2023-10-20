@@ -1,15 +1,16 @@
-import 'virtual:uno.css'
+import { Component } from 'vue'
 
-import * as components from './src'
-import type { WithInstall } from './src'
-import type { App, Component } from 'vue'
+const modules: Record<string, Component> = import.meta.glob('./src/*.vue', {
+  eager: true,
+  import: 'default',
+})
 
-export * from './src'
+const components: Record<string, Component> = {}
 
-export default {
-  install: (app: App) => {
-    for (const component in components) {
-      app.use((components as Record<string, WithInstall<Component>>)[component])
-    }
-  },
+for (const path in modules) {
+  const name = modules[path].name || /^\.\/src\/(.*)\.vue$/.exec(path)?.[1]
+  if (!name) continue
+  components[name] = modules[path]
 }
+
+export default components

@@ -16,12 +16,12 @@
   },
   "scripts": {
     "build:packages": "pnpm -r run stub",
+    "clean": "pnpm -r run clean && rimraf node_modules",
     "dev:client": "pnpm -F @sp/client dev",
     "dev:manage": "pnpm -F @sp/manage dev",
     "lint": "pnpm -r run lint",
     "lint:lint-staged": "lint-staged",
-    "prepare": "husky install && pnpm build:packages",
-    "reinstall": "pnpm -r run clean && rimraf --force node_modules && pnpm install"
+    "prepare": "husky install && pnpm build:packages"
   },
   "lint-staged": {
     "*.{cjs,ts,tsx,vue}": [
@@ -33,9 +33,10 @@
     ]
   },
   "dependencies": {
+    "@sp/shared": "workspace:^",
     "ant-design-vue": "^4.0.6",
+    "dayjs": "^1.11.10",
     "pinia": "^2.1.7",
-    "unplugin-vue-components": "^0.25.2",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
   },
@@ -44,13 +45,13 @@
     "@commitlint/config-conventional": "^17.8.0",
     "@iconify/json": "^2.2.127",
     "@sp/ts-config": "workspace:^",
-    "@sp/types": "workspace:^",
     "@sp/vite-config": "workspace:^",
     "@types/node": "^20.8.4",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "@unocss/eslint-config": "^0.56.5",
     "commitlint": "^17.8.0",
+    "env-cmd": "^10.1.0",
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.1",

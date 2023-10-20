@@ -1,0 +1,13 @@
+{
+  "name": "@sp/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "通用工具库",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "clean": "rimraf node_modules dist",
+    "lint": "eslint --max-warnings 0 --fix && prettier --write .",
+    "stub": "unbuild --stub"
+  }
+}

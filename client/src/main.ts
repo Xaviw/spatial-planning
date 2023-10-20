@@ -1,7 +1,6 @@
+import App from './App.vue'
+import router from './routes'
+import 'ant-design-vue/dist/reset.css'
 import 'virtual:uno.css'
 
-import spComponents from '@sp/components'
-
-import App from './App.vue'
-
-createApp(App).use(spComponents).mount('#app')
+createApp(App).use(router).mount('#app')

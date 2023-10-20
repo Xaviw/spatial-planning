@@ -2,6 +2,7 @@
   "name": "@sp/vite-config",
   "version": "1.0.0",
   "private": true,
+  "description": "vite-config配置库",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -16,14 +17,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build",
-    "clean": "rimraf --force node_modules dist",
+    "clean": "rimraf node_modules dist",
     "lint": "eslint --max-warnings 0 --fix && prettier --write .",
     "stub": "unbuild --stub"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.0.2",
-    "unplugin-auto-import": "^0.16.6"
+    "unplugin-auto-import": "^0.16.6",
+    "unplugin-vue-components": "^0.25.2",
+    "vite-plugin-html": "^3.2.0"
   }
 }

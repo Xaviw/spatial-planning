@@ -1,5 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "baseUrl": ".",
   "compilerOptions": {
     "jsx": "preserve",
     "lib": ["DOM", "DOM.Iterable"],

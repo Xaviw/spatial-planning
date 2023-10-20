@@ -5,6 +5,7 @@ import {
   presetTagify,
   presetUno,
   transformerVariantGroup,
+  transformerDirectives,
 } from 'unocss'
 
 export default defineConfig({
@@ -20,5 +21,5 @@ export default defineConfig({
     }),
     presetTagify(),
   ],
-  transformers: [transformerVariantGroup()],
+  transformers: [transformerVariantGroup(), transformerDirectives()],
 })

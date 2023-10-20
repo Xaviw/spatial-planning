@@ -2,11 +2,12 @@
   "name": "@sp/client",
   "version": "1.0.0",
   "private": true,
+  "description": "web前台",
   "type": "module",
   "scripts": {
     "build": "vue-tsc && vite build",
-    "clean": "rimraf --force node_modules dist",
-    "dev": "vite",
+    "clean": "rimraf node_modules dist",
+    "dev": "env-cmd -f ../.env vite",
     "lint": "eslint --max-warnings 0 \"{src,mock}/**/*.{vue,ts,tsx}\" --fix && prettier --write .",
     "preview": "vite preview"
   },

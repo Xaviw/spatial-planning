@@ -1,11 +1,11 @@
 {
   "name": "@sp/components",
   "version": "1.0.0",
-  "description": "",
+  "description": "vue组件库",
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "clean": "rimraf --force node_modules dist",
+    "clean": "rimraf node_modules dist",
     "dev": "vite",
     "lint": "eslint --max-warnings 0 \"src/**/*.{vue,ts,tsx}\" --fix && prettier --write ."
   }
