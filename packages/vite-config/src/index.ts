@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../../types/global.d.ts" />
+
 import { resolve } from 'node:path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -7,7 +10,6 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import { createHtmlPlugin } from 'vite-plugin-html'
-import '#/global'
 
 export const appConfig = defineConfig({
   publicDir: '../public',

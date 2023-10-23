@@ -41,6 +41,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     'vue/multi-word-component-names': 'off',
     'jsdoc/require-jsdoc': 'off',
+    'no-undef': 'off',
     'import/no-unresolved': 'off',
     'import/namespace': 'off',
     'import/no-empty-named-blocks': 'error',

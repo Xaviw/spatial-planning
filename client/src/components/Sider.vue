@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import components from '@sp/components'
-import type { Sider } from '#/global'
+import type { Sider } from '#/client'
 
 const list: Sider[] = [
   {
@@ -24,6 +24,30 @@ const list: Sider[] = [
     id: '2',
     componentType: 'SubTitle',
     componentProps: { title: '副标题' },
+    relationMenu: [],
+  },
+  {
+    id: '3',
+    componentType: 'DataCard',
+    componentProps: {
+      title:
+        'titletitletitletitletitletitletitletitletitletitletitletitletitle',
+      content: 123,
+      // imgSrc:
+      //   'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    },
+    relationMenu: [],
+  },
+  {
+    id: '4',
+    componentType: 'Description',
+    componentProps: {
+      data: [
+        { label: 'A', value: 1 },
+        { label: 'B', value: 2 },
+        { label: 'C', value: 3, span: 2 },
+      ],
+    },
     relationMenu: [],
   },
 ]
