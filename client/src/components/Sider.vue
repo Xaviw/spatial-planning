@@ -5,6 +5,7 @@
       :key="item.id"
       :is="components[item.componentType]"
       v-bind="item.componentProps"
+      class="mb-2"
     />
   </div>
 </template>
@@ -30,8 +31,7 @@ const list: Sider[] = [
     id: '3',
     componentType: 'DataCard',
     componentProps: {
-      title:
-        'titletitletitletitletitletitletitletitletitletitletitletitletitle',
+      title: '数据展示',
       content: 123,
       // imgSrc:
       //   'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',

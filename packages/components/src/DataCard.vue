@@ -1,40 +1,35 @@
 <template>
   <div
-    class="flex items-center from-blue-900 to-blue-300 from-opacity-70 to-opacity-10 bg-gradient-to-r px-4 py-2"
+    class="flex items-center from-[#043563] to-[#043563] from-opacity-10 to-opacity-100 bg-gradient-to-r p-4"
   >
-    <AImage
-      v-if="imgSrc"
-      :width="imgWidth"
-      :height="imgHeight"
-      :preview="imgPreview"
-      :src="imgSrc"
-    />
-    <i
-      class="i-material-symbols:chart-data-outline-sharp text-3xl text-blue-300"
-      v-else
-    />
+    <div
+      class="relative flex items-center justify-center border-24px border-[#0E4A85] border-l-[#053670] border-solid"
+    >
+      <AImage
+        v-if="imgSrc"
+        :width="42"
+        :height="42"
+        :preview="imgPreview"
+        :src="imgSrc"
+        class="absolute"
+      />
+      <i
+        class="i-solar:database-bold-duotone absolute text-3xl text-blue-300"
+        v-else
+      />
+    </div>
 
-    <span class="mx-4 flex-1 overflow-hidden text-ellipsis text-2xl">
+    <span class="mx-4 flex-1 break-all text-2xl">
       {{ title }}
     </span>
 
-    <span class="text-2xl text-yellow">{{ content }}</span>
+    <span class="text-3xl font-bold text-[#FFD15C]">{{ content }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    /**
-     * 图片宽度
-     * @default 42
-     */
-    imgWidth?: number
-    /**
-     * 图片高度
-     * @default 42
-     */
-    imgHeight?: number
     /**
      * 图片是否支持预览
      * @default true
@@ -48,8 +43,6 @@ withDefaults(
     content: string | number
   }>(),
   {
-    imgWidth: 42,
-    imgHeight: 42,
     imgPreview: true,
   },
 )

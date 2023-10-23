@@ -9,6 +9,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     AButton: (typeof import('ant-design-vue/es'))['Button']
     AConfigProvider: (typeof import('ant-design-vue/es'))['ConfigProvider']
+    ADescriptions: (typeof import('ant-design-vue/es'))['Descriptions']
+    ADescriptionsItem: (typeof import('ant-design-vue/es'))['DescriptionsItem']
     AImage: (typeof import('ant-design-vue/es'))['Image']
     ALayout: (typeof import('ant-design-vue/es'))['Layout']
     ALayoutContent: (typeof import('ant-design-vue/es'))['LayoutContent']

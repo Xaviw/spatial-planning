@@ -3,6 +3,7 @@
     <ADescriptionsItem
       v-for="(item, index) of data"
       :key="index"
+      :label="item.label"
       :span="item.span"
     >
       {{ item.value }}
@@ -11,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { DescriptionsProps } from 'ant-design-vue/es/descriptions/index'
+import { descriptionsProps } from 'ant-design-vue/es/descriptions/index'
 
 interface DescriptionItem {
   /** 字段标题 */
@@ -27,7 +28,7 @@ interface DescriptionItem {
 
 const props = withDefaults(
   defineProps<
-    DescriptionsProps & {
+    typeof descriptionsProps & {
       data: DescriptionItem[]
     }
   >(),

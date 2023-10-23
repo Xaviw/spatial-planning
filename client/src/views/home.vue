@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-screen w-screen flex flex-col overflow-hidden bg-blue-950 text-light-6"
+    class="h-screen w-screen flex flex-col overflow-hidden bg-[#001231] text-white"
   >
     <!-- 顶部 -->
     <Header />

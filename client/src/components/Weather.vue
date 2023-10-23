@@ -1,5 +1,5 @@
 <template>
-  <div id="he-plugin-simple" class="z-1"></div>
+  <div id="he-plugin-simple"></div>
 </template>
 
 <script setup lang="ts">
