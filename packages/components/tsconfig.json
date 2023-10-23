@@ -1,4 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@sp/ts-config/vue.json"
+  "extends": "../../tsconfig.vue.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "#/*": ["../../types/*"]
+    }
+  }
 }

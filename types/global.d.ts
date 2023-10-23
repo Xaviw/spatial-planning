@@ -8,21 +8,13 @@ interface ImportMeta {
   readonly env: ImportMetaEnv
 }
 
-declare global {
-  type Nullable<T> = T | null
-  type Recordable<T = any> = Record<string, T>
-  type ReadonlyRecordable<T = any> = {
-    readonly [key: string]: T
-  }
-
-  interface Window {
-    WIDGET: object
-  }
+interface Window {
+  /** 天气组件配置 */
+  WIDGET: object
 }
 
-export interface Sider {
-  id: string
-  componentType: string
-  componentProps: Recordable
-  relationMenu: string[]
+type Nullable<T> = T | null
+type Recordable<T = any> = Record<string, T>
+type ReadonlyRecordable<T = any> = {
+  readonly [key: string]: T
 }

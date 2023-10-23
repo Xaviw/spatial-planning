@@ -1,5 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@sp/ts-config/vue.json",
-  "compilerOptions": { "lib": ["ESNext", "DOM"] }
+  "extends": "../../tsconfig.vue.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "#/*": ["../../types/*"]
+    }
+  }
 }
