@@ -8,5 +8,8 @@
     "clean": "rimraf node_modules dist",
     "dev": "vite",
     "lint": "eslint --max-warnings 0 \"src/**/*.{vue,ts,tsx}\" --fix && prettier --write ."
+  },
+  "dependencies": {
+    "vue-pdf-embed": "^1.2.1"
   }
 }

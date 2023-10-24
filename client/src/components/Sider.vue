@@ -77,19 +77,19 @@ const list: Sider[] = [
         },
         {
           title: '文档',
-          src: '1.doc',
+          src: 'https://static-1252421604.cos.ap-guangzhou.myqcloud.com/vdp.docx',
         },
         {
           title: 'pdf',
-          src: '2.pdf',
+          src: 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/examples/learning/helloworld.pdf',
         },
         {
           title: '表格',
-          src: '3.xls',
+          src: '3.xlsx',
         },
         {
           title: 'ppt',
-          src: '4.ppt',
+          src: 'https://static-1252421604.cos.ap-guangzhou.myqcloud.com/vdp.pptx',
         },
         {
           title: '视频',
@@ -102,6 +102,36 @@ const list: Sider[] = [
         {
           title: '其他',
           src: '7.x',
+        },
+      ],
+    },
+    relationMenu: [],
+  },
+  {
+    id: '7',
+    componentType: 'Carousel',
+    componentProps: {
+      data: [
+        'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        'https://raw.githubusercontent.com/vueComponent/ant-design-vue/main/components/carousel/demo/abstract01.jpg',
+        'https://raw.githubusercontent.com/vueComponent/ant-design-vue/main/components/carousel/demo/abstract02.jpg',
+      ],
+      height: 280,
+    },
+    relationMenu: [],
+  },
+  {
+    id: '8',
+    componentType: 'Collapse',
+    componentProps: {
+      data: [
+        {
+          title: 'title1',
+          content: 'content1',
+        },
+        {
+          title: 'title2',
+          content: 'content2',
         },
       ],
     },

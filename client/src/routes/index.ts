@@ -5,11 +5,11 @@ export default createRouter({
   routes: [
     {
       path: '/login',
-      component: import('../views/login.vue'),
+      component: () => import('../views/login.vue'),
     },
     {
       path: '/',
-      component: import('../views/home.vue'),
+      component: () => import('../views/home.vue'),
     },
   ],
 })

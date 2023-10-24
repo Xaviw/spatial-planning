@@ -1,39 +1,42 @@
 <template>
-  <ARow :wrap="true">
-    <ACol
-      v-for="(item, index) of dataWithPreset"
-      :key="index"
-      :span="span"
-      v-bind="item"
-      class="flex flex-col items-center"
-      :style="{ padding: gutter + 'px' }"
-    >
-      <AImage
-        v-if="item.img"
-        :height="item.imgHeight ?? 64"
-        :width="item.imgWidth ?? 64"
-        :src="item.img"
+  <div>
+    <ARow :wrap="true">
+      <ACol
+        v-for="(item, index) of dataWithPreset"
+        :key="index"
+        :span="span"
+        v-bind="item"
+        class="flex flex-col items-center"
+        :style="{ padding: gutter + 'px' }"
       >
-        <template #previewMask>
-          <i class="i-ant-design:eye-outlined" />
-        </template>
-      </AImage>
+        <AImage
+          v-if="item.img"
+          :height="item.imgHeight ?? 64"
+          :width="item.imgWidth ?? 64"
+          :src="item.img"
+        >
+          <template #previewMask>
+            <i class="i-ant-design:eye-outlined" />
+          </template>
+        </AImage>
 
-      <i
-        v-else
-        :class="[item.icon, 'text-64px', 'cursor-pointer']"
-        @click="onPreview(item)"
-      />
+        <i
+          v-else
+          :class="[item.icon, 'text-64px', 'cursor-pointer', 'text-gradient']"
+          @click="onPreview(item)"
+        />
 
-      <span class="mt-1 break-all">{{ item.title }}</span>
-    </ACol>
-  </ARow>
+        <span class="mt-1 break-all">{{ item.title }}</span>
+      </ACol>
+    </ARow>
 
-  <FilePreview
-    v-model="previewData.visible"
-    :src="previewData.src"
-    :type="previewData.type"
-  />
+    <FilePreview
+      v-model="previewData.visible"
+      :src="previewData.src"
+      :type="previewData.type"
+      :extName="previewData.extName"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -64,6 +67,7 @@ interface FileItem extends ColProps {
 interface ResolvedFileItem extends FileItem {
   icon?: string
   type?: MediaEnum
+  extName: string
 }
 
 const props = withDefaults(
@@ -77,7 +81,7 @@ const props = withDefaults(
      * 栅格间隔，单位像素
      * @default 6
      */
-    gutter: number
+    gutter?: number
     data: FileItem[]
   }>(),
   {
@@ -89,37 +93,38 @@ const props = withDefaults(
 
 const dataWithPreset = computed<ResolvedFileItem[]>(() => {
   return props.data.map(item => {
-    let icon = 'i-mdi:file text-[#FFE897]'
+    let icon = 'i-mdi:file'
     let type
     const extName =
       /^.*\.(\w+)(\?.*)?$/.exec(item.src || '')?.[1]?.toLocaleLowerCase() ?? ''
     if (extName === 'pdf') {
-      icon = 'i-mdi:file-pdf text-[#C43E1C]'
+      icon = 'i-mdi:file-pdf'
       type = MediaEnum.PDF
-    } else if (['doc', 'docx'].includes(extName)) {
-      icon = 'i-mdi:file-word text-[#185ABD]'
-      type = MediaEnum.WORD
-    } else if (['xls', 'xlsx'].includes(extName)) {
-      icon = 'i-mdi:file-excel text-[#107C41]'
-      type = MediaEnum.EXCEL
-    } else if (['ppt', 'pptx'].includes(extName)) {
-      icon = 'i-mdi:file-powerpoint text-[#C43E1C]'
-      type = MediaEnum.PPT
+    } else if (extName === 'docx' || extName === 'doc') {
+      icon = 'i-mdi:file-word'
+      type = MediaEnum.OFFICE
+    } else if (extName === 'xlsx' || extName === 'xls') {
+      icon = 'i-mdi:file-excel'
+      type = MediaEnum.OFFICE
+    } else if (extName === 'pptx' || extName === 'ppt') {
+      icon = 'i-mdi:file-powerpoint'
+      type = MediaEnum.OFFICE
     } else if (['mp4', 'webm', 'ogv', 'mov', 'avi', 'mkv'].includes(extName)) {
-      icon = 'i-material-symbols:video-file text-violet'
+      icon = 'i-material-symbols:video-file'
       type = MediaEnum.VIDEO
     } else if (['mp3', 'wav', 'ogg', 'aac', 'm4a'].includes(extName)) {
-      icon = 'i-material-symbols:audio-file text-fuchsia'
+      icon = 'i-material-symbols:audio-file'
       type = MediaEnum.AUDIO
     }
-    return { ...item, icon, type }
+    return { ...item, icon, type, extName }
   })
 })
 
 const previewData = reactive({
   visible: false,
   src: '',
-  type: '',
+  type: MediaEnum.AUDIO,
+  extName: '',
 })
 
 function onPreview(item: ResolvedFileItem) {
@@ -129,7 +134,16 @@ function onPreview(item: ResolvedFileItem) {
   } else {
     previewData.src = item.src
     previewData.type = item.type
+    previewData.extName = item.extName
     previewData.visible = true
   }
 }
 </script>
+
+<style>
+.text-gradient {
+  background-image: linear-gradient(to top, #0783fa3d, #0783fa);
+  background-clip: text;
+  color: transparent;
+}
+</style>

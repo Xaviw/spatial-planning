@@ -34,6 +34,8 @@
   },
   "dependencies": {
     "@sp/shared": "workspace:^",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "ant-design-vue": "^4.0.6",
     "dayjs": "^1.11.10",
     "lodash-es": "^4.17.21",

@@ -2,8 +2,6 @@ export enum MediaEnum {
   IMAGE = 'image',
   VIDEO = 'video',
   AUDIO = 'audio',
-  WORD = 'word',
-  EXCEL = 'excel',
-  PPT = 'ppt',
+  OFFICE = 'office',
   PDF = 'pdf',
 }
