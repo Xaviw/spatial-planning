@@ -1,4 +1,5 @@
 import { Component } from 'vue'
+import '../../unocss-icon'
 
 const modules: Record<string, Component> = import.meta.glob('./src/*.vue', {
   eager: true,

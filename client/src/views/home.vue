@@ -5,7 +5,7 @@
     <!-- 顶部 -->
     <Header />
 
-    <div class="flex flex-1">
+    <div class="min-h-0 flex flex-1">
       <!-- 左侧 -->
       <div
         :class="[

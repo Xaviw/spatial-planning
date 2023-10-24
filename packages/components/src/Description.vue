@@ -1,5 +1,5 @@
 <template>
-  <ADescriptions v-bind="props">
+  <ADescriptions v-bind="props" class="px-4">
     <ADescriptionsItem
       v-for="(item, index) of data"
       :key="index"
@@ -35,3 +35,9 @@ const props = withDefaults(
   { data: () => [] },
 )
 </script>
+
+<style>
+.ant-descriptions-view {
+  border-radius: 0 !important;
+}
+</style>

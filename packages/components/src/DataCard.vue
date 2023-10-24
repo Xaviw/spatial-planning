@@ -5,21 +5,25 @@
     <div
       class="relative flex items-center justify-center border-24px border-[#0E4A85] border-l-[#053670] border-solid"
     >
-      <AImage
-        v-if="imgSrc"
-        :width="42"
-        :height="42"
-        :preview="imgPreview"
-        :src="imgSrc"
-        class="absolute"
-      />
+      <div class="absolute" v-if="imgSrc">
+        <AImage
+          :width="imgWidth > 48 || imgWidth < 20 ? 36 : imgWidth"
+          :height="imgHeight > 48 || imgHeight < 20 ? 36 : imgHeight"
+          :preview="imgPreview"
+          :src="imgSrc"
+        >
+          <template #previewMask>
+            <i class="i-ant-design:eye-outlined" />
+          </template>
+        </AImage>
+      </div>
       <i
         class="i-solar:database-bold-duotone absolute text-3xl text-blue-300"
         v-else
       />
     </div>
 
-    <span class="mx-4 flex-1 break-all text-2xl">
+    <span class="mx-4 flex-1 break-all text-lg">
       {{ title }}
     </span>
 
@@ -30,6 +34,16 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
+    /**
+     * 图片宽度，最大48，最小20
+     * @default 36
+     */
+    imgWidth?: number
+    /**
+     * 图片高度，最大48，最小20
+     * @default 36
+     */
+    imgHeight?: number
     /**
      * 图片是否支持预览
      * @default true
@@ -43,6 +57,8 @@ withDefaults(
     content: string | number
   }>(),
   {
+    imgWidth: 36,
+    imgHeight: 36,
     imgPreview: true,
   },
 )

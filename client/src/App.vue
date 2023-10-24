@@ -1,5 +1,23 @@
 <template>
-  <AConfigProvider :locale="zhCN">
+  <AConfigProvider
+    :locale="zhCN"
+    :theme="{
+      token: {
+        colorSplit: '#0387CE',
+        colorText: '#fff',
+      },
+      components: {
+        Table: {
+          colorBgContainer: 'rgb(3, 135, 206)',
+        },
+        Modal: {
+          paddingMD: 0,
+          paddingContentHorizontalLG: 0,
+          colorBgElevated: 'transparent',
+        },
+      },
+    }"
+  >
     <RouterView />
   </AConfigProvider>
 </template>
@@ -15,5 +33,23 @@ dayjs.locale('zh-cn')
 <style>
 .shadow-basic {
   --uno: shadow shadow-light shadow-opacity-50;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #21b1ff66;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #21b1ff;
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: #21b1ff;
 }
 </style>

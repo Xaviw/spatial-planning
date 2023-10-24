@@ -6,9 +6,10 @@ import {
   presetUno,
   transformerVariantGroup,
   transformerDirectives,
+  UserConfig,
 } from 'unocss'
 
-export default defineConfig({
+const config: UserConfig = defineConfig({
   presets: [
     presetUno(),
     presetAttributify(),
@@ -23,3 +24,5 @@ export default defineConfig({
   ],
   transformers: [transformerVariantGroup(), transformerDirectives()],
 })
+
+export default config
