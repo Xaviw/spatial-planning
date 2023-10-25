@@ -24,6 +24,8 @@ declare module 'vue' {
     AModal: (typeof import('ant-design-vue/es'))['Modal']
     ARow: (typeof import('ant-design-vue/es'))['Row']
     ATable: (typeof import('ant-design-vue/es'))['Table']
+    ATimeline: (typeof import('ant-design-vue/es'))['Timeline']
+    ATimelineItem: (typeof import('ant-design-vue/es'))['TimelineItem']
     ATypographyText: (typeof import('ant-design-vue/es'))['TypographyText']
     ATypographyTitle: (typeof import('ant-design-vue/es'))['TypographyTitle']
     Header: (typeof import('./../components/Header.vue'))['default']

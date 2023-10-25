@@ -124,15 +124,32 @@ const list: Sider[] = [
     id: '8',
     componentType: 'Collapse',
     componentProps: {
+      title: 'title1',
+      content: '<p>test</p>',
+    },
+    relationMenu: [],
+  },
+  {
+    id: '9',
+    componentType: 'Timeline',
+    componentProps: {
       data: [
-        {
-          title: 'title1',
-          content: 'content1',
-        },
-        {
-          title: 'title2',
-          content: 'content2',
-        },
+        { color: 'red', content: 'AAAAAAAAA' },
+        { color: 'green', content: 'BBBBBBBBBBBB' },
+        { content: 'CCCCCCCCCCCC', position: 'right', dot: true },
+        { content: 'CCCCCCCCCCCC', position: 'left' },
+      ],
+    },
+    relationMenu: [],
+  },
+  {
+    id: '10',
+    componentType: 'PieChart',
+    componentProps: {
+      data: [
+        { name: 'A', value: 1 },
+        { name: 'B', value: 3 },
+        { name: 'C', value: 5 },
       ],
     },
     relationMenu: [],
