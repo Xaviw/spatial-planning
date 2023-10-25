@@ -9,6 +9,7 @@ import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { ref } from 'vue'
 import VChart from 'vue-echarts'
+import { color } from './helper'
 import type { PieSeriesOption } from 'echarts/charts'
 import type {
   TooltipComponentOption,
@@ -24,20 +25,28 @@ const props = withDefaults(
   defineProps<{
     /**
      * 容器高度，单位px
-     * @default 400
+     * @default 240
      */
     height?: number
     /**
      * 半径，单位百分比；一个值为饼图，两个值为环形图
-     * @default '70%'
+     * @default '100%'
      */
     radius?: string | [string, string]
+    /**
+     * 中心点位置，单位百分比
+     * @default ['45%', '50%']
+     */
     center?: [string, string]
+    /**
+     * 南丁格尔玫瑰图，默认不使用
+     */
+    roseType?: 'radius' | 'area'
     data: PieSeriesOption['data']
   }>(),
   {
-    height: 400,
-    radius: () => '70%',
+    height: 240,
+    radius: () => '100%',
     center: () => ['45%', '50%'],
     data: () => [],
   },
@@ -46,18 +55,7 @@ const props = withDefaults(
 use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer])
 
 const option = ref<EChartsOption>({
-  color: [
-    '#63b2ee',
-    '#76da91',
-    '#f8cb7f',
-    '#f89588',
-    '#7cd6cf',
-    '#9192ab',
-    '#7898e1',
-    '#efa666',
-    '#eddd86',
-    '#9987ce',
-  ],
+  color,
   tooltip: {
     trigger: 'item',
   },
@@ -89,6 +87,7 @@ const option = ref<EChartsOption>({
       labelLine: {
         show: false,
       },
+      roseType: props.roseType,
       data: props.data,
       label: {
         show: true,

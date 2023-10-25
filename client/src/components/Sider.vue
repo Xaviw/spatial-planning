@@ -154,5 +154,48 @@ const list: Sider[] = [
     },
     relationMenu: [],
   },
+  {
+    id: '11',
+    componentType: 'LineChart',
+    componentProps: {
+      xAxis: ['A', 'B', 'C', 'D'],
+      series: [
+        {
+          name: '1',
+          data: [1, 5, 3, 7],
+          smooth: true,
+        },
+        {
+          name: '2',
+          data: [2, 6, 4, 8],
+          stack: true,
+        },
+        {
+          name: '3',
+          data: [1, 4, 7, 8],
+          stack: true,
+        },
+      ],
+    },
+    relationMenu: [],
+  },
+  {
+    id: '12',
+    componentType: 'BarChart',
+    componentProps: {
+      xAxis: ['A', 'B', 'C', 'D'],
+      series: [
+        {
+          name: '1',
+          data: [1, 5, 3, 7],
+        },
+        {
+          name: '2',
+          data: [2, 6, 4, 8],
+        },
+      ],
+    },
+    relationMenu: [],
+  },
 ]
 </script>
