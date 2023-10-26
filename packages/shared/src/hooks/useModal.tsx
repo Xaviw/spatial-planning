@@ -8,6 +8,19 @@ interface UseModalOptions {
   modalProps?: ModalProps
   /** 弹窗内容组件 */
   component: VNode | JSX.Element
+  /** 内容组件props */
+  componentProps: Recordable
 }
 
-export default function useModal(options: UseModalOptions) {}
+const modalMap = new Map()
+
+export default function useModal({
+  key,
+  modalProps,
+  component,
+  componentProps,
+}: UseModalOptions) {
+  if (!key || !modalMap.has(key)) {
+    //
+  }
+}

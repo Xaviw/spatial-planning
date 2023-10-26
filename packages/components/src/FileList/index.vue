@@ -40,9 +40,9 @@
 </template>
 
 <script setup lang="ts">
+import { MediaEnum } from '@sp/shared'
 import { computed, reactive } from 'vue'
-import FilePreview from './FilePreview/index.vue'
-import { MediaEnum } from './helper'
+import FilePreview from './FilePreview.vue'
 import type { ColProps } from 'ant-design-vue/es/col/index'
 
 interface FileItem extends ColProps {

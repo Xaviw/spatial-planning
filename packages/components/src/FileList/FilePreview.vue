@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
+import { MediaEnum } from '@sp/shared'
 import { ref, watch } from 'vue'
-import { MediaEnum } from '../helper'
 
 const props = withDefaults(
   defineProps<{

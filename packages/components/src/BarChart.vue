@@ -3,6 +3,7 @@
 </template>
 
 <script setup lang="ts">
+import { color } from '@sp/shared'
 import { BarChart } from 'echarts/charts'
 import {
   TooltipComponent,
@@ -14,7 +15,6 @@ import { CanvasRenderer } from 'echarts/renderers'
 
 import { ref } from 'vue'
 import VChart from 'vue-echarts'
-import { color } from './helper'
 import type {
   TooltipComponentOption,
   LegendComponentOption,

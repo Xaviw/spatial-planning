@@ -10,11 +10,14 @@
       padding: 0,
       background: 'transparent',
     }"
-  ></AModal>
+    v-bind="$attrs"
+  >
+    <slot />
+  </AModal>
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(
+withDefaults(
   defineProps<{
     modelValue: boolean
   }>(),

@@ -3,13 +3,13 @@
 </template>
 
 <script setup lang="ts">
+import { color } from '@sp/shared'
 import { LineChart } from 'echarts/charts'
 import { GridComponent } from 'echarts/components'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { ref } from 'vue'
 import VChart from 'vue-echarts'
-import { color } from './helper'
 import type { LineSeriesOption } from 'echarts/charts'
 import type { GridComponentOption } from 'echarts/components'
 import type { ComposeOption } from 'echarts/core'
