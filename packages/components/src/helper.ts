@@ -12,3 +12,11 @@ export const color = [
   '#0780cf',
   '#765005',
 ]
+
+export enum MediaEnum {
+  IMAGE = 'image',
+  VIDEO = 'video',
+  AUDIO = 'audio',
+  OFFICE = 'office',
+  PDF = 'pdf',
+}

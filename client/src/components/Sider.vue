@@ -12,9 +12,9 @@
 
 <script setup lang="ts">
 import components from '@sp/components'
-import type { Sider } from '#/client'
+import type { SiderItem } from '#/client'
 
-const list: Sider[] = [
+const list: SiderItem[] = [
   {
     id: '1',
     componentType: 'Title',
@@ -193,6 +193,18 @@ const list: Sider[] = [
           name: '2',
           data: [2, 6, 4, 8],
         },
+      ],
+    },
+    relationMenu: [],
+  },
+  {
+    id: '13',
+    componentType: 'Progress',
+    componentProps: {
+      data: [
+        { name: '数据1', value: 10 },
+        { name: '数据2', value: 20, format: '</>+' },
+        { name: '数据3', value: 30 },
       ],
     },
     relationMenu: [],

@@ -40,16 +40,8 @@ const props = withDefaults(
       name?: string
       /** 数量应与columns一致 */
       data: number[]
-      /**
-       * 平滑折线图
-       * @default false
-       */
-      smooth?: boolean
-      /**
-       * 堆叠面积图
-       * @default false
-       */
-      stack?: boolean
+      /** 柱宽度 */
+      barWidth?: string
     }[]
   }>(),
   {
@@ -116,6 +108,7 @@ const option = ref<EChartsOption>({
     return {
       name: item.name,
       data: item.data,
+      barWidth: item.barWidth,
       showBackground: true,
       backgroundStyle: {
         color: 'rgba(255,255,255,0.1)',

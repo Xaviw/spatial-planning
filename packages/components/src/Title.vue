@@ -21,7 +21,7 @@
     <div class="absolute bottom-0 right-[30%] h-1px w-8 bg-[#FFD15C]" />
     <div class="absolute bottom-0 right-4px h-3px w-6 bg-[#FFD15C]" />
 
-    <i class="i-uim:cube mr-2 text-3xl text-[#0783FA]" />
+    <i class="i-material-symbols:auto-awesome mr-2 text-3xl text-[#0783FA]" />
 
     <span class="title flex-1 break-all text-xl font-bold">
       {{ title }}
@@ -30,14 +30,28 @@
     <div
       class="btn mr-8 cursor-pointer border border-[#2e79b5] rounded-4px border-solid bg-[025493] p-3px"
     >
+      <!-- TODO: 组件弹窗 -->
       <i class="i-ph:list-bold text-xl text-[#19ECFF]" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { ComponentItem } from '#/client'
+
 defineProps<{
   title: string
+  /**
+   * 详情弹窗宽度
+   * @default 25rem
+   */
+  modalWidth?: number | string
+  /**
+   * 弹窗标题，默认`${title}详情`
+   */
+  modalTitle?: string
+  /** 弹窗内容，提供后组件右侧会显示详情按钮 */
+  modalData: ComponentItem[]
 }>()
 </script>
 
