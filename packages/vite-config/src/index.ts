@@ -10,6 +10,7 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import { createHtmlPlugin } from 'vite-plugin-html'
+import { viteMockServe } from 'vite-plugin-mock'
 
 export const appConfig = defineConfig({
   publicDir: '../public',
@@ -37,6 +38,10 @@ export const appConfig = defineConfig({
           VITE_TITLE: import.meta.env.VITE_TITLE,
         },
       },
+    }),
+    viteMockServe({
+      mockPath: resolve(__dirname, '../mock/'),
+      enable: import.meta.env.VITE_MOCK_ENABLE,
     }),
   ],
   resolve: {

@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_TITLE: string
+  readonly VITE_MOCK_ENABLE: boolean
 }
 
 interface ImportMeta {

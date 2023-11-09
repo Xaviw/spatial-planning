@@ -34,7 +34,7 @@
 
       <div class="relative flex flex-1 flex-col">
         <!-- 菜单 -->
-        <Menu class="absolute left-4 top-4" />
+        <Menu class="absolute left-6 top-4" />
 
         <!-- 地图 -->
         <div class="flex-1"></div>
