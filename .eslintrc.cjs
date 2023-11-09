@@ -37,6 +37,7 @@ module.exports = {
     indent: ['error', 2],
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
+    'no-inner-declarations': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'vue/multi-word-component-names': 'off',

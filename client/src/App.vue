@@ -15,6 +15,18 @@
           paddingContentHorizontalLG: 0,
           colorBgElevated: 'transparent',
         },
+        Menu: {
+          colorItemTextHover: '#69ECF1',
+          colorItemTextHoverHorizontal: '#69ECF1',
+          colorItemTextSelected: '#69ECF1',
+          colorItemTextSelectedHorizontal: '#69ECF1',
+          colorItemBg: 'transparent',
+          colorItemBgHover: 'inherit',
+          colorItemBgSelected: 'inherit',
+          colorItemBgSelectedHorizontal: 'inherit',
+          colorActiveBarWidth: 0,
+          colorActiveBarHeight: 0,
+        },
       },
     }"
   >
@@ -31,10 +43,6 @@ dayjs.locale('zh-cn')
 </script>
 
 <style>
-.shadow-basic {
-  --uno: shadow shadow-light shadow-opacity-50;
-}
-
 ::-webkit-scrollbar {
   width: 3px;
   height: 3px;

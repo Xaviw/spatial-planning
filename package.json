@@ -47,6 +47,7 @@
     "@commitlint/cli": "^17.8.0",
     "@commitlint/config-conventional": "^17.8.0",
     "@iconify/json": "^2.2.127",
+    "@sp/components": "workspace:^",
     "@sp/vite-config": "workspace:^",
     "@types/node": "^20.8.4",
     "@typescript-eslint/eslint-plugin": "^6.7.5",

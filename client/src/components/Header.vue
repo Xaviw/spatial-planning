@@ -1,6 +1,6 @@
 <template>
   <div
-    class="shadow-basic flex select-none items-center justify-between px-18 py-4 text-white"
+    class="flex select-none items-center justify-between px-18 py-4 text-white"
   >
     <div class="flex flex-1 items-center text-4xl font-bold">
       <i

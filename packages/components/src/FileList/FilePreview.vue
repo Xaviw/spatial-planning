@@ -1,23 +1,20 @@
 <template>
-  <AModal
-    :open="modelValue"
-    @update:open="(e: boolean) => $emit('update:modelValue', e)"
-    :afterClose="() => (loading = true)"
-    centered
-    :closable="false"
-    :footer="null"
-    width="auto"
-    :bodyStyle="{
-      padding: 0,
-      background: 'transparent',
-    }"
+  <Modal
+    :modelValue="modelValue"
+    @update:modelValue="e => $emit('update:modelValue', e)"
   >
     <i
       class="i-svg-spinners:12-dots-scale-rotate absolute left-50% top-50% translate--50% text-4xl"
     />
 
     <!-- 视频 -->
-    <video ref="videoRef" v-if="type === MediaEnum.VIDEO" controls :src="src" />
+    <video
+      ref="videoRef"
+      v-if="type === MediaEnum.VIDEO"
+      controls
+      :src="src"
+      class="relative"
+    />
     <!-- 音频 -->
     <audio ref="audioRef" v-if="type === MediaEnum.AUDIO" controls :src="src" />
     <!-- OFFICE -->
@@ -30,10 +27,11 @@
       frameborder="0"
     />
     <!-- TODO: PDF -->
-  </AModal>
+  </Modal>
 </template>
 
 <script setup lang="ts">
+import Modal from '@sp/components/src/Modal/index.vue'
 import { MediaEnum } from '@sp/shared'
 import { ref, watch } from 'vue'
 

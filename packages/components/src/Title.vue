@@ -30,29 +30,59 @@
     <div
       class="btn mr-8 cursor-pointer border border-[#2e79b5] rounded-4px border-solid bg-[025493] p-3px"
     >
-      <!-- TODO: 组件弹窗 -->
-      <i class="i-ph:list-bold text-xl text-[#19ECFF]" />
+      <i
+        v-if="modalData?.length"
+        class="i-ph:list-bold text-xl text-[#19ECFF]"
+        @click="onOpenDetail"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import components from '@sp/components'
+import ContentWrapper from '@sp/components/src/ContentWrapper/index.vue'
+import { useModal } from '@sp/shared'
+import { h } from 'vue'
 import type { ComponentItem } from '#/client'
 
-defineProps<{
-  title: string
-  /**
-   * 详情弹窗宽度
-   * @default 25rem
-   */
-  modalWidth?: number | string
-  /**
-   * 弹窗标题，默认`${title}详情`
-   */
-  modalTitle?: string
-  /** 弹窗内容，提供后组件右侧会显示详情按钮 */
-  modalData: ComponentItem[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    title: string
+    /**
+     * 详情弹窗宽度
+     * @default 25rem
+     */
+    modalWidth?: number | string
+    /**
+     * 弹窗标题，默认`${title}详情`
+     */
+    modalTitle?: string
+    /** 弹窗内容，提供后组件右侧会显示详情按钮 */
+    modalData?: ComponentItem[]
+  }>(),
+  {
+    modalWidth: '25rem',
+  },
+)
+
+const { open, close } = useModal('TitleDetail')
+
+function onOpenDetail() {
+  open(
+    h(
+      ContentWrapper,
+      {
+        title: props.modalTitle || `${props.title}详情`,
+        onClose: close,
+        style: { width: props.modalWidth },
+      },
+      props.modalData!.map(comp =>
+        h(components[comp.componentType], comp.componentProps),
+      ),
+    ),
+  )
+}
 </script>
 
 <style scoped>
