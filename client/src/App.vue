@@ -27,6 +27,9 @@
           colorActiveBarWidth: 0,
           colorActiveBarHeight: 0,
         },
+        Message: {
+          colorText: '#000',
+        },
       },
     }"
   >

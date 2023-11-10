@@ -16,7 +16,7 @@
           !layoutState.left && 'ml--100',
         ]"
       >
-        <Sider />
+        <Sider position="left" />
 
         <div
           class="trigger arrow right-0 translate-x-[100%] rounded-r"
@@ -74,6 +74,8 @@
           !layoutState.right && 'mr--100',
         ]"
       >
+        <Sider position="right" />
+
         <div
           class="trigger arrow left-0 translate-x-[-100%] rounded-l"
           @click="layoutState.right = !layoutState.right"

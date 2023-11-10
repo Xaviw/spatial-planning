@@ -8,7 +8,7 @@ export default createRouter({
       component: () => import('../views/login.vue'),
     },
     {
-      path: '/',
+      path: '/:id?',
       component: () => import('../views/home.vue'),
     },
   ],

@@ -1,3 +1,6 @@
+export * from './enums'
+export * from './request'
+
 export const color = [
   '#05f8d6',
   '#0082fc',
@@ -12,11 +15,3 @@ export const color = [
   '#0780cf',
   '#765005',
 ]
-
-export enum MediaEnum {
-  IMAGE = 'image',
-  VIDEO = 'video',
-  AUDIO = 'audio',
-  OFFICE = 'office',
-  PDF = 'pdf',
-}

@@ -40,8 +40,9 @@ export const appConfig = defineConfig({
       },
     }),
     viteMockServe({
-      mockPath: resolve(__dirname, '../mock/'),
+      mockPath: '../mock',
       enable: import.meta.env.VITE_MOCK_ENABLE,
+      watchFiles: false,
     }),
   ],
   resolve: {
