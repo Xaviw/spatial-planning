@@ -84,6 +84,7 @@ const option = ref<EChartsOption>({
     axisLabel: {
       color: '#ffffffaa',
     },
+    boundaryGap: false,
   },
   yAxis: {
     type: 'value',

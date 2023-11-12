@@ -29,12 +29,9 @@
 
     <div
       class="btn mr-8 cursor-pointer border border-[#2e79b5] rounded-4px border-solid bg-[025493] p-3px"
+      v-if="modalData?.length"
     >
-      <i
-        v-if="modalData?.length"
-        class="i-ph:list-bold text-xl text-[#19ECFF]"
-        @click="onOpenDetail"
-      />
+      <i class="i-ph:list-bold text-xl text-[#19ECFF]" @click="onOpenDetail" />
     </div>
   </div>
 </template>
@@ -43,6 +40,7 @@
 import components from '@sp/components'
 import ContentWrapper from '@sp/components/src/ContentWrapper/index.vue'
 import { useModal } from '@sp/shared'
+import { cloneDeep, merge } from 'lodash-es'
 import { h } from 'vue'
 import type { ComponentItem } from '#/client'
 
@@ -77,9 +75,15 @@ function onOpenDetail() {
         onClose: close,
         style: { width: props.modalWidth },
       },
-      props.modalData!.map(comp =>
-        h(components[comp.componentType], comp.componentProps),
-      ),
+      () =>
+        props.modalData!.map(comp =>
+          h(
+            components[comp.componentType],
+            merge(cloneDeep(comp.componentProps), {
+              style: { marginBottom: '0.5rem' },
+            }),
+          ),
+        ),
     ),
   )
 }

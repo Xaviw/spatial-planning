@@ -34,7 +34,7 @@ const columns = computed(() => {
 })
 
 const dataSource = computed(() => {
-  return props.data.slice(1).map(row => {
+  return props.data.map(row => {
     const rowData: Recordable = {}
     row.forEach((item, index) => {
       rowData[`column${index}`] = item

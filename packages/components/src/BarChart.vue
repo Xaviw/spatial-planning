@@ -120,10 +120,8 @@ const option = ref<EChartsOption>({
       label: {
         show: true,
         position: 'top',
-        textStyle: {
-          color: '#fff',
-          fontSize: 12,
-        },
+        color: '#fff',
+        fontSize: 12,
       },
       type: 'bar',
     }
