@@ -32,6 +32,7 @@ declare module 'vue' {
     ATypographyText: (typeof import('ant-design-vue/es'))['TypographyText']
     ATypographyTitle: (typeof import('ant-design-vue/es'))['TypographyTitle']
     Header: (typeof import('./../components/Header.vue'))['default']
+    Map: (typeof import('./../components/Map.vue'))['default']
     Menu: (typeof import('./../components/Menu.vue'))['default']
     RouterLink: (typeof import('vue-router'))['RouterLink']
     RouterView: (typeof import('vue-router'))['RouterView']

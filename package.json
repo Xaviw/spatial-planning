@@ -33,6 +33,7 @@
     ]
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "@sp/shared": "workspace:^",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
@@ -46,6 +47,7 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@amap/amap-jsapi-types": "^0.0.13",
     "@commitlint/cli": "^17.8.0",
     "@commitlint/config-conventional": "^17.8.0",
     "@iconify/json": "^2.2.127",
