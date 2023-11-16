@@ -33,7 +33,7 @@ const generationFunctions = {
   genSubTitle() {
     return {
       id: Mock.Random.id(),
-      componentType: 'Title',
+      componentType: 'SubTitle',
       componentProps: {
         title: Mock.Random.ctitle(),
       },
@@ -43,7 +43,7 @@ const generationFunctions = {
   genDataCard() {
     return {
       id: Mock.Random.id(),
-      componentType: 'Title',
+      componentType: 'DataCard',
       componentProps: {
         title: Mock.Random.ctitle(),
         content: Mock.Random.natural(1, 999),
@@ -66,7 +66,7 @@ const generationFunctions = {
         data: Array.from({ length: Mock.Random.natural(4, 10) }).map(() => ({
           label: Mock.Random.cword(2, 4),
           value: Mock.Random.csentence(2, 10),
-          span: Mock.Random.natural(1, column),
+          // span: Mock.Random.natural(1, column),
         })),
       },
     }
@@ -192,9 +192,7 @@ const generationFunctions = {
       id: Mock.Random.id(),
       componentType: 'LineChart',
       componentProps: {
-        xAxis: Array.from({ length: Mock.Random.natural(1, 6) }).map(() =>
-          Mock.Random.cword(1, 4),
-        ),
+        xAxis: Array.from({ length: num }).map(() => Mock.Random.cword(1, 4)),
         series: Array.from({ length: Mock.Random.natural(1, 4) }).map(() => ({
           name: Mock.Random.cword(1, 4),
           data: Array.from({ length: num }).map(() =>
@@ -213,9 +211,7 @@ const generationFunctions = {
       id: Mock.Random.id(),
       componentType: 'BarChart',
       componentProps: {
-        xAxis: Array.from({ length: Mock.Random.natural(1, 6) }).map(() =>
-          Mock.Random.cword(1, 4),
-        ),
+        xAxis: Array.from({ length: num }).map(() => Mock.Random.cword(1, 4)),
         series: Array.from({ length: Mock.Random.natural(1, 4) }).map(() => ({
           name: Mock.Random.cword(1, 4),
           data: Array.from({ length: num }).map(() =>

@@ -3,7 +3,7 @@
     class="h-screen w-screen flex flex-col overflow-hidden bg-[#001231] text-white"
   >
     <!-- 顶部 -->
-    <Header />
+    <Header class="z-2" />
 
     <div class="min-h-0 flex flex-1">
       <!-- 左侧 -->
@@ -55,11 +55,9 @@
             >
               {{ `${layoutState.bottom ? '折叠' : '展开'}图例` }}
             </div>
-            <div
-              class="trigger border-x border-y-0 border-light-6 border-solid px-2 py-1"
-            >
-              全部隐藏
-            </div>
+            <div class="w-1px bg-[#ffe14d] py-1 opacity-50" />
+            <div class="trigger px-2 py-1">全部隐藏</div>
+            <div class="w-1px bg-[#ffe14d] py-1 opacity-50" />
             <div class="trigger px-2 py-1">全部显示</div>
           </div>
         </div>
@@ -103,7 +101,7 @@ const layoutState = reactive({
 
 <style scoped>
 .trigger {
-  @apply cursor-pointer bg-blue opacity-50 hover:opacity-100 select-none;
+  @apply cursor-pointer opacity-50 hover:opacity-100 select-none bg-[#007fd9];
 }
 
 .arrow {

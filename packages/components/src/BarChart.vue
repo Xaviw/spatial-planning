@@ -109,6 +109,7 @@ const option = ref<EChartsOption>({
       name: item.name,
       data: item.data,
       barWidth: item.barWidth,
+      barMaxWidth: 30,
       showBackground: true,
       backgroundStyle: {
         color: 'rgba(255,255,255,0.1)',

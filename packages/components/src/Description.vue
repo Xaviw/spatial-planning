@@ -28,7 +28,7 @@ interface DescriptionItem {
 
 const props = withDefaults(
   defineProps<
-    typeof descriptionsProps & {
+    ReturnType<typeof descriptionsProps> & {
       data: DescriptionItem[]
     }
   >(),

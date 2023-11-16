@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full overflow-auto">
+  <div class="h-full overflow-auto" ref="siderRef">
     <component
       v-for="item of list"
       :key="item.id"
@@ -19,6 +19,8 @@ const props = defineProps<{
   position: 'left' | 'right'
 }>()
 
+const siderRef = ref<HTMLDivElement | null>(null)
+
 const list = ref<SiderItem[]>([])
 const route = useRoute()
 
@@ -27,6 +29,7 @@ watchEffect(() => {
   if (menuId) {
     getSider(props.position, menuId).then(res => {
       list.value = res
+      siderRef.value?.scrollTo({ top: 0, behavior: 'smooth' })
     })
   }
 })
