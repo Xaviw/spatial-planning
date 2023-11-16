@@ -2,49 +2,33 @@
   <AMenu
     forceSubMenuRender
     mode="horizontal"
-    :items="items"
-    v-model:selectedKeys="selectedKeys"
+    :items="menu"
+    v-model:selectedKeys="menuIds"
     @click="handleClick"
   />
 </template>
 
 <script setup lang="ts">
-import { getMenu } from '@sp/shared'
-import { message, type MenuProps } from 'ant-design-vue'
-import { ref } from 'vue'
-import type { Menu } from '#/client'
-
-const items = ref<Menu[]>([])
-
-const selectedKeys = ref<string[]>([])
+import { type MenuProps } from 'ant-design-vue'
+import { useMenuStore } from '@/store/menu'
 
 const route = useRoute()
 const router = useRouter()
 
+const menuStore = useMenuStore()
+const { menu, menuIds } = storeToRefs(menuStore)
+const { isIncluded, getFirstMenu, setMenuId } = menuStore
+
 watchEffect(() => {
-  const menuId = route.params.id as string
-  if (menuId) {
-    selectedKeys.value = [menuId]
+  const paramId = route.params.id as string
+
+  if (menu.value.length && (!paramId || !isIncluded(paramId))) {
+    const firstId = getFirstMenu()
+    router.replace('/' + firstId)
+  } else if (menu.value.length) {
+    setMenuId(paramId)
   }
 })
-
-getMenu()
-  .then(res => {
-    items.value = res
-    if (!route.params.id) {
-      router.replace(getFirstMenu(res))
-    }
-  })
-  .catch(() => {
-    message.error('获取菜单失败，请尝试刷新页面！')
-  })
-
-function getFirstMenu(data: Menu[]) {
-  if (data[0].children?.length) {
-    return getFirstMenu(data[0].children)
-  }
-  return data[0].key
-}
 
 const handleClick: MenuProps['onClick'] = ({ key }) => {
   router.push(key as string)

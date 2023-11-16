@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import { descriptionsProps } from 'ant-design-vue/es/descriptions/index'
+import { ExtractPropTypes } from 'vue'
 
 interface DescriptionItem {
   /** 字段标题 */
@@ -28,7 +29,7 @@ interface DescriptionItem {
 
 const props = withDefaults(
   defineProps<
-    ReturnType<typeof descriptionsProps> & {
+    Partial<ExtractPropTypes<ReturnType<typeof descriptionsProps>>> & {
       data: DescriptionItem[]
     }
   >(),

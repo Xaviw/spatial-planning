@@ -14,13 +14,7 @@ useMap({
     mapStyle: 'amap://styles/blue',
     zooms: [5, 24],
     zoom: 18,
-    showLabel: false,
-    showIndoorMap: true,
   },
-})
-
-onMounted(() => {
-  console.log(2)
 })
 </script>
 

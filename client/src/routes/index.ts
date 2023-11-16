@@ -11,5 +11,9 @@ export default createRouter({
       path: '/:id?',
       component: () => import('../views/home.vue'),
     },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
   ],
 })

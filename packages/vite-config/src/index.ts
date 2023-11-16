@@ -47,8 +47,7 @@ export const appConfig = defineConfig({
   ],
   resolve: {
     alias: {
-      '@/': resolve(__dirname, '/src/'),
-      '#/': resolve(__dirname, '../types/'),
+      '@/': '/src/',
     },
   },
 })

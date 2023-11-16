@@ -14,6 +14,7 @@
 import components from '@sp/components'
 import { getSider } from '@sp/shared'
 import type { SiderItem } from '#/client'
+import { useMenuStore } from '@/store/menu'
 
 const props = defineProps<{
   position: 'left' | 'right'
@@ -22,12 +23,14 @@ const props = defineProps<{
 const siderRef = ref<HTMLDivElement | null>(null)
 
 const list = ref<SiderItem[]>([])
-const route = useRoute()
+
+const { menuIds } = storeToRefs(useMenuStore())
 
 watchEffect(() => {
-  const menuId = route.params.id as string
+  const menuId = menuIds.value?.[0]
+
   if (menuId) {
-    getSider(props.position, menuId).then(res => {
+    getSider(props.position, menuId[0]).then(res => {
       list.value = res
       siderRef.value?.scrollTo({ top: 0, behavior: 'smooth' })
     })
