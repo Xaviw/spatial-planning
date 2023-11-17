@@ -19,18 +19,26 @@ const menuStore = useMenuStore()
 const { menu, menuIds } = storeToRefs(menuStore)
 const { isIncluded, getFirstMenu, setMenuId } = menuStore
 
-watchEffect(() => {
-  const paramId = route.params.id as string
+// 仅监听params.id，手动选择菜单时可以避免没必要的判断触发
+watch(
+  [menu, () => route.params.id as string],
+  ([menuData, paramsId]) => {
+    if (!menuData.length || paramsId === menuIds.value?.[0]) return
 
-  if (menu.value.length && (!paramId || !isIncluded(paramId))) {
-    const firstId = getFirstMenu()
-    router.replace('/' + firstId)
-  } else if (menu.value.length) {
-    setMenuId(paramId)
-  }
-})
+    // 没有选择菜单或菜单key错误时，切换到第一个菜单
+    if (!paramsId || !isIncluded(paramsId)) {
+      const firstId = getFirstMenu()
+      setMenuId(firstId)
+      router.replace('/' + firstId)
+    } else {
+      setMenuId(paramsId)
+    }
+  },
+  { immediate: true },
+)
 
 const handleClick: MenuProps['onClick'] = ({ key }) => {
+  setMenuId(key as string)
   router.push(key as string)
 }
 </script>

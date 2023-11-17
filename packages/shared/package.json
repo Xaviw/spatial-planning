@@ -4,9 +4,13 @@
   "private": true,
   "description": "通用工具库",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "/index.ts",
   "scripts": {
     "clean": "rimraf node_modules dist",
     "lint": "eslint --max-warnings 0 --fix && prettier --write ."
+  },
+  "dependencies": {
+    "echarts": "^5.4.3",
+    "vue-echarts": "^6.6.1"
   }
 }

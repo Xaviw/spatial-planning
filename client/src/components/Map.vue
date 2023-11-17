@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMap } from '@sp/shared'
+import { useMap } from '@sp/shared/hooks'
 
 const container = ref<HTMLDivElement | null>(null)
 

@@ -1,4 +1,4 @@
-import Modal from '@sp/components/src/Modal/index.vue'
+import { Modal } from '@sp/shared/components'
 import { h, render, VNode } from 'vue'
 import type { ModalProps } from 'ant-design-vue/es/modal/index'
 

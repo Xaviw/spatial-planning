@@ -37,9 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import components from '@sp/components'
-import ContentWrapper from '@sp/components/src/ContentWrapper/index.vue'
-import { useModal } from '@sp/shared'
+import { components, ContentWrapper } from '@sp/shared/components'
+import { useModal } from '@sp/shared/hooks'
 import { cloneDeep, merge } from 'lodash-es'
 import { h } from 'vue'
 import type { ComponentItem } from '#/client'

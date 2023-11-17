@@ -5,7 +5,9 @@ export default [
   {
     url: '/api/sider',
     method: 'get',
-    response: () => genList(8, 50, false),
+    timeout: 500,
+    statusCode: 200,
+    response: () => ({ code: 1, data: genList(8, 50, false), message: 'ok' }),
   },
 ] as MockMethod[]
 

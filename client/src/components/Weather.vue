@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { useScript } from '@sp/shared'
+import { useScript } from '@sp/shared/hooks'
 
 onMounted(() => {
   window.WIDGET = {

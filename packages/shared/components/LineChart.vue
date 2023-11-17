@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { color } from '@sp/shared'
+import { color } from '@sp/shared/utils'
 import { LineChart } from 'echarts/charts'
 import { GridComponent } from 'echarts/components'
 import { use } from 'echarts/core'

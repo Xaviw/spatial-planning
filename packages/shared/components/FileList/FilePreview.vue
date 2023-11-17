@@ -1,7 +1,7 @@
 <template>
   <Modal
     :modelValue="modelValue"
-    @update:modelValue="e => $emit('update:modelValue', e)"
+    @update:modelValue="(e: any) => $emit('update:modelValue', e)"
   >
     <i
       class="i-svg-spinners:12-dots-scale-rotate absolute left-50% top-50% translate--50% text-4xl"
@@ -31,8 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import Modal from '@sp/components/src/Modal/index.vue'
-import { MediaEnum } from '@sp/shared'
+import { Modal } from '@sp/shared/components'
+import { MediaEnum } from '@sp/shared/utils'
 import { ref, watch } from 'vue'
 
 const props = withDefaults(

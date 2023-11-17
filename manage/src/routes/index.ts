@@ -10,6 +10,9 @@ export default createRouter({
     {
       path: '/login',
       component: () => import('../views/login.vue'),
+      meta: {
+        layout: 'custom',
+      },
     },
     {
       path: '/menu',
@@ -26,6 +29,10 @@ export default createRouter({
     {
       path: '/map',
       component: () => import('../views/map.vue'),
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      component: () => import('../views/notFound.vue'),
     },
   ],
 })

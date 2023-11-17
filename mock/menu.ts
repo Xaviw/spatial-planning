@@ -5,8 +5,11 @@ export default [
   {
     url: '/api/menu',
     method: 'get',
-    response: () =>
-      [
+    timeout: 500,
+    statusCode: 200,
+    response: () => ({
+      code: 1,
+      data: [
         {
           key: '1',
           label: '工作组',
@@ -44,5 +47,7 @@ export default [
           ],
         },
       ] as Menu[],
+      message: 'ok',
+    }),
   },
 ] as MockMethod[]

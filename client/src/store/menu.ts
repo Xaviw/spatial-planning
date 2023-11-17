@@ -1,4 +1,4 @@
-import { getMenu as getMenuApi } from '@sp/shared'
+import { getMenu as getMenuApi } from '@sp/shared/apis'
 import { message } from 'ant-design-vue'
 import { Menu } from '#/client'
 
@@ -8,6 +8,7 @@ export const useMenuStore = defineStore('menu', () => {
   const menuIds = ref<string[]>()
 
   getMenuApi()
+    .send()
     .then(res => (menu.value = res))
     .catch(() => {
       message.error('菜单获取失败，请尝试刷新页面！')

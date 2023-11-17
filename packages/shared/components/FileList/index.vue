@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { MediaEnum } from '@sp/shared'
+import { MediaEnum } from '@sp/shared/utils'
 import { computed, reactive } from 'vue'
 import FilePreview from './FilePreview.vue'
 import type { ColProps } from 'ant-design-vue/es/col/index'

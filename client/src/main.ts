@@ -1,4 +1,4 @@
-import { extendErrorHandler } from '@sp/shared'
+import { setErrorHandler } from '@sp/shared/utils'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './routes'
@@ -9,4 +9,6 @@ const pinia = createPinia()
 
 createApp(App).use(router).use(pinia).mount('#app')
 
-extendErrorHandler()
+setErrorHandler(() => {
+  console.log('client error')
+})
