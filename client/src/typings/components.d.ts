@@ -26,6 +26,7 @@ declare module 'vue' {
     AProgress: (typeof import('ant-design-vue/es'))['Progress']
     ARow: (typeof import('ant-design-vue/es'))['Row']
     ASpace: (typeof import('ant-design-vue/es'))['Space']
+    ASpin: (typeof import('ant-design-vue/es'))['Spin']
     ATable: (typeof import('ant-design-vue/es'))['Table']
     ATimeline: (typeof import('ant-design-vue/es'))['Timeline']
     ATimelineItem: (typeof import('ant-design-vue/es'))['TimelineItem']

@@ -16,19 +16,29 @@ export default createRouter({
     },
     {
       path: '/menu',
+      name: 'menu',
       component: () => import('../views/menu.vue'),
     },
     {
       path: '/sidebar',
+      name: 'sidebar',
       component: () => import('../views/sidebar.vue'),
+      meta: {
+        keepAlive: true,
+      },
     },
     {
       path: '/legend',
+      name: 'legend',
       component: () => import('../views/legend.vue'),
     },
     {
       path: '/map',
+      name: 'map',
       component: () => import('../views/map.vue'),
+      meta: {
+        keepAlive: true,
+      },
     },
     {
       path: '/:pathMatch(.*)*',

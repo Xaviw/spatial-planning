@@ -1,3 +1,7 @@
-<template>menu</template>
+<template>
+  <p @click="num++">menu{{ num }}</p>
+</template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const num = ref(0)
+</script>

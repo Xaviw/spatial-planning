@@ -1,13 +1,15 @@
 <template>
-  <div class="h-full overflow-auto" ref="siderRef">
-    <component
-      v-for="item of data"
-      :key="item.id"
-      :is="components[item.componentType]"
-      v-bind="item.componentProps"
-      class="mb-2"
-    />
-  </div>
+  <ASpin :delay="300" :spinning="loading" wrapperClassName="h-full">
+    <div class="h-full overflow-auto" ref="siderRef">
+      <component
+        v-for="item of data"
+        :key="item.id"
+        :is="components[item.componentType]"
+        v-bind="item.componentProps"
+        class="mb-2"
+      />
+    </div>
+  </ASpin>
 </template>
 
 <script setup lang="ts">
@@ -21,16 +23,34 @@ const props = defineProps<{
 }>()
 
 const siderRef = ref<HTMLDivElement | null>(null)
-const { menuIds } = storeToRefs(useMenuStore())
-const menuId = computed(() => menuIds.value?.[0])
+const { selectedKeys } = storeToRefs(useMenuStore())
+const menuId = computed(() => selectedKeys.value[selectedKeys.value.length - 1])
+const loading = ref(false)
 
-const { data, onSuccess } = useWatcher(
-  () => getSider(props.position, menuIds.value![0]),
+const { data, onSuccess, onComplete } = useWatcher(
+  () => {
+    loading.value = true
+    return getSider(props.position, menuId.value)
+  },
   [menuId],
-  { immediate: false, initialData: [] },
+  { immediate: false, initialData: [], sendable: () => !!menuId.value },
 )
 
 onSuccess(() => {
   siderRef.value?.scrollTo({ top: 0, behavior: 'smooth' })
 })
+
+onComplete(() => {
+  loading.value = false
+})
 </script>
+
+<style>
+.ant-spin-container {
+  height: 100%;
+}
+
+.ant-spin {
+  max-height: none !important;
+}
+</style>

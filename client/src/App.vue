@@ -46,21 +46,9 @@ dayjs.locale('zh-cn')
 </script>
 
 <style>
-::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
-}
-::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background-color: #21b1ff66;
-  border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background-color: #21b1ff;
-}
-::-webkit-scrollbar-thumb:active {
-  background-color: #21b1ff;
+@import url('@sp/shared/styles/common.css');
+
+.wv-lt-refresh {
+  display: none !important;
 }
 </style>

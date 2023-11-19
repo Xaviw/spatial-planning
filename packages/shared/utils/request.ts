@@ -36,6 +36,8 @@ export const request = createAlova({
     return json.data
   },
   timeout: 1000 * 60,
+  // 默认不使用缓存
+  localCache: null,
 })
 
 /** 用于不同子包设置不同的错误处理逻辑，主要是401处理 */

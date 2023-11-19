@@ -3,7 +3,7 @@
     class="h-screen w-screen flex flex-col overflow-hidden bg-[#001231] text-white"
   >
     <!-- 顶部 -->
-    <Header class="z-2" />
+    <Header class="z-201" />
 
     <div class="min-h-0 flex flex-1">
       <!-- 左侧 -->

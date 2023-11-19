@@ -1,47 +1,80 @@
-import { getMenu as getMenuApi } from '@sp/shared/apis'
+import { getMenu as getMenuApi, getSider } from '@sp/shared/apis'
+import { useFetcher } from 'alova'
 import { message } from 'ant-design-vue'
 import { Menu } from '#/client'
 
-export const useMenuStore = defineStore('menu', () => {
-  const menu = ref<Menu[]>([])
+export interface HandledMenu extends Menu {
+  index: number
+  keys: string[]
+  labels: string[]
+  children?: HandledMenu[]
+}
 
-  const menuIds = ref<string[]>()
+export const useMenuStore = defineStore('menu', () => {
+  const menu = ref<HandledMenu[]>([])
+
+  const selectedKeys = ref<string[]>([])
+
+  const keysMap = ref<Map<string, HandledMenu>>(new Map())
 
   getMenuApi()
     .send()
-    .then(res => (menu.value = res))
+    .then(res => {
+      menu.value = transformMenu(res)
+    })
     .catch(() => {
       message.error('菜单获取失败，请尝试刷新页面！')
     })
 
-  function setMenuId(id: string) {
-    menuIds.value = [id]
+  const { fetch } = useFetcher()
+
+  function setSelectMenu(item: HandledMenu) {
+    selectedKeys.value = item.keys
+    menu.value[item.index].label = item.labels.join('-')
   }
 
-  function getFirstMenu(data: Menu[] = menu.value) {
+  // 处理菜单数组格式，并记录全部key
+  function transformMenu(
+    data: Menu[],
+    parentData: Pick<HandledMenu, 'keys' | 'labels'> = {
+      keys: [],
+      labels: [],
+    },
+    index?: number,
+  ) {
+    return data.map((item, i) => {
+      const handledMenu = {
+        ...item,
+        index: index ?? i,
+        keys: [...parentData.keys, item.key],
+        labels: [...parentData.labels, item.label],
+      } as HandledMenu
+
+      handledMenu.children = item.children?.length
+        ? transformMenu(item.children, handledMenu, index ?? i)
+        : undefined
+
+      keysMap.value.set(item.key, handledMenu)
+
+      fetch(getSider('left', item.key))
+      fetch(getSider('right', item.key))
+
+      return handledMenu
+    })
+  }
+
+  function getFirstMenu(data: HandledMenu[] = menu.value) {
     if (data[0].children?.length) {
       return getFirstMenu(data[0].children)
     }
-    return data[0].key
+    return data[0]
   }
 
-  function isIncluded(key: string) {
-    const queue: Menu[] = []
-
-    for (const menuItem of menu.value) {
-      queue.push(menuItem)
-
-      while (queue.length) {
-        const current = queue.shift() as Menu
-        if (current.key === key) return true
-        if (current.children?.length) {
-          queue.push(...current.children)
-        }
-      }
-    }
-
-    return false
+  return {
+    menu,
+    selectedKeys,
+    keysMap,
+    setSelectMenu,
+    getFirstMenu,
   }
-
-  return { menu, menuIds, setMenuId, getFirstMenu, isIncluded }
 })
