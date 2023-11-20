@@ -11,9 +11,7 @@
           colorBgContainer: 'rgb(3, 135, 206)',
         },
         Modal: {
-          paddingMD: 0,
-          paddingContentHorizontalLG: 0,
-          colorBgElevated: 'transparent',
+          colorBgElevated: '#001231',
         },
         Menu: {
           colorItemTextHover: '#ffe14d',

@@ -5,7 +5,7 @@ export default [
   {
     url: '/api/menu',
     method: 'get',
-    timeout: 1000,
+    timeout: 5000,
     statusCode: 200,
     response: () => ({
       code: 1,

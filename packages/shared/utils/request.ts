@@ -1,11 +1,15 @@
 import { createAlova } from 'alova'
 import GlobalFetch from 'alova/GlobalFetch'
 import vueHook from 'alova/vue'
-import { message } from 'ant-design-vue'
+import { message, notification, Modal } from 'ant-design-vue'
 import type { Res } from '#/request'
 
-type ErrorHandler = (res: Res<any>) => void | Promise<void>
+type ErrorHandler = (
+  response: Response,
+  result?: Res<any>,
+) => void | Promise<void>
 
+// 存储子包错误处理器
 let errorHandler: ErrorHandler
 
 const errorMessage: Record<number, string> = {
@@ -16,31 +20,69 @@ const errorMessage: Record<number, string> = {
   500: '服务器出错了，请稍后再试！',
 }
 
+const [notify] = notification.useNotification()
+
 export const request = createAlova({
   baseURL: '/api',
   statesHook: vueHook,
   requestAdapter: GlobalFetch(),
-  responded: async response => {
-    const json = await response.json()
+  responded: {
+    async onSuccess(response, method) {
+      let json: Res<any> | undefined
+      let errMsg: string
 
-    if (response.status >= 400 || !json.code) {
-      message.error(
-        json.message || errorMessage[response.status] || response.statusText,
-      )
+      try {
+        json = await response.json()
+        // eslint-disable-next-line no-empty
+      } catch {}
 
-      await errorHandler(json)
+      if (!response.ok || !json?.code) {
+        errMsg =
+          json?.message || errorMessage[response.status] || response.statusText
 
-      return Promise.reject(json)
-    }
+        const msgMode = method.meta?.errorMessageMode
 
-    return json.data
+        if (msgMode === 'notify') {
+          notify.error({
+            message: '出错了！',
+            description: errMsg,
+            placement: 'topRight',
+          })
+        } else if (msgMode === 'modal') {
+          Modal.error({
+            title: '出错了！',
+            content: errMsg,
+            centered: true,
+            keyboard: false,
+            mask: false,
+            okText: '确定',
+          })
+        } else if (msgMode === 'message' || msgMode !== 'none') {
+          message.error(errMsg)
+        }
+
+        await errorHandler(response, json)
+
+        return Promise.reject(json)
+      }
+
+      return method.meta?.isReturnNativeResponse ? response : json.data
+    },
+    onError(error: Error) {
+      if (error.message?.includes('network timeout')) {
+        message.error('请求超时，请稍后再试！')
+      } else if (error.message?.includes('Failed to fetch')) {
+        message.error('请求失败，请检查您的网络！')
+      }
+    },
   },
   timeout: 1000 * 60,
   // 默认不使用缓存
   localCache: null,
+  cacheLogger: false,
 })
 
-/** 用于不同子包设置不同的错误处理逻辑，主要是401处理 */
+/** 用于不同子包设置包含业务逻辑的错误处理，例如401 */
 export function setErrorHandler(handler: ErrorHandler) {
   errorHandler = handler
 }

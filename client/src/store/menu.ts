@@ -1,6 +1,8 @@
 import { getMenu as getMenuApi, getSider } from '@sp/shared/apis'
+import { useLoading } from '@sp/shared/hooks'
 import { useFetcher } from 'alova'
-import { message } from 'ant-design-vue'
+import { Modal } from 'ant-design-vue'
+import { createVNode } from 'vue'
 import { Menu } from '#/client'
 
 export interface HandledMenu extends Menu {
@@ -17,16 +19,14 @@ export const useMenuStore = defineStore('menu', () => {
 
   const keysMap = ref<Map<string, HandledMenu>>(new Map())
 
-  getMenuApi()
-    .send()
-    .then(res => {
-      menu.value = transformMenu(res)
-    })
-    .catch(() => {
-      message.error('菜单获取失败，请尝试刷新页面！')
-    })
-
   const { fetch } = useFetcher()
+
+  onMounted(() => {
+    const [openLoading, closeLoading] = useLoading()
+    setTimeout(() => {
+      getMenu(openLoading, closeLoading)
+    })
+  })
 
   function setSelectMenu(item: HandledMenu) {
     selectedKeys.value = item.keys
@@ -68,6 +68,42 @@ export const useMenuStore = defineStore('menu', () => {
       return getFirstMenu(data[0].children)
     }
     return data[0]
+  }
+
+  function getMenu(openLoading: () => void, closeLoading: () => void) {
+    openLoading()
+    getMenuApi()
+      .send()
+      .then(res => {
+        menu.value = transformMenu(res)
+      })
+      .catch(() => {
+        Modal.confirm({
+          title: '菜单请求失败！',
+          content: '是否尝试重新获取菜单？',
+          centered: true,
+          keyboard: false,
+          maskClosable: false,
+          icon: createVNode('span', {
+            class: 'i-ant-design:close-circle-filled anticon',
+            style: {
+              color: '#ff4d4f',
+              flex: 'none',
+              marginInlineEnd: '12px',
+              fontSize: '22px',
+            },
+          }),
+          cancelButtonProps: {
+            ghost: true,
+          },
+          onOk: () => {
+            getMenu(openLoading, closeLoading)
+          },
+        })
+      })
+      .finally(() => {
+        closeLoading()
+      })
   }
 
   return {

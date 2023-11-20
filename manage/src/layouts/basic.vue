@@ -8,9 +8,7 @@
           class="i-streamline:ecology-science-planet-solar-system-ring-planet-saturn-space-astronomy"
         />
 
-        <span class="ml-4 tracking-widest">
-          {{ AppTitle }}
-        </span>
+        <span class="ml-4 tracking-widest">{{ AppTitle }}后台</span>
       </div>
 
       <ADropdown>
@@ -36,8 +34,8 @@
           @click="onMenuClick"
         />
       </ALayoutSider>
-      <ALayoutContent class="p-4">
-        <div class="h-full overflow-auto">
+      <ALayoutContent class="bg-gray-2 p-4">
+        <div class="h-full overflow-auto bg-white shadow">
           <slot />
         </div>
       </ALayoutContent>

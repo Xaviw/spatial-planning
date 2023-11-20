@@ -8,6 +8,7 @@
       padding: 0,
       background: 'transparent',
     }"
+    wrapClassName="sp-modal"
     v-bind="$attrs"
     :open="modelValue"
     @update:open="(e: boolean) => $emit('update:modelValue', e)"
@@ -29,3 +30,9 @@ defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 </script>
+
+<style>
+.sp-modal .ant-modal-content {
+  padding: 0 !important;
+}
+</style>

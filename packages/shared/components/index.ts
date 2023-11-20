@@ -6,6 +6,7 @@ import DataCard from './DataCard.vue'
 import Description from './Description.vue'
 import FileList from './FileList/index.vue'
 import LineChart from './LineChart.vue'
+import Loading from './Loading/index.vue'
 import Modal from './Modal/index.vue'
 import Progress from './Progress.vue'
 import SubTitle from './SubTitle.vue'
@@ -46,6 +47,7 @@ export {
   SubTitle,
   Progress,
   LineChart,
+  Loading,
   Description,
   DataCard,
   Collapse,

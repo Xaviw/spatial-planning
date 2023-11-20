@@ -1,14 +1,27 @@
 <template>
   <AConfigProvider :locale="zhCN">
     <RouterView #default="{ Component, route }">
-      <component :is="Component" v-if="route.meta.layout === 'custom'" />
+      <component
+        :is="Component"
+        :key="route.name"
+        v-if="route.meta?.layout === 'custom'"
+      />
 
       <BasicLayout v-else>
         <KeepAlive>
-          <component :is="Component" v-if="route.meta.keepAlive" />
+          <component
+            :is="Component"
+            :key="route.name"
+            v-if="route.meta?.keepAlive"
+          />
+          <div v-else></div>
         </KeepAlive>
 
-        <component :is="Component" v-if="!route.meta.keepAlive" />
+        <component
+          :is="Component"
+          :key="route.name"
+          v-if="!route.meta?.keepAlive"
+        />
       </BasicLayout>
     </RouterView>
   </AConfigProvider>

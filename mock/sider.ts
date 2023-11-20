@@ -5,7 +5,7 @@ export default [
   {
     url: '/api/sider',
     method: 'get',
-    timeout: 2000,
+    timeout: 1000,
     statusCode: 200,
     response: () => ({ code: 1, data: genList(8, 50, false), message: 'ok' }),
   },

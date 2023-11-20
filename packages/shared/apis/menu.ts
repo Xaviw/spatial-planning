@@ -2,5 +2,9 @@ import { request } from '../utils/request'
 import type { Menu } from '#/client'
 
 export function getMenu() {
-  return request.Get<Menu[]>('/menu')
+  const method = request.Get<Menu[]>('/menu')
+  method.meta = {
+    errorMessageMode: 'none',
+  }
+  return method
 }

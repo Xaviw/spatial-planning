@@ -1,20 +1,19 @@
 <template>
-  <ASpin :delay="300" :spinning="loading" wrapperClassName="h-full">
-    <div class="h-full overflow-auto" ref="siderRef">
-      <component
-        v-for="item of data"
-        :key="item.id"
-        :is="components[item.componentType]"
-        v-bind="item.componentProps"
-        class="mb-2"
-      />
-    </div>
-  </ASpin>
+  <div class="relative h-full overflow-auto" ref="siderRef">
+    <component
+      v-for="item of data"
+      :key="item.id"
+      :is="components[item.componentType]"
+      v-bind="item.componentProps"
+      class="mb-2"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
 import { getSider } from '@sp/shared/apis'
 import { components } from '@sp/shared/components'
+import { useLoading } from '@sp/shared/hooks'
 import { useWatcher } from 'alova'
 import { useMenuStore } from '@/store/menu'
 
@@ -25,11 +24,16 @@ const props = defineProps<{
 const siderRef = ref<HTMLDivElement | null>(null)
 const { selectedKeys } = storeToRefs(useMenuStore())
 const menuId = computed(() => selectedKeys.value[selectedKeys.value.length - 1])
-const loading = ref(false)
+const [openLoading, closeLoading] = useLoading({
+  target: siderRef,
+  props: {
+    absolute: true,
+  },
+})
 
 const { data, onSuccess, onComplete } = useWatcher(
   () => {
-    loading.value = true
+    openLoading()
     return getSider(props.position, menuId.value)
   },
   [menuId],
@@ -41,7 +45,7 @@ onSuccess(() => {
 })
 
 onComplete(() => {
-  loading.value = false
+  closeLoading()
 })
 </script>
 
