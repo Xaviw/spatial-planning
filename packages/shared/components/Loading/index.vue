@@ -15,7 +15,6 @@ export interface LoadingProps {
   absolute: boolean
   loading: boolean
   background: string
-  theme: 'dark' | 'light'
 }
 
 withDefaults(
@@ -25,7 +24,6 @@ withDefaults(
     absolute?: boolean
     loading?: boolean
     background?: string
-    theme?: 'dark' | 'light'
   }>(),
   {
     tip: '',
@@ -47,6 +45,6 @@ withDefaults(
   justify-content: center;
   width: 100%;
   height: 100%;
-  background-color: rgb(240 242 245 / 20%);
+  background-color: rgb(240 242 245 / 30%);
 }
 </style>

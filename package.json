@@ -33,6 +33,7 @@
     ]
   },
   "dependencies": {
+    "@alova/scene-vue": "^1.2.1",
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@sp/shared": "workspace:^",
     "@wangeditor/editor": "^5.1.23",

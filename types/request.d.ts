@@ -7,11 +7,13 @@ export interface Res<T> {
   message: string
 }
 
+export interface RequestMeta {
+  isReturnNativeResponse?: boolean
+  errorMessageMode?: 'message' | 'modal' | 'notify' | 'none'
+}
+
 declare module 'alova' {
   export interface Method {
-    meta: {
-      isReturnNativeResponse?: boolean
-      errorMessageMode?: 'message' | 'modal' | 'notify' | 'none'
-    }
+    meta: RequestMeta
   }
 }
