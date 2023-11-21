@@ -5,7 +5,11 @@
 <script setup lang="ts">
 import { color } from '@sp/shared/utils'
 import { LineChart } from 'echarts/charts'
-import { GridComponent, TooltipComponent } from 'echarts/components'
+import {
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+} from 'echarts/components'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { ref } from 'vue'
@@ -14,11 +18,15 @@ import type { LineSeriesOption } from 'echarts/charts'
 import type {
   GridComponentOption,
   TooltipComponentOption,
+  LegendComponentOption,
 } from 'echarts/components'
 import type { ComposeOption } from 'echarts/core'
 
 type EChartsOption = ComposeOption<
-  TooltipComponentOption | GridComponentOption | LineSeriesOption
+  | LegendComponentOption
+  | TooltipComponentOption
+  | GridComponentOption
+  | LineSeriesOption
 >
 
 const props = withDefaults(
@@ -55,7 +63,13 @@ const props = withDefaults(
   },
 )
 
-use([GridComponent, TooltipComponent, LineChart, CanvasRenderer])
+use([
+  LegendComponent,
+  GridComponent,
+  TooltipComponent,
+  LineChart,
+  CanvasRenderer,
+])
 
 const option = ref<EChartsOption>({
   color,

@@ -1,4 +1,4 @@
-import type { Menu } from '../types/client'
+import type { MenuItem } from '../types/client'
 import type { MockMethod } from 'vite-plugin-mock'
 
 export default [
@@ -7,47 +7,94 @@ export default [
     method: 'get',
     timeout: 1000,
     statusCode: 200,
-    response: () => ({
-      code: 1,
-      data: [
+    response: () => {
+      const data: MenuItem[] = [
         {
-          key: '1',
-          label: '工作组',
+          id: '1',
+          name: '工作组',
+          status: true,
+          sort: 1,
           children: [
             {
-              key: '11',
-              label: '工作组1',
+              id: '11',
+              name: '工作组1',
+              status: true,
+              sort: 1,
             },
             {
-              key: '12',
-              label: '工作组2',
-            },
-            {
-              key: '13',
-              label: '工作组3',
-            },
-            {
-              key: '14',
-              label: '工作组4',
-            },
-            {
-              key: '15',
-              label: '工作组5',
+              id: '12',
+              name: '工作组2',
+              status: true,
+              sort: 2,
               children: [
                 {
-                  key: '111',
-                  label: '工作组5-1',
+                  id: '121',
+                  name: '工作组2-1',
+                  status: true,
+                  sort: 1,
                 },
                 {
-                  key: '112',
-                  label: '工作组5-2',
+                  id: '122',
+                  name: '工作组2-2',
+                  status: true,
+                  sort: 2,
                 },
               ],
             },
+            {
+              id: '13',
+              name: '工作组3',
+              status: true,
+              sort: 3,
+            },
           ],
         },
-      ] as Menu[],
-      message: 'ok',
-    }),
+      ]
+
+      return {
+        code: 1,
+        data,
+        message: 'ok',
+      }
+    },
+  },
+  {
+    url: '/api/menu',
+    method: 'post',
+    timeout: 1000,
+    statusCode: 200,
+    response: () => {
+      return {
+        code: 1,
+        data: true,
+        message: 'ok',
+      }
+    },
+  },
+  {
+    url: '/api/menu',
+    method: 'put',
+    timeout: 1000,
+    statusCode: 200,
+    response: () => {
+      return {
+        code: 1,
+        data: true,
+        message: 'ok',
+      }
+    },
+  },
+  {
+    url: '/api/menu',
+    method: 'delete',
+    timeout: 1000,
+    statusCode: 200,
+    response: () => {
+      return {
+        code: 1,
+        data: true,
+        message: 'ok',
+      }
+    },
   },
 ] as MockMethod[]

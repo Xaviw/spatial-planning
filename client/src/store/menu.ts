@@ -3,9 +3,11 @@ import { useLoading } from '@sp/shared/hooks'
 import { useFetcher } from 'alova'
 import { Modal } from 'ant-design-vue'
 import { createVNode } from 'vue'
-import { Menu } from '#/client'
+import type { MenuItem } from '#/client'
 
-export interface HandledMenu extends Menu {
+export interface HandledMenu {
+  label: string
+  key: string
   index: number
   keys: string[]
   labels: string[]
@@ -35,7 +37,7 @@ export const useMenuStore = defineStore('menu', () => {
 
   // 处理菜单数组格式，并记录全部key
   function transformMenu(
-    data: Menu[],
+    data: MenuItem[],
     parentData: Pick<HandledMenu, 'keys' | 'labels'> = {
       keys: [],
       labels: [],
@@ -44,20 +46,21 @@ export const useMenuStore = defineStore('menu', () => {
   ) {
     return data.map((item, i) => {
       const handledMenu = {
-        ...item,
+        key: item.id,
+        label: item.name,
         index: index ?? i,
-        keys: [...parentData.keys, item.key],
-        labels: [...parentData.labels, item.label],
+        keys: [...parentData.keys, item.id],
+        labels: [...parentData.labels, item.name],
       } as HandledMenu
 
       handledMenu.children = item.children?.length
         ? transformMenu(item.children, handledMenu, index ?? i)
         : undefined
 
-      keysMap.value.set(item.key, handledMenu)
+      keysMap.value.set(item.id, handledMenu)
 
-      fetch(getSider('left', item.key))
-      fetch(getSider('right', item.key))
+      fetch(getSider('left', item.id))
+      fetch(getSider('right', item.id))
 
       return handledMenu
     })
@@ -72,7 +75,7 @@ export const useMenuStore = defineStore('menu', () => {
 
   function getMenu(openLoading: () => void, closeLoading: () => void) {
     openLoading()
-    getMenuApi()
+    getMenuApi(true)
       .send()
       .then(res => {
         menu.value = transformMenu(res)

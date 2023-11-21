@@ -35,9 +35,7 @@
         />
       </ALayoutSider>
       <ALayoutContent class="bg-gray-2 p-4">
-        <div class="h-full overflow-auto">
-          <slot />
-        </div>
+        <slot />
       </ALayoutContent>
     </ALayout>
   </ALayout>

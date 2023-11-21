@@ -1,5 +1,6 @@
 export * from './enums'
 export * from './request'
+export * from './modal'
 
 export const color = [
   '#05f8d6',
