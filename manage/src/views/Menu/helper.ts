@@ -38,11 +38,11 @@ export function move(
   },
 ) {
   const { oldIndex, oldParent, currentIndex, currentParent } = data
-  let node: DataNode = { key: 1 }
+  let node: DataNode | undefined
 
   if (oldParent) {
     loop(treeData, oldParent, item => {
-      node = item.children![data.oldIndex]
+      node = item.children![oldIndex]
       item.children?.splice(oldIndex, 1)
     })
   } else {
@@ -50,9 +50,14 @@ export function move(
     treeData.splice(oldIndex, 1)
   }
 
+  if (!node) {
+    throw new Error('未获取到拖拽节点！')
+  }
+
   if (currentParent) {
     loop(treeData, currentParent, item => {
-      item.splice(currentIndex, 0, node)
+      item.children = item.children || []
+      item.children.splice(currentIndex, 0, node!)
     })
   } else {
     treeData.splice(currentIndex, 0, node)

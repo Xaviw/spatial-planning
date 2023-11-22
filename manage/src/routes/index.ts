@@ -17,7 +17,7 @@ export default createRouter({
     {
       path: '/menu',
       name: 'menu',
-      component: () => import('../views/Menu/index.vue'),
+      component: () => import('../views/Menu/normal.vue'),
     },
     {
       path: '/sidebar',

@@ -3,7 +3,7 @@
     <Loading :loading="getting" absolute />
 
     <div
-      class="mr-2 max-w-150 min-w-50 flex flex-basis-30% flex-col bg-white p-4"
+      class="mr-2 max-w-150 min-w-84 flex flex-basis-30% flex-col bg-white p-4"
     >
       <div class="flex items-center justify-between">
         <AAlert showIcon class="mr-4 flex-1">
@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <div class="flex flex-1 justify-center overflow-auto bg-white pt-24">
+    <div class="flex flex-1 justify-center overflow-auto bg-white px-4 pt-24">
       <div class="max-w-150 w-full">
         <AForm
           :disabled="!selectedKeys[0]"
@@ -77,11 +77,34 @@
         </AForm>
       </div>
     </div>
+
+    <div class="absolute bottom-0 right-0 w-40">
+      <div
+        v-for="(sm, i) in waitingSilentQueue"
+        :key="sm.id"
+        class="method-item"
+      >
+        <div v-if="i > 0" class="status">
+          <div :class="['point', i > 0 ? 'waiting' : 'acting']"></div>
+          {{ i > 0 ? 'waiting' : 'acting' }}
+        </div>
+        <div v-else class="status">
+          <div class="error-tag">×</div>
+          请求错误
+        </div>
+        <span>[{{ sm.entity.type }}]{{ sm.entity.url }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { filterSilentMethods, useSQRequest } from '@alova/scene-vue'
+import {
+  filterSilentMethods,
+  updateStateEffect,
+  useSQRequest,
+  silentQueueMap,
+} from '@alova/scene-vue'
 import {
   getMenu,
   setMenu,
@@ -99,6 +122,23 @@ import type {
   DataNode,
   AntTreeNodeDropEvent,
 } from 'ant-design-vue/es/tree'
+
+const waitingSilentQueue = ref<any[]>([])
+const customDefaultQueue: any[] = []
+const originalPush = customDefaultQueue.push
+const originalShift = customDefaultQueue.shift
+customDefaultQueue.push = function (...items) {
+  waitingSilentQueue.value.push(...items)
+  console.log('waitingSilentQueue: ', waitingSilentQueue.value)
+  return originalPush.call(this, ...items)
+}
+customDefaultQueue.shift = function () {
+  const silentMethodInstance = originalShift.call(this)
+  waitingSilentQueue.value.shift()
+  console.log('waitingSilentQueue: ', waitingSilentQueue.value)
+  return silentMethodInstance
+}
+silentQueueMap.default = customDefaultQueue
 
 const getDefaultFormData = () => ({
   id: '',
@@ -182,19 +222,25 @@ const { send: sendAdd, onSuccess: onAddSuccess } = useSQRequest(
   {
     behavior: 'silent',
     immediate: false,
+    silentDefaultResponse: () => '-',
   },
 )
 
-onAddSuccess(({ sendArgs: [data], silentMethod }) => {
-  add(treeData.value, data)
+onAddSuccess(({ sendArgs: [reqData], data, silentMethod }) => {
+  console.log('data: ', data, reqData)
+  // add(treeData.value, { ...reqData, id: data })
   cancel()
   if (silentMethod) {
     silentMethod.reviewData = {
       operate: 'add',
-      data,
+      data: { ...reqData, id: data },
     }
     silentMethod.save()
   }
+  updateStateEffect(getMenu<DataNode[]>(false), menuData => {
+    add(menuData, { ...reqData, id: data })
+    return menuData
+  })
 })
 
 const { send: sendMove, onSuccess: onMoveSuccess } = useSQRequest(
@@ -216,9 +262,12 @@ onMoveSuccess(({ sendArgs: [data], silentMethod }) => {
   }
 })
 
-const { validateInfos, validate, clearValidate } = Form.useForm(formData, {
-  name: [{ required: true, message: '请填写菜单名称！' }],
-})
+const { validateInfos, validate, clearValidate } = Form.useForm(
+  formData,
+  reactive({
+    name: [{ required: true, message: '请填写菜单名称！' }],
+  }),
+)
 
 // 新增时值为[-1, parentKey || -1(根目录时)]
 const selectedKeys = ref<Key[]>([])
