@@ -1,3 +1,4 @@
+import { bootSilentFactory } from '@alova/scene-vue'
 import { createAlova } from 'alova'
 import GlobalFetch from 'alova/GlobalFetch'
 import vueHook from 'alova/vue'
@@ -80,6 +81,10 @@ export const request = createAlova({
   // 默认不使用缓存
   localCache: null,
   cacheLogger: false,
+})
+
+bootSilentFactory({
+  alova: request,
 })
 
 /** 用于不同子包设置包含业务逻辑的错误处理，例如401 */

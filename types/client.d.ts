@@ -12,7 +12,7 @@ export interface MenuItem {
   id: string
   parentId?: string
   name: string
-  sort: number
+  sort?: number
   status: boolean
   children?: MenuItem[]
 }

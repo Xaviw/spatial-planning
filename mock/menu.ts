@@ -1,3 +1,4 @@
+import Mock from 'mockjs'
 import type { MenuItem } from '../types/client'
 import type { MockMethod } from 'vite-plugin-mock'
 
@@ -66,7 +67,7 @@ export default [
     response: () => {
       return {
         code: 1,
-        data: true,
+        data: Mock.Random.id(),
         message: 'ok',
       }
     },
@@ -87,6 +88,19 @@ export default [
   {
     url: '/api/menu',
     method: 'delete',
+    timeout: 1000,
+    statusCode: 200,
+    response: () => {
+      return {
+        code: 1,
+        data: true,
+        message: 'ok',
+      }
+    },
+  },
+  {
+    url: '/api/menu/move',
+    method: 'post',
     timeout: 1000,
     statusCode: 200,
     response: () => {
