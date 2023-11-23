@@ -33,7 +33,11 @@
               <AButton type="link" class="ml-2" @click.stop="onAdd(item.id)">
                 新增
               </AButton>
-              <AButton type="link" danger @click.stop="onRemove(item.id)">
+              <AButton
+                type="link"
+                danger
+                @click.stop="onRemove(item.id, item.name)"
+              >
                 删除
               </AButton>
             </div>
@@ -78,22 +82,38 @@
       </div>
     </div>
 
-    <div class="absolute bottom-0 right-0 w-40">
-      <div
+    <div class="absolute bottom-0 right-0 min-w-60">
+      <AAlert
         v-for="(sm, i) in waitingSilentQueue"
         :key="sm.id"
-        class="method-item"
+        class="mb-1"
+        :message="sm.reviewData?.info"
+        :description="
+          sm.reviewData?.error
+            ? '该操作及后续操作失败，请尝试重试或刷新页面后重新操作'
+            : undefined
+        "
+        :type="sm.reviewData?.error ? 'error' : i === 0 ? 'info' : 'warning'"
+        showIcon
       >
-        <div v-if="i > 0" class="status">
-          <div :class="['point', i > 0 ? 'waiting' : 'acting']"></div>
-          {{ i > 0 ? 'waiting' : 'acting' }}
-        </div>
-        <div v-else class="status">
-          <div class="error-tag">×</div>
-          请求错误
-        </div>
-        <span>[{{ sm.entity.type }}]{{ sm.entity.url }}</span>
-      </div>
+        <template #icon v-if="!sm.reviewData?.error">
+          <ASpin size="small" v-if="i === 0" />
+          <ASpin size="small" style="visibility: hidden" v-else />
+        </template>
+
+        <template #action>
+          <AButton
+            size="small"
+            type="primary"
+            ghost
+            class="ml-4"
+            v-if="sm.reviewData?.error"
+            @click="retry"
+          >
+            重试
+          </AButton>
+        </template>
+      </AAlert>
     </div>
   </div>
 </template>
@@ -104,6 +124,7 @@ import {
   updateStateEffect,
   useSQRequest,
   silentQueueMap,
+  onSilentSubmitFail,
 } from '@alova/scene-vue'
 import {
   getMenu,
@@ -127,18 +148,32 @@ const waitingSilentQueue = ref<any[]>([])
 const customDefaultQueue: any[] = []
 const originalPush = customDefaultQueue.push
 const originalShift = customDefaultQueue.shift
+const originalSplice = customDefaultQueue.splice
 customDefaultQueue.push = function (...items) {
   waitingSilentQueue.value.push(...items)
-  console.log('waitingSilentQueue: ', waitingSilentQueue.value)
   return originalPush.call(this, ...items)
 }
 customDefaultQueue.shift = function () {
-  const silentMethodInstance = originalShift.call(this)
   waitingSilentQueue.value.shift()
-  console.log('waitingSilentQueue: ', waitingSilentQueue.value)
-  return silentMethodInstance
+  return originalShift.call(this)
+}
+customDefaultQueue.splice = function (
+  ...args: Parameters<typeof Array.prototype.splice>
+) {
+  waitingSilentQueue.value.splice(...args)
+  return originalSplice.call(this, ...args)
 }
 silentQueueMap.default = customDefaultQueue
+
+onUnmounted(() => {
+  console.log('unmounted')
+  silentQueueMap.default.forEach(method => method.remove())
+})
+
+onMounted(() => {
+  console.log('onMounted')
+  silentQueueMap.default.forEach(method => method.remove())
+})
 
 const getDefaultFormData = () => ({
   id: '',
@@ -154,7 +189,7 @@ const {
   loading: getting,
   onSuccess: onGetSuccess,
 } = useSQRequest(() => getMenu<DataNode[]>(false), {
-  behavior: 'silent',
+  behavior: 'static',
   initialData: [],
 })
 
@@ -183,7 +218,7 @@ const { send: sendRemove, onSuccess: onRemoveSuccess } = useSQRequest(
   },
 )
 
-onRemoveSuccess(({ sendArgs: [id], silentMethod }) => {
+onRemoveSuccess(({ sendArgs: [id, name], silentMethod }) => {
   remove(treeData.value, id)
   if (selectedKeys.value[0] === id) {
     cancel()
@@ -192,6 +227,9 @@ onRemoveSuccess(({ sendArgs: [id], silentMethod }) => {
     silentMethod.reviewData = {
       operate: 'remove',
       data: { id },
+      info: `删除：${name}`,
+      id,
+      retry: sendRemove.bind(null, id, name),
     }
     silentMethod.save()
   }
@@ -212,6 +250,9 @@ onUpdateSuccess(({ sendArgs: [data], silentMethod }) => {
     silentMethod.reviewData = {
       operate: 'update',
       data,
+      info: `修改：${data.name}`,
+      id: data.id,
+      retry: sendUpdate.bind(null, data),
     }
     silentMethod.save()
   }
@@ -227,13 +268,14 @@ const { send: sendAdd, onSuccess: onAddSuccess } = useSQRequest(
 )
 
 onAddSuccess(({ sendArgs: [reqData], data, silentMethod }) => {
-  console.log('data: ', data, reqData)
-  // add(treeData.value, { ...reqData, id: data })
   cancel()
   if (silentMethod) {
     silentMethod.reviewData = {
       operate: 'add',
       data: { ...reqData, id: data },
+      info: `新增：${reqData.name}`,
+      id: data,
+      retry: sendAdd.bind(null, reqData),
     }
     silentMethod.save()
   }
@@ -251,16 +293,31 @@ const { send: sendMove, onSuccess: onMoveSuccess } = useSQRequest(
   },
 )
 
-onMoveSuccess(({ sendArgs: [data], silentMethod }) => {
+onMoveSuccess(({ sendArgs: [data, name], silentMethod }) => {
   move(treeData.value, data)
   if (silentMethod) {
     silentMethod.reviewData = {
       operate: 'move',
       data,
+      info: `移动：${name}`,
+      id: data.id,
+      retry: sendMove.bind(null, data, name),
     }
     silentMethod.save()
   }
 })
+
+onSilentSubmitFail(({ silentMethod, error }) => {
+  if (!silentMethod) return
+  waitingSilentQueue.value[0].reviewData = {
+    ...(silentMethod.reviewData || {}),
+    error,
+  }
+})
+
+function retry(task: any) {
+  task.reviewData?.retry?.()
+}
 
 const { validateInfos, validate, clearValidate } = Form.useForm(
   formData,
@@ -294,11 +351,11 @@ async function onAdd(id: Key = -1) {
   formData.value = { ...getDefaultFormData(), parentId, parentName }
 }
 
-async function onRemove(id: Key) {
+async function onRemove(id: Key, name: string) {
   await modal('confirm', {
     content: '该节点及其子节点将被删除，且不可恢复，是否确认删除？',
   })
-  sendRemove(id)
+  sendRemove(id, name)
 }
 
 async function onConfirm() {
@@ -331,12 +388,16 @@ function onDrop(e: AntTreeNodeDropEvent) {
     currentParent = e.node.key!
   }
 
-  sendMove({
-    oldIndex: oldIndex!,
-    oldParent,
-    currentIndex: currentIndex!,
-    currentParent,
-  })
+  sendMove(
+    {
+      oldIndex: oldIndex!,
+      oldParent,
+      currentIndex: currentIndex!,
+      currentParent,
+      id: e.dragNode.key,
+    },
+    e.dragNode.name,
+  )
 }
 
 function cancel() {

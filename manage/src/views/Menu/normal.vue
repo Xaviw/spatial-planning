@@ -1,6 +1,6 @@
 <template>
   <div class="relative h-full flex">
-    <Loading :loading="loading" absolute />
+    <Loading :loading="getting || setting || moving || removing" absolute />
 
     <div
       class="mr-2 max-w-150 min-w-84 flex flex-basis-30% flex-col bg-white p-4"
@@ -21,6 +21,7 @@
           v-if="treeData.length"
           defaultExpandAll
           draggable
+          autoExpandParent
           :treeData="treeData"
           :fieldNames="{ title: 'name', key: 'id' }"
           :selectedKeys="selectedKeys"
@@ -93,56 +94,56 @@ import { Loading } from '@sp/shared/components'
 import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { Form, message } from 'ant-design-vue'
-import { loop } from './helper'
+import { loop, add, move, remove, update } from './helper'
 import type { MenuItem } from '#/client'
-import type { Key } from 'ant-design-vue/es/_util/type'
 import type {
   EventDataNode,
-  DataNode,
   AntTreeNodeDropEvent,
 } from 'ant-design-vue/es/tree'
 
-// 新增时值为[-1, parentKey || -1(根目录时)]
-const selectedKeys = ref<Key[]>([])
+// 新增时值为['-1', parentKey || '-1'(根目录时)]
+const selectedKeys = ref<string[]>([])
+
+const { data: treeData, loading: getting } = useRequest(
+  getMenu(false, 'message'),
+  {
+    initialData: [],
+  },
+)
 
 const {
-  data: treeData,
-  loading,
-  send: sendGet,
-} = useRequest(getMenu<DataNode[]>(false, 'message'), {
-  initialData: [],
+  send: sendRemove,
+  onSuccess: onRemoveSuccess,
+  loading: removing,
+} = useRequest(id => removeMenu(id), {
+  immediate: false,
 })
 
-const { send: sendRemove, onSuccess: onRemoveSuccess } = useRequest(
-  id => removeMenu(id),
-  {
-    immediate: false,
-  },
-)
-
-const { send: sendMoving, onSuccess: onMoveSuccess } = useRequest(
-  data => moveMenu(data),
-  {
-    immediate: false,
-  },
-)
+const {
+  send: sendMove,
+  onSuccess: onMoveSuccess,
+  loading: moving,
+} = useRequest(data => moveMenu(data), {
+  immediate: false,
+})
 
 const {
-  data: formData,
+  form: formData,
   onSuccess: onSetSuccess,
   updateForm,
   reset: resetForm,
   send: sendSet,
+  loading: setting,
 } = useForm<MenuItem & { parentName: string }>(
   formData => {
-    if (selectedKeys.value[0] !== -1) {
+    if (selectedKeys.value[0] !== '-1') {
       return setMenu(formData)
     } else {
       return addMenu(formData)
     }
   },
   {
-    initialData: { status: true },
+    initialForm: { status: true } as any,
   },
 )
 
@@ -155,21 +156,32 @@ const { validateInfos, validate, clearValidate } = Form.useForm(
 
 async function onConfirm() {
   await validate()
+  if (selectedKeys.value[0] !== '-1' && !hasModify()) {
+    message.warn('未修改任何数据！')
+    return
+  }
   sendSet()
 }
 
-onSetSuccess(() => {
-  sendGet()
+onSetSuccess(({ data }) => {
   message.success('成功！')
+  if (selectedKeys.value[0] === '-1') {
+    add(treeData.value, { ...formData.value, id: data })
+  } else {
+    update(treeData.value, formData.value)
+  }
   cancel()
 })
-onRemoveSuccess(() => {
-  sendGet()
+onRemoveSuccess(({ sendArgs: [id] }) => {
   message.success('删除成功！')
+  remove(treeData.value, id)
+  if (selectedKeys.value[0] === id) {
+    cancel()
+  }
 })
-onMoveSuccess(() => {
-  sendGet()
+onMoveSuccess(({ sendArgs: [param] }) => {
   message.success('移动成功！')
+  move(treeData.value, param)
 })
 
 async function onMenuClick(_: MouseEvent, node: EventDataNode) {
@@ -182,7 +194,7 @@ async function onMenuClick(_: MouseEvent, node: EventDataNode) {
   })
 }
 
-async function onAdd(id: Key = -1) {
+async function onAdd(id: string = '-1') {
   await confirmSwitch(id)
   cancel()
   let parentId,
@@ -191,7 +203,7 @@ async function onAdd(id: Key = -1) {
     parentId = item.id
     parentName = item.name
   })
-  selectedKeys.value = [-1, id]
+  selectedKeys.value = ['-1', id]
   resetForm()
   updateForm({ parentId, parentName })
 }
@@ -209,23 +221,31 @@ async function onRemove(id: string) {
 
 function onDrop(e: AntTreeNodeDropEvent) {
   let oldIndex: number,
-    oldParent: Key | undefined,
+    oldParent: string | undefined,
     currentIndex: number,
-    currentParent: Key | undefined
+    currentParent: string | undefined
 
-  loop(treeData.value, e.dragNode.key, (_item, index, _data, parent) => {
-    oldIndex = index
-    oldParent = parent?.id
-  })
+  loop(
+    treeData.value,
+    e.dragNode.key as string,
+    (_item, index, _data, parent) => {
+      oldIndex = index
+      oldParent = parent?.id
+    },
+  )
 
   if (e.dropToGap) {
     currentIndex = e.dropPosition
-    loop(treeData.value, e.node.key, (_item, _index, _data, parent) => {
-      currentParent = parent?.id
-    })
+    loop(
+      treeData.value,
+      e.node.key as string,
+      (_item, _index, _data, parent) => {
+        currentParent = parent?.id
+      },
+    )
   } else {
     currentIndex = 0
-    currentParent = e.node.key!
+    currentParent = e.node.key as string
   }
 
   const param = {
@@ -236,7 +256,18 @@ function onDrop(e: AntTreeNodeDropEvent) {
     id: e.dragNode.key,
   }
 
-  sendMoving(param)
+  sendMove(param)
+}
+
+function hasModify() {
+  const id = selectedKeys.value[0]
+  let flag = false
+  if (!id || id === '-1') return flag
+  loop(treeData.value, id, item => {
+    flag =
+      item.name !== formData.value.name || item.status !== formData.value.status
+  })
+  return flag
 }
 
 function cancel() {
@@ -245,12 +276,14 @@ function cancel() {
   selectedKeys.value = []
 }
 
-function confirmSwitch(id: Key) {
+function confirmSwitch(id: string) {
   if (selectedKeys.value[0] === id) return
-  if (selectedKeys.value[0] && id !== -1) {
+  if (selectedKeys.value[0] && id !== '-1' && hasModify()) {
     return modal('confirm', {
       title: '警告',
       content: '您当前的编辑还未保存，是否确认切换？',
+    }).then(() => {
+      selectedKeys.value = [id]
     })
   } else {
     selectedKeys.value = [id]

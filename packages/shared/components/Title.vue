@@ -77,8 +77,8 @@ function onOpenDetail() {
       () =>
         props.modalData!.map(comp =>
           h(
-            components[comp.componentType],
-            merge(cloneDeep(comp.componentProps), {
+            components[comp.type],
+            merge(cloneDeep(comp.props), {
               style: { marginBottom: '0.5rem' },
             }),
           ),

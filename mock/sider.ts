@@ -22,8 +22,8 @@ const generationFunctions = {
   genTitle(isInModal: boolean): any {
     return {
       id: Mock.Random.id(),
-      componentType: 'Title',
-      componentProps: {
+      type: 'Title',
+      props: {
         title: Mock.Random.ctitle(),
         modalData: isInModal ? [] : genList(3, 18, true),
         modalTitle: Mock.Random.ctitle(),
@@ -35,8 +35,8 @@ const generationFunctions = {
   genSubTitle() {
     return {
       id: Mock.Random.id(),
-      componentType: 'SubTitle',
-      componentProps: {
+      type: 'SubTitle',
+      props: {
         title: Mock.Random.ctitle(),
       },
     }
@@ -45,8 +45,8 @@ const generationFunctions = {
   genDataCard() {
     return {
       id: Mock.Random.id(),
-      componentType: 'DataCard',
-      componentProps: {
+      type: 'DataCard',
+      props: {
         title: Mock.Random.ctitle(),
         content: Mock.Random.natural(1, 999),
         imgSrc: Mock.Random.image(
@@ -62,8 +62,8 @@ const generationFunctions = {
     const column = Mock.Random.natural(1, 3)
     return {
       id: Mock.Random.id(),
-      componentType: 'Description',
-      componentProps: {
+      type: 'Description',
+      props: {
         column,
         data: Array.from({ length: Mock.Random.natural(4, 10) }).map(() => ({
           label: Mock.Random.cword(2, 4),
@@ -78,8 +78,8 @@ const generationFunctions = {
     const column = Mock.Random.natural(3, 8)
     return {
       id: Mock.Random.id(),
-      componentType: 'Table',
-      componentProps: {
+      type: 'Table',
+      props: {
         data: [
           Array.from({ length: column }).map(() => Mock.Random.ctitle(1, 4)),
           ...Array.from({ length: Mock.Random.natural(3, 10) }).map(() =>
@@ -95,8 +95,8 @@ const generationFunctions = {
   genFileList() {
     return {
       id: Mock.Random.id(),
-      componentType: 'FileList',
-      componentProps: {
+      type: 'FileList',
+      props: {
         data: [
           {
             title: '图片',
@@ -138,8 +138,8 @@ const generationFunctions = {
   genCarousel() {
     return {
       id: Mock.Random.id(),
-      componentType: 'Carousel',
-      componentProps: {
+      type: 'Carousel',
+      props: {
         data: Array.from({ length: Mock.Random.natural(3, 5) }).map(() =>
           Mock.Random.image(
             `${Mock.Random.natural(300, 400)}x${Mock.Random.natural(200, 300)}`,
@@ -154,8 +154,8 @@ const generationFunctions = {
   genCollapse() {
     return {
       id: Mock.Random.id(),
-      componentType: 'Collapse',
-      componentProps: {
+      type: 'Collapse',
+      props: {
         title: Mock.Random.ctitle(),
         content: `<p>${Mock.Random.cparagraph()}</p>`,
       },
@@ -165,8 +165,8 @@ const generationFunctions = {
   genTimeline() {
     return {
       id: Mock.Random.id(),
-      componentType: 'Timeline',
-      componentProps: {
+      type: 'Timeline',
+      props: {
         data: Array.from({ length: Mock.Random.natural(3, 7) }).map(() => ({
           content: Mock.Random.ctitle(),
           color: Mock.Random.color(),
@@ -178,8 +178,8 @@ const generationFunctions = {
   genPieChart() {
     return {
       id: Mock.Random.id(),
-      componentType: 'PieChart',
-      componentProps: {
+      type: 'PieChart',
+      props: {
         data: Array.from({ length: Mock.Random.natural(3, 8) }).map(() => ({
           name: Mock.Random.cword(2, 4),
           value: Mock.Random.natural(1, 99),
@@ -192,8 +192,8 @@ const generationFunctions = {
     const num = Mock.Random.natural(4, 10)
     return {
       id: Mock.Random.id(),
-      componentType: 'LineChart',
-      componentProps: {
+      type: 'LineChart',
+      props: {
         xAxis: Array.from({ length: num }).map(() => Mock.Random.cword(1, 4)),
         series: Array.from({ length: Mock.Random.natural(1, 4) }).map(() => ({
           name: Mock.Random.cword(1, 4),
@@ -211,8 +211,8 @@ const generationFunctions = {
     const num = Mock.Random.natural(4, 10)
     return {
       id: Mock.Random.id(),
-      componentType: 'BarChart',
-      componentProps: {
+      type: 'BarChart',
+      props: {
         xAxis: Array.from({ length: num }).map(() => Mock.Random.cword(1, 4)),
         series: Array.from({ length: Mock.Random.natural(1, 4) }).map(() => ({
           name: Mock.Random.cword(1, 4),
@@ -227,8 +227,8 @@ const generationFunctions = {
   genProgress() {
     return {
       id: Mock.Random.id(),
-      componentType: 'Progress',
-      componentProps: {
+      type: 'Progress',
+      props: {
         data: Array.from({ length: Mock.Random.natural(3, 10) }).map(() => ({
           name: Mock.Random.ctitle(),
           value: Mock.Random.natural(0, 100),

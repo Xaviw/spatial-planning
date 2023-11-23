@@ -1,16 +1,15 @@
-import type { Key } from 'ant-design-vue/es/_util/type'
-import type { DataNode } from 'ant-design-vue/es/tree'
+import type { MenuItem } from '#/client'
 
 export function loop(
-  data: DataNode[],
-  key: Key,
+  data: MenuItem[],
+  key: string,
   callback: (
-    item: DataNode,
+    item: MenuItem,
     index: number,
-    data: DataNode[],
-    parent?: DataNode,
+    data: MenuItem[],
+    parent?: MenuItem,
   ) => void,
-  parent?: DataNode,
+  parent?: MenuItem,
 ) {
   data.forEach((item, index) => {
     if (item.id === key) {
@@ -22,23 +21,23 @@ export function loop(
   })
 }
 
-export function remove(treeData: DataNode[], id: string) {
+export function remove(treeData: MenuItem[], id: string) {
   loop(treeData, id, (_item, index, data) => {
     data.splice(index, 1)
   })
 }
 
 export function move(
-  treeData: DataNode[],
+  treeData: MenuItem[],
   data: {
     oldIndex: number
-    oldParent?: Key
+    oldParent?: string
     currentIndex: number
-    currentParent?: Key
+    currentParent?: string
   },
 ) {
   const { oldIndex, oldParent, currentIndex, currentParent } = data
-  let node: DataNode | undefined
+  let node: MenuItem | undefined
 
   if (oldParent) {
     loop(treeData, oldParent, item => {
@@ -64,13 +63,13 @@ export function move(
   }
 }
 
-export function update(treeData: DataNode[], data: DataNode) {
+export function update(treeData: MenuItem[], data: MenuItem) {
   loop(treeData, data.id, (item, index, arr) => {
     arr[index] = { ...item, ...data }
   })
 }
 
-export function add(treeData: DataNode[], data: DataNode) {
+export function add(treeData: MenuItem[], data: MenuItem) {
   if (!data.parentId) {
     treeData.push(data)
   } else {

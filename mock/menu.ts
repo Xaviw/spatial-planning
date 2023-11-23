@@ -62,7 +62,7 @@ export default [
   {
     url: '/api/menu',
     method: 'post',
-    timeout: 5000,
+    timeout: 1000,
     statusCode: 200,
     response: () => {
       return {

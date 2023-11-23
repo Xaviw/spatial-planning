@@ -1,7 +1,7 @@
 export interface ComponentItem {
   id: string
-  componentType: string
-  componentProps: Recordable
+  type: string
+  props: Recordable
 }
 
 export interface SiderItem extends ComponentItem {

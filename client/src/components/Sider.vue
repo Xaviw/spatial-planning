@@ -3,8 +3,8 @@
     <component
       v-for="item of data"
       :key="item.id"
-      :is="components[item.componentType]"
-      v-bind="item.componentProps"
+      :is="components[item.type]"
+      v-bind="item.props"
       class="mb-2"
     />
   </div>

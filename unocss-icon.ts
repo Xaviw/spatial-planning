@@ -8,4 +8,8 @@ export const icons = [
   'i-mdi:file-pdf',
   'i-mdi:file',
   'i-ant-design:close-circle-filled',
+  'i-ant-design:menu-outlined',
+  'i-zondicons:show-sidebar',
+  'i-gis:map-legend',
+  'i-material-symbols:map',
 ]
