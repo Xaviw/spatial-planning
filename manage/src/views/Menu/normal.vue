@@ -47,7 +47,7 @@
       <div class="max-w-150 w-full">
         <AForm
           :disabled="!selectedKeys[0]"
-          :labelCol="{ style: { width: '100px' } }"
+          :labelCol="{ style: { width: '82px' } }"
         >
           <AFormItem
             label="父级菜单"
