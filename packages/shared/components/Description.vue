@@ -37,8 +37,16 @@ const props = withDefaults(
 )
 </script>
 
-<style>
-.ant-descriptions-view {
+<style scoped>
+:deep(.ant-descriptions-view) {
   border-radius: 0 !important;
+}
+
+:deep(.ant-descriptions-item-label) {
+  color: #fff;
+}
+
+:deep(.ant-descriptions-item-content) {
+  color: #fff;
 }
 </style>

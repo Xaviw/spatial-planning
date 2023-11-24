@@ -57,10 +57,12 @@ export const useMenuStore = defineStore('menu', () => {
         ? transformMenu(item.children, handledMenu, index ?? i)
         : undefined
 
-      keysMap.value.set(item.id, handledMenu)
+      if (!item.children?.length) {
+        keysMap.value.set(item.id, handledMenu)
+      }
 
-      fetch(getSider('left', item.id))
-      fetch(getSider('right', item.id))
+      fetch(getSider({ position: 'left', menuId: item.id, filter: true }))
+      fetch(getSider({ position: 'right', menuId: item.id, filter: true }))
 
       return handledMenu
     })

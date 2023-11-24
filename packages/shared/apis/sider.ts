@@ -1,9 +1,13 @@
 import { request } from '../utils/request'
-import type { SiderItem } from '#/client'
+import type { SiderPosition, SiderItem } from '#/client'
 
-export function getSider(position: 'left' | 'right', menuId: string) {
+export function getSider(params: {
+  menuId: string
+  filter: boolean
+  position: SiderPosition
+}) {
   return request.Get<SiderItem[]>('/sider', {
-    params: { position, menuId },
+    params,
     localCache: 100 * 60 * 5,
   })
 }

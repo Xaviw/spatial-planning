@@ -29,8 +29,11 @@ const props = withDefaults(defineProps<Timeline>(), {
 })
 </script>
 
-<style>
-.ant-timeline-item:last-of-type {
+<style scoped>
+:deep(.ant-timeline-item:last-of-type) {
   padding-bottom: 0;
+}
+:deep(.ant-timeline) {
+  color: #fff;
 }
 </style>

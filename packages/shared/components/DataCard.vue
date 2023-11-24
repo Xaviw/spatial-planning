@@ -5,12 +5,12 @@
     <div
       class="relative flex items-center justify-center border-24px border-[#0E4A85] border-l-[#053670] border-solid"
     >
-      <div class="absolute" v-if="imgSrc">
+      <div class="absolute" v-if="img">
         <AImage
           :width="imgWidth > 48 || imgWidth < 20 ? 36 : imgWidth"
           :height="imgHeight > 48 || imgHeight < 20 ? 36 : imgHeight"
           :preview="imgPreview"
-          :src="imgSrc"
+          :src="img"
         >
           <template #previewMask>
             <i class="i-ant-design:eye-outlined" />
@@ -50,7 +50,7 @@ withDefaults(
      */
     imgPreview?: boolean
     /** 图片链接 */
-    imgSrc?: string
+    img?: string
     /** 标题 */
     title: string
     /** 内容 */

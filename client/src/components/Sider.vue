@@ -15,10 +15,11 @@ import { getSider } from '@sp/shared/apis'
 import { components } from '@sp/shared/components'
 import { useLoading } from '@sp/shared/hooks'
 import { useWatcher } from 'alova'
+import type { SiderPosition } from '#/client'
 import { useMenuStore } from '@/store/menu'
 
 const props = defineProps<{
-  position: 'left' | 'right'
+  position: SiderPosition
 }>()
 
 const siderRef = ref<HTMLDivElement | null>(null)
@@ -34,7 +35,11 @@ const [openLoading, closeLoading] = useLoading({
 const { data, onSuccess, onComplete } = useWatcher(
   () => {
     openLoading()
-    return getSider(props.position, menuId.value)
+    return getSider({
+      position: props.position,
+      menuId: menuId.value,
+      filter: true,
+    })
   },
   [menuId],
   { immediate: false, initialData: [], sendable: () => !!menuId.value },

@@ -32,23 +32,26 @@ const props = defineProps<{
 }>()
 </script>
 
-<style>
-:root {
-  --w-e-textarea-bg-color: transparent;
-  --w-e-textarea-color: #fff;
-}
-
-.ant-collapse-header {
+<style scoped>
+:deep(.ant-collapse-header) {
   align-items: center !important;
+  color: #fff !important;
 }
 
-.ant-collapse-header-text {
+:deep(.ant-collapse-header-text) {
   color: #ffd15c;
   font-size: 1.25rem;
   font-weight: bold;
 }
 
-.ant-collapse-content-box {
+:deep(.ant-collapse-content-box) {
   padding: 0 16px 12px 16px !important;
+}
+</style>
+
+<style>
+:root {
+  --w-e-textarea-bg-color: transparent;
+  --w-e-textarea-color: #fff;
 }
 </style>

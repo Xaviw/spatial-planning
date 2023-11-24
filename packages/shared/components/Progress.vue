@@ -33,7 +33,7 @@
           type === 'circle' && 'mt-2',
         ]"
       >
-        <span class="text-[#587396]">{{ item.name }}</span>
+        <span>{{ item.name }}</span>
         <span v-if="!showInfo">{{ formatter(item) }}</span>
       </div>
 

@@ -34,6 +34,7 @@ declare module 'vue' {
     ASpin: (typeof import('ant-design-vue/es'))['Spin']
     ASwitch: (typeof import('ant-design-vue/es'))['Switch']
     ATable: (typeof import('ant-design-vue/es'))['Table']
+    ATag: (typeof import('ant-design-vue/es'))['Tag']
     ATimeline: (typeof import('ant-design-vue/es'))['Timeline']
     ATimelineItem: (typeof import('ant-design-vue/es'))['TimelineItem']
     ATree: (typeof import('ant-design-vue/es'))['Tree']

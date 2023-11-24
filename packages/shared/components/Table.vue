@@ -47,25 +47,30 @@ const rowClassName = (_: Recordable, index: number) =>
   index === 0 ? 'table-head' : index % 2 === 1 ? 'table-odd' : 'table-even'
 </script>
 
-<style>
-.ant-table {
+<style scoped>
+:deep(.ant-table) {
   background: transparent !important;
+  color: #fff !important;
 }
 
-td {
+:deep(.ant-table-row > td) {
   border: none !important;
 }
 
-.table-head {
+:deep(.ant-table-cell-row-hover) {
+  background-color: rgb(3, 135, 206) !important;
+}
+
+:global(.table-head) {
   background-color: rgba(3, 135, 206, 0.5);
   font-weight: bold;
 }
 
-.table-odd {
+:global(.table-odd) {
   background-color: rgba(3, 149, 206, 0.2);
 }
 
-.table-even {
+:global(.table-even) {
   background-color: rgba(3, 157, 206, 0.1);
 }
 </style>

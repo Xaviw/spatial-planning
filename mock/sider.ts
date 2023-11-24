@@ -49,7 +49,7 @@ const generationFunctions = {
       props: {
         title: Mock.Random.ctitle(),
         content: Mock.Random.natural(1, 999),
-        imgSrc: Mock.Random.image(
+        img: Mock.Random.image(
           `${Mock.Random.natural(300, 400)}x${Mock.Random.natural(200, 300)}`,
           Mock.Random.color(),
           Mock.Random.color(),

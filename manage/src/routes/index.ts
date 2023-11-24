@@ -17,12 +17,12 @@ export default createRouter({
     {
       path: '/menu',
       name: 'menu',
-      component: () => import('../views/Menu/normal.vue'),
+      component: () => import('../views/menu/normal.vue'),
     },
     {
       path: '/sidebar',
       name: 'sidebar',
-      component: () => import('../views/sidebar.vue'),
+      component: () => import('../views/sidebar/index.vue'),
       meta: {
         keepAlive: true,
       },
@@ -30,12 +30,12 @@ export default createRouter({
     {
       path: '/legend',
       name: 'legend',
-      component: () => import('../views/legend.vue'),
+      component: () => import('../views/legend/index.vue'),
     },
     {
       path: '/map',
       name: 'map',
-      component: () => import('../views/map.vue'),
+      component: () => import('../views/overlay/index.vue'),
       meta: {
         keepAlive: true,
       },
