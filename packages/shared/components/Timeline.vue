@@ -1,6 +1,6 @@
 <template>
   <div class="px-4 py-2">
-    <ATimeline v-bind="props">
+    <ATimeline v-bind="props" class="mb--8">
       <ATimelineItem v-for="(item, index) of data" :key="index" v-bind="item">
         {{ item.content }}
       </ATimelineItem>
@@ -35,5 +35,8 @@ const props = withDefaults(defineProps<Timeline>(), {
 }
 :deep(.ant-timeline) {
   color: #fff;
+}
+:deep(.ant-timeline-item-tail) {
+  background-color: #ffffff55;
 }
 </style>

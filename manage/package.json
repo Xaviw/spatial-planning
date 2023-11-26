@@ -7,11 +7,11 @@
   "scripts": {
     "build": "vue-tsc && vite build",
     "clean": "rimraf node_modules dist",
-    "dev": "env-cmd -f ../.env vite",
+    "dev": "vite",
     "lint": "eslint --max-warnings 0 \"{src,mock}/**/*.{vue,ts,tsx}\" --fix && prettier --write .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "vuedraggable": "^4.1.0"
+    "vue-draggable-plus": "^0.2.7"
   }
 }

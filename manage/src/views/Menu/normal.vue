@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-full flex">
+  <div class="h-full flex">
     <Loading :loading="getting || setting || moving || removing" absolute />
 
     <div
@@ -22,11 +22,13 @@
           defaultExpandAll
           draggable
           autoExpandParent
+          blockNode
           :treeData="treeData"
           :fieldNames="{ title: 'name', key: 'id' }"
           :selectedKeys="selectedKeys"
           @click="onMenuClick"
           @drop="onDrop"
+          class="w-auto!"
         >
           <template #title="item">
             <div class="tree-item flex items-center">
@@ -294,9 +296,6 @@ function confirmSwitch(id: string) {
 <style scoped>
 :deep(.ant-tree-list-holder-inner) {
   align-items: stretch;
-}
-:deep(.ant-tree-treenode) {
-  width: 100%;
 }
 :deep(.ant-tree-switcher) {
   display: flex;

@@ -39,6 +39,7 @@ module.exports = {
     'no-inner-declarations': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/triple-slash-reference': 'off',
     'vue/multi-word-component-names': 'off',
     'no-undef': 'off',
     'import/no-unresolved': 'off',

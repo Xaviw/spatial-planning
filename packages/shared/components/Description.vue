@@ -25,6 +25,11 @@ interface DescriptionItem {
    * @default 1
    */
   span?: number
+  /**
+   * 是否显示冒号
+   * @default '：'
+   */
+  colon?: boolean
 }
 
 const props = withDefaults(
@@ -33,7 +38,7 @@ const props = withDefaults(
       data: DescriptionItem[]
     }
   >(),
-  { data: () => [] },
+  { data: () => [], colon: true },
 )
 </script>
 

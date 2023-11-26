@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="flex items-center justify-between bg-[#1a4f84] px-4 py-2 text-xl font-900"
+      class="flex items-center justify-between bg-[#1a4f84] px-4 py-2 text-xl font-900 text-white"
     >
       <span class="title">{{ title }}</span>
       <i
@@ -9,7 +9,7 @@
         @click="$emit('close')"
       />
     </div>
-    <div class="max-h-[80vh] overflow-auto bg-[#001231] p-4">
+    <div class="max-h-[80vh] overflow-auto bg-[#001231] p-4 text-white">
       <slot />
     </div>
   </div>

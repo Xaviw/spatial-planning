@@ -15,7 +15,6 @@
     ]
   },
   "scripts": {
-    "build:packages": "pnpm -r run stub",
     "clean": "pnpm -r run clean && rimraf node_modules",
     "dev:client": "pnpm -F @sp/client dev",
     "dev:manage": "pnpm -F @sp/manage dev",
@@ -41,6 +40,7 @@
     "alova": "^2.13.1",
     "ant-design-vue": "^4.0.6",
     "dayjs": "^1.11.10",
+    "immer": "^10.0.3",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "pinia": "^2.1.7",
@@ -60,7 +60,6 @@
     "@typescript-eslint/parser": "^6.7.5",
     "@unocss/eslint-config": "^0.56.5",
     "commitlint": "^17.8.0",
-    "env-cmd": "^10.1.0",
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.1",
@@ -71,9 +70,8 @@
     "prettier-plugin-packagejson": "^2.4.6",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.2",
-    "unbuild": "^2.0.0",
     "unocss": "^0.56.5",
-    "vite": "^4.4.11",
+    "vite": "^4.5.0",
     "vite-plugin-mock": "^2.9.8",
     "vue-eslint-parser": "^9.3.2",
     "vue-tsc": "^1.8.18"

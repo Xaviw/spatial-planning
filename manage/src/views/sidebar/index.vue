@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-full flex">
+  <div class="h-full min-w-400 flex">
     <div class="sidebar">
       <Loading absolute :loading="leftLoading" />
 
@@ -9,7 +9,7 @@
       </div>
 
       <div class="flex-1 overflow-auto">
-        <DraggableList :componentList="leftList" />
+        <DraggableList id="left" v-model="leftList" group="sider" />
       </div>
     </div>
 
@@ -22,7 +22,7 @@
       </div>
 
       <div class="flex-1 overflow-auto">
-        <DraggableList :componentList="rightList" />
+        <DraggableList id="right" v-model="rightList" group="sider" />
       </div>
     </div>
 
@@ -34,7 +34,12 @@
       </div>
 
       <div class="flex-1 overflow-auto">
-        <DraggableList :componentList="materials" />
+        <DraggableList
+          id="material"
+          v-model="materials"
+          :group="{ name: 'sider', pull: materialsPull, put: false }"
+          :sort="false"
+        />
       </div>
 
       <div class="header border-t-1!">
@@ -44,7 +49,7 @@
       </div>
 
       <div class="flex-1 overflow-auto">
-        <DraggableList />
+        <DraggableList id="temp" v-model="temp" group="sider" />
       </div>
     </div>
 
@@ -63,8 +68,12 @@
 import { getSider } from '@sp/shared/apis'
 import { Loading } from '@sp/shared/components'
 import { useRequest } from 'alova'
+// import { produce, applyPatches, enablePatches } from 'immer'
 import DraggableList from './draggableList.vue'
 import materials from './materials'
+import type { SiderItem } from '#/client'
+
+// enablePatches()
 
 const { data: leftList, loading: leftLoading } = useRequest(
   menuId => getSider({ position: 'left', filter: false, menuId }),
@@ -75,6 +84,13 @@ const { data: rightList, loading: rightLoading } = useRequest(
   menuId => getSider({ position: 'right', filter: false, menuId }),
   { initialData: [] },
 )
+
+const temp = ref<SiderItem[]>([])
+
+function materialsPull(to: any) {
+  if (['left', 'right'].includes((to.el as HTMLDivElement).id)) return 'clone'
+  return false
+}
 </script>
 
 <style scoped>
