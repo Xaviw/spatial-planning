@@ -11,9 +11,13 @@
       <div class="flex-1 overflow-auto">
         <DraggableList
           id="left"
+          :filterMenu="selectedMenu"
           v-model="leftList"
           group="sider"
           @immer="onImmer"
+          @edit="(...e) => onEdit('left', ...e)"
+          enableContextMenu
+          :selectedId="selectedSiderItem?.id"
         />
       </div>
     </div>
@@ -29,9 +33,13 @@
       <div class="flex-1 overflow-auto">
         <DraggableList
           id="right"
+          :filterMenu="selectedMenu"
           v-model="rightList"
           group="sider"
           @immer="onImmer"
+          @edit="(...e) => onEdit('right', ...e)"
+          enableContextMenu
+          :selectedId="selectedSiderItem?.id"
         />
       </div>
     </div>
@@ -40,7 +48,6 @@
       <div class="header">
         <i class="i-uiw:component" />
         <span class="mx-2">物料栏</span>
-        <ATag color="processing">拖拽物料到左/右栏中以添加组件</ATag>
       </div>
 
       <div class="flex-1 overflow-auto">
@@ -49,6 +56,7 @@
           v-model="materials"
           :group="{ name: 'sider', pull: materialsPull, put: false }"
           :sort="false"
+          :clone="onClone"
           @immer="onImmer"
         />
       </div>
@@ -56,7 +64,9 @@
       <div class="header border-t-1!">
         <i class="i-ant-design:delete-outlined" />
         <span class="mx-2">删除/暂存栏</span>
-        <ATag color="processing">拖动组件到暂存栏便于大范围移动元素</ATag>
+        <div class="flex-1 text-right">
+          <AButton size="small" danger ghost @click="clearTemp">清空</AButton>
+        </div>
       </div>
 
       <div class="flex-1 overflow-auto">
@@ -65,6 +75,7 @@
           v-model="temp"
           group="sider"
           @immer="onImmer"
+          class="h-full"
         />
       </div>
     </div>
@@ -72,22 +83,31 @@
     <div class="flex flex-1 flex-col bg-white p-2">
       <AAlert showIcon>
         <template #message>
-          <div>拖到“左栏”、“右栏”组件移动位置</div>
-          <div>单击“左栏”、“右栏”组件进行编辑</div>
+          <div>拖拽“左栏”、“右栏”中的组件移动位置；</div>
+          <div>右击“左栏”、“右栏”中的组件进行编辑；</div>
+          <div>拖拽“物料栏”中的组件到“左栏”、“右栏”中进行新增；</div>
+          <div>
+            拖拽“左栏”、“右栏”中的组件到“删除/暂存栏”中进行删除或暂存（暂存便于大范围移动组件）；
+          </div>
         </template>
       </AAlert>
 
-      <ATreeSelect
-        :fieldNames="{ label: 'name', value: 'id' }"
-        :filterTreeNode="onMenuFilter"
-        placeholder="选择或搜索菜单进行筛选"
-        v-model:searchValue="menuSearchValue"
-        allowclear
-        treedefaultexpandall
-        showSearch
-        :treeData="menuData"
-        @dropdownVisibleChange="onMenuDropdown"
-      />
+      <div class="my-4 flex items-center">
+        <span>菜单筛选：</span>
+        <ATreeSelect
+          :fieldNames="{ label: 'name', value: 'id' }"
+          :filterTreeNode="onMenuFilter"
+          placeholder="选择或搜索菜单进行筛选"
+          v-model:searchValue="menuSearchValue"
+          v-model:value="selectedMenu"
+          allowClear
+          treeDefaultExpandAll
+          showSearch
+          :treeData="menuData"
+          @dropdownVisibleChange="onMenuDropdown"
+          class="flex-1"
+        />
+      </div>
 
       <AButton @click="onSubmit">确定</AButton>
     </div>
@@ -98,14 +118,15 @@
 import { getMenu, getSider } from '@sp/shared/apis'
 import { Loading } from '@sp/shared/components'
 import { useMutative } from '@sp/shared/hooks'
+import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { cloneDeep } from 'lodash-es'
-import { apply, create } from 'mutative'
+import { apply, create, rawReturn } from 'mutative'
 import DraggableList, { type SiderChangeParams } from './draggableList.vue'
 import materials from './materials'
 import type { SiderItem, MenuItem } from '#/client'
 
-// ---------------------------------- draggable list ----------------------------------
+// ----------------------------- draggable list -----------------------------
 const { data: leftList, loading: leftLoading } = useRequest(
   menuId => getSider({ position: 'left', filter: false, menuId }),
   { initialData: [] },
@@ -123,8 +144,17 @@ function materialsPull(to: any) {
   return false
 }
 
-// ---------------------------------- 菜单 ----------------------------------
+async function clearTemp() {
+  await modal('warning', {
+    title: '警告！',
+    content: '清空后不可恢复，是否确认清空？',
+  })
+  temp.value = []
+}
+
+// ----------------------------- 菜单 -----------------------------
 const menuSearchValue = ref<string>()
+const selectedMenu = ref<string>()
 
 const { data: menuData, send: sendMenu } = useRequest(
   () => getMenu(true, 'message'),
@@ -144,7 +174,24 @@ function onMenuFilter(val: string, node: MenuItem) {
   return node.name.includes(val)
 }
 
-// ---------------------------------- immer ----------------------------------
+function onClone(item: SiderItem): SiderItem {
+  const id: any = Symbol('add id')
+  return {
+    ...item,
+    id,
+    menuIds: selectedMenu.value ? [selectedMenu.value] : [],
+  }
+}
+
+// ----------------------------- 编辑表单 -----------------------------
+const selectedSiderItem = ref<SiderItem>()
+
+function onEdit(name: 'left' | 'right', item: SiderItem, index: number) {
+  console.log('onEdit', name, item, index)
+  selectedSiderItem.value = item
+}
+
+// ----------------------------- immer -----------------------------
 let originalList: SiderItem[]
 
 const { update, patches, state } = useMutative([] as SiderItem[])
@@ -152,7 +199,9 @@ const { update, patches, state } = useMutative([] as SiderItem[])
 const unwatch = watchEffect(() => {
   if (leftList.value.length && rightList.value.length && !state.value.length) {
     originalList = [...cloneDeep(leftList.value), ...cloneDeep(rightList.value)]
-    update(() => [...cloneDeep(leftList.value), ...cloneDeep(rightList.value)])
+    update(() =>
+      rawReturn([...cloneDeep(leftList.value), ...cloneDeep(rightList.value)]),
+    )
     unwatch()
   }
 })
@@ -195,6 +244,6 @@ function onSubmit() {
   @apply mr-2 w-100 flex flex-col bg-[#001231] text-white relative;
 }
 .header {
-  @apply border-0 border-b-1 border-white border-solid pl-4 py-2 text-lg font-600 text-white flex items-center;
+  @apply border-0 border-b-1 border-white border-solid px-4 py-2 text-lg font-600 text-white flex items-center;
 }
 </style>

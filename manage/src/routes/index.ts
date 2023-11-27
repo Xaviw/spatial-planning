@@ -20,9 +20,9 @@ export default createRouter({
       component: () => import('../views/menu/normal.vue'),
     },
     {
-      path: '/sidebar',
-      name: 'sidebar',
-      component: () => import('../views/sidebar/index.vue'),
+      path: '/sider',
+      name: 'sider',
+      component: () => import('../views/sider/index.vue'),
       meta: {
         keepAlive: true,
       },
@@ -33,8 +33,8 @@ export default createRouter({
       component: () => import('../views/legend/index.vue'),
     },
     {
-      path: '/map',
-      name: 'map',
+      path: '/overlay',
+      name: 'overlay',
       component: () => import('../views/overlay/index.vue'),
       meta: {
         keepAlive: true,

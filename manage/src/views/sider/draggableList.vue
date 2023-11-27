@@ -7,18 +7,49 @@
     @add="onChange"
     @update="onChange"
   >
-    <component
-      v-for="comp of modelValue"
-      :key="comp.id"
-      :is="components[comp.type]"
-      v-bind="comp.props"
-      class="mb-2"
-    />
+    <TransitionGroup name="sider">
+      <template v-if="enableContextMenu">
+        <div
+          v-for="(comp, index) of modelValue"
+          :key="comp.id"
+          :class="['mb-2', selectedId === comp.id && 'sider-selected']"
+        >
+          <ADropdown :trigger="['contextmenu']">
+            <component
+              v-show="!filterMenu || comp.menuIds.includes(filterMenu)"
+              :is="components[comp.type]"
+              :key="comp.id"
+              v-bind="comp.props"
+            />
+
+            <template #overlay>
+              <AMenu>
+                <AMenuItem key="edit" @click="onEdit(comp, index)">
+                  编辑
+                </AMenuItem>
+              </AMenu>
+            </template>
+          </ADropdown>
+        </div>
+      </template>
+
+      <template v-else>
+        <component
+          v-for="comp of modelValue"
+          :key="comp.id"
+          :class="['mb-2', selectedId === comp.id && 'sider-selected']"
+          v-show="!filterMenu || comp.menuIds.includes(filterMenu)"
+          :is="components[comp.type]"
+          v-bind="comp.props"
+        />
+      </template>
+    </TransitionGroup>
   </VueDraggable>
 </template>
 
 <script setup lang="ts">
 import { components } from '@sp/shared/components'
+import { cloneDeep } from 'lodash-es'
 import { VueDraggable, type UseDraggableOptions } from 'vue-draggable-plus'
 import type { SiderItem } from '#/client'
 
@@ -35,18 +66,21 @@ export interface SiderChangeParams {
 
 withDefaults(
   defineProps<{
-    modelValue: any[]
-    relationMenuIds?: string[]
+    modelValue: SiderItem[]
+    selectedId?: string
+    filterMenu?: string
+    enableContextMenu?: boolean
   }>(),
   {
-    componentList: () => [],
-    relationMenuIds: () => [],
+    modelValue: () => [],
+    enableContextMenu: false,
   },
 )
 
 const emits = defineEmits<{
   (e: 'update:modelValue', newList: any[]): void
   (e: 'immer', params: SiderChangeParams): void
+  (e: 'edit', item: SiderItem, index: number): void
 }>()
 
 function onChange(e: Parameters<Add>[0]) {
@@ -88,18 +122,26 @@ function onChange(e: Parameters<Add>[0]) {
     })
   }
 }
+
+function onEdit(item: SiderItem, index: number) {
+  emits('edit', cloneDeep(unref(item)), index)
+}
 </script>
 
 <style>
-.sortable-chosen {
-  transform: scale(1.2);
-  transform-origin: left center;
+.sortable-chosen,
+.sortable-ghost,
+.sider-selected {
+  box-shadow: 0 0 3px 3px #ffffff55;
 }
 
-/* .sortable-drag {} */
-
-.sortable-ghost {
-  /* background: blue; */
-  box-shadow: 0 0 3px 3px #ffffff55;
+.sider-enter-active,
+.sider-leave-active {
+  transition: all 0.3s ease;
+}
+.sider-enter-from,
+.sider-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>

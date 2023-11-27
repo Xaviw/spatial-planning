@@ -6,7 +6,7 @@ export default [
   },
   {
     label: '侧边栏管理',
-    key: 'sidebar',
+    key: 'sider',
     icon: () => h('i', { class: 'i-zondicons:show-sidebar' }),
   },
   {
