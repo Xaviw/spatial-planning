@@ -38,6 +38,7 @@ declare module 'vue' {
     ATimeline: (typeof import('ant-design-vue/es'))['Timeline']
     ATimelineItem: (typeof import('ant-design-vue/es'))['TimelineItem']
     ATree: (typeof import('ant-design-vue/es'))['Tree']
+    ATreeSelect: (typeof import('ant-design-vue/es'))['TreeSelect']
     RouterLink: (typeof import('vue-router'))['RouterLink']
     RouterView: (typeof import('vue-router'))['RouterView']
   }

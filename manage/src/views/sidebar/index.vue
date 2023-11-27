@@ -9,7 +9,12 @@
       </div>
 
       <div class="flex-1 overflow-auto">
-        <DraggableList id="left" v-model="leftList" group="sider" />
+        <DraggableList
+          id="left"
+          v-model="leftList"
+          group="sider"
+          @immer="onImmer"
+        />
       </div>
     </div>
 
@@ -22,7 +27,12 @@
       </div>
 
       <div class="flex-1 overflow-auto">
-        <DraggableList id="right" v-model="rightList" group="sider" />
+        <DraggableList
+          id="right"
+          v-model="rightList"
+          group="sider"
+          @immer="onImmer"
+        />
       </div>
     </div>
 
@@ -39,6 +49,7 @@
           v-model="materials"
           :group="{ name: 'sider', pull: materialsPull, put: false }"
           :sort="false"
+          @immer="onImmer"
         />
       </div>
 
@@ -49,7 +60,12 @@
       </div>
 
       <div class="flex-1 overflow-auto">
-        <DraggableList id="temp" v-model="temp" group="sider" />
+        <DraggableList
+          id="temp"
+          v-model="temp"
+          group="sider"
+          @immer="onImmer"
+        />
       </div>
     </div>
 
@@ -60,21 +76,36 @@
           <div>单击“左栏”、“右栏”组件进行编辑</div>
         </template>
       </AAlert>
+
+      <ATreeSelect
+        :fieldNames="{ label: 'name', value: 'id' }"
+        :filterTreeNode="onMenuFilter"
+        placeholder="选择或搜索菜单进行筛选"
+        v-model:searchValue="menuSearchValue"
+        allowclear
+        treedefaultexpandall
+        showSearch
+        :treeData="menuData"
+        @dropdownVisibleChange="onMenuDropdown"
+      />
+
+      <AButton @click="onSubmit">确定</AButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getSider } from '@sp/shared/apis'
+import { getMenu, getSider } from '@sp/shared/apis'
 import { Loading } from '@sp/shared/components'
+import { useMutative } from '@sp/shared/hooks'
 import { useRequest } from 'alova'
-// import { produce, applyPatches, enablePatches } from 'immer'
-import DraggableList from './draggableList.vue'
+import { cloneDeep } from 'lodash-es'
+import { apply, create } from 'mutative'
+import DraggableList, { type SiderChangeParams } from './draggableList.vue'
 import materials from './materials'
-import type { SiderItem } from '#/client'
+import type { SiderItem, MenuItem } from '#/client'
 
-// enablePatches()
-
+// ---------------------------------- draggable list ----------------------------------
 const { data: leftList, loading: leftLoading } = useRequest(
   menuId => getSider({ position: 'left', filter: false, menuId }),
   { initialData: [] },
@@ -90,6 +121,72 @@ const temp = ref<SiderItem[]>([])
 function materialsPull(to: any) {
   if (['left', 'right'].includes((to.el as HTMLDivElement).id)) return 'clone'
   return false
+}
+
+// ---------------------------------- 菜单 ----------------------------------
+const menuSearchValue = ref<string>()
+
+const { data: menuData, send: sendMenu } = useRequest(
+  () => getMenu(true, 'message'),
+  {
+    initialData: [],
+  },
+)
+
+function onMenuDropdown(open: boolean) {
+  if (!open) return
+  if (!menuData.value.length) {
+    sendMenu()
+  }
+}
+
+function onMenuFilter(val: string, node: MenuItem) {
+  return node.name.includes(val)
+}
+
+// ---------------------------------- immer ----------------------------------
+let originalList: SiderItem[]
+
+const { update, patches, state } = useMutative([] as SiderItem[])
+
+const unwatch = watchEffect(() => {
+  if (leftList.value.length && rightList.value.length && !state.value.length) {
+    originalList = [...cloneDeep(leftList.value), ...cloneDeep(rightList.value)]
+    update(() => [...cloneDeep(leftList.value), ...cloneDeep(rightList.value)])
+    unwatch()
+  }
+})
+
+function onImmer(e: SiderChangeParams) {
+  const leftLength = leftList.value.length
+  if (e.name === 'add') {
+    update(state => {
+      const index = e.to === 'left' ? e.newIndex! : leftLength + e.newIndex!
+      state.splice(index, 0, e.data)
+    })
+  } else if (e.name === 'remove') {
+    update(state => {
+      state.splice(e.oldIndex!, 1)
+    })
+  } else {
+    const oldIndex = e.from === 'right' ? e.oldIndex! + leftLength : e.oldIndex!
+    const newIndex = e.to === 'right' ? e.newIndex! + leftLength : e.newIndex!
+    update(state => {
+      state.splice(oldIndex, 1)
+      state.splice(newIndex, 0, e.data)
+    })
+  }
+}
+
+function onSubmit() {
+  const [_state, simplePatches] = create(
+    originalList,
+    state => {
+      apply(state, patches.value.slice(1))
+    },
+    { enablePatches: true },
+  )
+  console.log('simplePatches: ', simplePatches)
 }
 </script>
 
