@@ -1,4 +1,3 @@
-import Mock from 'mockjs'
 import type { SiderItem, SiderComponents } from '#/client'
 
 const materials: { [K in SiderComponents]: SiderItem } = {

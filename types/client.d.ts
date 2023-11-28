@@ -10,12 +10,12 @@ export interface MenuItem {
 
 // -----------------侧边栏-----------------
 export type SiderComponents =
-  | 'FileList'
   | 'BarChart'
   | 'Carousel'
   | 'Collapse'
   | 'DataCard'
   | 'Description'
+  | 'FileList'
   | 'LineChart'
   | 'PieChart'
   | 'Progress'

@@ -142,6 +142,6 @@ function onEdit(item: SiderItem, index: number) {
 .sider-enter-from,
 .sider-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateY(-30px);
 }
 </style>

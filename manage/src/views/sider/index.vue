@@ -92,7 +92,9 @@
         </template>
       </AAlert>
 
-      <div class="my-4 flex items-center">
+      <div
+        class="flex items-center border-0 border-b-1px border-gray-3 border-solid py-4"
+      >
         <span>菜单筛选：</span>
         <ATreeSelect
           :fieldNames="{ label: 'name', value: 'id' }"
@@ -100,23 +102,44 @@
           placeholder="选择或搜索菜单进行筛选"
           v-model:searchValue="menuSearchValue"
           v-model:value="selectedMenu"
-          allowClear
-          treeDefaultExpandAll
-          showSearch
+          treedefaultexpandall
+          showsearch
+          allowclear
           :treeData="menuData"
           @dropdownVisibleChange="onMenuDropdown"
           class="flex-1"
         />
       </div>
 
-      <AButton @click="onSubmit">确定</AButton>
+      <div class="flex-1 overflow-auto py-4">
+        <EditFormBase
+          v-if="selectedSiderItem"
+          :element="componentEditForms[selectedSiderItem.type]"
+          :rules="componentEditFormRules[selectedSiderItem.type]"
+          @register="register"
+        />
+
+        <AEmpty
+          v-if="!selectedSiderItem"
+          description="请右击“左栏”、“右栏”中的组件选择“编辑”"
+          class="h-full flex flex-col justify-center"
+        />
+      </div>
+
+      <AButton @click="onSubmit" type="primary">确定</AButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { getMenu, getSider } from '@sp/shared/apis'
-import { Loading } from '@sp/shared/components'
+import {
+  Loading,
+  componentEditForms,
+  EditFormBase,
+  componentEditFormRules,
+  useEditFormBase,
+} from '@sp/shared/components'
 import { useMutative } from '@sp/shared/hooks'
 import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
@@ -152,6 +175,15 @@ async function clearTemp() {
   temp.value = []
 }
 
+function onClone(item: SiderItem): SiderItem {
+  const id = `add_${Date.now()}`
+  return {
+    ...item,
+    id,
+    menuIds: selectedMenu.value ? [selectedMenu.value] : [],
+  }
+}
+
 // ----------------------------- 菜单 -----------------------------
 const menuSearchValue = ref<string>()
 const selectedMenu = ref<string>()
@@ -174,21 +206,14 @@ function onMenuFilter(val: string, node: MenuItem) {
   return node.name.includes(val)
 }
 
-function onClone(item: SiderItem): SiderItem {
-  const id: any = Symbol('add id')
-  return {
-    ...item,
-    id,
-    menuIds: selectedMenu.value ? [selectedMenu.value] : [],
-  }
-}
-
 // ----------------------------- 编辑表单 -----------------------------
 const selectedSiderItem = ref<SiderItem>()
+const [register, { getFieldsValue, resetFields, validate }] = useEditFormBase()
 
-function onEdit(name: 'left' | 'right', item: SiderItem, index: number) {
+async function onEdit(name: 'left' | 'right', item: SiderItem, index: number) {
   console.log('onEdit', name, item, index)
   selectedSiderItem.value = item
+  await resetFields(item)
 }
 
 // ----------------------------- immer -----------------------------
@@ -227,7 +252,11 @@ function onImmer(e: SiderChangeParams) {
   }
 }
 
-function onSubmit() {
+async function onSubmit() {
+  await validate()
+  const params = await getFieldsValue()
+  console.log('params:', params)
+
   const [_state, simplePatches] = create(
     originalList,
     state => {
