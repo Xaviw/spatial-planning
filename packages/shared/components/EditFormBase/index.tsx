@@ -4,10 +4,8 @@ import { cloneDeep } from 'lodash-es'
 import { defineComponent, reactive, Ref, ref, type VNode } from 'vue'
 import { getMenu } from '../../apis'
 import { baseRules, componentTypes } from './data'
-import type { MenuItem } from '#/client'
 import type { Rule } from 'ant-design-vue/es/form'
 import type { validateInfos } from 'ant-design-vue/es/form/useForm'
-import type { DefaultOptionType } from 'ant-design-vue/es/select'
 
 export default defineComponent(
   function (
@@ -20,18 +18,23 @@ export default defineComponent(
     },
     { emit },
   ) {
-    const model = ref<Recordable>({})
+    const model = ref<Recordable>({ props: {} })
     const rules = reactive({
       ...baseRules,
       ...props.rules,
     })
-    const { validateInfos, clearValidate, resetFields, validate } =
-      Form.useForm(model, rules)
+    const { validateInfos, clearValidate, validate } = Form.useForm(
+      model,
+      rules,
+    )
 
     emit('register', {
       validate,
       clearValidate,
-      resetFields,
+      resetFields(newValues: Recordable = { props: {} }) {
+        if (!newValues.props) newValues.props = {}
+        model.value = newValues
+      },
       getFieldsValue() {
         return cloneDeep(model.value)
       },

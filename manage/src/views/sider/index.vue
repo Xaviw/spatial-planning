@@ -80,7 +80,7 @@
       </div>
     </div>
 
-    <div class="flex flex-1 flex-col bg-white p-2">
+    <div class="flex flex-1 flex-col bg-white p-4">
       <AAlert showIcon>
         <template #message>
           <div>拖拽“左栏”、“右栏”中的组件移动位置；</div>
@@ -111,7 +111,7 @@
         />
       </div>
 
-      <div class="flex-1 overflow-auto py-4">
+      <div class="mb-4 flex-1 overflow-auto">
         <EditFormBase
           v-if="selectedSiderItem"
           :element="componentEditForms[selectedSiderItem.type]"
@@ -126,7 +126,12 @@
         />
       </div>
 
-      <AButton @click="onSubmit" type="primary">确定</AButton>
+      <div class="flex items-center">
+        <AButton @click="onSubmit" type="primary" class="mr-4 flex-1">
+          确定
+        </AButton>
+        <AButton @click="onCancel" class="flex-1">取消</AButton>
+      </div>
     </div>
   </div>
 </template>
@@ -213,7 +218,12 @@ const [register, { getFieldsValue, resetFields, validate }] = useEditFormBase()
 async function onEdit(name: 'left' | 'right', item: SiderItem, index: number) {
   console.log('onEdit', name, item, index)
   selectedSiderItem.value = item
-  await resetFields(item)
+  await resetFields({ ...item, ...item.props })
+}
+
+async function onCancel() {
+  await resetFields()
+  selectedSiderItem.value = undefined
 }
 
 // ----------------------------- immer -----------------------------

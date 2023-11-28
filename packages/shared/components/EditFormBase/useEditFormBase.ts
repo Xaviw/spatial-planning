@@ -40,7 +40,6 @@ export function useEditFormBase(): [
     },
     resetFields: async (...args) => {
       const form = await getForm()
-      form.resetFields()
       form.resetFields(...args)
     },
     validate: async (...args) => {
