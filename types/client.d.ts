@@ -32,3 +32,12 @@ export interface SiderItem {
   status: boolean
   menuIds: string[]
 }
+export type DetailItem = Pick<SiderItem, 'id' | 'type' | 'props' | 'status'>
+export interface SiderChangeParams {
+  name: 'add' | 'move' | 'remove'
+  from?: string
+  to?: string
+  oldIndex?: number
+  newIndex?: number
+  data: SiderItem | DetailItem
+}

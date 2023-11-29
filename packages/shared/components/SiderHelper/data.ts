@@ -1,22 +1,64 @@
 import type { SiderItem, SiderComponents } from '#/client'
+import type { Rule } from 'ant-design-vue/es/form'
 
-const materials: { [K in SiderComponents]: SiderItem } = {
+export const componentTypes: { label: string; value: SiderComponents }[] = [
+  { label: '大标题', value: 'Title' },
+  { label: '小标题', value: 'SubTitle' },
+  { label: '数据卡片', value: 'DataCard' },
+  { label: '折叠面板', value: 'Collapse' },
+  { label: '描述列表', value: 'Description' },
+  { label: '进度条', value: 'Progress' },
+  { label: '表格', value: 'Table' },
+  { label: '文件列表', value: 'FileList' },
+  { label: '轮播图', value: 'Carousel' },
+  { label: '饼图', value: 'PieChart' },
+  { label: '柱状图', value: 'BarChart' },
+  { label: '折线图', value: 'LineChart' },
+  { label: '时间轴', value: 'Timeline' },
+]
+
+export const baseRules = (inModal: boolean): Record<string, Rule[]> => {
+  let common: Record<string, Rule[]> = {
+    type: [
+      {
+        required: true,
+        message: '请选择组件类型！',
+      },
+    ],
+    status: [
+      {
+        required: true,
+        message: '请选择组件状态！',
+      },
+    ],
+  }
+  if (!inModal) {
+    common = {
+      ...common,
+      position: [
+        {
+          required: true,
+          message: '请选择组件显示位置！',
+        },
+      ],
+      menuIds: [
+        {
+          required: true,
+          message: '请选择组件关联菜单！',
+        },
+      ],
+    }
+  }
+  return common
+}
+
+const materialsMap: { [K in SiderComponents]: SiderItem } = {
   Title: {
     id: '',
     position: 'left',
     type: 'Title',
     props: {
       title: '大标题',
-      modalTitle: '大标题详情弹窗',
-      modalData: [
-        {
-          id: '',
-          type: 'SubTitle',
-          props: { title: '同外部自定义组件' },
-          status: true,
-          menuIds: [],
-        },
-      ],
     },
     status: true,
     menuIds: [],
@@ -172,4 +214,4 @@ const materials: { [K in SiderComponents]: SiderItem } = {
   },
 }
 
-export default Object.values(materials)
+export const materials = Object.values(materialsMap)

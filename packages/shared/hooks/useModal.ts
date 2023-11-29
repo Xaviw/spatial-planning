@@ -13,7 +13,11 @@ const modalMap = new Map()
 export function useModal(
   key: string,
   modalProps?: Partial<Omit<ModalProps, 'open'>>,
-) {
+): {
+  open: (content: JSX.Element | VNode) => void
+  close: () => void
+  destroy: () => void
+} {
   if (modalMap.has(key)) {
     return modalMap.get(key)
   } else {
@@ -24,7 +28,7 @@ export function useModal(
     let currentContent: VNode
 
     const handler = {
-      open(content: VNode) {
+      open(content: JSX.Element | VNode) {
         if (instance?.component) {
           if (content !== currentContent) {
             currentContent = content

@@ -1,20 +1,28 @@
+/* eslint-disable import/order */
 import BarChart from './BarChart/index.vue'
 import Carousel from './Carousel/index.vue'
 import Collapse from './Collapse/index.vue'
 import ContentWrapper from './ContentWrapper/index.vue'
 import DataCard from './DataCard/index.vue'
 import Description from './Description/index.vue'
-import EditFormBase from './EditFormBase/index.tsx'
-import { useEditFormBase } from './EditFormBase/useEditFormBase.ts'
 import FileList from './FileList/index.vue'
 import LineChart from './LineChart/index.vue'
-import Loading from './Loading/index.vue'
-import Modal from './Modal/index.vue'
 import Progress from './Progress/index.vue'
 import SubTitle from './SubTitle/index.vue'
 import Table from './Table/index.vue'
 import Timeline from './Timeline/index.vue'
 import Title from './Title/index.vue'
+
+import Loading from './Loading/index.vue'
+import Modal from './Modal/index.vue'
+
+import DraggableList from './SiderHelper/draggableList.vue'
+import MaterialBar from './SiderHelper/materialBar.vue'
+import SiderBaseForm from './SiderHelper/siderBaseForm'
+import SiderFormBar from './SiderHelper/siderFormBar.vue'
+import SiderModalEditor from './SiderHelper/siderModalEditor.vue'
+import { useSiderForm } from './SiderHelper/useSiderForm'
+import { useMenuTree } from './SiderHelper/useMenuTree'
 
 import '../../../unocss-icon'
 
@@ -42,7 +50,10 @@ const editFormModules: Record<string, any> = import.meta.glob(
   },
 )
 const componentEditForms: Record<string, any> = {}
-const componentEditFormRules: Record<string, Record<string, Rule[]>> = {}
+const componentEditFormRules: Record<
+  string,
+  (inModal: boolean) => Record<string, Rule[]>
+> = {}
 for (const path in editFormModules) {
   const name = /^.*\/(.*?)\/editForm.tsx$/.exec(path)?.[1]
   if (name) {
@@ -52,24 +63,29 @@ for (const path in editFormModules) {
 }
 
 export {
-  components,
-  componentEditForms,
-  componentEditFormRules,
   Title,
   Timeline,
   Table,
   SubTitle,
   Progress,
   LineChart,
-  Loading,
   Description,
   DataCard,
   Collapse,
   Carousel,
   BarChart,
-  Modal,
   FileList,
+  Modal,
+  Loading,
   ContentWrapper,
-  EditFormBase,
-  useEditFormBase,
+  DraggableList,
+  SiderModalEditor,
+  useMenuTree,
+  useSiderForm,
+  SiderFormBar,
+  SiderBaseForm,
+  MaterialBar,
+  components,
+  componentEditForms,
+  componentEditFormRules,
 }

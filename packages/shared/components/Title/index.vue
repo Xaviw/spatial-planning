@@ -74,15 +74,19 @@ function onOpenDetail() {
         onClose: close,
         style: { width: props.modalWidth },
       },
-      () =>
-        props.modalData!.map(comp =>
-          h(
-            components[comp.type],
-            merge(cloneDeep(comp.props), {
-              style: { marginBottom: '0.5rem' },
-            }),
+      h(
+        'div',
+        { class: 'max-h-[80vh] overflow-auto bg-[#001231] p-4 text-white' },
+        () =>
+          props.modalData!.map(comp =>
+            h(
+              components[comp.type],
+              merge(cloneDeep(comp.props), {
+                style: { marginBottom: '0.5rem' },
+              }),
+            ),
           ),
-        ),
+      ),
     ),
   )
 }

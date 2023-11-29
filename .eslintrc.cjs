@@ -33,7 +33,6 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'vue', 'import'],
   rules: {
-    indent: ['error', 2],
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
     'no-inner-declarations': 'off',

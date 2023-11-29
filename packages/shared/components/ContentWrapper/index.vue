@@ -9,9 +9,7 @@
         @click="$emit('close')"
       />
     </div>
-    <div class="max-h-[80vh] overflow-auto bg-[#001231] p-4 text-white">
-      <slot />
-    </div>
+    <slot />
   </div>
 </template>
 

@@ -10,8 +10,5 @@
     "dev": "vite",
     "lint": "eslint --max-warnings 0 \"{src,mock}/**/*.{vue,ts,tsx}\" --fix && prettier --write .",
     "preview": "vite preview"
-  },
-  "dependencies": {
-    "vue-draggable-plus": "^0.2.7"
   }
 }

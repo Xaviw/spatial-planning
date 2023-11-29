@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import Mock from 'mockjs'
 import type { GetSiderParams } from '@sp/shared/apis'
 import type { MockMethod } from 'vite-plugin-mock'
@@ -30,10 +29,12 @@ function genList(
         isInModal,
         params,
       ),
-      id: Mock.Random.id(),
-      position: params.position,
+      id: isInModal ? undefined : Mock.Random.id(),
+      position: isInModal ? undefined : params.position,
       status: params.filter ? true : Mock.Random.boolean(),
-      menuIds: params.menuId
+      menuIds: isInModal
+        ? undefined
+        : params.menuId
         ? [params.menuId]
         : Mock.Random.shuffle(['1', '11', '12', '13', '121', '122']).slice(
             0,

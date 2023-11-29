@@ -1,7 +1,7 @@
 <template>
   <VueDraggable
     v-bind="$attrs"
-    class="select-none"
+    class="h-full select-none"
     :modelValue="modelValue"
     @update:modelValue="$emit('update:modelValue', $event)"
     @add="onChange"
@@ -16,7 +16,7 @@
         >
           <ADropdown :trigger="['contextmenu']">
             <component
-              v-show="!filterMenu || comp.menuIds.includes(filterMenu)"
+              v-show="show(comp)"
               :is="components[comp.type]"
               :key="comp.id"
               v-bind="comp.props"
@@ -38,7 +38,7 @@
           v-for="comp of modelValue"
           :key="comp.id"
           :class="['mb-2', selectedId === comp.id && 'sider-selected']"
-          v-show="!filterMenu || comp.menuIds.includes(filterMenu)"
+          v-show="show(comp)"
           :is="components[comp.type]"
           v-bind="comp.props"
         />
@@ -47,26 +47,18 @@
   </VueDraggable>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends SiderItem | DetailItem">
 import { components } from '@sp/shared/components'
 import { cloneDeep } from 'lodash-es'
+import { unref } from 'vue'
 import { VueDraggable, type UseDraggableOptions } from 'vue-draggable-plus'
-import type { SiderItem } from '#/client'
+import type { DetailItem, SiderItem, SiderChangeParams } from '#/client'
 
 type Add = NonNullable<Pick<UseDraggableOptions<any>, 'onAdd'>['onAdd']>
 
-export interface SiderChangeParams {
-  name: 'add' | 'move' | 'remove'
-  from?: string
-  to?: string
-  oldIndex?: number
-  newIndex?: number
-  data: SiderItem
-}
-
-withDefaults(
+const props = withDefaults(
   defineProps<{
-    modelValue: SiderItem[]
+    modelValue: T[]
     selectedId?: string
     filterMenu?: string
     enableContextMenu?: boolean
@@ -80,18 +72,19 @@ withDefaults(
 const emits = defineEmits<{
   (e: 'update:modelValue', newList: any[]): void
   (e: 'immer', params: SiderChangeParams): void
-  (e: 'edit', item: SiderItem, index: number): void
+  (e: 'edit', item: T, index: number): void
 }>()
 
+const show = (item: T) => {
+  if (!props.filterMenu) return true
+  if ((item as SiderItem).menuIds) {
+    return (item as SiderItem).menuIds.includes(props.filterMenu)
+  }
+  return true
+}
+
 function onChange(e: Parameters<Add>[0]) {
-  // const index = e.newIndex!
-  // const params = {
-  //   id: undefined,
-  //   prevId: index > 0 ? props.modelValue[index - 1].id : undefined,
-  //   nextId: props.modelValue[index + 1]?.id,
-  //   index,
-  // }
-  let original: SiderItem
+  let original: T
   for (let symbol of Object.getOwnPropertySymbols(e.item)) {
     if (symbol.toString() === 'Symbol(cloneElement)') {
       original = (e.item as any)[symbol]
@@ -123,7 +116,7 @@ function onChange(e: Parameters<Add>[0]) {
   }
 }
 
-function onEdit(item: SiderItem, index: number) {
+function onEdit(item: T, index: number) {
   emits('edit', cloneDeep(unref(item)), index)
 }
 </script>

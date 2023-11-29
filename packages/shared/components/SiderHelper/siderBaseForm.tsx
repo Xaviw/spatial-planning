@@ -1,9 +1,8 @@
-import { useRequest } from 'alova'
 import { Form, Input, Radio, Select, Switch, TreeSelect } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
-import { defineComponent, reactive, Ref, ref, type VNode } from 'vue'
-import { getMenu } from '../../apis'
+import { computed, defineComponent, Ref, ref, type VNode } from 'vue'
 import { baseRules, componentTypes } from './data'
+import { useMenuTree } from './useMenuTree'
 import type { Rule } from 'ant-design-vue/es/form'
 import type { validateInfos } from 'ant-design-vue/es/form/useForm'
 
@@ -13,16 +12,18 @@ export default defineComponent(
       element: (
         model: Ref<Recordable>,
         validateInfos: validateInfos,
+        inModal: boolean,
       ) => JSX.Element | VNode
-      rules: Record<string, Rule[]>
+      rules: (inModal: boolean) => Record<string, Rule[]>
+      inModal: boolean
     },
     { emit },
   ) {
     const model = ref<Recordable>({ props: {} })
-    const rules = reactive({
-      ...baseRules,
-      ...props.rules,
-    })
+    const rules = computed(() => ({
+      ...baseRules(props.inModal),
+      ...(typeof props.rules === 'function' ? props.rules(props.inModal) : {}),
+    }))
     const { validateInfos, clearValidate, validate } = Form.useForm(
       model,
       rules,
@@ -40,19 +41,7 @@ export default defineComponent(
       },
     })
 
-    const { data: menuData, send: sendMenu } = useRequest(
-      () => getMenu(true, 'message'),
-      {
-        initialData: [],
-      },
-    )
-
-    function onMenuDropdown(open: boolean) {
-      if (!open) return
-      if (!menuData.value.length) {
-        sendMenu()
-      }
-    }
+    const { menuData, onMenuDropdown } = useMenuTree()
 
     return () => (
       <Form model={model}>
@@ -75,34 +64,37 @@ export default defineComponent(
             unCheckedChildren='禁用'
           />
         </Form.Item>
+        {!props.inModal && (
+          <>
+            <Form.Item label='显示位置' {...validateInfos.position}>
+              <Radio.Group v-model:value={model.value.position} name='position'>
+                <Radio value='left'>左栏</Radio>
+                <Radio value='right'>右栏</Radio>
+              </Radio.Group>
+            </Form.Item>
 
-        <Form.Item label='显示位置' {...validateInfos.position}>
-          <Radio.Group v-model:value={model.value.position} name='position'>
-            <Radio value='left'>左栏</Radio>
-            <Radio value='right'>右栏</Radio>
-          </Radio.Group>
-        </Form.Item>
+            <Form.Item label='关联菜单' {...validateInfos.menuIds}>
+              <TreeSelect
+                fieldNames={{ label: 'name', value: 'id' }}
+                placeholder='请选择关联菜单'
+                v-model:value={model.value.menuIds}
+                treeDefaultExpandAll
+                treeData={menuData.value}
+                treeCheckable
+                onDropdownVisibleChange={onMenuDropdown}
+                class='flex-1'
+              />
+            </Form.Item>
+          </>
+        )}
 
-        <Form.Item label='关联菜单' {...validateInfos.menuIds}>
-          <TreeSelect
-            fieldNames={{ label: 'name', value: 'id' }}
-            placeholder='请选择关联菜单'
-            v-model:value={model.value.menuIds}
-            treeDefaultExpandAll
-            treeData={menuData.value}
-            treeCheckable
-            onDropdownVisibleChange={onMenuDropdown}
-            class='flex-1'
-          />
-        </Form.Item>
-
-        {props.element(model, validateInfos)}
+        {props.element(model, validateInfos, props.inModal)}
       </Form>
     )
   },
   {
-    name: 'EditFormBase',
-    props: ['element', 'rules'],
+    name: 'siderBaseForm',
+    props: ['element', 'rules', 'inModal'],
     emits: ['register'],
   },
 )

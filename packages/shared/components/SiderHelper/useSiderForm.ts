@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { nextTick, ref, unref } from 'vue'
 import type { RuleError } from 'ant-design-vue/es/form/interface'
 import type { validateOptions } from 'ant-design-vue/es/form/useForm'
@@ -13,10 +12,7 @@ export interface FormAction {
   getFieldsValue: () => Promise<Recordable>
 }
 
-export function useEditFormBase(): [
-  (instance: FormAction) => void,
-  FormAction,
-] {
+export function useSiderForm(): [(instance: FormAction) => void, FormAction] {
   const formRef = ref<FormAction>()
 
   async function getForm() {
