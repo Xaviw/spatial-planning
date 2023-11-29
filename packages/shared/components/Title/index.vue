@@ -74,10 +74,17 @@ function onOpenDetail() {
         onClose: close,
         style: { width: props.modalWidth },
       },
-      h(
-        'div',
-        { class: 'max-h-[80vh] overflow-auto bg-[#001231] p-4 text-white' },
-        () =>
+      () =>
+        h(
+          'div',
+          {
+            style: {
+              maxHeight: '80vh',
+              overflow: 'auto',
+              backgroundColor: '#001231',
+              color: '#fff',
+            },
+          },
           props.modalData!.map(comp =>
             h(
               components[comp.type],
@@ -86,7 +93,7 @@ function onOpenDetail() {
               }),
             ),
           ),
-      ),
+        ),
     ),
   )
 }
