@@ -86,6 +86,7 @@ const generationFunctions = {
     return {
       type: 'Description',
       props: {
+        layout: 'vertical',
         column,
         data: Array.from({ length: Mock.Random.natural(4, 10) }).map(() => ({
           label: Mock.Random.cword(2, 4),

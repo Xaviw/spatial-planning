@@ -41,27 +41,11 @@ import { components, ContentWrapper } from '@sp/shared/components'
 import { useModal } from '@sp/shared/hooks'
 import { cloneDeep, merge } from 'lodash-es'
 import { h } from 'vue'
-import type { SiderItem } from '#/client'
+import type { TitleProps } from '#/components'
 
-const props = withDefaults(
-  defineProps<{
-    title: string
-    /**
-     * 详情弹窗宽度
-     * @default 25rem
-     */
-    modalWidth?: number | string
-    /**
-     * 弹窗标题，默认`${title}详情`
-     */
-    modalTitle?: string
-    /** 弹窗内容，提供后组件右侧会显示详情按钮 */
-    modalData?: SiderItem[]
-  }>(),
-  {
-    modalWidth: '25rem',
-  },
-)
+const props = withDefaults(defineProps<TitleProps>(), {
+  modalWidth: '25rem',
+})
 
 const { open, close } = useModal('TitleDetail')
 

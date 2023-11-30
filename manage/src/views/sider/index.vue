@@ -51,6 +51,7 @@
       v-model:selectedMenu="selectedMenu"
       :selectedItem="selectedItem"
       @submit="onSubmit"
+      @cancel="onCancel"
     >
       <template #header>
         <AAlert showIcon class="mb-4">
@@ -145,6 +146,10 @@ function onSubmit(params: SiderItem | DetailItem) {
     { enablePatches: true },
   )
   console.log('simplePatches: ', simplePatches)
+}
+
+function onCancel() {
+  selectedItem.value = undefined
 }
 </script>
 

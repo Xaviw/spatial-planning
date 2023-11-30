@@ -14,7 +14,8 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "jsxImportSource": "vue"
   },
   "exclude": ["**/node_modules/**", "**/dist/**"]
 }

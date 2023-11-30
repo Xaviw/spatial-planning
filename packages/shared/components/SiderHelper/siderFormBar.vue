@@ -22,29 +22,29 @@
         class="flex-1"
       />
     </div>
+    <template v-if="selectedItem">
+      <div class="mb-4 flex-1 overflow-auto">
+        <SiderBaseForm
+          :element="componentEditForms[selectedItem.type]"
+          :rules="componentEditFormRules[selectedItem.type]"
+          :inModal="inModal"
+          @register="register"
+        />
+      </div>
 
-    <div class="mb-4 flex-1 overflow-auto">
-      <SiderBaseForm
-        v-if="selectedItem"
-        :element="componentEditForms[selectedItem.type]"
-        :rules="componentEditFormRules[selectedItem.type]"
-        :inModal="inModal"
-        @register="register"
-      />
+      <div class="flex items-center">
+        <AButton @click="onSubmit" type="primary" class="mr-4 flex-1">
+          确定
+        </AButton>
+        <AButton @click="onCancel" class="flex-1">取消</AButton>
+      </div>
+    </template>
 
-      <AEmpty
-        v-if="!selectedItem"
-        description="请右击“左栏”、“右栏”中的组件选择“编辑”"
-        class="h-full flex flex-col justify-center"
-      />
-    </div>
-
-    <div class="flex items-center">
-      <AButton @click="onSubmit" type="primary" class="mr-4 flex-1">
-        确定
-      </AButton>
-      <AButton @click="onCancel" class="flex-1">取消</AButton>
-    </div>
+    <AEmpty
+      v-else
+      description="请右击“左栏”、“右栏”中的组件选择“编辑”"
+      class="flex flex-1 flex-col justify-center"
+    />
   </div>
 </template>
 

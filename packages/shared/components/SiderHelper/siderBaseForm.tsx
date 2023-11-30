@@ -1,10 +1,28 @@
-import { Form, Input, Radio, Select, Switch, TreeSelect } from 'ant-design-vue'
+import {
+  Button,
+  Form,
+  Input,
+  Radio,
+  Select,
+  Switch,
+  TreeSelect,
+} from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
-import { computed, defineComponent, Ref, ref, type VNode } from 'vue'
+import { computed, defineComponent, provide, Ref, ref, type VNode } from 'vue'
 import { baseRules, componentTypes } from './data'
 import { useMenuTree } from './useMenuTree'
 import type { Rule } from 'ant-design-vue/es/form'
-import type { validateInfos } from 'ant-design-vue/es/form/useForm'
+import type {
+  validateInfos,
+  validateOptions,
+} from 'ant-design-vue/es/form/useForm'
+
+export interface BaseFormMethods {
+  validate: (names?: string | string[], options?: validateOptions) => void
+  clearValidate: (names?: string | string[]) => void
+  resetFields: (newValues?: Recordable) => void
+  getFieldsValue: () => Recordable
+}
 
 export default defineComponent(
   function (
@@ -20,17 +38,25 @@ export default defineComponent(
     { emit },
   ) {
     const model = ref<Recordable>({ props: {} })
+
     const rules = computed(() => ({
       ...baseRules(props.inModal),
       ...(typeof props.rules === 'function' ? props.rules(props.inModal) : {}),
     }))
+
     const { validateInfos, clearValidate, validate } = Form.useForm(
       model,
       rules,
     )
 
-    emit('register', {
-      validate,
+    const validateFlag = ref(0)
+    provide('validateFlag', validateFlag)
+
+    const formMethods = {
+      validate() {
+        validateFlag.value++
+        validate()
+      },
       clearValidate,
       resetFields(newValues: Recordable = { props: {} }) {
         if (!newValues.props) newValues.props = {}
@@ -39,7 +65,9 @@ export default defineComponent(
       getFieldsValue() {
         return cloneDeep(model.value)
       },
-    })
+    }
+
+    emit('register', formMethods)
 
     const { menuData, onMenuDropdown } = useMenuTree()
 
@@ -89,6 +117,9 @@ export default defineComponent(
         )}
 
         {props.element(model, validateInfos, props.inModal)}
+        <Form.Item>
+          <Button htmlType='submit'>submit</Button>
+        </Form.Item>
       </Form>
     )
   },

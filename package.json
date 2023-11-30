@@ -35,6 +35,7 @@
     "@alova/scene-vue": "^1.2.1",
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@sp/shared": "workspace:^",
+    "@vueuse/core": "^10.6.1",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "alova": "^2.13.1",

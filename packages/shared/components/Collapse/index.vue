@@ -1,7 +1,12 @@
 <template>
   <div class="from-[#043563] to-[#04356305] bg-gradient-to-r">
-    <ACollapse v-bind="props" expandIconPosition="end" ghost>
-      <ACollapsePanel :header="title">
+    <ACollapse
+      v-bind="props"
+      expandIconPosition="end"
+      ghost
+      v-model:activeKey="activeKey"
+    >
+      <ACollapsePanel :header="title" :key="1">
         <Editor
           style="background: transparent"
           :modelValue="content"
@@ -17,19 +22,15 @@
 
 <script setup lang="ts">
 import { Editor } from '@wangeditor/editor-for-vue'
+import { ref } from 'vue'
 import '@wangeditor/editor/dist/css/style.css'
+import type { CollapseProps } from '#/components'
 
-const props = defineProps<{
-  /** 标题 */
-  title: string
-  /** 富文本内容 */
-  content: string
-  /**
-   * 手风琴模式
-   * @default false
-   */
-  accordion?: boolean
-}>()
+const props = withDefaults(defineProps<CollapseProps>(), {
+  defaultOpen: false,
+})
+
+const activeKey = ref(props.defaultOpen ? 1 : undefined)
 </script>
 
 <style scoped>
@@ -47,11 +48,9 @@ const props = defineProps<{
 :deep(.ant-collapse-content-box) {
   padding: 0 16px 12px 16px !important;
 }
-</style>
 
-<style>
-:root {
-  --w-e-textarea-bg-color: transparent;
-  --w-e-textarea-color: #fff;
+:deep(.w-e-text-container) {
+  background-color: transparent !important;
+  color: #fff !important;
 }
 </style>

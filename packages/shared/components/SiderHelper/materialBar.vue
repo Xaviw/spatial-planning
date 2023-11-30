@@ -19,7 +19,7 @@
       <i class="i-ant-design:delete-outlined" />
       <span class="mx-2">删除/暂存栏</span>
       <div class="flex-1 text-right">
-        <AButton size="small" danger ghost @click="clearTemp">清空</AButton>
+        <AButton size="small" ghost danger @click="clearTemp">清空</AButton>
       </div>
     </div>
 

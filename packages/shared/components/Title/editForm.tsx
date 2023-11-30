@@ -21,8 +21,8 @@ export function form(
         }
         modalWidth={model.value.props.modalWidth}
         modalData={model.value.props.modalData}
-        close={close}
-        confirm={onDetailConfirm}
+        onClose={close}
+        onConfirm={onDetailConfirm}
       />,
     )
   }
@@ -33,14 +33,7 @@ export function form(
 
   return (
     <>
-      <Form.Item
-        label='标题'
-        {...validateInfos['props.title']}
-        rules={{
-          required: true,
-          message: '请填写标题！',
-        }}
-      >
+      <Form.Item label='标题' {...validateInfos['props.title']}>
         <Input v-model:value={model.value.props.title} />
       </Form.Item>
       {!inModal && (
@@ -72,7 +65,6 @@ export const rules = (): Record<string, Rule[]> => ({
   'props.title': [
     {
       required: true,
-      message: '请填写标题！',
     },
   ],
 })

@@ -32,34 +32,11 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(
-  defineProps<{
-    /**
-     * 图片宽度，最大48，最小20
-     * @default 36
-     */
-    imgWidth?: number
-    /**
-     * 图片高度，最大48，最小20
-     * @default 36
-     */
-    imgHeight?: number
-    /**
-     * 图片是否支持预览
-     * @default true
-     */
-    imgPreview?: boolean
-    /** 图片链接 */
-    img?: string
-    /** 标题 */
-    title: string
-    /** 内容 */
-    content: string | number
-  }>(),
-  {
-    imgWidth: 36,
-    imgHeight: 36,
-    imgPreview: true,
-  },
-)
+import type { DataCardProps } from '#/components'
+
+withDefaults(defineProps<DataCardProps>(), {
+  imgWidth: 36,
+  imgHeight: 36,
+  imgPreview: true,
+})
 </script>

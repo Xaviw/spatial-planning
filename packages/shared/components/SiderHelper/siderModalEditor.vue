@@ -1,5 +1,5 @@
 <template>
-  <ContentWrapper :title="title" @close="close">
+  <ContentWrapper :title="title" @close="$emit('close')">
     <div class="h-80vh flex">
       <div class="sidebar" :style="{ width: modalWidth }">
         <div class="header">
@@ -29,7 +29,7 @@
       />
     </div>
     <div class="bg-[#1a4f84] px-4 py-2 text-right">
-      <AButton @click="onConfirm">完成编辑</AButton>
+      <AButton @click="onConfirm" type="primary">完成编辑</AButton>
     </div>
   </ContentWrapper>
 </template>
@@ -48,14 +48,17 @@ const props = withDefaults(
     title: string
     modalWidth?: string
     modalData: DetailItem[]
-    close: () => void
-    confirm: (list: DetailItem[]) => void
   }>(),
   {
     modalWidth: '25rem',
     modalData: () => [],
   },
 )
+
+const emits = defineEmits<{
+  (e: 'close'): void
+  (e: 'confirm', list: DetailItem[]): void
+}>()
 
 const list = ref<DetailItem[]>([])
 
@@ -87,7 +90,7 @@ async function onConfirm() {
       content: '当前存在未确定的编辑，是否直接提交？',
     })
   }
-  props.confirm(list.value)
-  props.close()
+  emits('confirm', list.value)
+  emits('close')
 }
 </script>
