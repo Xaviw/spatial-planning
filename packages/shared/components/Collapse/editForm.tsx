@@ -1,23 +1,24 @@
 import { Form, Input, Switch } from 'ant-design-vue'
 import Editor from './editor.vue'
 import type { Rule } from 'ant-design-vue/es/form'
-import type { validateInfos } from 'ant-design-vue/es/form/useForm'
-import type { Ref } from 'vue'
+import type {
+  ComponentFormProps,
+  ComponentFormRuleProps,
+} from 'components/SiderHelper/siderBaseForm'
 
-export function form(model: Ref<Recordable>, validateInfos: validateInfos) {
+export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
   return (
     <>
       <Form.Item label='标题' {...validateInfos['props.title']}>
         <Input v-model:value={model.value.props.title} />
       </Form.Item>
-      {/* HACK: 用编辑器组件传出的_empty判断是否为空，因为editor为空时值为<p><br/></p> */}
-      <Form.Item label='内容' {...validateInfos['props._empty']}>
+      <Form.Item label='内容' {...validateInfos['props.content']}>
         <Editor
           modelValue={model.value.props.content}
-          onUpdate:modelValue={(value: string, text: boolean) => {
+          onUpdate:modelValue={(value: string) => {
             model.value.props.content = value
-            model.value.props._empty = text
           }}
+          ref={editorRef}
         />
       </Form.Item>
       <Form.Item
@@ -35,20 +36,27 @@ export function form(model: Ref<Recordable>, validateInfos: validateInfos) {
   )
 }
 
-export const rules = (): Record<string, Rule[]> => ({
-  'props.title': [
-    {
-      required: true,
-      message: '请填写标题！',
-    },
-  ],
-  'props._empty': [
-    {
-      required: true,
-      message: '请填写内容！',
-      validator(_rule, value) {
-        return value ? Promise.reject() : Promise.resolve()
+export const rules = ({
+  editorRef,
+}: ComponentFormRuleProps): Record<string, Rule[]> => {
+  return {
+    'props.title': [
+      {
+        required: true,
+        message: '请填写标题！',
       },
-    },
-  ],
-})
+    ],
+    'props.content': [
+      {
+        required: true,
+        message: '请填写内容！',
+        validator(_rule, value) {
+          if (editorRef.value?.validate) {
+            return editorRef.value.validate()
+          }
+          return value === '<p><br></p>' ? Promise.reject() : Promise.resolve
+        },
+      },
+    ],
+  }
+}

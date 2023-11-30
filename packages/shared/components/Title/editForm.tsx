@@ -1,16 +1,11 @@
 import { Form, Input, Button } from 'ant-design-vue'
 import { useModal } from '../../hooks'
 import SiderModalEditor from '../SiderHelper/siderModalEditor.vue'
+import type { DetailItem } from '#/client'
 import type { Rule } from 'ant-design-vue/es/form'
-import type { validateInfos } from 'ant-design-vue/es/form/useForm'
-import type { Ref } from 'vue'
-import { DetailItem } from '#/client'
+import type { ComponentFormProps } from 'components/SiderHelper/siderBaseForm'
 
-export function form(
-  model: Ref<Recordable>,
-  validateInfos: validateInfos,
-  inModal: boolean,
-) {
+export function form({ model, validateInfos, inModal }: ComponentFormProps) {
   const { open, close } = useModal('TitleDetailEditor')
 
   function openDetail() {

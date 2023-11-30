@@ -1,14 +1,13 @@
-import {
-  Button,
-  Form,
-  Input,
-  Radio,
-  Select,
-  Switch,
-  TreeSelect,
-} from 'ant-design-vue'
+import { Form, Input, Radio, Select, Switch, TreeSelect } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
-import { computed, defineComponent, provide, Ref, ref, type VNode } from 'vue'
+import {
+  type DefineComponent,
+  computed,
+  defineComponent,
+  Ref,
+  ref,
+  type VNode,
+} from 'vue'
 import { baseRules, componentTypes } from './data'
 import { useMenuTree } from './useMenuTree'
 import type { Rule } from 'ant-design-vue/es/form'
@@ -24,24 +23,38 @@ export interface BaseFormMethods {
   getFieldsValue: () => Recordable
 }
 
+export interface ComponentFormProps {
+  model: Ref<Recordable>
+  validateInfos: validateInfos
+  editorRef: Ref<DefineComponent | null>
+  /** Title 组件详情弹窗会复用表单 */
+  inModal: boolean
+}
+
+export interface ComponentFormRuleProps {
+  inModal: boolean
+  model: Ref<Recordable>
+  editorRef: Ref<DefineComponent | null>
+}
+
 export default defineComponent(
   function (
     props: {
-      element: (
-        model: Ref<Recordable>,
-        validateInfos: validateInfos,
-        inModal: boolean,
-      ) => JSX.Element | VNode
-      rules: (inModal: boolean) => Record<string, Rule[]>
+      element: (options: ComponentFormProps) => JSX.Element | VNode
+      rules: (options: ComponentFormRuleProps) => Record<string, Rule[]>
       inModal: boolean
     },
     { emit },
   ) {
+    const editorRef = ref<DefineComponent | null>(null)
+
     const model = ref<Recordable>({ props: {} })
 
     const rules = computed(() => ({
       ...baseRules(props.inModal),
-      ...(typeof props.rules === 'function' ? props.rules(props.inModal) : {}),
+      ...(typeof props.rules === 'function'
+        ? props.rules({ inModal: props.inModal, model, editorRef })
+        : {}),
     }))
 
     const { validateInfos, clearValidate, validate } = Form.useForm(
@@ -49,13 +62,13 @@ export default defineComponent(
       rules,
     )
 
-    const validateFlag = ref(0)
-    provide('validateFlag', validateFlag)
-
     const formMethods = {
-      validate() {
-        validateFlag.value++
-        validate()
+      validate: () => {
+        const events: Promise<any>[] = [validate()]
+        if (editorRef.value?.validate) {
+          events.push(editorRef.value.validate())
+        }
+        return Promise.all(events)
       },
       clearValidate,
       resetFields(newValues: Recordable = { props: {} }) {
@@ -116,10 +129,12 @@ export default defineComponent(
           </>
         )}
 
-        {props.element(model, validateInfos, props.inModal)}
-        <Form.Item>
-          <Button htmlType='submit'>submit</Button>
-        </Form.Item>
+        {props.element({
+          model,
+          validateInfos,
+          inModal: props.inModal,
+          editorRef,
+        })}
       </Form>
     )
   },

@@ -11,11 +11,9 @@ import type { DescriptionProps } from '#/components'
 
 const props = withDefaults(defineProps<DescriptionProps>(), {
   data: () => [],
-  bordered: false,
   colon: true,
   column: 3,
   layout: 'horizontal',
-  size: 'default',
 })
 </script>
 

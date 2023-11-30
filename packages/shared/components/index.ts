@@ -18,7 +18,10 @@ import Modal from './Modal/index.vue'
 
 import DraggableList from './SiderHelper/draggableList.vue'
 import MaterialBar from './SiderHelper/materialBar.vue'
-import SiderBaseForm from './SiderHelper/siderBaseForm'
+import SiderBaseForm, {
+  type ComponentFormProps,
+  type ComponentFormRuleProps,
+} from './SiderHelper/siderBaseForm'
 import SiderFormBar from './SiderHelper/siderFormBar.vue'
 import SiderModalEditor from './SiderHelper/siderModalEditor.vue'
 import { useSiderForm } from './SiderHelper/useSiderForm'
@@ -27,6 +30,7 @@ import { useMenuTree } from './SiderHelper/useMenuTree'
 import '../../../unocss-icon'
 
 import type { Rule } from 'ant-design-vue/es/form/interface'
+import { VNode } from 'vue'
 
 const componentModules: Record<string, any> = import.meta.glob(
   './**/index.vue',
@@ -49,10 +53,13 @@ const editFormModules: Record<string, any> = import.meta.glob(
     eager: true,
   },
 )
-const componentEditForms: Record<string, any> = {}
+const componentEditForms: Record<
+  string,
+  (options: ComponentFormProps) => JSX.Element | VNode
+> = {}
 const componentEditFormRules: Record<
   string,
-  (inModal: boolean) => Record<string, Rule[]>
+  (option: ComponentFormRuleProps) => Record<string, Rule[]>
 > = {}
 for (const path in editFormModules) {
   const name = /^.*\/(.*?)\/editForm.tsx$/.exec(path)?.[1]

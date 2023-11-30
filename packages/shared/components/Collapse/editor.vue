@@ -9,7 +9,7 @@
     <Editor
       class="min-h-[300px] overflow-auto"
       :modelValue="modelValue"
-      @update:modelValue="onUpdate"
+      @update:modelValue="$emit('update:modelValue', $event)"
       :defaultConfig="editorConfig"
       mode="simple"
       @onCreated="handleCreated"
@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { message } from 'ant-design-vue'
-import { onBeforeUnmount, shallowRef } from 'vue'
+import { nextTick, onBeforeUnmount, shallowRef } from 'vue'
 import '@wangeditor/editor/dist/css/style.css'
 import type { IToolbarConfig, IEditorConfig } from '@wangeditor/editor'
 import type { AlertType } from 'ant-design-vue/es/alert'
@@ -30,7 +30,7 @@ defineProps<{
 }>()
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', value: string, isEmpty: boolean): void
+  (e: 'update:modelValue', value: string): void
 }>()
 
 const editorRef = shallowRef()
@@ -71,10 +71,16 @@ const handleCreated = (editor: any) => {
   // console.log('菜单配置：', editor.getMenuConfig(''))
 }
 
-function onUpdate(content: string) {
-  const empty = editorRef.value.isEmpty()
-  const text = editorRef.value.getText().trim()
+defineExpose({
+  async validate() {
+    await nextTick()
+    const empty = editorRef.value.isEmpty()
+    const text = editorRef.value.getText().trim()
 
-  emits('update:modelValue', content, empty && !text)
-}
+    if (empty && !text) {
+      return Promise.reject()
+    }
+    return Promise.resolve()
+  },
+})
 </script>

@@ -79,11 +79,6 @@ export interface DescriptionItemProps {
 
 export interface DescriptionProps {
   /**
-   * 是否显示边框
-   * @default false
-   */
-  bordered?: boolean
-  /**
    * 是否显示分隔冒号
    * @default true
    */
@@ -98,11 +93,6 @@ export interface DescriptionProps {
    * @default horizontal
    */
   layout?: 'horizontal' | 'vertical'
-  /**
-   * 列表大小，支持 middle|small|default
-   * @default default
-   */
-  size?: 'middle' | 'small' | 'default'
   /**
    * 显示在顶部的标题
    */

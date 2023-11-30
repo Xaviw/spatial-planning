@@ -4,6 +4,7 @@
     :model="item"
     :key="index"
     class="mb-2"
+    :ref="el => refs.push(el)"
   >
     <div
       class="max-w-100 flex items-center border border-[#d9d9d9] border-dashed p-2 pb-0"
@@ -41,7 +42,7 @@
 
 <script setup lang="ts">
 import { Form, Input } from 'ant-design-vue'
-import { inject, watchEffect } from 'vue'
+import { ref } from 'vue'
 import type { DescriptionItemProps } from '#/components'
 
 const props = withDefaults(
@@ -55,19 +56,25 @@ const emits = defineEmits<{
   (e: 'update:modelValue', data: DescriptionItemProps[]): void
 }>()
 
-const validateFlag = inject('validateFlag')
-
-watchEffect(() => {
-  console.log(validateFlag)
-})
+const refs = ref<any[]>([])
 
 function onAdd() {
   emits('update:modelValue', [...props.modelValue, {} as DescriptionItemProps])
 }
 
 function onRemove(index: number) {
-  emits('update:modelValue', [...props.modelValue].splice(index, 1))
+  const clone = [...props.modelValue]
+  clone.splice(index, 1)
+  emits('update:modelValue', clone)
 }
+
+defineExpose({
+  validate() {
+    for (const instance of refs.value) {
+      instance?.validate()
+    }
+  },
+})
 </script>
 
 <style scoped>

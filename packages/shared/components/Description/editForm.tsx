@@ -1,10 +1,9 @@
 import { Form, Input, InputNumber, Radio } from 'ant-design-vue'
 import Editor from './editor.vue'
 import type { Rule } from 'ant-design-vue/es/form'
-import type { validateInfos } from 'ant-design-vue/es/form/useForm'
-import type { Ref } from 'vue'
+import type { ComponentFormProps } from 'components/SiderHelper/siderBaseForm'
 
-export function form(model: Ref<Recordable>, validateInfos: validateInfos) {
+export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
   return (
     <>
       <Form.Item
@@ -42,6 +41,7 @@ export function form(model: Ref<Recordable>, validateInfos: validateInfos) {
         <Editor
           modelValue={model.value.props.data}
           onUpdate:modelValue={data => (model.value.props.data = data)}
+          ref={editorRef}
         />
       </Form.Item>
     </>

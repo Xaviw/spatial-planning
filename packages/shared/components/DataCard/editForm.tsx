@@ -1,9 +1,8 @@
 import { Form, Input, InputNumber, Switch } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
-import type { validateInfos } from 'ant-design-vue/es/form/useForm'
-import type { Ref } from 'vue'
+import type { ComponentFormProps } from 'components/SiderHelper/siderBaseForm'
 
-export function form(model: Ref<Recordable>, validateInfos: validateInfos) {
+export function form({ model, validateInfos }: ComponentFormProps) {
   return (
     <>
       <Form.Item label='名称' {...validateInfos['props.title']}>
