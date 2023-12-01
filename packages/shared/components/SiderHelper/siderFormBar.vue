@@ -54,7 +54,7 @@ import { componentEditFormRules, componentEditForms } from '../../components'
 import SiderBaseForm from './siderBaseForm'
 import { useMenuTree } from './useMenuTree'
 import { useSiderForm } from './useSiderForm'
-import type { DetailItem, SiderItem } from '#/client'
+import type { DetailItem, SiderItem } from '#/request'
 
 const props = defineProps<{
   inModal: boolean
@@ -90,3 +90,17 @@ async function onCancel() {
   emits('cancel')
 }
 </script>
+
+<style>
+.editor-block {
+  @apply max-w-100 flex items-center border border-[#d9d9d9] border-dashed p-2 pb-0;
+}
+
+.editor-btn {
+  @apply flex items-center justify-center border border-[#d9d9d9] rounded border-solid p-2 cursor-pointer;
+}
+
+:fullscreen {
+  background-color: #fff;
+}
+</style>

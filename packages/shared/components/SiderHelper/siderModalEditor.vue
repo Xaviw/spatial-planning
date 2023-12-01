@@ -41,7 +41,7 @@ import ContentWrapper from '../ContentWrapper/index.vue'
 import DraggableList from './draggableList.vue'
 import MaterialBar from './materialBar.vue'
 import SiderFormBar from './siderFormBar.vue'
-import type { DetailItem } from '#/client'
+import type { DetailItem } from '#/request'
 
 const props = withDefaults(
   defineProps<{

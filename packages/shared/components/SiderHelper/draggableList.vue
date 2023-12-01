@@ -15,12 +15,14 @@
           :class="['mb-2', selectedId === comp.id && 'sider-selected']"
         >
           <ADropdown :trigger="['contextmenu']">
-            <component
-              v-show="show(comp)"
-              :is="components[comp.type]"
-              :key="comp.id"
-              v-bind="comp.props"
-            />
+            <div>
+              <component
+                v-show="show(comp)"
+                :is="components[comp.type]"
+                :key="comp.id"
+                v-bind="comp.props"
+              />
+            </div>
 
             <template #overlay>
               <AMenu>
@@ -52,7 +54,7 @@ import { components } from '@sp/shared/components'
 import { cloneDeep } from 'lodash-es'
 import { unref } from 'vue'
 import { VueDraggable, type UseDraggableOptions } from 'vue-draggable-plus'
-import type { DetailItem, SiderItem, SiderChangeParams } from '#/client'
+import type { DetailItem, SiderItem, SiderChangeParams } from '#/request'
 
 type Add = NonNullable<Pick<UseDraggableOptions<any>, 'onAdd'>['onAdd']>
 

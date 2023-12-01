@@ -10,20 +10,17 @@
       <div class="mr-4 flex-1">
         <Form.Item
           label="名称"
-          name="label"
+          name="name"
           :rules="{ required: true, message: '请填写名称！' }"
         >
-          <Input v-model:value="item.label" class="w-30" />
+          <Input v-model:value="item.name" class="w-30" />
         </Form.Item>
         <Form.Item
-          label="内容"
+          label="数值"
           name="value"
-          :rules="{ required: true, message: '请填写内容！' }"
+          :rules="{ required: true, message: '请填写数值！' }"
         >
-          <Input.TextArea
-            v-model:value="item.value"
-            :autoSize="{ minRows: 1 }"
-          />
+          <InputNumber v-model:value="item.value" :min="0" />
         </Form.Item>
       </div>
       <Form.Item>
@@ -43,25 +40,25 @@
 </template>
 
 <script setup lang="ts">
-import { Form, Input } from 'ant-design-vue'
+import { Form, InputNumber, Input } from 'ant-design-vue'
 import { ref } from 'vue'
-import type { DescriptionItemProps } from '#/components'
+import type { ProgressItem } from '#/components'
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: DescriptionItemProps[]
+    modelValue?: ProgressItem[]
   }>(),
   { modelValue: () => [] },
 )
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', data: DescriptionItemProps[]): void
+  (e: 'update:modelValue', data: ProgressItem[]): void
 }>()
 
 const refs = ref<any[]>([])
 
 function onAdd() {
-  emits('update:modelValue', [...props.modelValue, {} as DescriptionItemProps])
+  emits('update:modelValue', [...props.modelValue, {} as ProgressItem])
 }
 
 function onRemove(index: number) {
@@ -78,9 +75,3 @@ defineExpose({
   },
 })
 </script>
-
-<style scoped>
-.btn {
-  @apply flex items-center justify-center border border-[#d9d9d9] rounded border-solid p-2 cursor-pointer;
-}
-</style>

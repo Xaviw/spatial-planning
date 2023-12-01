@@ -1,4 +1,4 @@
-import type { MenuItem } from '#/client'
+import type { MenuItem } from '#/request'
 
 export function loop(
   data: MenuItem[],

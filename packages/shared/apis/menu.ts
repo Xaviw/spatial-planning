@@ -1,6 +1,5 @@
 import { request } from '../utils/request'
-import type { MenuItem } from '#/client'
-import type { RequestMeta } from '#/request'
+import type { MenuItem, RequestMeta } from '#/request'
 
 export function getMenu<T = MenuItem[]>(
   /** 是否筛选掉禁用的菜单 */

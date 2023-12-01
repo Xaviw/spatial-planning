@@ -1,7 +1,7 @@
 import { Form, Input, Button } from 'ant-design-vue'
 import { useModal } from '../../hooks'
 import SiderModalEditor from '../SiderHelper/siderModalEditor.vue'
-import type { DetailItem } from '#/client'
+import type { DetailItem } from '#/request'
 import type { Rule } from 'ant-design-vue/es/form'
 import type { ComponentFormProps } from 'components/SiderHelper/siderBaseForm'
 

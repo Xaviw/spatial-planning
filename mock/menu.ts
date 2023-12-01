@@ -1,5 +1,5 @@
 import Mock from 'mockjs'
-import type { MenuItem } from '../types/client'
+import type { MenuItem } from '../types/request'
 import type { MockMethod } from 'vite-plugin-mock'
 
 export default [

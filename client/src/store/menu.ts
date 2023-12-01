@@ -3,7 +3,7 @@ import { useLoading } from '@sp/shared/hooks'
 import { useFetcher } from 'alova'
 import { Modal } from 'ant-design-vue'
 import { createVNode } from 'vue'
-import type { MenuItem } from '#/client'
+import type { MenuItem } from '#/request'
 
 export interface HandledMenu {
   label: string

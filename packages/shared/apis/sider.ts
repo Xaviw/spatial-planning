@@ -1,5 +1,5 @@
 import { request } from '../utils/request'
-import type { SiderPosition, SiderItem } from '#/client'
+import type { SiderPosition, SiderItem } from '#/request'
 
 export interface GetSiderParams {
   menuId?: string

@@ -97,7 +97,7 @@ import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { Form, message } from 'ant-design-vue'
 import { loop, add, move, remove, update } from './helper'
-import type { MenuItem } from '#/client'
+import type { MenuItem } from '#/request'
 import type {
   EventDataNode,
   AntTreeNodeDropEvent,

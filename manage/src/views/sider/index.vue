@@ -81,7 +81,7 @@ import { useMutative } from '@sp/shared/hooks'
 import { useRequest } from 'alova'
 import { cloneDeep } from 'lodash-es'
 import { apply, create, rawReturn } from 'mutative'
-import type { DetailItem, SiderItem, SiderChangeParams } from '#/client'
+import type { DetailItem, SiderItem, SiderChangeParams } from '#/request'
 
 const { data: leftList, loading: leftLoading } = useRequest(
   menuId => getSider({ position: 'left', filter: false, menuId }),

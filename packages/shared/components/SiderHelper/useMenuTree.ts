@@ -1,7 +1,7 @@
 import { useRequest } from 'alova'
 import { ref } from 'vue'
 import { getMenu } from '../../apis'
-import type { MenuItem } from '#/client'
+import type { MenuItem } from '#/request'
 
 export function useMenuTree() {
   const menuSearchValue = ref<string>()

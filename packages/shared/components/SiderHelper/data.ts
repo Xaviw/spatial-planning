@@ -1,4 +1,4 @@
-import type { SiderItem, SiderComponents } from '#/client'
+import type { SiderItem, SiderComponents } from '#/request'
 import type { Rule } from 'ant-design-vue/es/form'
 
 export const componentTypes: { label: string; value: SiderComponents }[] = [

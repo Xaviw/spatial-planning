@@ -11,19 +11,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { TableProps } from '#/components'
 
-const props = withDefaults(
-  defineProps<{
-    /**
-     * 表格数据，二维数组
-     * @example [['列1', '列2'], ['数据1', '数据2']]
-     */
-    data: (string | number)[][]
-  }>(),
-  {
-    data: () => [],
-  },
-)
+const props = withDefaults(defineProps<TableProps>(), {
+  data: () => [],
+})
 
 const columns = computed(() => {
   return props.data[0]?.map((item, index) => ({
