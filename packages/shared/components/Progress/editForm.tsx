@@ -25,7 +25,7 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
     <>
       <Form.Item
         label='类型'
-        help='默认进度条'
+        help='默认“进度条”'
         {...validateInfos['props.type']}
       >
         <Radio.Group
@@ -39,7 +39,7 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
       </Form.Item>
       <Form.Item
         label='排列方式'
-        help='默认纵向排列'
+        help='默认“纵向”排列'
         {...validateInfos['props.layout']}
       >
         <Radio.Group v-model:value={model.value.props.layout}>
@@ -68,10 +68,10 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
           <InputNumber v-model:value={model.value.props.steps} precision={0} />
         </Form.Item>
       )}
-      {model.value.props.type !== 'line' && (
+      {model.value.props.type && model.value.props.type !== 'line' && (
         <Form.Item
           label='进度条宽度'
-          help='单位为相对于整体尺寸所占百分比，默认6%'
+          help='单位为相对于整体尺寸所占百分比，默认“6%”'
           {...validateInfos['props.strokeWidth']}
         >
           <InputNumber
@@ -87,7 +87,7 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
         <>
           <Form.Item
             label='缺口角度'
-            help='仪表盘缺口角度，默认75度'
+            help='仪表盘缺口角度，默认“75”度'
             {...validateInfos['props.gapDegree']}
           >
             <InputNumber
@@ -100,7 +100,7 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
           </Form.Item>
           <Form.Item
             label='缺口位置'
-            help='仪表盘缺口位置，默认底部'
+            help='仪表盘缺口位置，默认“底部”'
             {...validateInfos['props.gapPosition']}
           >
             <Radio.Group v-model:value={model.value.props.gapPosition}>
@@ -114,14 +114,14 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
       )}
       <Form.Item
         label='进度条颜色'
-        help='默认蓝色（#1677ff）'
+        help='默认“蓝色”（#1677ff）'
         {...validateInfos['props.strokeColor']}
       >
         <ColorPicker v-model:pureColor={model.value.props.strokeColor} />
       </Form.Item>
       <Form.Item
         label='进度条底色'
-        help='默认半透明（#ffffff22'
+        help='默认“半透明白色”（#ffffff22）'
         {...validateInfos['props.trailColor']}
       >
         <ColorPicker v-model:pureColor={model.value.props.trailColor} />
@@ -134,7 +134,6 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
         <InputNumber
           v-model={model.value.props.size}
           min={1}
-          precision={0}
           addonAfter='像素'
         />
       </Form.Item>

@@ -16,7 +16,7 @@
           enableContextMenu
           :filterMenu="selectedMenu"
           @edit="onEdit"
-          @immer="onImmer"
+          @mutative="onMutative"
           :selectedId="selectedItem?.id"
         />
       </div>
@@ -38,7 +38,7 @@
           enableContextMenu
           :filterMenu="selectedMenu"
           @edit="onEdit"
-          @immer="onImmer"
+          @mutative="onMutative"
           :selectedId="selectedItem?.id"
         />
       </div>
@@ -50,10 +50,13 @@
       :inModal="false"
       v-model:selectedMenu="selectedMenu"
       :selectedItem="selectedItem"
-      @submit="onSubmit"
+      @confirm="onConfirm"
       @cancel="onCancel"
     >
       <template #header>
+        <div class="mb-2 flex">
+          <AButton type="primary" @click="onSubmit">提交</AButton>
+        </div>
         <AAlert showIcon class="mb-4">
           <template #message>
             <div>拖拽“左栏”、“右栏”中的组件移动位置；</div>
@@ -81,7 +84,7 @@ import { useMutative } from '@sp/shared/hooks'
 import { useRequest } from 'alova'
 import { cloneDeep } from 'lodash-es'
 import { apply, create, rawReturn } from 'mutative'
-import type { DetailItem, SiderItem, SiderChangeParams } from '#/request'
+import type { SiderItem, SiderChangeParams } from '#/request'
 
 const { data: leftList, loading: leftLoading } = useRequest(
   menuId => getSider({ position: 'left', filter: false, menuId }),
@@ -100,6 +103,7 @@ const selectedItem = ref<SiderItem>()
 function onEdit(item: SiderItem) {
   selectedItem.value = item
 }
+
 let originalList: SiderItem[]
 
 const { update, patches, state } = useMutative([] as SiderItem[])
@@ -114,7 +118,7 @@ const unwatch = watchEffect(() => {
   }
 })
 
-function onImmer(e: SiderChangeParams) {
+function onMutative(e: SiderChangeParams) {
   const leftLength = leftList.value.length
   if (e.name === 'add') {
     update(state => {
@@ -135,9 +139,32 @@ function onImmer(e: SiderChangeParams) {
   }
 }
 
-function onSubmit(params: SiderItem | DetailItem) {
-  console.log('params:', params)
+function onConfirm(params: SiderItem) {
+  let index = leftList.value.findIndex(item => item.id === params.id)
+  if (index >= 0) {
+    leftList.value[index] = params
+    update(state => {
+      state[index] = params
+    })
+  } else {
+    index = rightList.value.findIndex(item => item.id === params.id)
+    if (index < 0) {
+      throw new Error('编辑的组件不存在！')
+    }
+    rightList.value[index] = params
+    update(state => {
+      state[index + leftList.value.length] = params
+    })
+  }
 
+  selectedItem.value = undefined
+}
+
+function onCancel() {
+  selectedItem.value = undefined
+}
+
+function onSubmit() {
   const [_state, simplePatches] = create(
     originalList,
     state => {
@@ -146,10 +173,6 @@ function onSubmit(params: SiderItem | DetailItem) {
     { enablePatches: true },
   )
   console.log('simplePatches: ', simplePatches)
-}
-
-function onCancel() {
-  selectedItem.value = undefined
 }
 </script>
 

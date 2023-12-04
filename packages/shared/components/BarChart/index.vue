@@ -1,5 +1,5 @@
 <template>
-  <VChart :option="option" :style="{ height: props.height + 'px' }" />
+  <VChart :option="option" :style="{ height: props.height }" />
 </template>
 
 <script setup lang="ts">
@@ -15,6 +15,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 
 import { ref } from 'vue'
 import VChart from 'vue-echarts'
+import type { BarChartProps } from '#/components'
 import type {
   TooltipComponentOption,
   LegendComponentOption,
@@ -25,31 +26,11 @@ import type { ComposeOption } from 'echarts/core'
 type EChartsOption = ComposeOption<
   TooltipComponentOption | LegendComponentOption | GridComponentOption
 >
-const props = withDefaults(
-  defineProps<{
-    /**
-     * 容器高度，单位px
-     * @default 240
-     */
-    height?: number
-    /** X轴数据项，数量应该与data.value一致 */
-    xAxis: string[]
-    /** 多条折线数据 */
-    series: {
-      /** 提供name时会显示图例 */
-      name?: string
-      /** 数量应与columns一致 */
-      data: number[]
-      /** 柱宽度 */
-      barWidth?: string
-    }[]
-  }>(),
-  {
-    height: 240,
-    xAxis: () => [],
-    series: () => [],
-  },
-)
+const props = withDefaults(defineProps<BarChartProps>(), {
+  height: '240px',
+  xAxis: () => [],
+  series: () => [],
+})
 
 use([
   TooltipComponent,

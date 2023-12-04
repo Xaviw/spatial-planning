@@ -1,4 +1,5 @@
-import { Form, Input, InputNumber, Switch } from 'ant-design-vue'
+import { Form, Input, Switch } from 'ant-design-vue'
+import CssSizeInput from '../CssSizeInput/index.vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import type { ComponentFormProps } from 'components/SiderHelper/siderBaseForm'
 
@@ -23,28 +24,30 @@ export function form({ model, validateInfos }: ComponentFormProps) {
       </Form.Item>
       <Form.Item
         label='图片宽度'
-        help='默认36像素'
+        help='默认“36px”'
         {...validateInfos['props.imgWidth']}
       >
-        <InputNumber
-          v-model:value={model.value.props.imgWidth}
-          addonAfter='像素'
+        <CssSizeInput
+          modelValue={model.value.props.imgWidth}
+          onUpdate:modelValue={newValue =>
+            (model.value.props.imgWidth = newValue)
+          }
           max={48}
           min={20}
-          precision={0}
         />
       </Form.Item>
       <Form.Item
         label='图片高度'
-        help='默认36像素'
+        help='默认“36px”'
         {...validateInfos['props.imgHeight']}
       >
-        <InputNumber
-          v-model:value={model.value.props.imgHeight}
-          addonAfter='像素'
+        <CssSizeInput
+          modelValue={model.value.props.imgHeight}
+          onUpdate:modelValue={newValue =>
+            (model.value.props.imgHeight = newValue)
+          }
           max={48}
           min={20}
-          precision={0}
         />
       </Form.Item>
     </>

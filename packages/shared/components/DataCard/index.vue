@@ -7,8 +7,8 @@
     >
       <div class="absolute" v-if="img">
         <AImage
-          :width="imgWidth > 48 || imgWidth < 20 ? 36 : imgWidth"
-          :height="imgHeight > 48 || imgHeight < 20 ? 36 : imgHeight"
+          :width="imgWidth"
+          :height="imgHeight"
           :preview="imgPreview"
           :src="img"
         >
@@ -35,8 +35,8 @@
 import type { DataCardProps } from '#/components'
 
 withDefaults(defineProps<DataCardProps>(), {
-  imgWidth: 36,
-  imgHeight: 36,
+  imgWidth: '36px',
+  imgHeight: '36px',
   imgPreview: true,
 })
 </script>

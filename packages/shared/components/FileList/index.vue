@@ -1,34 +1,37 @@
 <template>
-  <div>
-    <ARow :wrap="true">
-      <ACol
-        v-for="(item, index) of dataWithPreset"
-        :key="index"
-        :span="span"
-        v-bind="item"
-        class="flex flex-col items-center"
-        :style="{ padding: gutter + 'px' }"
+  <div
+    class="grid"
+    :style="{
+      gridTemplateColumns: `repeat(${columns}, 1fr)`,
+      gap: gap,
+      marginInline: gap,
+    }"
+  >
+    <div
+      v-for="(item, index) of dataWithPreset"
+      :key="index"
+      v-bind="item"
+      class="flex flex-col items-center"
+    >
+      <AImage
+        v-if="item.img"
+        :height="item.imgHeight"
+        :width="item.imgWidth"
+        :src="item.img"
       >
-        <AImage
-          v-if="item.img"
-          :height="item.imgHeight ?? 64"
-          :width="item.imgWidth ?? 64"
-          :src="item.img"
-        >
-          <template #previewMask>
-            <i class="i-ant-design:eye-outlined" />
-          </template>
-        </AImage>
+        <template #previewMask>
+          <i class="i-ant-design:eye-outlined" />
+        </template>
+      </AImage>
 
-        <i
-          v-else
-          :class="[item.icon, 'text-64px', 'cursor-pointer', 'text-gradient']"
-          @click="onPreview(item)"
-        />
+      <i
+        v-else
+        :class="[item.icon, 'text-64px', 'cursor-pointer', 'text-gradient']"
+        @click="onPreview(item)"
+      />
 
-        <span class="mt-1 break-all">{{ item.title }}</span>
-      </ACol>
-    </ARow>
+      <span class="mt-1 break-all">{{ item.title }}</span>
+    </div>
 
     <FilePreview
       v-model="previewData.visible"
@@ -43,53 +46,19 @@
 import { MediaEnum } from '@sp/shared/utils'
 import { computed, reactive } from 'vue'
 import FilePreview from './FilePreview.vue'
-import type { ColProps } from 'ant-design-vue/es/col/index'
+import type { FileListProps, FileListItem } from '#/components'
 
-interface FileItem extends ColProps {
-  /** 文件标题 */
-  title: string
-  /** 图片链接 */
-  img?: string
-  /**
-   * 图片宽度
-   * @default 64
-   */
-  imgWidth?: number
-  /**
-   * 图片高度
-   * @default 64
-   */
-  imgHeight?: number
-  /** 文件预览链接，支持PDF、WORD、EXCEL、PPT */
-  src?: string
-}
-
-interface ResolvedFileItem extends FileItem {
+interface ResolvedFileItem extends FileListItem {
   icon?: string
   type?: MediaEnum
   extName: string
 }
 
-const props = withDefaults(
-  defineProps<{
-    /**
-     * 默认栅格占格数，24栅格
-     * @default 8
-     */
-    span?: number
-    /**
-     * 栅格间隔，单位像素
-     * @default 6
-     */
-    gutter?: number
-    data: FileItem[]
-  }>(),
-  {
-    span: 8,
-    gutter: 6,
-    data: () => [],
-  },
-)
+const props = withDefaults(defineProps<FileListProps>(), {
+  columns: 4,
+  gap: '8px',
+  data: () => [],
+})
 
 const dataWithPreset = computed<ResolvedFileItem[]>(() => {
   return props.data.map(item => {

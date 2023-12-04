@@ -73,7 +73,7 @@ const props = withDefaults(
 
 const emits = defineEmits<{
   (e: 'update:modelValue', newList: any[]): void
-  (e: 'immer', params: SiderChangeParams): void
+  (e: 'mutative', params: SiderChangeParams): void
   (e: 'edit', item: T, index: number): void
 }>()
 
@@ -93,21 +93,21 @@ function onChange(e: Parameters<Add>[0]) {
     }
   }
   if (e.from.id === 'material') {
-    emits('immer', {
+    emits('mutative', {
       name: 'add',
       to: e.to.id,
       newIndex: e.newIndex,
       data: original!,
     })
   } else if (e.to.id === 'temp') {
-    emits('immer', {
+    emits('mutative', {
       name: 'remove',
       from: e.from.id,
       oldIndex: e.oldIndex,
       data: original!,
     })
   } else {
-    emits('immer', {
+    emits('mutative', {
       name: 'move',
       from: e.from.id,
       to: e.to.id,

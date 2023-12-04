@@ -2,6 +2,7 @@
   <AInputGroup compact>
     <AInput
       v-model:value="before"
+      class="text-right!"
       style="width: calc(50% - 25px)"
       placeholder="前置信息"
       @change="onChange"

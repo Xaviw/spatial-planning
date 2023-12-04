@@ -40,8 +40,8 @@ export interface ComponentFormRuleProps {
 export default defineComponent(
   function (
     props: {
-      element: (options: ComponentFormProps) => JSX.Element | VNode
-      rules: (options: ComponentFormRuleProps) => Record<string, Rule[]>
+      element?: (options: ComponentFormProps) => JSX.Element | VNode
+      rules?: (options: ComponentFormRuleProps) => Record<string, Rule[]>
       inModal: boolean
     },
     { emit },
@@ -129,12 +129,13 @@ export default defineComponent(
           </>
         )}
 
-        {props.element({
-          model,
-          validateInfos,
-          inModal: props.inModal,
-          editorRef,
-        })}
+        {typeof props.element === 'function' &&
+          props.element({
+            model,
+            validateInfos,
+            inModal: props.inModal,
+            editorRef,
+          })}
       </Form>
     )
   },

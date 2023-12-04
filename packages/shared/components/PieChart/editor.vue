@@ -1,0 +1,77 @@
+<template>
+  <Form
+    v-for="(item, index) of modelValue"
+    :model="item"
+    :key="index"
+    class="mb-2"
+    :ref="el => refs.push(el)"
+  >
+    <div class="editor-block">
+      <div class="mr-4 flex-1">
+        <Form.Item
+          label="名称"
+          name="name"
+          :rules="{ required: true, message: '请填写名称！' }"
+        >
+          <Input v-model:value="item.name" class="w-30" />
+        </Form.Item>
+        <Form.Item
+          label="数值"
+          name="value"
+          :rules="{ required: true, message: '请填写数值！' }"
+        >
+          <InputNumber v-model:value="item.value" />
+        </Form.Item>
+      </div>
+      <Form.Item>
+        <div
+          class="editor-btn"
+          v-if="index === modelValue.length - 1"
+          @click="onAdd"
+        >
+          <i class="i-ant-design:plus-outlined" />
+        </div>
+        <div @click="onRemove(index)" v-else class="editor-btn">
+          <i class="i-ant-design:close-outlined text-red" />
+        </div>
+      </Form.Item>
+    </div>
+  </Form>
+</template>
+
+<script setup lang="ts">
+import { Form, InputNumber, Input } from 'ant-design-vue'
+import { ref } from 'vue'
+import type { ProgressItem } from '#/components'
+
+const props = withDefaults(
+  defineProps<{
+    modelValue?: ProgressItem[]
+  }>(),
+  { modelValue: () => [] },
+)
+
+const emits = defineEmits<{
+  (e: 'update:modelValue', data: ProgressItem[]): void
+}>()
+
+const refs = ref<any[]>([])
+
+function onAdd() {
+  emits('update:modelValue', [...props.modelValue, {} as ProgressItem])
+}
+
+function onRemove(index: number) {
+  const clone = [...props.modelValue]
+  clone.splice(index, 1)
+  emits('update:modelValue', clone)
+}
+
+defineExpose({
+  validate() {
+    for (const instance of refs.value) {
+      instance?.validate()
+    }
+  },
+})
+</script>

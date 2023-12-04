@@ -9,22 +9,9 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  TimelineProps,
-  TimelineItemProps,
-} from 'ant-design-vue/es/timeline'
+import type { TimelineProps } from '#/components'
 
-interface TimelineItem extends TimelineItemProps {
-  /** 内容 */
-  content: string
-}
-
-interface Timeline extends TimelineProps {
-  /** 内容数组 */
-  data: TimelineItem[]
-}
-
-const props = withDefaults(defineProps<Timeline>(), {
+const props = withDefaults(defineProps<TimelineProps>(), {
   data: () => [],
 })
 </script>

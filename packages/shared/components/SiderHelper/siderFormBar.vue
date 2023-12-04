@@ -25,7 +25,7 @@
     <template v-if="selectedItem">
       <div class="mb-4 flex-1 overflow-auto">
         <SiderBaseForm
-          :element="componentEditForms[selectedItem.type]"
+          :element="componentForm"
           :rules="componentEditFormRules[selectedItem.type]"
           :inModal="inModal"
           @register="register"
@@ -33,7 +33,7 @@
       </div>
 
       <div class="flex items-center">
-        <AButton @click="onSubmit" type="primary" class="mr-4 flex-1">
+        <AButton @click="onConfirm" type="primary" class="mr-4 flex-1">
           确定
         </AButton>
         <AButton @click="onCancel" class="flex-1">取消</AButton>
@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends SiderItem | DetailItem">
-import { watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { componentEditFormRules, componentEditForms } from '../../components'
 import SiderBaseForm from './siderBaseForm'
 import { useMenuTree } from './useMenuTree'
@@ -64,7 +64,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'update: selectedMenu', menuId: string): void
-  (e: 'submit', data: T): void
+  (e: 'confirm', data: T): void
   (e: 'cancel'): void
 }>()
 
@@ -73,16 +73,20 @@ const [register, { getFieldsValue, resetFields, validate }] = useSiderForm()
 const { menuData, menuSearchValue, onMenuDropdown, onMenuFilter } =
   useMenuTree()
 
-watchEffect(() => {
+const componentForm = ref()
+
+watchEffect(async () => {
   if (props.selectedItem) {
-    resetFields(props.selectedItem)
+    componentForm.value = undefined
+    await resetFields(props.selectedItem)
+    componentForm.value = componentEditForms[props.selectedItem.type]
   }
 })
 
-async function onSubmit() {
+async function onConfirm() {
   await validate()
   const params = await getFieldsValue()
-  emits('submit', params as T)
+  emits('confirm', params as T)
 }
 
 async function onCancel() {

@@ -8,7 +8,7 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
     <>
       <Form.Item
         label='列数量'
-        help='默认三列'
+        help='默认“3”列'
         {...validateInfos['props.column']}
       >
         <InputNumber
@@ -28,7 +28,7 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
 
       <Form.Item
         label='布局方式'
-        help='名称与内容同行或换行显示，默认同行'
+        help='名称与内容同行或换行显示，默认“同行”'
         {...validateInfos['props.layout']}
       >
         <Radio.Group v-model:value={model.value.props.layout}>

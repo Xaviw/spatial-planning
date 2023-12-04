@@ -23,7 +23,7 @@ export function form({ model, validateInfos, editorRef }: ComponentFormProps) {
       </Form.Item>
       <Form.Item
         label='默认展开'
-        help='不设置时初始默认折叠'
+        help='不设置时，初始默认“折叠”'
         {...validateInfos['props.defaultOpen']}
       >
         <Switch

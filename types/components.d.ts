@@ -1,5 +1,6 @@
 import { CSSProperties } from 'vue'
 import type { DetailItem } from './request'
+import type { PieSeriesOption } from 'echarts/charts'
 
 export interface TitleProps {
   title: string
@@ -30,14 +31,14 @@ export interface DataCardProps {
   img?: string
   /**
    * 图片宽度，最大48，最小20
-   * @default 36
+   * @default 36px
    */
-  imgWidth?: number
+  imgWidth?: string
   /**
    * 图片高度，最大48，最小20
-   * @default 36
+   * @default 36px
    */
-  imgHeight?: number
+  imgHeight?: string
   /**
    * 图片是否支持预览
    * @default true
@@ -181,4 +182,166 @@ export interface TableProps {
    * @example [['列1', '列2'], ['数据1', '数据2']]
    */
   data: (string | number)[][]
+}
+
+export interface FileListItem {
+  /** 文件标题 */
+  title: string
+  /** 图片链接 */
+  img?: string
+  /**
+   * 图片宽度，默认自适应
+   */
+  imgWidth?: string
+  /**
+   * 图片高度，默认自适应
+   */
+  imgHeight?: string
+  /** 文件链接 */
+  src?: string
+}
+export interface FileListProps {
+  /**
+   * 列数
+   * @default 4
+   */
+  columns?: number
+  /**
+   * 间隔
+   * @default 8px
+   */
+  gap?: string
+  data: FileItem[]
+}
+
+export interface CarouselProps {
+  /**
+   * 是否自动切换
+   * @default true
+   */
+  autoplay?: boolean
+  /**
+   * 模板指示点位置
+   * @default bottom
+   */
+  dotPosition?: 'top' | 'bottom' | 'left' | 'right'
+  /**
+   * 是否显示面板指示点
+   * @default true
+   */
+  dots?: boolean
+  /**
+   * 图片链接数组
+   */
+  data: string[]
+  /**
+   * 组件高度，图片大小差距过大时可定义，避免切换到短图片时底部留白
+   */
+  height?: string
+}
+
+export interface PieChartProps {
+  /**
+   * 容器高度
+   * @default 240px
+   */
+  height?: string
+  /**
+   * 外半径，单位百分比
+   * @default 95
+   */
+  outterRadius?: number
+  /**
+   * 内半径，单位百分比，未传递时为饼状图，传递时为环形图
+   */
+  innerRadius?: number
+  /**
+   * 中心点位置X轴位置，单位百分比
+   * @default 45
+   */
+  centerX?: number
+  /**
+   * 中心点位置Y轴位置，单位百分比
+   * @default 50
+   */
+  centerY?: number
+  /**
+   * 南丁格尔玫瑰图，默认不使用
+   * @default false
+   */
+  enableRose?: boolean
+  data: PieSeriesOption['data']
+}
+
+export interface BarChartItem {
+  /** 提供name时会显示图例 */
+  name?: string
+  /** 数量应与columns一致 */
+  data: number[]
+  /**
+   * 柱宽度
+   */
+  barWidth?: string
+}
+export interface BarChartProps {
+  /**
+   * 容器高度
+   * @default 240px
+   */
+  height?: string
+  /** X轴数据项，数量应该与data.value一致 */
+  xAxis: string[]
+  /** 多条折线数据 */
+  series: BarChartItem[]
+}
+
+export interface LineChartItem {
+  /** 提供name时会显示图例 */
+  name?: string
+  /** 数量应与columns一致 */
+  data: number[]
+  /**
+   * 平滑折线图
+   * @default false
+   */
+  smooth?: boolean
+  /**
+   * 堆叠面积图
+   * @default false
+   */
+  stack?: boolean
+}
+export interface LineChartProps {
+  /**
+   * 容器高度
+   * @default 240px
+   */
+  height?: string
+  /** X轴数据项，数量应该与data.value一致 */
+  xAxis: string[]
+  /** 多条折线数据 */
+  series: LineChartItem[]
+}
+
+export interface TimelineItem {
+  /**
+   * 圆圈颜色
+   * @default blue
+   */
+  color?: string
+  /**
+   * 内容
+   */
+  content?: string
+}
+export interface TimelineProps {
+  /**
+   * 展示位置，左侧|交替|右侧
+   * @default left
+   */
+  mode?: 'left' | 'alternate' | 'right'
+  /**
+   * 数据数组
+   */
+  data: TimelineItem[]
 }
