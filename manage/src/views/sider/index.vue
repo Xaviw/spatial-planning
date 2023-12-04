@@ -81,10 +81,21 @@ import {
   Loading,
 } from '@sp/shared/components'
 import { useMutative } from '@sp/shared/hooks'
+import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { cloneDeep } from 'lodash-es'
 import { apply, create, rawReturn } from 'mutative'
 import type { SiderItem, SiderChangeParams } from '#/request'
+
+onMounted(async () => {
+  if (!localStorage.getItem('siderTips')) {
+    await modal('warning', {
+      title: '注意',
+      content: '请在全部编辑操作完成后点击右上方提交按钮，否则修改无效！',
+    })
+    localStorage.setItem('siderTips', '1')
+  }
+})
 
 const { data: leftList, loading: leftLoading } = useRequest(
   menuId => getSider({ position: 'left', filter: false, menuId }),

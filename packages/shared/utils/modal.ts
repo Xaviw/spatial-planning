@@ -14,6 +14,7 @@ export function modal(
   return new Promise((resolve, reject) => {
     Modal[method]({
       title: defaultTitle[method],
+      centered: true,
       ...props,
       async onOk() {
         const res = await props.onOk?.()

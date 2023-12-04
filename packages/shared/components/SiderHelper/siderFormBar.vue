@@ -48,7 +48,7 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="T extends SiderItem | DetailItem">
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { componentEditFormRules, componentEditForms } from '../../components'
 import SiderBaseForm from './siderBaseForm'
@@ -64,7 +64,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'update: selectedMenu', menuId: string): void
-  (e: 'confirm', data: T): void
+  (e: 'confirm', data: SiderItem): void
   (e: 'cancel'): void
 }>()
 
@@ -86,7 +86,7 @@ watchEffect(async () => {
 async function onConfirm() {
   await validate()
   const params = await getFieldsValue()
-  emits('confirm', params as T)
+  emits('confirm', params as SiderItem)
 }
 
 async function onCancel() {
