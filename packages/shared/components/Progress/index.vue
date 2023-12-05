@@ -34,9 +34,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Progress, ProgressItem } from '#/components'
+import type { ProgressProps, ProgressItem } from '#/components'
 
-const props = withDefaults(defineProps<Progress>(), {
+const props = withDefaults(defineProps<ProgressProps>(), {
   data: () => [],
   format: '</>%',
   layout: 'vertical',

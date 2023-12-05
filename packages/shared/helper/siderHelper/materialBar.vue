@@ -8,7 +8,7 @@
     <div class="flex-1 overflow-auto">
       <DraggableList
         id="material"
-        v-model="materials"
+        :modelValue="materials"
         :group="{ name: 'sider', pull: materialsPull, put: false }"
         :sort="false"
         :clone="onClone"
@@ -24,7 +24,7 @@
     </div>
 
     <div class="flex-1 overflow-auto">
-      <DraggableList id="temp" v-model="temp" group="sider" />
+      <DraggableList id="temp" v-model="tempList" group="sider" />
     </div>
   </div>
 </template>
@@ -41,7 +41,7 @@ const props = defineProps<{
   inModal: boolean
 }>()
 
-const temp = ref<T[]>([])
+const tempList = ref<T[]>([])
 
 function materialsPull(to: any) {
   if ((to.el as HTMLDivElement).id === 'temp') return false
@@ -53,7 +53,7 @@ async function clearTemp() {
     title: '警告！',
     content: '清空后不可恢复，是否确认清空？',
   })
-  temp.value = []
+  tempList.value = []
 }
 
 function onClone(item: T): T {

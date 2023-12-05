@@ -16,21 +16,7 @@ import Title from './Title/index.vue'
 import Loading from './Loading/index.vue'
 import Modal from './Modal/index.vue'
 
-import DraggableList from './SiderHelper/draggableList.vue'
-import MaterialBar from './SiderHelper/materialBar.vue'
-import SiderBaseForm, {
-  type ComponentFormProps,
-  type ComponentFormRuleProps,
-} from './SiderHelper/siderBaseForm'
-import SiderFormBar from './SiderHelper/siderFormBar.vue'
-import SiderModalEditor from './SiderHelper/siderModalEditor.vue'
-import { useSiderForm } from './SiderHelper/useSiderForm'
-import { useMenuTree } from './SiderHelper/useMenuTree'
-
 import '../../../unocss-icon'
-
-import type { Rule } from 'ant-design-vue/es/form/interface'
-import { VNode } from 'vue'
 
 const componentModules: Record<string, any> = import.meta.glob(
   './**/index.vue',
@@ -47,25 +33,15 @@ for (const path in componentModules) {
   }
 }
 
-const editFormModules: Record<string, any> = import.meta.glob(
-  './**/editForm.tsx',
-  {
-    eager: true,
-  },
-)
-const componentEditForms: Record<
-  string,
-  (options: ComponentFormProps) => JSX.Element | VNode
-> = {}
-const componentEditFormRules: Record<
-  string,
-  (option: ComponentFormRuleProps) => Record<string, Rule[]>
-> = {}
-for (const path in editFormModules) {
-  const name = /^.*\/(.*?)\/editForm.tsx$/.exec(path)?.[1]
+const formModules: Record<string, any> = import.meta.glob('./**/form.vue', {
+  eager: true,
+  import: 'default',
+})
+const componentForms: Record<string, any> = {}
+for (const path in formModules) {
+  const name = /^.*\/(.*?)\/form.vue$/.exec(path)?.[1]
   if (name) {
-    componentEditForms[name] = editFormModules[path].form
-    componentEditFormRules[name] = editFormModules[path].rules
+    componentForms[name] = formModules[path]
   }
 }
 
@@ -85,14 +61,6 @@ export {
   Modal,
   Loading,
   ContentWrapper,
-  DraggableList,
-  SiderModalEditor,
-  useMenuTree,
-  useSiderForm,
-  SiderFormBar,
-  SiderBaseForm,
-  MaterialBar,
   components,
-  componentEditForms,
-  componentEditFormRules,
+  componentForms,
 }

@@ -72,9 +72,13 @@ function onRemove(index: number) {
 
 defineExpose({
   validate() {
+    const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      instance?.validate()
+      if (typeof instance.validate === 'function') {
+        events.push(instance.validate())
+      }
     }
+    return Promise.all(events)
   },
 })
 </script>

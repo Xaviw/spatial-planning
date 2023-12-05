@@ -1,6 +1,6 @@
 import { useRequest } from 'alova'
 import { ref } from 'vue'
-import { getMenu } from '../../apis'
+import { getMenu } from '../apis'
 import type { MenuItem } from '#/request'
 
 export function useMenuTree() {

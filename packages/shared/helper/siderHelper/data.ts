@@ -1,5 +1,4 @@
 import type { SiderItem, SiderComponents } from '#/request'
-import type { Rule } from 'ant-design-vue/es/form'
 
 export const componentTypes: { label: string; value: SiderComponents }[] = [
   { label: '大标题', value: 'Title' },
@@ -16,41 +15,6 @@ export const componentTypes: { label: string; value: SiderComponents }[] = [
   { label: '折线图', value: 'LineChart' },
   { label: '时间轴', value: 'Timeline' },
 ]
-
-export const baseRules = (inModal: boolean): Record<string, Rule[]> => {
-  let common: Record<string, Rule[]> = {
-    type: [
-      {
-        required: true,
-        message: '请选择组件类型！',
-      },
-    ],
-    status: [
-      {
-        required: true,
-        message: '请选择组件状态！',
-      },
-    ],
-  }
-  if (!inModal) {
-    common = {
-      ...common,
-      position: [
-        {
-          required: true,
-          message: '请选择组件显示位置！',
-        },
-      ],
-      menuIds: [
-        {
-          required: true,
-          message: '请选择组件关联菜单！',
-        },
-      ],
-    }
-  }
-  return common
-}
 
 const materialsMap: { [K in SiderComponents]: SiderItem } = {
   Title: {

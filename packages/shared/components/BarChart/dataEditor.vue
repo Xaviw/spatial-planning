@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <Form.ItemRest>
+    <AFormItemRest>
       <component
         :is="type === 'string' ? Input : InputNumber"
         v-for="(_item, index) of xAxis || data"
@@ -25,12 +25,12 @@
           />
         </template>
       </component>
-    </Form.ItemRest>
+    </AFormItemRest>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Form, Input, InputNumber } from 'ant-design-vue'
+import { Input, InputNumber } from 'ant-design-vue'
 import { ref, watchEffect } from 'vue'
 
 const props = withDefaults(

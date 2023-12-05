@@ -8,7 +8,7 @@ export interface TitleProps {
    * 详情弹窗宽度
    * @default 25rem
    */
-  modalWidth?: number | string
+  modalWidth?: string
   /**
    * 弹窗标题，默认`${title}详情`
    */
@@ -116,7 +116,7 @@ export interface ProgressItem {
   name: string
   value: number
 }
-export interface Progress {
+export interface ProgressProps {
   /**
    * 数据数组
    */

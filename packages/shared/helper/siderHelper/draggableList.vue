@@ -77,10 +77,15 @@ const emits = defineEmits<{
   (e: 'edit', item: T, index: number): void
 }>()
 
+function isSiderItem(item: SiderItem | DetailItem): item is SiderItem {
+  if (Array.isArray((item as SiderItem).menuIds)) return true
+  return false
+}
+
 const show = (item: T) => {
   if (!props.filterMenu) return true
-  if ((item as SiderItem).menuIds) {
-    return (item as SiderItem).menuIds.includes(props.filterMenu)
+  if (isSiderItem(item)) {
+    return item.menuIds.includes(props.filterMenu)
   }
   return true
 }

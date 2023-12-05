@@ -28,7 +28,7 @@
     </span>
 
     <div
-      class="btn mr-8 cursor-pointer border border-[#2e79b5] rounded-4px border-solid bg-[025493] p-3px"
+      class="title-btn mr-8 cursor-pointer border border-[#2e79b5] rounded-4px border-solid bg-[025493] p-3px"
       v-if="modalData?.length"
     >
       <i class="i-ph:list-bold text-xl text-[#19ECFF]" @click="onOpenDetail" />
@@ -88,7 +88,7 @@ function onOpenDetail() {
   text-shadow: 0px 0px 6px rgba(0, 233, 215, 0.6);
 }
 
-.btn {
+.title-btn {
   box-shadow: inset 0px 2px 5px 0px rgba(0, 0, 0, 0.5);
 }
 </style>
