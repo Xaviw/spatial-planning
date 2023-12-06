@@ -48,7 +48,7 @@ const formModel = ref<Partial<DescriptionProps>>({
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)
 
 const rules = ref<Record<string, Rule[]>>({
-  'props.data': [
+  data: [
     {
       required: true,
       message: '请填写数据！',

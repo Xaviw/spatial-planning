@@ -20,10 +20,7 @@
           name="value"
           :rules="{ required: true, message: '请填写内容！' }"
         >
-          <AInputTextArea
-            v-model:value="item.value"
-            :autoSize="{ minRows: 1 }"
-          />
+          <ATextarea v-model:value="item.value" :autoSize="{ minRows: 1 }" />
         </AFormItem>
       </div>
       <AFormItem>

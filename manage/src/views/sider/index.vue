@@ -42,7 +42,11 @@
       </div>
     </div>
 
-    <MaterialBar :inModal="false" :selectedMenu="selectedMenu" />
+    <MaterialBar
+      :inModal="false"
+      :selectedMenu="selectedMenu"
+      @mutative="onMutative"
+    />
 
     <div class="min-w-100 flex flex-1 flex-col bg-white p-4">
       <div class="mb-2 flex">
@@ -87,7 +91,6 @@
             :is="componentForms[selectedItem.type]"
             :key="selectedItem.id"
             ref="componentFormEl"
-            v-bind="selectedItem.props"
           />
         </div>
 
@@ -199,7 +202,6 @@ async function onConfirm() {
     item => item.id === selectedItem.value!.id,
   )
   if (index >= 0) {
-    // 从左侧改到右侧
     leftList.value[index] = data
     update(state => {
       state[index] = data
@@ -224,11 +226,11 @@ function onSubmit() {
   const [_state, simplePatches] = create(
     originalList,
     state => {
-      apply(state, patches.value.slice(2))
+      apply(state, patches.value.slice(originalList.length))
     },
     { enablePatches: true },
   )
-  console.log('simplePatches: ', simplePatches)
+  console.log('simplePatches: ', patches, originalList, simplePatches)
 }
 
 function onReset() {
@@ -248,12 +250,21 @@ function onMutative(e: SiderChangeParams) {
       state.splice(index, 0, e.data as SiderItem)
     })
   } else if (e.name === 'remove') {
+    const index = e.to === 'right' ? leftLength + e.oldIndex! : e.oldIndex!
     update(state => {
-      state.splice(e.oldIndex!, 1)
+      state.splice(index, 1)
     })
   } else {
-    const oldIndex = e.from === 'right' ? e.oldIndex! + leftLength : e.oldIndex!
-    const newIndex = e.to === 'right' ? e.newIndex! + leftLength : e.newIndex!
+    let oldIndex = e.oldIndex!
+    let newIndex = e.newIndex!
+    if (e.from === 'right' && e.to === 'left') {
+      oldIndex += leftLength - 1
+    } else if (e.from === 'left' && e.to === 'right') {
+      newIndex += leftLength
+    } else if (e.from === 'right' && e.to === 'right') {
+      oldIndex += leftLength
+      newIndex += leftLength
+    }
     update(state => {
       state.splice(oldIndex, 1)
       state.splice(newIndex, 0, e.data as SiderItem)

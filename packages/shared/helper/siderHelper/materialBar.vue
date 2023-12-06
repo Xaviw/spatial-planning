@@ -24,7 +24,12 @@
     </div>
 
     <div class="flex-1 overflow-auto">
-      <DraggableList id="temp" v-model="tempList" group="sider" />
+      <DraggableList
+        id="temp"
+        v-model="tempList"
+        group="sider"
+        @mutative="$emit('mutative', $event)"
+      />
     </div>
   </div>
 </template>
@@ -34,11 +39,15 @@ import { ref } from 'vue'
 import { modal } from '../../utils'
 import { materials } from './data'
 import DraggableList from './draggableList.vue'
-import type { SiderItem, DetailItem } from '#/request'
+import type { SiderItem, DetailItem, SiderChangeParams } from '#/request'
 
 const props = defineProps<{
   selectedMenu?: string
   inModal: boolean
+}>()
+
+defineEmits<{
+  (e: 'mutative', params: SiderChangeParams): void
 }>()
 
 const tempList = ref<T[]>([])
