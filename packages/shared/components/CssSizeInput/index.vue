@@ -1,26 +1,25 @@
 <template>
-  <Input.Group compact>
-    <Form.ItemRest>
-      <InputNumber
+  <AInputGroup compact>
+    <AFormItemRest>
+      <AInputNumber
         v-model:value="data.value"
         @change="onChange"
         :disabled="disabled"
         :min="min"
         :max="max"
       />
-      <Select
+      <ASelect
         v-model:value="data.unit"
         :options="unitsOptions"
         class="w-20"
         @change="onChange"
         :disabled="disabled"
       />
-    </Form.ItemRest>
-  </Input.Group>
+    </AFormItemRest>
+  </AInputGroup>
 </template>
 
 <script setup lang="ts">
-import { InputNumber, Select, Input, Form } from 'ant-design-vue'
 import { reactive, watchEffect } from 'vue'
 
 const props = defineProps<{

@@ -29,6 +29,7 @@
 import { Form } from 'ant-design-vue'
 import { ref } from 'vue'
 import CssSizeInput from '../CssSizeInput/index.vue'
+import DataEditor from './dataEditor.vue'
 import Editor from './editor.vue'
 import type { BarChartItem, LineChartProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'

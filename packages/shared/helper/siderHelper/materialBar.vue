@@ -11,7 +11,7 @@
         :modelValue="materials"
         :group="{ name: 'sider', pull: materialsPull, put: false }"
         :sort="false"
-        :clone="onClone"
+        :clone="customClone"
       />
     </div>
 
@@ -56,12 +56,11 @@ async function clearTemp() {
   tempList.value = []
 }
 
-function onClone(item: T): T {
+function customClone(item: T): T {
   const id = `add_${Date.now()}`
   return {
     ...item,
     id,
-    position: props.inModal ? undefined : (item as SiderItem).position,
     menuIds: props.inModal
       ? undefined
       : props.selectedMenu

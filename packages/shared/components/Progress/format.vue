@@ -18,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 
-defineProps<{ modelValue?: string }>()
+const props = defineProps<{ modelValue?: string }>()
 
 const emits = defineEmits<{
   (e: 'update:modelValue', newValue: string): void
@@ -28,6 +28,14 @@ const emits = defineEmits<{
 
 const before = ref('')
 const after = ref('')
+
+watchEffect(() => {
+  if (props.modelValue?.includes('</>')) {
+    const [l, r] = props.modelValue.split('</>')
+    before.value = l
+    after.value = r
+  }
+})
 
 function onChange() {
   emits('update:modelValue', `${before.value}</>${after.value}`)

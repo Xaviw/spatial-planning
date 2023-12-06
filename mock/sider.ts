@@ -30,7 +30,6 @@ function genList(
         params,
       ),
       id: Mock.Random.id(),
-      position: isInModal ? undefined : params.position,
       status: params.filter ? true : Mock.Random.boolean(),
       menuIds: isInModal
         ? undefined

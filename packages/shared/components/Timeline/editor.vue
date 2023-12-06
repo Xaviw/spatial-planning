@@ -1,25 +1,25 @@
 <template>
-  <Form
+  <AForm
     v-for="(item, index) of modelValue"
     :model="item"
     :key="index"
     class="mb-2"
-    :ref="el => refs.push(el)"
+    :ref="(el: any) => (refs[index] = el)"
   >
     <div class="editor-block">
       <div class="mr-4 flex-1">
-        <Form.Item
+        <AFormItem
           label="内容"
           name="content"
           :rules="{ required: true, message: '请填写内容！' }"
         >
-          <Input v-model:value="item.content" class="w-30" />
-        </Form.Item>
-        <Form.Item label="圆圈颜色" help="默认“蓝色”（blue）" name="color">
+          <AInput v-model:value="item.content" class="w-30" />
+        </AFormItem>
+        <AFormItem label="圆圈颜色" help="默认“蓝色”（blue）" name="color">
           <ColorPicker v-model:pureColor="item.color" />
-        </Form.Item>
+        </AFormItem>
       </div>
-      <Form.Item>
+      <AFormItem>
         <div
           class="editor-btn"
           v-if="index === modelValue.length - 1"
@@ -30,15 +30,15 @@
         <div @click="onRemove(index)" v-else class="editor-btn">
           <i class="i-ant-design:close-outlined text-red" />
         </div>
-      </Form.Item>
+      </AFormItem>
     </div>
-  </Form>
+  </AForm>
 </template>
 
 <script setup lang="ts">
-import { Form, Input } from 'ant-design-vue'
 import { ref } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
+import 'vue3-colorpicker/style.css'
 import type { TimelineItem } from '#/components'
 
 const props = withDefaults(
@@ -68,7 +68,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (typeof instance.validate === 'function') {
+      if (typeof instance?.validate === 'function') {
         events.push(instance.validate())
       }
     }

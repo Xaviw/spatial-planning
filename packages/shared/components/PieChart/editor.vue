@@ -1,29 +1,29 @@
 <template>
-  <Form
+  <AForm
     v-for="(item, index) of modelValue"
     :model="item"
     :key="index"
     class="mb-2"
-    :ref="el => refs.push(el)"
+    :ref="(el: any) => (refs[index] = el)"
   >
     <div class="editor-block">
       <div class="mr-4 flex-1">
-        <Form.Item
+        <AFormItem
           label="名称"
           name="name"
           :rules="{ required: true, message: '请填写名称！' }"
         >
-          <Input v-model:value="item.name" class="w-30" />
-        </Form.Item>
-        <Form.Item
+          <AInput v-model:value="item.name" class="w-30" />
+        </AFormItem>
+        <AFormItem
           label="数值"
           name="value"
           :rules="{ required: true, message: '请填写数值！' }"
         >
-          <InputNumber v-model:value="item.value" />
-        </Form.Item>
+          <AInputNumber v-model:value="item.value" />
+        </AFormItem>
       </div>
-      <Form.Item>
+      <AFormItem>
         <div
           class="editor-btn"
           v-if="index === modelValue.length - 1"
@@ -34,13 +34,12 @@
         <div @click="onRemove(index)" v-else class="editor-btn">
           <i class="i-ant-design:close-outlined text-red" />
         </div>
-      </Form.Item>
+      </AFormItem>
     </div>
-  </Form>
+  </AForm>
 </template>
 
 <script setup lang="ts">
-import { Form, InputNumber, Input } from 'ant-design-vue'
 import { ref } from 'vue'
 import type { ProgressItem } from '#/components'
 
@@ -71,7 +70,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (typeof instance.validate === 'function') {
+      if (typeof instance?.validate === 'function') {
         events.push(instance.validate())
       }
     }

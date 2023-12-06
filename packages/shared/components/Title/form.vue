@@ -1,6 +1,6 @@
 <template>
   <AForm>
-    <AFormItem label="标题" v-bind="validateInfos['props.title']">
+    <AFormItem label="标题" v-bind="validateInfos.title">
       <AInput v-model:value="formModel.title" />
     </AFormItem>
     <template v-if="!inModal">

@@ -16,10 +16,9 @@ export const componentTypes: { label: string; value: SiderComponents }[] = [
   { label: '时间轴', value: 'Timeline' },
 ]
 
-const materialsMap: { [K in SiderComponents]: SiderItem } = {
+const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
   Title: {
     id: '',
-    position: 'left',
     type: 'Title',
     props: {
       title: '大标题',
@@ -29,7 +28,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   SubTitle: {
     id: '',
-    position: 'left',
     type: 'SubTitle',
     props: { title: '小标题' },
     status: true,
@@ -37,7 +35,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   DataCard: {
     id: '',
-    position: 'left',
     type: 'DataCard',
     props: {
       title: '数据卡片',
@@ -49,7 +46,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   Collapse: {
     id: '',
-    position: 'left',
     type: 'Collapse',
     props: {
       title: '折叠面板',
@@ -60,7 +56,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   Description: {
     id: '',
-    position: 'left',
     type: 'Description',
     props: {
       column: 1,
@@ -74,7 +69,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   Progress: {
     id: '',
-    position: 'left',
     type: 'Progress',
     props: {
       data: [
@@ -87,7 +81,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   Table: {
     id: '',
-    position: 'left',
     type: 'Table',
     props: {
       data: [
@@ -100,7 +93,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   FileList: {
     id: '',
-    position: 'left',
     type: 'FileList',
     props: {
       data: [
@@ -119,7 +111,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   Carousel: {
     id: '',
-    position: 'left',
     type: 'Carousel',
     props: {
       data: [
@@ -132,7 +123,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   PieChart: {
     id: '',
-    position: 'left',
     type: 'PieChart',
     props: {
       data: [
@@ -146,7 +136,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   BarChart: {
     id: '',
-    position: 'left',
     type: 'BarChart',
     props: {
       xAxis: ['柱状图', 'A', 'B'],
@@ -157,7 +146,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   LineChart: {
     id: '',
-    position: 'left',
     type: 'LineChart',
     props: {
       xAxis: ['折线图', 'A', 'B'],
@@ -168,7 +156,6 @@ const materialsMap: { [K in SiderComponents]: SiderItem } = {
   },
   Timeline: {
     id: '',
-    position: 'left',
     type: 'Timeline',
     props: {
       data: [{ content: '时间轴' }, { content: '自定义内容' }],

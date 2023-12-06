@@ -5,19 +5,15 @@
       :model="item"
       :key="index"
       class="mb-2"
-      :ref="(el: any) => refs.push(el)"
+      :ref="(el: any) => (refs[index] = el)"
     >
       <div class="editor-block">
         <div class="mr-4 flex-1">
-          <AFormItem
-            label="名称"
-            name="name"
-            :rules="{ required: true, message: '请填写名称！' }"
-          >
+          <AFormItem label="名称" name="name">
             <AInput v-model:value="item.name" />
           </AFormItem>
           <AFormItem label="柱条宽度" help="默认自适应宽度" name="barWidth">
-            <CssSizeInput v-model:value="item.barWidth" />
+            <CssSizeInput v-model="item.barWidth" />
           </AFormItem>
           <AFormItem
             label="数据"
@@ -69,7 +65,6 @@ const emits = defineEmits<{
 const refs = ref<any[]>([])
 
 const dataValidator = (_rule: any, value: number[]) => {
-  console.log('value: ', value)
   if (value?.some((item: number) => !item && item !== 0)) {
     return Promise.reject()
   }
@@ -90,7 +85,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (typeof instance.validate === 'function') {
+      if (typeof instance?.validate === 'function') {
         events.push(instance.validate())
       }
     }

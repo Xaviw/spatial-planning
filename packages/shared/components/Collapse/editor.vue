@@ -66,9 +66,6 @@ onBeforeUnmount(() => {
 
 const handleCreated = (editor: any) => {
   editorRef.value = editor
-  // console.log('editor配置：', editor.getConfig())
-  // console.log('所有菜单 key：', editor.getAllMenuKeys())
-  // console.log('菜单配置：', editor.getMenuConfig(''))
 }
 
 defineExpose({

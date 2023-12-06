@@ -199,6 +199,7 @@ async function onConfirm() {
     item => item.id === selectedItem.value!.id,
   )
   if (index >= 0) {
+    // 从左侧改到右侧
     leftList.value[index] = data
     update(state => {
       state[index] = data

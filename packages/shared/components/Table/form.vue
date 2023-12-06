@@ -15,10 +15,11 @@
 <script setup lang="ts">
 import { Form } from 'ant-design-vue'
 import { ref } from 'vue'
+import Editor from './editor.vue'
 import type { TableProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
-const formModel = ref<Partial<TableProps>>({ data: [] })
+const formModel = ref<TableProps>({ data: [] })
 
 const rules = ref<Record<string, Rule[]>>({
   data: [

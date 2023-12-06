@@ -1,5 +1,5 @@
 <template>
-  <ACarousel class="px-4">
+  <ACarousel class="px-4" v-bind="props">
     <div
       v-for="(item, index) of data"
       :key="index"
@@ -17,8 +17,10 @@
 <script setup lang="ts">
 import type { CarouselProps } from '#/components'
 
-withDefaults(defineProps<CarouselProps>(), {
+const props = withDefaults(defineProps<CarouselProps>(), {
   data: () => [],
   autoplay: true,
+  dotPosition: 'bottom',
+  dots: true,
 })
 </script>

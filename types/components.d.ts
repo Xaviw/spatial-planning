@@ -181,7 +181,7 @@ export interface TableProps {
    * 表格数据，二维数组
    * @example [['列1', '列2'], ['数据1', '数据2']]
    */
-  data: (string | number)[][]
+  data: string[][]
 }
 
 export interface FileListItem {

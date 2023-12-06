@@ -23,12 +23,6 @@
         unCheckedChildren="禁用"
       />
     </AFormItem>
-    <AFormItem label="显示位置" v-bind="validateInfos.position">
-      <ARadioGroup v-model:value="formModel.position" name="position">
-        <ARadio value="left">左栏</ARadio>
-        <ARadio value="right">右栏</ARadio>
-      </ARadioGroup>
-    </AFormItem>
 
     <AFormItem label="关联菜单" v-bind="validateInfos.menuIds">
       <ATreeSelect
@@ -68,7 +62,6 @@ const { menuData, onMenuDropdown } = useMenuTree()
 const formModel = ref<Partial<Omit<SiderItem, 'props'>>>({
   type: undefined,
   status: true,
-  position: undefined,
   menuIds: [],
 })
 
@@ -84,12 +77,6 @@ const baseRules = computed(() => {
       {
         required: true,
         message: '请选择组件状态！',
-      },
-    ],
-    position: [
-      {
-        required: true,
-        message: '请选择组件显示位置！',
       },
     ],
     menuIds: [

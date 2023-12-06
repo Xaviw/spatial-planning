@@ -77,14 +77,14 @@
     </template>
     <AFormItem
       label="进度条颜色"
-      help="默认“蓝色”（#1677ff）"
+      help="默认蓝色"
       v-bind="validateInfos.strokeColor"
     >
       <ColorPicker v-model:pureColor="formModel.strokeColor" />
     </AFormItem>
     <AFormItem
       label="进度条底色"
-      help="默认“半透明白色”（#ffffff22）"
+      help="默认半透明白色"
       v-bind="validateInfos.trailColor"
     >
       <ColorPicker v-model:pureColor="formModel.trailColor" />
@@ -105,7 +105,10 @@
 <script setup lang="ts">
 import { Form, type RadioChangeEvent } from 'ant-design-vue'
 import { ref } from 'vue'
+import { ColorPicker } from 'vue3-colorpicker'
 import Editor from './editor.vue'
+import Format from './format.vue'
+import 'vue3-colorpicker/style.css'
 import type { ProgressProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
@@ -118,9 +121,9 @@ const formModel = ref<Partial<ProgressProps>>({
   mode: 'percent',
   size: undefined,
   steps: undefined,
-  strokeColor: '#1677ff',
+  strokeColor: 'rgb(22,119,255)',
   strokeWidth: 6,
-  trailColor: '#ffffff22',
+  trailColor: 'rgba(255,255,255,0.3)',
   type: 'line',
 })
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)
@@ -143,10 +146,14 @@ function onTypeChange({ target: { value } }: RadioChangeEvent) {
     formModel.value.gapDegree = undefined
     formModel.value.gapPosition = undefined
   } else if (value === 'circle') {
+    formModel.value.strokeWidth = formModel.value.strokeWidth || 6
     formModel.value.steps = undefined
     formModel.value.gapDegree = undefined
     formModel.value.gapPosition = undefined
   } else if (value === 'dashboard') {
+    formModel.value.strokeWidth = formModel.value.strokeWidth || 6
+    formModel.value.gapDegree = formModel.value.gapDegree || 75
+    formModel.value.gapPosition = formModel.value.gapPosition || 'bottom'
     formModel.value.steps = undefined
   }
 }

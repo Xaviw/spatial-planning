@@ -13,7 +13,7 @@ import {
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 
-import { ref } from 'vue'
+import { computed } from 'vue'
 import VChart from 'vue-echarts'
 import type { BarChartProps } from '#/components'
 import type {
@@ -40,7 +40,7 @@ use([
   CanvasRenderer,
 ])
 
-const option = ref<EChartsOption>({
+const option = computed<EChartsOption>(() => ({
   color,
   grid: {
     left: 10,
@@ -108,5 +108,5 @@ const option = ref<EChartsOption>({
       type: 'bar',
     }
   }),
-})
+}))
 </script>

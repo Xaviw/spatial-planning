@@ -1,42 +1,42 @@
 <template>
-  <Form
+  <AForm
     v-for="(item, index) of modelValue"
     :model="item"
     :key="index"
     class="mb-2"
-    :ref="el => refs.push(el)"
+    :ref="(el: any) => (refs[index] = el)"
   >
     <div class="editor-block">
       <div class="mr-4 flex-1">
-        <Form.Item
+        <AFormItem
           label="标题"
           name="title"
           :rules="{ required: true, message: '请填写标题！' }"
         >
-          <Input v-model:value="item.title" />
-        </Form.Item>
-        <Form.Item
+          <AInput v-model:value="item.title" />
+        </AFormItem>
+        <AFormItem
           label="文件链接"
           name="src"
           :rules="{ required: true, message: '请上传文件！' }"
         >
-          <Input v-model:value="item.src" />
-        </Form.Item>
-        <Form.Item label="封面图片" help="默认显示文件类型对应图片" name="img">
-          <Input v-model:value="item.img" />
-        </Form.Item>
-        <Form.Item
+          <AInput v-model:value="item.src" />
+        </AFormItem>
+        <AFormItem label="封面图片" help="默认显示文件类型对应图片" name="img">
+          <AInput v-model:value="item.img" />
+        </AFormItem>
+        <AFormItem
           label="图片宽度"
           help="默认保持比例自适应宽度"
           name="imgWidth"
         >
-          <Input v-model:value="item.imgWidth" />
-        </Form.Item>
-        <Form.Item label="图片高度" name="imgHeight">
-          <Input v-model:value="item.imgHeight" />
-        </Form.Item>
+          <CssSizeInput v-model="item.imgWidth" />
+        </AFormItem>
+        <AFormItem label="图片高度" name="imgHeight">
+          <CssSizeInput v-model="item.imgHeight" />
+        </AFormItem>
       </div>
-      <Form.Item>
+      <AFormItem>
         <div
           class="editor-btn"
           v-if="index === modelValue.length - 1"
@@ -47,14 +47,14 @@
         <div @click="onRemove(index)" v-else class="editor-btn">
           <i class="i-ant-design:close-outlined text-red" />
         </div>
-      </Form.Item>
+      </AFormItem>
     </div>
-  </Form>
+  </AForm>
 </template>
 
 <script setup lang="ts">
-import { Form, Input } from 'ant-design-vue'
 import { ref } from 'vue'
+import CssSizeInput from '../CssSizeInput/index.vue'
 import type { FileListItem } from '#/components'
 
 const props = withDefaults(
@@ -84,7 +84,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (typeof instance.validate === 'function') {
+      if (typeof instance?.validate === 'function') {
         events.push(instance.validate())
       }
     }

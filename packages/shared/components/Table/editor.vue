@@ -1,5 +1,5 @@
 <template>
-  <Table
+  <ATable
     bordered
     size="small"
     :pagination="false"
@@ -9,26 +9,26 @@
   >
     <template #headerCell="{ column }">
       <template v-if="column.dataIndex === 'index'">
-        <Tooltip v-if="isFullscreen" title="点击退出全屏" placement="bottom">
+        <ATooltip v-if="isFullscreen" title="点击退出全屏" placement="bottom">
           <i
             class="i-ant-design:fullscreen-exit-outlined cursor-pointer text-sm"
             @click="exit"
           />
-        </Tooltip>
-        <Tooltip v-else title="点击进入全屏">
+        </ATooltip>
+        <ATooltip v-else title="点击进入全屏">
           <i
             class="i-ant-design:fullscreen-outlined cursor-pointer text-sm"
             @click="enter"
           />
-        </Tooltip>
+        </ATooltip>
       </template>
       <template v-else-if="column.dataIndex === 'action'">
-        <Button size="small" @click="addColumn">
+        <AButton size="small" @click="addColumn">
           <i class="i-ant-design:plus-outlined" />
-        </Button>
+        </AButton>
       </template>
       <template v-else>
-        <Input
+        <AInput
           v-model:value="tableData[0][column.dataIndex as number]"
           size="small"
           class="min-w-20"
@@ -39,7 +39,7 @@
               @click="removeColumn(column.dataIndex as number)"
             />
           </template>
-        </Input>
+        </AInput>
       </template>
     </template>
 
@@ -48,29 +48,29 @@
         <span class="text-gray">{{ index + 1 }}</span>
       </template>
       <template v-else-if="column.dataIndex === 'action'">
-        <Button v-if="data.length - 1 === index" @click="addRow">
+        <AButton v-if="data.length - 1 === index" @click="addRow">
           <template #icon>
             <i class="i-ant-design:plus-outlined" />
           </template>
-        </Button>
-        <Button v-else @click="removeRow(index + 1)">
+        </AButton>
+        <AButton v-else @click="removeRow(index + 1)">
           <template #icon>
             <i class="i-ant-design:close-outlined text-red" />
           </template>
-        </Button>
+        </AButton>
       </template>
       <template v-else>
-        <Input
+        <AInput
+          size="small"
           v-model:value="tableData[index + 1][column.dataIndex as number]"
         />
       </template>
     </template>
-  </Table>
+  </ATable>
 </template>
 
 <script setup lang="ts">
 import { useFullscreen } from '@vueuse/core'
-import { Button, Input, Table, Tooltip } from 'ant-design-vue'
 import { computed, ref, watchEffect } from 'vue'
 import type { VueInstance } from '@vueuse/core'
 import type { ColumnType } from 'ant-design-vue/es/table'

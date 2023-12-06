@@ -56,7 +56,9 @@ import { unref } from 'vue'
 import { VueDraggable, type UseDraggableOptions } from 'vue-draggable-plus'
 import type { DetailItem, SiderItem, SiderChangeParams } from '#/request'
 
-type Add = NonNullable<Pick<UseDraggableOptions<any>, 'onAdd'>['onAdd']>
+export type SortableEvent = Parameters<
+  NonNullable<Pick<UseDraggableOptions<any>, 'onAdd'>['onAdd']>
+>[0]
 
 const props = withDefaults(
   defineProps<{
@@ -90,7 +92,7 @@ const show = (item: T) => {
   return true
 }
 
-function onChange(e: Parameters<Add>[0]) {
+function onChange(e: SortableEvent) {
   let original: T
   for (let symbol of Object.getOwnPropertySymbols(e.item)) {
     if (symbol.toString() === 'Symbol(cloneElement)') {

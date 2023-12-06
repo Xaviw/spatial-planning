@@ -1,27 +1,23 @@
 <template>
-  <Form
+  <AForm
     v-for="(item, index) of modelValue"
     :model="item"
     :key="index"
     class="mb-2"
-    :ref="el => refs.push(el)"
+    :ref="(el: any) => (refs[index] = el)"
   >
     <div class="editor-block">
       <div class="mr-4 flex-1">
-        <Form.Item
-          label="名称"
-          name="name"
-          :rules="{ required: true, message: '请填写名称！' }"
-        >
-          <Input v-model:value="item.name" />
-        </Form.Item>
-        <Form.Item label="平滑折线" help="默认不启用" name="smooth">
-          <Switch v-model:checked="item.smooth" />
-        </Form.Item>
-        <Form.Item label="堆叠面积" help="默认不启用" name="stack">
-          <Switch v-model:checked="item.stack" />
-        </Form.Item>
-        <Form.Item
+        <AFormItem label="名称" name="name">
+          <AInput v-model:value="item.name" />
+        </AFormItem>
+        <AFormItem label="平滑折线" help="默认不启用" name="smooth">
+          <ASwitch v-model:checked="item.smooth" />
+        </AFormItem>
+        <AFormItem label="堆叠面积" help="默认不启用" name="stack">
+          <ASwitch v-model:checked="item.stack" />
+        </AFormItem>
+        <AFormItem
           label="数据"
           name="data"
           :rules="{
@@ -31,9 +27,9 @@
           }"
         >
           <DataEditor type="number" v-model="item.data" :xAxis="xAxis" />
-        </Form.Item>
+        </AFormItem>
       </div>
-      <Form.Item>
+      <AFormItem>
         <div
           class="editor-btn"
           v-if="index === modelValue.length - 1"
@@ -44,13 +40,12 @@
         <div @click="onRemove(index)" v-else class="editor-btn">
           <i class="i-ant-design:close-outlined text-red" />
         </div>
-      </Form.Item>
+      </AFormItem>
     </div>
-  </Form>
+  </AForm>
 </template>
 
 <script setup lang="ts">
-import { Form, Input, Switch } from 'ant-design-vue'
 import { ref } from 'vue'
 import DataEditor from './dataEditor.vue'
 import type { LineChartItem } from '#/components'
@@ -89,7 +84,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (typeof instance.validate === 'function') {
+      if (typeof instance?.validate === 'function') {
         events.push(instance.validate())
       }
     }

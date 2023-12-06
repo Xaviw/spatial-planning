@@ -44,6 +44,7 @@ declare module 'vue' {
     ATag: (typeof import('ant-design-vue/es'))['Tag']
     ATimeline: (typeof import('ant-design-vue/es'))['Timeline']
     ATimelineItem: (typeof import('ant-design-vue/es'))['TimelineItem']
+    ATooltip: (typeof import('ant-design-vue/es'))['Tooltip']
     ATree: (typeof import('ant-design-vue/es'))['Tree']
     ATreeSelect: (typeof import('ant-design-vue/es'))['TreeSelect']
     AUpload: (typeof import('ant-design-vue/es'))['Upload']

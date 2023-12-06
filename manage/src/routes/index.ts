@@ -17,7 +17,7 @@ export default createRouter({
     {
       path: '/menu',
       name: 'menu',
-      component: () => import('../views/menu/normal.vue'),
+      component: () => import('../views/menu/index.vue'),
     },
     {
       path: '/sider',

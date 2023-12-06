@@ -45,7 +45,6 @@ export type SiderComponents =
 export type SiderPosition = 'left' | 'right'
 export interface SiderItem {
   id: string
-  position: SiderPosition
   type: SiderComponents
   props: Recordable
   status: boolean

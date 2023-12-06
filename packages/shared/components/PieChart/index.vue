@@ -8,7 +8,7 @@ import { PieChart } from 'echarts/charts'
 import { TooltipComponent, LegendComponent } from 'echarts/components'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { ref } from 'vue'
+import { computed } from 'vue'
 import VChart from 'vue-echarts'
 import type { PieChartProps } from '#/components'
 import type { PieSeriesOption } from 'echarts/charts'
@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<PieChartProps>(), {
 
 use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer])
 
-const option = ref<EChartsOption>({
+const option = computed<EChartsOption>(() => ({
   color,
   tooltip: {
     trigger: 'item',
@@ -68,7 +68,7 @@ const option = ref<EChartsOption>({
       labelLine: {
         show: false,
       },
-      roseType: props.enableRose ? 'radius' : undefined,
+      roseType: props.enableRose ? 'area' : undefined,
       data: props.data,
       label: {
         show: true,
@@ -79,5 +79,5 @@ const option = ref<EChartsOption>({
       },
     },
   ],
-})
+}))
 </script>
