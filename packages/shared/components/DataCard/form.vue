@@ -45,12 +45,12 @@ import type { DataCardProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<DataCardProps>>({
-  imgPreview: true,
-  imgWidth: '36px',
-  imgHeight: '36px',
-  content: undefined,
-  img: undefined,
-  title: undefined,
+  // imgPreview: true,
+  // imgWidth: '36px',
+  // imgHeight: '36px',
+  // content: undefined,
+  // img: undefined,
+  // title: undefined,
 })
 
 const rules = ref<Record<string, Rule[]>>({

@@ -35,9 +35,9 @@ import type { BarChartItem, LineChartProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<LineChartProps>>({
-  height: '240px',
-  series: [],
-  xAxis: [],
+  // height: '240px',
+  // series: [],
+  // xAxis: [],
 })
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)
 

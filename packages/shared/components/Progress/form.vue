@@ -113,18 +113,18 @@ import type { ProgressProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<ProgressProps>>({
-  data: [],
-  format: '</>%',
-  gapDegree: undefined,
-  gapPosition: undefined,
-  layout: 'vertical',
-  mode: 'percent',
-  size: undefined,
-  steps: undefined,
-  strokeColor: 'rgb(22,119,255)',
-  strokeWidth: 6,
-  trailColor: 'rgba(255,255,255,0.3)',
-  type: 'line',
+  // data: [],
+  // format: '</>%',
+  // gapDegree: undefined,
+  // gapPosition: undefined,
+  // layout: 'vertical',
+  // mode: 'percent',
+  // size: undefined,
+  // steps: undefined,
+  // strokeColor: 'rgb(22,119,255)',
+  // strokeWidth: 6,
+  // trailColor: 'rgba(255,255,255,0.3)',
+  // type: 'line',
 })
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)
 

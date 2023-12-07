@@ -12,7 +12,9 @@ import { ref } from 'vue'
 import type { SubTitleProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
-const formModel = ref<Partial<SubTitleProps>>({ title: undefined })
+const formModel = ref<Partial<SubTitleProps>>({
+  // title: undefined
+})
 
 const rules = ref<Record<string, Rule[]>>({
   title: [

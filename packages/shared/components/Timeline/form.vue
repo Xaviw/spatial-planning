@@ -24,7 +24,9 @@ import Editor from './editor.vue'
 import type { TimelineProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
-const formModel = ref<Partial<TimelineProps>>({ data: [] })
+const formModel = ref<Partial<TimelineProps>>({
+  // data: []
+})
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)
 
 const rules = ref<Record<string, Rule[]>>({

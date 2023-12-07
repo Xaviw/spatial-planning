@@ -86,6 +86,7 @@ function isSiderItem(item: SiderItem | DetailItem): item is SiderItem {
 
 const show = (item: T) => {
   if (!props.filterMenu) return true
+  console.log('item: ', item)
   if (isSiderItem(item)) {
     return item.menuIds.includes(props.filterMenu)
   }

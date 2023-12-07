@@ -35,9 +35,9 @@ import type { BarChartItem, BarChartProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<BarChartProps>>({
-  height: '240px',
-  series: [{ data: [undefined as any] }],
-  xAxis: [''],
+  // height: '240px',
+  // series: [{ data: [undefined as any] }],
+  // xAxis: [''],
 })
 
 const rules = ref<Record<string, Rule[]>>({

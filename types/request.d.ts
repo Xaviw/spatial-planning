@@ -49,6 +49,7 @@ export interface SiderItem {
   props: Recordable
   status: boolean
   menuIds: string[]
+  position: SiderPosition
 }
 export type DetailItem = Pick<SiderItem, 'id' | 'type' | 'props' | 'status'>
 export interface SiderChangeParams {

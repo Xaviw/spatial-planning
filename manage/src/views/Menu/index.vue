@@ -75,7 +75,7 @@
           </AFormItem>
           <div class="ml-100px mt-8 flex justify-center">
             <AButton class="mr-8" @click="cancel">取消</AButton>
-            <AButton type="primary" @click="onConfirm">确认</AButton>
+            <AButton type="primary" @click="onConfirm">确定</AButton>
           </div>
         </AForm>
       </div>
@@ -212,7 +212,7 @@ async function onAdd(id: string = '-1') {
 
 async function onRemove(id: string) {
   await modal('confirm', {
-    content: '该节点及其子节点将被删除，且不可恢复，是否确认删除？',
+    content: '该节点及其子节点将被删除，且不可恢复，是否确定删除？',
   })
   sendRemove(id).then(() => {
     if (selectedKeys.value[0] === id) {
@@ -283,7 +283,7 @@ function confirmSwitch(id: string) {
   if (selectedKeys.value[0] && id !== '-1' && hasModify()) {
     return modal('confirm', {
       title: '警告',
-      content: '您当前的编辑还未保存，是否确认切换？',
+      content: '您当前的编辑还未保存，是否确定切换？',
     }).then(() => {
       selectedKeys.value = [id]
     })

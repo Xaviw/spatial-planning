@@ -60,9 +60,9 @@ const props = withDefaults(
 const { menuData, onMenuDropdown } = useMenuTree()
 
 const formModel = ref<Partial<Omit<SiderItem, 'props'>>>({
-  type: undefined,
-  status: true,
-  menuIds: [],
+  // type: undefined,
+  // status: true,
+  // menuIds: [],
 })
 
 const baseRules = computed(() => {

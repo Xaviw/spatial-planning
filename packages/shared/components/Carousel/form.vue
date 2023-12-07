@@ -39,11 +39,11 @@ import type { CarouselProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<CarouselProps>>({
-  autoplay: true,
-  dots: true,
-  dotPosition: 'bottom',
-  data: [],
-  height: undefined,
+  // autoplay: true,
+  // dots: true,
+  // dotPosition: 'bottom',
+  // data: [],
+  // height: undefined,
 })
 
 const rules = ref<Record<string, Rule[]>>({

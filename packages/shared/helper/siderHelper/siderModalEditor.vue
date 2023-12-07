@@ -36,7 +36,7 @@
 
           <div class="flex">
             <AButton class="flex-1" type="primary" @click="onConfirm">
-              确认
+              确定
             </AButton>
             <AButton class="mx-4 flex-1" @click="onReset">重置</AButton>
             <AButton class="flex-1" danger @click="onCancel">取消</AButton>
@@ -58,6 +58,7 @@
 </template>
 
 <script setup lang="ts">
+import { isEqual } from 'lodash-es'
 import { nextTick, ref, watchEffect } from 'vue'
 import { ContentWrapper, componentForms } from '../../components'
 import { BaseForm } from '../../helper/siderHelper'
@@ -96,7 +97,18 @@ watchEffect(() => {
 
 const selectedItem = ref<DetailItem>()
 
-function onEdit(item: DetailItem) {
+async function onEdit(item: DetailItem) {
+  if (selectedItem.value) {
+    if (item.id === selectedItem.value.id) return
+    const check = checkDataChanged()
+    if (check) {
+      await modal('confirm', {
+        title: '提示！',
+        content: '您有正在编辑的组件还未保存，是否直接切换？',
+        okText: '切换',
+      })
+    }
+  }
   selectedItem.value = item
   nextTick(() => {
     if (!baseFormEl.value || !componentFormEl.value) {
@@ -115,10 +127,7 @@ function onEdit(item: DetailItem) {
   })
 }
 
-async function onConfirm() {
-  await baseFormEl.value?.validate()
-  await componentFormEl.value?.validate()
-
+function checkDataChanged() {
   const data = {
     ...baseFormEl.value!.formModel,
     props: componentFormEl.value!.formModel,
@@ -128,7 +137,21 @@ async function onConfirm() {
   if (index < 0) {
     throw new Error('编辑的组件不存在！')
   }
-  list.value[index] = data
+  if (isEqual(data, list.value[index])) {
+    return false
+  } else {
+    return { data, index }
+  }
+}
+
+async function onConfirm() {
+  await baseFormEl.value?.validate()
+  await componentFormEl.value?.validate()
+
+  const check = checkDataChanged()
+  if (check) {
+    list.value[check.index] = check.data
+  }
 
   onCancel()
 }

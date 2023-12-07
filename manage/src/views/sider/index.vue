@@ -50,7 +50,13 @@
 
     <div class="min-w-100 flex flex-1 flex-col bg-white p-4">
       <div class="mb-2 flex">
-        <AButton type="primary" @click="onSubmit">提交</AButton>
+        <AButton
+          type="primary"
+          @click="onSubmit"
+          :disabled="patches.length <= originalList.length"
+        >
+          提交
+        </AButton>
       </div>
 
       <AAlert showIcon>
@@ -74,9 +80,9 @@
           placeholder="选择或搜索菜单进行筛选"
           v-model:searchValue="menuSearchValue"
           v-model:value="selectedMenu"
-          treedefaultexpandall
-          showsearch
-          allowclear
+          treeDefaultExpandAll
+          showSearch
+          allowClear
           :treeData="menuData"
           @dropdownVisibleChange="onMenuDropdown"
           class="flex-1"
@@ -95,10 +101,9 @@
         </div>
 
         <div class="flex">
-          <AButton class="flex-1" type="primary" @click="onConfirm">
-            确认
+          <AButton class="mr-4 flex-1" type="primary" @click="onConfirm">
+            确定
           </AButton>
-          <AButton class="mx-4 flex-1" @click="onReset">重置</AButton>
           <AButton class="flex-1" danger @click="onCancel">取消</AButton>
         </div>
       </template>
@@ -121,7 +126,9 @@ import {
   BaseForm,
 } from '@sp/shared/helper/siderHelper'
 import { useMutative, useMenuTree } from '@sp/shared/hooks'
+import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
+import { isEqual } from 'lodash-es'
 import { apply, create } from 'mutative'
 import type { SiderChangeParams, SiderItem } from '#/request'
 
@@ -169,7 +176,18 @@ const selectedMenu = ref<string>()
 const { menuData, menuSearchValue, onMenuDropdown, onMenuFilter } =
   useMenuTree()
 
-function onEdit(item: SiderItem) {
+async function onEdit(item: SiderItem) {
+  if (selectedItem.value) {
+    if (item.id === selectedItem.value.id) return
+    const check = checkDataChanged()
+    if (check) {
+      await modal('confirm', {
+        title: '提示！',
+        content: '您有正在编辑的组件还未保存，是否直接切换？',
+        okText: '切换',
+      })
+    }
+  }
   selectedItem.value = item
   nextTick(() => {
     if (!baseFormEl.value || !componentFormEl.value) {
@@ -188,24 +206,19 @@ function onEdit(item: SiderItem) {
   })
 }
 
-async function onConfirm() {
-  await baseFormEl.value?.validate()
-  await componentFormEl.value?.validate()
-
+function checkDataChanged() {
   const data = {
     ...baseFormEl.value!.formModel,
     props: componentFormEl.value!.formModel,
   } as SiderItem
-  console.log('data', data)
 
   let index = leftList.value.findIndex(
     item => item.id === selectedItem.value!.id,
   )
   if (index >= 0) {
-    leftList.value[index] = data
-    update(state => {
-      state[index] = data
-    })
+    return isEqual(leftList.value[index], data)
+      ? false
+      : { data, position: 'left', index, totalIndex: index }
   } else {
     index = rightList.value.findIndex(
       item => item.id === selectedItem.value!.id,
@@ -213,13 +226,35 @@ async function onConfirm() {
     if (index < 0) {
       throw new Error('编辑的组件不存在！')
     }
-    rightList.value[index] = data
+    return isEqual(rightList.value[index], data)
+      ? false
+      : {
+          data,
+          position: 'right',
+          index,
+          totalIndex: index + leftList.value.length,
+        }
+  }
+}
+
+async function onConfirm() {
+  await baseFormEl.value?.validate()
+  await componentFormEl.value?.validate()
+
+  const check = checkDataChanged()
+
+  if (check) {
+    if (check.position === 'left') {
+      leftList.value[check.index] = check.data
+    } else {
+      rightList.value[check.index] = check.data
+    }
     update(state => {
-      state[index + leftList.value.length] = data
+      state[check.totalIndex] = check.data
     })
   }
 
-  onCancel()
+  selectedItem.value = undefined
 }
 
 function onSubmit() {
@@ -233,12 +268,14 @@ function onSubmit() {
   console.log('simplePatches: ', patches, originalList, simplePatches)
 }
 
-function onReset() {
-  baseFormEl.value?.resetFields()
-  componentFormEl.value?.resetFields()
-}
-
-function onCancel() {
+async function onCancel() {
+  const check = checkDataChanged()
+  if (check) {
+    await modal('confirm', {
+      title: '提示！',
+      content: '您当前编辑还未保存，是否确定取消？',
+    })
+  }
   selectedItem.value = undefined
 }
 
@@ -247,10 +284,10 @@ function onMutative(e: SiderChangeParams) {
   if (e.name === 'add') {
     update(state => {
       const index = e.to === 'left' ? e.newIndex! : leftLength + e.newIndex!
-      state.splice(index, 0, e.data as SiderItem)
+      state.splice(index, 0, { ...e.data, position: e.to } as SiderItem)
     })
   } else if (e.name === 'remove') {
-    const index = e.to === 'right' ? leftLength + e.oldIndex! : e.oldIndex!
+    const index = e.from === 'right' ? leftLength + e.oldIndex! : e.oldIndex!
     update(state => {
       state.splice(index, 1)
     })
@@ -259,7 +296,9 @@ function onMutative(e: SiderChangeParams) {
     let newIndex = e.newIndex!
     if (e.from === 'right' && e.to === 'left') {
       oldIndex += leftLength - 1
+      // leftList.value[newIndex].position = 'left'
     } else if (e.from === 'left' && e.to === 'right') {
+      // rightList.value[newIndex].position = 'right'
       newIndex += leftLength
     } else if (e.from === 'right' && e.to === 'right') {
       oldIndex += leftLength
@@ -267,7 +306,7 @@ function onMutative(e: SiderChangeParams) {
     }
     update(state => {
       state.splice(oldIndex, 1)
-      state.splice(newIndex, 0, e.data as SiderItem)
+      state.splice(newIndex, 0, { ...e.data, position: e.to } as SiderItem)
     })
   }
 }

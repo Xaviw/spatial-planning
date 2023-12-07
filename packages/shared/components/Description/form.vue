@@ -37,13 +37,13 @@ import type { DescriptionProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<DescriptionProps>>({
-  colon: true,
-  column: 3,
-  contentStyle: undefined,
-  data: [],
-  labelStyle: undefined,
-  layout: 'horizontal',
-  title: undefined,
+  // colon: true,
+  // column: 3,
+  // contentStyle: undefined,
+  // data: [],
+  // labelStyle: undefined,
+  // layout: 'horizontal',
+  // title: undefined,
 })
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)
 

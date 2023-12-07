@@ -29,9 +29,9 @@ import type { Rule } from 'ant-design-vue/es/form'
 
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)
 const formModel = ref<Partial<CollapseProps>>({
-  content: undefined,
-  defaultOpen: false,
-  title: undefined,
+  // content: undefined,
+  // defaultOpen: false,
+  // title: undefined,
 })
 
 const rules = ref<Record<string, Rule[]>>({

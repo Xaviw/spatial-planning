@@ -21,9 +21,9 @@ import type { FileListProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<FileListProps>>({
-  columns: 4,
-  gap: '8px',
-  data: [],
+  // columns: 4,
+  // gap: '8px',
+  // data: [],
 })
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)
 

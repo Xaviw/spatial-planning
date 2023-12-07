@@ -19,7 +19,9 @@ import Editor from './editor.vue'
 import type { TableProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
-const formModel = ref<TableProps>({ data: [] })
+const formModel = ref<Partial<TableProps>>({
+  // data: []
+})
 
 const rules = ref<Record<string, Rule[]>>({
   data: [

@@ -42,10 +42,10 @@ withDefaults(
 )
 
 const formModel = ref<Partial<TitleProps>>({
-  title: undefined,
-  modalData: [],
-  modalTitle: undefined,
-  modalWidth: '25rem',
+  // title: undefined,
+  // modalData: [],
+  // modalTitle: undefined,
+  // modalWidth: '25rem',
 })
 
 const rules = ref<Record<string, Rule[]>>({

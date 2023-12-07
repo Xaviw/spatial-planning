@@ -73,13 +73,13 @@ import type { PieChartProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<PieChartProps>>({
-  height: '240px',
-  outterRadius: 95,
-  centerX: 45,
-  centerY: 50,
-  data: [],
-  enableRose: undefined,
-  innerRadius: undefined,
+  // height: '240px',
+  // outterRadius: 95,
+  // centerX: 45,
+  // centerY: 50,
+  // data: [],
+  // enableRose: undefined,
+  // innerRadius: undefined,
 })
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)
 

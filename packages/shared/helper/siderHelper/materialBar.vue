@@ -60,7 +60,7 @@ function materialsPull(to: any) {
 async function clearTemp() {
   await modal('warning', {
     title: '警告！',
-    content: '清空后不可恢复，是否确认清空？',
+    content: '清空后不可恢复，是否确定清空？',
   })
   tempList.value = []
 }

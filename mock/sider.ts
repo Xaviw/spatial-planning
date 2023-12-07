@@ -39,6 +39,7 @@ function genList(
             0,
             Mock.Random.natural(1, 3),
           ),
+      position: isInModal ? undefined : params.position,
     }
   })
 }
