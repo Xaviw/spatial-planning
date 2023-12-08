@@ -48,6 +48,7 @@ export function useModal(
         if (instance) {
           render(null, container as any)
           instance = null
+          modalMap.delete(key)
         }
       },
     }

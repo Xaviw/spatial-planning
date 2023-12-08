@@ -50,13 +50,33 @@
 
     <div class="min-w-100 flex flex-1 flex-col bg-white p-4">
       <div class="mb-2 flex">
-        <AButton
-          type="primary"
-          @click="onSubmit"
-          :disabled="patches.length <= originalList.length"
-        >
-          提交
-        </AButton>
+        <div class="flex-1">
+          <AButton
+            danger
+            :disabled="inversePatches.length - patchFlag <= 0"
+            @click="onRevokeOrRedo(revoke)"
+          >
+            撤销
+          </AButton>
+          <AButton
+            type="primary"
+            class="mx-2"
+            ghost
+            :disabled="patchFlag <= 0"
+            @click="onRevokeOrRedo(redo)"
+          >
+            重做
+          </AButton>
+        </div>
+        <div>
+          <AButton
+            type="primary"
+            @click="onSubmit"
+            :disabled="patches.length - patchFlag <= 0"
+          >
+            提交
+          </AButton>
+        </div>
       </div>
 
       <AAlert showIcon>
@@ -118,7 +138,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getSider } from '@sp/shared/apis'
+import { getSider, setSider } from '@sp/shared/apis'
 import { Loading, componentForms } from '@sp/shared/components'
 import {
   DraggableList,
@@ -128,6 +148,7 @@ import {
 import { useMutative, useMenuTree } from '@sp/shared/hooks'
 import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
+import { message } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
 import { apply, create } from 'mutative'
 import type { SiderChangeParams, SiderItem } from '#/request'
@@ -138,37 +159,40 @@ const componentFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
 const {
   data: leftList,
   loading: leftLoading,
-  onSuccess: onLeftSuccess,
+  send: sendLeft,
 } = useRequest(() => getSider({ position: 'left', filter: false }), {
   initialData: [],
+  immediate: false,
 })
 
 const {
   data: rightList,
   loading: rightLoading,
-  onSuccess: onRightSuccess,
+  send: sendRight,
 } = useRequest(() => getSider({ position: 'right', filter: false }), {
   initialData: [],
+  immediate: false,
 })
 
-const originalList: SiderItem[] = []
-const { update, patches } = useMutative([] as SiderItem[])
+const {
+  update,
+  patches,
+  inversePatches,
+  revoke,
+  redo,
+  patchFlag,
+  originalState: originalList,
+  reset,
+  state: currentList,
+} = useMutative([] as SiderItem[])
 
-onLeftSuccess(({ data }) => {
-  originalList.unshift(...data)
-  update(state => {
-    state.unshift(...data)
-  })
+Promise.all([sendLeft(), sendRight()]).then(([leftData, rightData]) => {
+  reset([...leftData, ...rightData])
 })
 
-onRightSuccess(({ data }) => {
-  originalList.push(...data)
-  update(state => {
-    state.push(...data)
-  })
-})
-
-const loading = computed(() => leftLoading.value || rightLoading.value)
+const loading = computed(
+  () => leftLoading.value || rightLoading.value || submitLoading.value,
+)
 
 const selectedItem = ref<SiderItem>()
 
@@ -224,7 +248,7 @@ function checkDataChanged() {
       item => item.id === selectedItem.value!.id,
     )
     if (index < 0) {
-      throw new Error('编辑的组件不存在！')
+      return false
     }
     return isEqual(rightList.value[index], data)
       ? false
@@ -257,15 +281,31 @@ async function onConfirm() {
   selectedItem.value = undefined
 }
 
+const submitLoading = ref(false)
+
 function onSubmit() {
+  submitLoading.value = true
   const [_state, simplePatches] = create(
-    originalList,
+    originalList.value,
     state => {
-      apply(state, patches.value.slice(originalList.length))
+      patches.value.forEach(patchArr => {
+        patchArr.forEach(patch => {
+          apply(state, [patch])
+        })
+      })
     },
     { enablePatches: true },
   )
   console.log('simplePatches: ', patches, originalList, simplePatches)
+  setSider(simplePatches)
+    .send()
+    .then(() => {
+      message.success('提交成功！')
+      reset(currentList.value)
+    })
+    .finally(() => {
+      submitLoading.value = false
+    })
 }
 
 async function onCancel() {
@@ -280,6 +320,7 @@ async function onCancel() {
 }
 
 function onMutative(e: SiderChangeParams) {
+  console.log('e: ', e)
   const leftLength = leftList.value.length
   if (e.name === 'add') {
     update(state => {
@@ -296,9 +337,7 @@ function onMutative(e: SiderChangeParams) {
     let newIndex = e.newIndex!
     if (e.from === 'right' && e.to === 'left') {
       oldIndex += leftLength - 1
-      // leftList.value[newIndex].position = 'left'
     } else if (e.from === 'left' && e.to === 'right') {
-      // rightList.value[newIndex].position = 'right'
       newIndex += leftLength
     } else if (e.from === 'right' && e.to === 'right') {
       oldIndex += leftLength
@@ -309,6 +348,13 @@ function onMutative(e: SiderChangeParams) {
       state.splice(newIndex, 0, { ...e.data, position: e.to } as SiderItem)
     })
   }
+}
+
+function onRevokeOrRedo(func: typeof revoke | typeof redo) {
+  const fullList = func()
+  const firstRightIndex = fullList.findIndex(item => item.position === 'right')
+  leftList.value = fullList.slice(0, firstRightIndex)
+  rightList.value = fullList.slice(firstRightIndex)
 }
 </script>
 

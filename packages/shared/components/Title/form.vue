@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 import { Form } from 'ant-design-vue'
+import { cloneDeep } from 'lodash-es'
 import { h, ref } from 'vue'
 import { SiderModalEditor } from '../../helper/siderHelper'
 import { useModal } from '../../hooks'
@@ -60,14 +61,17 @@ const rules = ref<Record<string, Rule[]>>({
 const { validateInfos, resetFields, clearValidate, validate, initialModel } =
   Form.useForm(formModel, rules)
 
-const { open, close } = useModal('TitleDetailEditor')
+const { open, close } = useModal('TitleDetailEditor', {
+  keyboard: false,
+  maskClosable: false,
+})
 
 function openDetail() {
   open(
     h(SiderModalEditor, {
       modalTitle:
         formModel.value.modalTitle || `${formModel.value.title}详情内容`,
-      modalData: formModel.value.modalData,
+      modalData: cloneDeep(formModel.value.modalData),
       modalWidth: formModel.value.modalWidth,
       onConfirm: onDetailConfirm,
       onClose: close,

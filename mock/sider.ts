@@ -14,6 +14,17 @@ export default [
       message: 'ok',
     }),
   },
+  {
+    url: '/api/sider',
+    method: 'post',
+    timeout: 1000,
+    statusCode: 200,
+    response: () => ({
+      code: 1,
+      data: true,
+      message: 'ok',
+    }),
+  },
 ] as MockMethod[]
 
 function genList(
@@ -82,16 +93,15 @@ const generationFunctions = {
   },
 
   genDescription() {
-    const column = Mock.Random.natural(1, 3)
+    const column = Mock.Random.natural(2, 3)
     return {
       type: 'Description',
       props: {
-        layout: 'vertical',
+        layout: 'horizontal',
         column,
         data: Array.from({ length: Mock.Random.natural(4, 10) }).map(() => ({
           label: Mock.Random.cword(2, 4),
-          value: Mock.Random.csentence(2, 10),
-          // span: Mock.Random.natural(1, column),
+          value: Mock.Random.csentence(2, 6),
         })),
       },
     }

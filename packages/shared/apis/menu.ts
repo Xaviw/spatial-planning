@@ -1,3 +1,4 @@
+import 'alova/GlobalFetch'
 import { request } from '../utils/request'
 import type { MenuItem, RequestMeta } from '#/request'
 
