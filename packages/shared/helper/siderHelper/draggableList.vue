@@ -29,6 +29,9 @@
                 <AMenuItem key="edit" @click="onEdit(comp, index)">
                   编辑
                 </AMenuItem>
+                <AMenuItem key="remove" @click="onRemove(comp, index)">
+                  删除
+                </AMenuItem>
               </AMenu>
             </template>
           </ADropdown>
@@ -52,9 +55,14 @@
 <script setup lang="ts" generic="T extends SiderItem | DetailItem">
 import { components } from '@sp/shared/components'
 import { cloneDeep } from 'lodash-es'
-import { unref } from 'vue'
+import { unref, useAttrs } from 'vue'
 import { VueDraggable, type UseDraggableOptions } from 'vue-draggable-plus'
-import type { DetailItem, SiderItem, SiderChangeParams } from '#/request'
+import type {
+  DetailItem,
+  SiderItem,
+  SiderChangeParams,
+  SiderPosition,
+} from '#/request'
 
 export type SortableEvent = Parameters<
   NonNullable<Pick<UseDraggableOptions<any>, 'onAdd'>['onAdd']>
@@ -77,7 +85,10 @@ const emits = defineEmits<{
   (e: 'update:modelValue', newList: any[]): void
   (e: 'mutative', params: SiderChangeParams): void
   (e: 'edit', item: T, index: number): void
+  (e: 'remove', position: SiderPosition, index: number, item: T): void
 }>()
+
+const attrs = useAttrs()
 
 function isSiderItem(item: SiderItem | DetailItem): item is SiderItem {
   if (Array.isArray((item as SiderItem).menuIds)) return true
@@ -86,7 +97,6 @@ function isSiderItem(item: SiderItem | DetailItem): item is SiderItem {
 
 const show = (item: T) => {
   if (!props.filterMenu) return true
-  console.log('item: ', item)
   if (isSiderItem(item)) {
     return item.menuIds.includes(props.filterMenu)
   }
@@ -107,13 +117,6 @@ function onChange(e: SortableEvent) {
       newIndex: e.newIndex,
       data: original!,
     })
-  } else if (e.to.id === 'temp') {
-    emits('mutative', {
-      name: 'remove',
-      from: e.from.id,
-      oldIndex: e.oldIndex,
-      data: original!,
-    })
   } else {
     emits('mutative', {
       name: 'move',
@@ -128,6 +131,10 @@ function onChange(e: SortableEvent) {
 
 function onEdit(item: T, index: number) {
   emits('edit', cloneDeep(unref(item)), index)
+}
+
+function onRemove(item: T, index: number) {
+  emits('remove', attrs.id as SiderPosition, index, cloneDeep(unref(item)))
 }
 </script>
 

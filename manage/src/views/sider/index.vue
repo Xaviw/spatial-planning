@@ -15,6 +15,7 @@
           id="left"
           enableContextMenu
           @edit="onEdit"
+          @remove="onRemove"
           :selectedId="selectedItem?.id"
           @mutative="onMutative"
           :filterMenu="selectedMenu"
@@ -35,6 +36,7 @@
           group="sider"
           enableContextMenu
           @edit="onEdit"
+          @remove="onRemove"
           :selectedId="selectedItem?.id"
           @mutative="onMutative"
           :filterMenu="selectedMenu"
@@ -42,119 +44,46 @@
       </div>
     </div>
 
-    <MaterialBar
-      :inModal="false"
-      :selectedMenu="selectedMenu"
-      @mutative="onMutative"
+    <MaterialBar :inModal="false" :selectedMenu="selectedMenu" />
+
+    <FormBar
+      :patches="patches"
+      :inversePatches="inversePatches"
+      :patchFlag="patchFlag"
+      v-model:selected-menu="selectedMenu"
+      :selectedItem="selectedItem"
+      @cancel="onCancel"
+      @confirm="onConfirm"
+      @submit="onSubmit"
+      @revoke="onRevokeOrRedo(revoke)"
+      @redo="onRevokeOrRedo(redo)"
+      ref="formBarEl"
     />
-
-    <div class="min-w-100 flex flex-1 flex-col bg-white p-4">
-      <div class="mb-2 flex">
-        <div class="flex-1">
-          <AButton
-            danger
-            :disabled="inversePatches.length - patchFlag <= 0"
-            @click="onRevokeOrRedo(revoke)"
-          >
-            撤销
-          </AButton>
-          <AButton
-            type="primary"
-            class="mx-2"
-            ghost
-            :disabled="patchFlag <= 0"
-            @click="onRevokeOrRedo(redo)"
-          >
-            重做
-          </AButton>
-        </div>
-        <div>
-          <AButton
-            type="primary"
-            @click="onSubmit"
-            :disabled="patches.length - patchFlag <= 0"
-          >
-            提交
-          </AButton>
-        </div>
-      </div>
-
-      <AAlert showIcon>
-        <template #message>
-          <div>拖拽“左栏”、“右栏”中的组件移动位置；</div>
-          <div>右击“左栏”、“右栏”中的组件进行编辑；</div>
-          <div>拖拽“物料栏”中的组件到“左栏”、“右栏”中进行新增；</div>
-          <div>
-            拖拽“左栏”、“右栏”中的组件到“删除/暂存栏”中进行删除或暂存（暂存便于大范围移动组件）；
-          </div>
-        </template>
-      </AAlert>
-
-      <div
-        class="flex items-center border-0 border-b-1px border-gray-3 border-solid py-2"
-      >
-        <span>菜单筛选：</span>
-        <ATreeSelect
-          :fieldNames="{ label: 'name', value: 'id' }"
-          :filterTreeNode="onMenuFilter"
-          placeholder="选择或搜索菜单进行筛选"
-          v-model:searchValue="menuSearchValue"
-          v-model:value="selectedMenu"
-          treeDefaultExpandAll
-          showSearch
-          allowClear
-          :treeData="menuData"
-          @dropdownVisibleChange="onMenuDropdown"
-          class="flex-1"
-        />
-      </div>
-
-      <template v-if="selectedItem">
-        <div class="flex-1 overflow-auto">
-          <BaseForm ref="baseFormEl" />
-
-          <component
-            :is="componentForms[selectedItem.type]"
-            :key="selectedItem.id"
-            ref="componentFormEl"
-          />
-        </div>
-
-        <div class="flex">
-          <AButton class="mr-4 flex-1" type="primary" @click="onConfirm">
-            确定
-          </AButton>
-          <AButton class="flex-1" danger @click="onCancel">取消</AButton>
-        </div>
-      </template>
-
-      <AEmpty
-        v-else
-        description="请右击“左栏”、“右栏”中的组件，选择“编辑”"
-        class="h-full flex flex-col items-center justify-center"
-      />
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { getSider, setSider } from '@sp/shared/apis'
-import { Loading, componentForms } from '@sp/shared/components'
+import { Loading } from '@sp/shared/components'
 import {
   DraggableList,
   MaterialBar,
-  BaseForm,
+  FormBar,
 } from '@sp/shared/helper/siderHelper'
-import { useMutative, useMenuTree } from '@sp/shared/hooks'
+import { useMutative } from '@sp/shared/hooks'
 import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { message } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
 import { apply, create } from 'mutative'
-import type { SiderChangeParams, SiderItem } from '#/request'
+import type {
+  SiderChangeParams,
+  SiderItem,
+  SiderPosition,
+  DetailItem,
+} from '#/request'
 
-const baseFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
-const componentFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
+const formBarEl = ref<InstanceType<typeof FormBar> | null>(null)
 
 const {
   data: leftList,
@@ -197,14 +126,12 @@ const loading = computed(
 const selectedItem = ref<SiderItem>()
 
 const selectedMenu = ref<string>()
-const { menuData, menuSearchValue, onMenuDropdown, onMenuFilter } =
-  useMenuTree()
 
 async function onEdit(item: SiderItem) {
   if (selectedItem.value) {
     if (item.id === selectedItem.value.id) return
-    const check = checkDataChanged()
-    if (check) {
+    const data = await formBarEl.value!.getData()
+    if (!isEqual(data, selectedItem)) {
       await modal('confirm', {
         title: '提示！',
         content: '您有正在编辑的组件还未保存，是否直接切换？',
@@ -213,71 +140,48 @@ async function onEdit(item: SiderItem) {
     }
   }
   selectedItem.value = item
-  nextTick(() => {
-    if (!baseFormEl.value || !componentFormEl.value) {
-      throw new Error('表单渲染失败！')
-    }
+}
 
-    const { initialModel: baseInitModel } = baseFormEl.value
-    const { initialModel: componentInitModel } = componentFormEl.value
-
-    // 合并默认值，确保非必填属性也有值
-    baseFormEl.value!.formModel = { ...baseInitModel, ...item }
-    componentFormEl.value!.formModel = {
-      ...componentInitModel,
-      ...item.props,
-    }
+async function onRemove(position: SiderPosition, index: number) {
+  await modal('confirm', {
+    title: '提示！',
+    content: '是否确定删除？',
   })
-}
-
-function checkDataChanged() {
-  const data = {
-    ...baseFormEl.value!.formModel,
-    props: componentFormEl.value!.formModel,
-  } as SiderItem
-
-  let index = leftList.value.findIndex(
-    item => item.id === selectedItem.value!.id,
-  )
-  if (index >= 0) {
-    return isEqual(leftList.value[index], data)
-      ? false
-      : { data, position: 'left', index, totalIndex: index }
+  if (position === 'left') {
+    leftList.value.splice(index, 1)
+    update(draft => {
+      draft.splice(index, 1)
+    })
   } else {
-    index = rightList.value.findIndex(
-      item => item.id === selectedItem.value!.id,
-    )
-    if (index < 0) {
-      return false
-    }
-    return isEqual(rightList.value[index], data)
-      ? false
-      : {
-          data,
-          position: 'right',
-          index,
-          totalIndex: index + leftList.value.length,
-        }
-  }
-}
-
-async function onConfirm() {
-  await baseFormEl.value?.validate()
-  await componentFormEl.value?.validate()
-
-  const check = checkDataChanged()
-
-  if (check) {
-    if (check.position === 'left') {
-      leftList.value[check.index] = check.data
-    } else {
-      rightList.value[check.index] = check.data
-    }
-    update(state => {
-      state[check.totalIndex] = check.data
+    rightList.value.splice(index, 1)
+    update(draft => {
+      draft.splice(leftList.value.length + index, 1)
     })
   }
+}
 
+function onConfirm(data: SiderItem | DetailItem, equal: boolean) {
+  if (!equal) {
+    let index = leftList.value.findIndex(
+      item => item.id === selectedItem.value?.id,
+    )
+    if (index >= 0) {
+      leftList.value[index] = data as SiderItem
+      update(draft => {
+        draft[index] = data as SiderItem
+      })
+    } else {
+      index = rightList.value.findIndex(
+        item => item.id === selectedItem.value?.id,
+      )
+      if (index >= 0) {
+        rightList.value[index] = data as SiderItem
+        update(draft => {
+          draft[leftList.value.length + index] = data as SiderItem
+        })
+      }
+    }
+  }
   selectedItem.value = undefined
 }
 
@@ -308,37 +212,26 @@ function onSubmit() {
     })
 }
 
-async function onCancel() {
-  const check = checkDataChanged()
-  if (check) {
-    await modal('confirm', {
-      title: '提示！',
-      content: '您当前编辑还未保存，是否确定取消？',
-    })
-  }
+function onCancel() {
   selectedItem.value = undefined
 }
 
 function onMutative(e: SiderChangeParams) {
-  console.log('e: ', e)
   const leftLength = leftList.value.length
   if (e.name === 'add') {
     update(state => {
       const index = e.to === 'left' ? e.newIndex! : leftLength + e.newIndex!
       state.splice(index, 0, { ...e.data, position: e.to } as SiderItem)
     })
-  } else if (e.name === 'remove') {
-    const index = e.from === 'right' ? leftLength + e.oldIndex! : e.oldIndex!
-    update(state => {
-      state.splice(index, 1)
-    })
   } else {
     let oldIndex = e.oldIndex!
     let newIndex = e.newIndex!
     if (e.from === 'right' && e.to === 'left') {
+      // 事件触发时，左侧列表长度已经是添加了移动的元素
       oldIndex += leftLength - 1
     } else if (e.from === 'left' && e.to === 'right') {
-      newIndex += leftLength
+      // 事件触发时，左侧列表长度还未移除移动的元素
+      newIndex += leftLength - 1
     } else if (e.from === 'right' && e.to === 'right') {
       oldIndex += leftLength
       newIndex += leftLength

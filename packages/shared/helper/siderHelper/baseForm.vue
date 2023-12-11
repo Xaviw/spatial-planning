@@ -24,7 +24,7 @@
       />
     </AFormItem>
 
-    <AFormItem label="关联菜单" v-bind="validateInfos.menuIds">
+    <AFormItem label="关联菜单" v-bind="validateInfos.menuIds" v-if="!inModal">
       <ATreeSelect
         :fieldNames="{ label: 'name', value: 'id' }"
         placeholder="请选择关联菜单"

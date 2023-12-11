@@ -1,9 +1,10 @@
+import { cloneDeep } from 'lodash-es'
 import { apply, create, type Patches, type Draft } from 'mutative'
 import { ref, shallowRef } from 'vue'
 
 export function useMutative<T>(baseState: T) {
-  const originalState = shallowRef(baseState)
-  const state = shallowRef(baseState)
+  const originalState = shallowRef(cloneDeep(baseState))
+  const state = shallowRef(cloneDeep(baseState))
 
   const patches = ref<Patches[]>([])
   const inversePatches = ref<Patches[]>([])
@@ -68,8 +69,8 @@ export function useMutative<T>(baseState: T) {
   }
 
   const reset = (resetState: T) => {
-    originalState.value = resetState
-    state.value = resetState
+    originalState.value = cloneDeep(resetState)
+    state.value = cloneDeep(resetState)
     patches.value = []
     inversePatches.value = []
     patchFlag.value = 0

@@ -13,74 +13,37 @@
             group="sider"
             enableContextMenu
             @edit="onEdit"
+            @remove="onRemove"
             @mutative="onMutative"
             :selectedId="selectedItem?.id"
           />
         </div>
       </div>
 
-      <MaterialBar :inModal="true" @mutative="onMutative" />
+      <MaterialBar :inModal="true" />
 
-      <div class="min-w-100 flex flex-1 flex-col bg-white p-4">
-        <div class="mb-2 flex justify-between">
-          <AButton
-            danger
-            :disabled="inversePatches.length - patchFlag <= 0"
-            @click="onRevokeOrRedo(revoke)"
-          >
-            撤销
-          </AButton>
-          <AButton
-            type="primary"
-            class="mx-2"
-            ghost
-            :disabled="patchFlag <= 0"
-            @click="onRevokeOrRedo(redo)"
-          >
-            重做
-          </AButton>
-        </div>
-        <template v-if="selectedItem">
-          <div class="flex-1 overflow-auto">
-            <BaseForm ref="baseFormEl" inModal />
-
-            <component
-              :is="componentForms[selectedItem.type]"
-              :key="selectedItem.id"
-              ref="componentFormEl"
-              v-bind="selectedItem.props"
-              inModal
-            />
-          </div>
-
-          <div class="flex">
-            <AButton class="flex-1" type="primary" @click="onConfirm">
-              确定
-            </AButton>
-            <AButton class="mx-4 flex-1" @click="onReset">重置</AButton>
-            <AButton class="flex-1" danger @click="onCancel">取消</AButton>
-          </div>
-        </template>
-
-        <AEmpty
-          v-else
-          description="请右击组件，选择“编辑”"
-          class="h-full flex flex-col items-center justify-center"
-        />
-      </div>
-    </div>
-
-    <div class="bg-[#1a4f84] px-4 py-2 text-right">
-      <AButton @click="onSubmit" type="primary">完成编辑</AButton>
+      <FormBar
+        inModal
+        :patches="patches"
+        :inversePatches="inversePatches"
+        :patchFlag="patchFlag"
+        :selectedItem="selectedItem"
+        @cancel="onCancel"
+        @confirm="onConfirm"
+        @submit="onSubmit"
+        @redo="onRevokeOrRedo(redo)"
+        @revoke="onRevokeOrRedo(revoke)"
+        ref="formBarEl"
+      />
     </div>
   </ContentWrapper>
 </template>
 
 <script setup lang="ts">
-import { isEqual } from 'lodash-es'
-import { nextTick, ref, watchEffect } from 'vue'
-import { ContentWrapper, componentForms } from '../../components'
-import { BaseForm } from '../../helper/siderHelper'
+import { isEqual, cloneDeep } from 'lodash-es'
+import { ref, watchEffect } from 'vue'
+import { ContentWrapper } from '../../components'
+import { FormBar } from '../../helper/siderHelper'
 import { useMutative } from '../../hooks'
 import { modal } from '../../utils'
 import DraggableList from './draggableList.vue'
@@ -104,17 +67,17 @@ const emits = defineEmits<{
   (e: 'confirm', list: DetailItem[]): void
 }>()
 
-const baseFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
-const componentFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
+const formBarEl = ref<InstanceType<typeof FormBar> | null>(null)
 
 const { redo, revoke, reset, patchFlag, inversePatches, update, patches } =
   useMutative([] as DetailItem[])
+
 const list = ref<DetailItem[]>([])
 
 watchEffect(() => {
   if (props.modalData?.length) {
-    reset(props.modalData)
-    list.value = props.modalData
+    reset(cloneDeep(props.modalData))
+    list.value = cloneDeep(props.modalData)
   }
 })
 
@@ -123,8 +86,8 @@ const selectedItem = ref<DetailItem>()
 async function onEdit(item: DetailItem) {
   if (selectedItem.value) {
     if (item.id === selectedItem.value.id) return
-    const check = checkDataChanged()
-    if (check) {
+    const data = await formBarEl.value!.getData()
+    if (!isEqual(data, selectedItem)) {
       await modal('confirm', {
         title: '提示！',
         content: '您有正在编辑的组件还未保存，是否直接切换？',
@@ -133,68 +96,36 @@ async function onEdit(item: DetailItem) {
     }
   }
   selectedItem.value = item
-  nextTick(() => {
-    if (!baseFormEl.value || !componentFormEl.value) {
-      throw new Error('表单渲染失败！')
-    }
+}
 
-    const { initialModel: baseInitModel } = baseFormEl.value
-    const { initialModel: componentInitModel } = componentFormEl.value
-
-    // 合并默认值，确保非必填属性也有值
-    baseFormEl.value!.formModel = { ...baseInitModel, ...item }
-    componentFormEl.value!.formModel = {
-      ...componentInitModel,
-      ...item.props,
-    }
+async function onRemove(_position: string, index: number) {
+  await modal('confirm', {
+    title: '提示！',
+    content: '是否确定删除？',
+  })
+  list.value.splice(index, 1)
+  update(draft => {
+    draft.splice(index, 1)
   })
 }
 
-function checkDataChanged() {
-  const data = {
-    ...baseFormEl.value!.formModel,
-    props: componentFormEl.value!.formModel,
-  } as DetailItem
-
-  let index = list.value.findIndex(item => item.id === selectedItem.value!.id)
-  if (index < 0) {
-    return false
-  }
-  if (isEqual(data, list.value[index])) {
-    return false
-  } else {
-    return { data, index }
-  }
-}
-
-async function onConfirm() {
-  await baseFormEl.value?.validate()
-  await componentFormEl.value?.validate()
-
-  const check = checkDataChanged()
-  if (check) {
-    list.value[check.index] = check.data
-    update(draft => {
-      draft[check.index] = check.data
-    })
+function onConfirm(data: DetailItem, equal: boolean) {
+  if (!equal) {
+    const index = list.value.findIndex(
+      item => item.id === selectedItem.value?.id,
+    )
+    if (index >= 0) {
+      list.value[index] = data
+      update(draft => {
+        draft[index] = data
+      })
+    }
   }
 
   selectedItem.value = undefined
 }
 
-function onReset() {
-  baseFormEl.value?.resetFields()
-  componentFormEl.value?.resetFields()
-}
-
-async function onCancel() {
-  const check = checkDataChanged()
-  if (check) {
-    await modal('confirm', {
-      title: '提示！',
-      content: '您当前编辑还未保存，是否确定取消？',
-    })
-  }
+function onCancel() {
   selectedItem.value = undefined
 }
 
@@ -202,10 +133,6 @@ function onMutative(e: SiderChangeParams) {
   if (e.name === 'add') {
     update(draft => {
       draft.splice(e.newIndex!, 0, e.data)
-    })
-  } else if (e.name === 'remove') {
-    update(draft => {
-      draft.splice(e.oldIndex!, 1)
     })
   } else if (e.name === 'move') {
     update(draft => {
@@ -215,14 +142,7 @@ function onMutative(e: SiderChangeParams) {
   }
 }
 
-async function onSubmit() {
-  const check = selectedItem.value ? checkDataChanged() : false
-  if (check) {
-    await modal('warning', {
-      title: '警告！',
-      content: '当前存在未确定的编辑，是否直接提交？',
-    })
-  }
+function onSubmit() {
   if (patches.value.length - patchFlag.value) {
     emits('confirm', list.value)
   }
@@ -230,8 +150,16 @@ async function onSubmit() {
 }
 
 async function onClose() {
-  const check = selectedItem.value ? checkDataChanged() : false
-  if (check || patches.value.length - patchFlag.value) {
+  if (selectedItem.value) {
+    const data = await formBarEl.value!.getData()
+    if (!isEqual(data, selectedItem)) {
+      await modal('confirm', {
+        title: '提示！',
+        content: '您当前的编辑还未确定，关闭弹窗后不会保存，是否确定关闭？',
+      })
+    }
+  }
+  if (patches.value.length - patchFlag.value) {
     await modal('confirm', {
       title: '提示！',
       content: '您当前的修改还未提交，关闭弹窗后修改不会保存，是否确定关闭？',
@@ -242,7 +170,6 @@ async function onClose() {
 
 function onRevokeOrRedo(func: typeof revoke | typeof redo) {
   const state = func()
-  console.log('state: ', state)
-  list.value = state
+  list.value = [...state]
 }
 </script>

@@ -14,55 +14,22 @@
         :clone="customClone"
       />
     </div>
-
-    <div class="header border-t-1!">
-      <i class="i-ant-design:delete-outlined" />
-      <span class="mx-2">删除/暂存栏</span>
-      <div class="flex-1 text-right">
-        <AButton size="small" danger ghost @click="clearTemp">清空</AButton>
-      </div>
-    </div>
-
-    <div class="flex-1 overflow-auto">
-      <DraggableList
-        id="temp"
-        v-model="tempList"
-        group="sider"
-        @mutative="$emit('mutative', $event)"
-      />
-    </div>
   </div>
 </template>
 
 <script setup lang="ts" generic="T extends SiderItem | DetailItem">
-import { ref } from 'vue'
-import { modal } from '../../utils'
 import { materials } from './data'
 import DraggableList from './draggableList.vue'
-import type { SiderItem, DetailItem, SiderChangeParams } from '#/request'
+import type { SiderItem, DetailItem } from '#/request'
 
 const props = defineProps<{
   selectedMenu?: string
   inModal: boolean
 }>()
 
-defineEmits<{
-  (e: 'mutative', params: SiderChangeParams): void
-}>()
-
-const tempList = ref<T[]>([])
-
 function materialsPull(to: any) {
   if ((to.el as HTMLDivElement).id === 'temp') return false
   return 'clone'
-}
-
-async function clearTemp() {
-  await modal('warning', {
-    title: '警告！',
-    content: '清空后不可恢复，是否确定清空？',
-  })
-  tempList.value = []
 }
 
 function customClone(item: T): T {

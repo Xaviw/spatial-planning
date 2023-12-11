@@ -1,0 +1,9 @@
+{
+  "atDirectives": [
+    {
+      "description": "定义多个原子CSS为一个类",
+      "name": "@apply"
+    }
+  ],
+  "version": 1.1
+}
