@@ -113,7 +113,7 @@ const {
   originalState: originalList,
   reset,
   state: currentList,
-} = useMutative([] as SiderItem[])
+} = useMutative<SiderItem[]>([])
 
 Promise.all([sendLeft(), sendRight()]).then(([leftData, rightData]) => {
   reset([...leftData, ...rightData])
@@ -142,11 +142,7 @@ async function onEdit(item: SiderItem) {
   selectedItem.value = item
 }
 
-async function onRemove(position: SiderPosition, index: number) {
-  await modal('confirm', {
-    title: '提示！',
-    content: '是否确定删除？',
-  })
+function onRemove(position: SiderPosition, index: number) {
   if (position === 'left') {
     leftList.value.splice(index, 1)
     update(draft => {
@@ -198,9 +194,9 @@ function onSubmit() {
         })
       })
     },
-    { enablePatches: true },
+    { enablePatches: { arrayLengthAssignment: false } },
   )
-  console.log('simplePatches: ', patches, originalList, simplePatches)
+  console.log('simplePatches: ', patches, simplePatches)
   setSider(simplePatches)
     .send()
     .then(() => {
@@ -216,7 +212,7 @@ function onCancel() {
   selectedItem.value = undefined
 }
 
-function onMutative(e: SiderChangeParams) {
+function onMutative(e: SiderChangeParams<SiderItem>) {
   const leftLength = leftList.value.length
   if (e.name === 'add') {
     update(state => {
@@ -238,7 +234,7 @@ function onMutative(e: SiderChangeParams) {
     }
     update(state => {
       state.splice(oldIndex, 1)
-      state.splice(newIndex, 0, { ...e.data, position: e.to } as SiderItem)
+      state.splice(newIndex, 0, { ...e.data, position: e.to as SiderPosition })
     })
   }
 }

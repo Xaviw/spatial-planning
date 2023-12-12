@@ -2,16 +2,29 @@ import { cloneDeep } from 'lodash-es'
 import { apply, create, type Patches, type Draft } from 'mutative'
 import { ref, shallowRef } from 'vue'
 
+// interface StepPatch<T = any> {
+//   op: 'add' | 'remove' | 'replace' | 'move'
+//   path: (string | number)[]
+//   value: T
+// }
+
 export function useMutative<T>(baseState: T) {
-  const originalState = shallowRef(cloneDeep(baseState))
-  const state = shallowRef(cloneDeep(baseState))
+  const originalState = shallowRef<T>(cloneDeep(baseState))
+  const state = shallowRef<T>(cloneDeep(baseState))
 
   const patches = ref<Patches[]>([])
   const inversePatches = ref<Patches[]>([])
 
+  // const operatingSteps = shallowRef<StepPatch[]>([])
+  // const stepPatches = ref<Patches[]>([])
+  // const stepInversePatches = ref<Patches[]>([])
+
   const patchFlag = ref(0)
 
-  const update = (mutate: (state: Draft<T>) => void) => {
+  const update = (
+    mutate: (state: Draft<T>) => void,
+    // updateSteps?: (state: Draft<StepPatch[]>) => StepPatch,
+  ) => {
     const [nextState, newPatches, newInversePatches] = create(
       state.value,
       state => {
@@ -36,6 +49,29 @@ export function useMutative<T>(baseState: T) {
     state.value = nextState
     patches.value.push(newPatches)
     inversePatches.value.push(newInversePatches)
+
+    // if (typeof updateSteps === 'function') {
+    //   const [newSteps, newStepPatches, newStepInversePatches] = create(
+    //     operatingSteps.value,
+    //     state => {
+    //       const patch = updateSteps(state)
+    //       const filterPatches = []
+    //       for (const item of state) {
+    //         if (item.value.id !== patch.value.id) {
+    //           filterPatches.push(item)
+    //         } else {
+    //           if (patch.op === 'replace' && item.op !== 'replace') {
+    //             filterPatches.push(item)
+    //           } else if (patch.op === 'move') {
+    //           }
+    //         }
+    //       }
+    //     },
+    //     {
+    //       enablePatches: { arrayLengthAssignment: false },
+    //     },
+    //   )
+    // }
   }
 
   const revoke = () => {

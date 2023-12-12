@@ -52,11 +52,23 @@ export interface SiderItem {
   position: SiderPosition
 }
 export type DetailItem = Pick<SiderItem, 'id' | 'type' | 'props' | 'status'>
-export interface SiderChangeParams {
+export interface SiderChangeParams<T extends SiderItem | DetailItem> {
   name: 'add' | 'move' | 'remove'
   from?: string
   to?: string
   oldIndex?: number
   newIndex?: number
-  data: SiderItem | DetailItem
+  data: T
+}
+
+// -----------------图例-----------------
+export interface LegendTypeItem {
+  id: string
+  name: string
+}
+
+export interface LegendItem {
+  type: LegendTypeItem
+  name: string
+  img: string
 }

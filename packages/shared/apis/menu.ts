@@ -2,12 +2,12 @@ import 'alova/GlobalFetch'
 import { request } from '../utils/request'
 import type { MenuItem, RequestMeta } from '#/request'
 
-export function getMenu<T = MenuItem[]>(
+export function getMenu(
   /** 是否筛选掉禁用的菜单 */
   filter: boolean,
   errorMessageMode: RequestMeta['errorMessageMode'] = 'none',
 ) {
-  const method = request.Get<T>('/menu', { params: { filter } })
+  const method = request.Get<MenuItem[]>('/menu', { params: { filter } })
   method.meta = { errorMessageMode }
   return method
 }

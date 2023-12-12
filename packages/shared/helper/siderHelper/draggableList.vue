@@ -83,7 +83,7 @@ const props = withDefaults(
 
 const emits = defineEmits<{
   (e: 'update:modelValue', newList: any[]): void
-  (e: 'mutative', params: SiderChangeParams): void
+  (e: 'mutative', params: SiderChangeParams<T>): void
   (e: 'edit', item: T, index: number): void
   (e: 'remove', position: SiderPosition, index: number, item: T): void
 }>()

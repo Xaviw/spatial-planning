@@ -70,7 +70,7 @@ const emits = defineEmits<{
 const formBarEl = ref<InstanceType<typeof FormBar> | null>(null)
 
 const { redo, revoke, reset, patchFlag, inversePatches, update, patches } =
-  useMutative([] as DetailItem[])
+  useMutative<DetailItem[]>([])
 
 const list = ref<DetailItem[]>([])
 
@@ -98,11 +98,7 @@ async function onEdit(item: DetailItem) {
   selectedItem.value = item
 }
 
-async function onRemove(_position: string, index: number) {
-  await modal('confirm', {
-    title: '提示！',
-    content: '是否确定删除？',
-  })
+function onRemove(_position: string, index: number) {
   list.value.splice(index, 1)
   update(draft => {
     draft.splice(index, 1)
@@ -129,7 +125,7 @@ function onCancel() {
   selectedItem.value = undefined
 }
 
-function onMutative(e: SiderChangeParams) {
+function onMutative(e: SiderChangeParams<DetailItem>) {
   if (e.name === 'add') {
     update(draft => {
       draft.splice(e.newIndex!, 0, e.data)
