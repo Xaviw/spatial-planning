@@ -1,7 +1,11 @@
 <template>
   <div class="h-full flex">
-    <LegendType class="mr-2 flex-basis-30% bg-white p-4" :loading="loading" />
-    <Legend :typeList="[]" class="flex flex-1 bg-white p-4" />
+    <LegendType
+      class="mr-2 flex-basis-30% bg-white p-4"
+      :loading="loading"
+      @change="onTypeChange"
+    />
+    <Legend ref="legendEl" class="flex flex-1 bg-white p-4" />
   </div>
 </template>
 
@@ -11,9 +15,15 @@ import { useRequest } from 'alova'
 import Legend from './legend.vue'
 import LegendType from './legendType.vue'
 
+const legendEl = ref<InstanceType<typeof Legend> | null>(null)
+
 const { data: typeList, loading } = useRequest(getLegendType, {
   initialData: [],
 })
 
 provide('typeList', typeList)
+
+function onTypeChange() {
+  legendEl.value?.reload()
+}
 </script>

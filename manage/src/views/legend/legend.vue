@@ -44,10 +44,11 @@
           <ASelect
             v-if="editableData[record.id]"
             :fieldNames="{ label: 'name', value: 'id' }"
-            labelInValue
             :options="typeList"
             placeholder="请选择图例类型！"
-            v-model:value="editableData[record.id][column.dataIndex].id"
+            v-model:value="
+              (editableData[record.id] as Recordable)[column.dataIndex]
+            "
             style="margin: -5px 0; width: 100%"
           />
           <template v-else>
@@ -69,11 +70,12 @@ import {
 } from '@sp/shared/apis'
 import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
 import { EditableTable } from '@sp/shared/components'
+import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import type { LegendItem, LegendTypeItem } from '#/request'
 import type { ColumnType } from 'ant-design-vue/es/table'
 
-const typeList = inject<LegendTypeItem[]>('typeList', () => [], true)
+const typeList = inject<Ref<LegendTypeItem[]>>('typeList', () => ref([]), true)
 
 const tableEl = ref<ComponentExposed<typeof EditableTable<LegendItem>> | null>(
   null,
@@ -99,12 +101,63 @@ const columns: ColumnType[] = [
 
 const { data: list, loading, send } = useRequest(getLegend, { initialData: [] })
 
-function add() {
-  tableEl.value?.add()
+function scrollToBottom(element: HTMLElement, duration: number) {
+  const start = element.scrollTop
+  const end = element.scrollHeight - element.clientHeight
+  const change = end - start
+  let currentTime = 0
+  const increment = 20
+
+  function animateScroll() {
+    currentTime += increment
+    const val = easeInOutQuad(currentTime, start, change, duration)
+    element.scrollTop = val
+    if (currentTime < duration) {
+      requestAnimationFrame(animateScroll)
+    }
+  }
+
+  animateScroll()
 }
 
-function addFunc(data: LegendItem) {
-  const { label: name, value: id } = data.type.id as unknown as {
+function easeInOutQuad(t: number, b: number, c: number, d: number): number {
+  t /= d / 2
+  if (t < 1) return (c / 2) * t * t + b
+  t--
+  return (-c / 2) * (t * (t - 2) - 1) + b
+}
+
+function add() {
+  tableEl.value?.add()
+  nextTick(() => {
+    const tbody = ((tableEl.value as any).$el as HTMLDivElement).querySelector(
+      '.ant-table-tbody',
+    ) as HTMLDivElement
+    console.log('tbody: ', tbody)
+    scrollToBottom(tbody!, 1000)
+  })
+}
+
+function validate(data: LegendItem) {
+  const errMsg = !data.name
+    ? '请填写名称！'
+    : !data.img
+    ? '请上传图片！'
+    : !data.type
+    ? '请选择分类！'
+    : ''
+  if (errMsg) {
+    modal('warning', {
+      title: '提示！',
+      content: errMsg,
+    })
+    return Promise.reject()
+  }
+}
+
+async function addFunc(data: LegendItem) {
+  await validate(data)
+  const { label: name, value: id } = data.type as unknown as {
     label: string
     value: string
   }
@@ -113,8 +166,9 @@ function addFunc(data: LegendItem) {
     .then((newId: string) => ({ ...data, id: newId, type: { name, id } }))
 }
 
-function replaceFunc(data: LegendItem) {
-  const { label: name, value: id } = data.type.id as unknown as {
+async function replaceFunc(data: LegendItem) {
+  await validate(data)
+  const { label: name, value: id } = data.type as unknown as {
     label: string
     value: string
   }

@@ -56,16 +56,6 @@
           :editableData="editableData"
           v-else
         />
-        <!-- <template>
-        <AInput
-          v-if="editableData[record[rowKey]]"
-          v-model:value="editableData[record[rowKey]][column.dataIndex]"
-          style="margin: -5px 0; width: auto"
-        />
-        <template v-else>
-          {{ text }}
-        </template>
-      </template> -->
       </template>
     </ATable>
   </VueDraggable>
@@ -74,7 +64,7 @@
 <script setup lang="ts" generic="T extends Recordable">
 import { useTableScroll } from '@sp/shared/hooks'
 import { message, Table } from 'ant-design-vue'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, isEqual } from 'lodash-es'
 import { ref, reactive, computed } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import type { SortableEvent } from '@sp/shared/helper/siderHelper/draggableList.vue'
@@ -145,6 +135,11 @@ function handleList(func: (list: T[]) => T[]) {
 function save(id: string) {
   listLoading.value = true
   const [index, newData] = getIndexAndData(id)
+  if (isEqual(newData, props.modelValue[index])) {
+    delete editableData[id]
+    listLoading.value = false
+    return
+  }
   const isAdd = id.startsWith('add')
   const func = isAdd ? props.addFunc : props.replaceFunc
   func(newData, index)

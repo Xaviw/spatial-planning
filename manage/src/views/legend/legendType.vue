@@ -62,6 +62,7 @@ import {
   moveLegendType,
 } from '@sp/shared/apis'
 import { EditableTable } from '@sp/shared/components'
+import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import type { LegendTypeItem } from '#/request'
 import type { ColumnType } from 'ant-design-vue/es/table'
@@ -69,7 +70,7 @@ import type { ColumnType } from 'ant-design-vue/es/table'
 defineProps<{ loading: boolean }>()
 
 const emits = defineEmits<{
-  (e: 'remove', id: string): void
+  (e: 'change'): void
 }>()
 
 const { data: showSingle, loading: showSingleLoading } = useRequest(
@@ -93,7 +94,7 @@ const tableEl = ref<ComponentExposed<
   typeof EditableTable<LegendTypeItem>
 > | null>(null)
 
-const typeList = inject<LegendTypeItem[]>('typeList', () => [], true)
+const typeList = inject<Ref<LegendTypeItem[]>>('typeList', () => ref([]), true)
 
 const columns: ColumnType[] = [
   {
@@ -107,25 +108,41 @@ function add() {
   tableEl.value?.add()
 }
 
-function addFunc(data: LegendTypeItem) {
+function validate(data: LegendTypeItem) {
+  if (!data.name) {
+    modal('warning', {
+      title: '提示！',
+      content: '请填写名称！',
+    })
+    return Promise.reject()
+  }
+}
+
+async function addFunc(data: LegendTypeItem) {
+  await validate(data)
   return addLegendType(data)
     .send()
     .then((newId: string) => {
+      emits('change')
       return { ...data, id: newId }
     })
 }
 
-function replaceFunc(data: LegendTypeItem) {
+async function replaceFunc(data: LegendTypeItem) {
+  await validate(data)
   return setLegendType(data)
     .send()
-    .then(() => data)
+    .then(() => {
+      emits('change')
+      return data
+    })
 }
 
 function removeFunc(data: LegendTypeItem) {
   return removeLegendType(data.id)
     .send()
     .then(() => {
-      emits('remove', data.id)
+      emits('change')
     })
 }
 
