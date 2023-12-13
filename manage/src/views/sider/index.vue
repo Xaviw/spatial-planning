@@ -83,7 +83,7 @@ import type {
   DetailItem,
 } from '#/request'
 
-const formBarEl = ref<InstanceType<typeof FormBar> | null>(null)
+const formBarEl = ref<ComponentExposed<typeof FormBar<SiderItem>> | null>(null)
 
 const {
   data: leftList,

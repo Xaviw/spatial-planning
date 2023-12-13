@@ -116,8 +116,9 @@ export default [
       const data: LegendItem[] = Array.from({
         length: Mock.Random.integer(10, 20),
       }).map(() => ({
+        id: Mock.Random.id(),
         type: typeData[Mock.Random.integer(0, 2)],
-        name: Mock.Random.cword(undefined, 2, 4),
+        name: Mock.Random.cword(),
         img: Mock.Random.image(),
       }))
 

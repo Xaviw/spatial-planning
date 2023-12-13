@@ -1,6 +1,6 @@
 import 'alova/GlobalFetch'
 import { request } from '../utils/request'
-import type { LegendTypeItem, LegendItem } from '#/request'
+import type { LegendTypeItem, LegendItem, LegendEditItem } from '#/request'
 
 export function getShowSingleType() {
   return request.Get<boolean>('/legendType/showSingle')
@@ -26,24 +26,21 @@ export function removeLegendType(id: string) {
   return request.Delete<boolean>('/legendType', { id })
 }
 
-export function moveLegendType(data: {
-  oldIndex: number
-  currentIndex: number
-}) {
-  return request.Post<boolean>('/legendType/move', data)
+export function moveLegendType(data: { oldIndex: number; newIndex: number }) {
+  const method = request.Post<boolean>('/legendType/move', data)
+  method.meta = { errorMessageMode: 'none' }
+  return method
 }
 
 export function getLegend() {
   return request.Get<LegendItem[]>('/legend')
 }
 
-export function addLegend(
-  data: Pick<LegendItem, 'name' | 'img'> & { type: string },
-) {
+export function addLegend(data: Omit<LegendEditItem, 'id'>) {
   return request.Post<string>('/legend', data)
 }
 
-export function setLegend(data: Omit<LegendItem, 'type'> & { type: string }) {
+export function setLegend(data: LegendEditItem) {
   return request.Put<boolean>('/legend', data)
 }
 
@@ -51,6 +48,6 @@ export function removeLegend(id: string) {
   return request.Delete<boolean>('/legend', { id })
 }
 
-export function moveLegend(data: { oldIndex: number; currentIndex: number }) {
+export function moveLegend(data: { oldIndex: number; newIndex: number }) {
   return request.Post<boolean>('/legend/move', data)
 }

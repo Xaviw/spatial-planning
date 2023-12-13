@@ -68,7 +68,10 @@ export interface LegendTypeItem {
 }
 
 export interface LegendItem {
-  type: LegendTypeItem
+  id: string
   name: string
   img: string
+  type: LegendTypeItem
 }
+
+export type LegendEditItem = Omit<LegendItem, 'type'> & { type: string }

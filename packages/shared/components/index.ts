@@ -15,6 +15,7 @@ import Title from './Title/index.vue'
 
 import Loading from './Loading/index.vue'
 import Modal from './Modal/index.vue'
+import EditableTable from './EditableTable/index.vue'
 
 import '../../../unocss-icon'
 
@@ -61,6 +62,7 @@ export {
   Modal,
   Loading,
   ContentWrapper,
+  EditableTable,
   components,
   componentForms,
 }

@@ -67,7 +67,7 @@ const emits = defineEmits<{
   (e: 'confirm', list: DetailItem[]): void
 }>()
 
-const formBarEl = ref<InstanceType<typeof FormBar> | null>(null)
+const formBarEl = ref<ComponentExposed<typeof FormBar<DetailItem>> | null>(null)
 
 const { redo, revoke, reset, patchFlag, inversePatches, update, patches } =
   useMutative<DetailItem[]>([])
