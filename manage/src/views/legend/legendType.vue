@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between">
       <h1 class="font-bold">图例分类</h1>
 
-      <AButton type="primary" @click="add">新增</AButton>
+      <AButton type="primary" @click="add" :disabled="loading">新增</AButton>
     </div>
 
     <AAlert message="拖拽表格行调整顺序" showIcon class="my-2" />

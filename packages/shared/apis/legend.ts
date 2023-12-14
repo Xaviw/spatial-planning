@@ -1,6 +1,11 @@
 import 'alova/GlobalFetch'
 import { request } from '../utils/request'
-import type { LegendTypeItem, LegendItem, LegendEditItem } from '#/request'
+import type {
+  LegendTypeItem,
+  LegendItem,
+  LegendEditItem,
+  LegendRequestItem,
+} from '#/request'
 
 export function getShowSingleType() {
   return request.Get<boolean>('/legendType/showSingle')
@@ -33,14 +38,21 @@ export function moveLegendType(data: { oldIndex: number; newIndex: number }) {
 }
 
 export function getLegend() {
-  return request.Get<LegendItem[]>('/legend')
+  return request.Get<LegendEditItem[], LegendItem[]>('/legend', {
+    transformData(data) {
+      return data.map(item => ({
+        ...item,
+        type: { label: item.type.name, value: item.type.id },
+      }))
+    },
+  })
 }
 
-export function addLegend(data: Omit<LegendEditItem, 'id'>) {
+export function addLegend(data: Omit<LegendRequestItem, 'id'>) {
   return request.Post<string>('/legend', data)
 }
 
-export function setLegend(data: LegendEditItem) {
+export function setLegend(data: LegendRequestItem) {
   return request.Put<boolean>('/legend', data)
 }
 

@@ -1,7 +1,11 @@
 <template>
+  <!-- 
+    ATable设置scroll时，tbody首行会多出一个ant-table-measure-row用于测量宽度
+    拖拽元素数量与数据数量不一致，会导致拖拽后排序错乱，所以这里需要增加一个占位数据
+   -->
   <VueDraggable
-    :modelValue="modelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    :modelValue="[{}, ...modelValue]"
+    @update:modelValue="$emit('update:modelValue', $event.slice(1))"
     target=".ant-table-tbody"
     @update="move"
     class="overflow-hidden"
@@ -65,7 +69,7 @@
 import { useTableScroll } from '@sp/shared/hooks'
 import { message, Table } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, nextTick } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import type { SortableEvent } from '@sp/shared/helper/siderHelper/draggableList.vue'
 import type { ColumnType } from 'ant-design-vue/es/table'
@@ -80,9 +84,16 @@ const props = withDefaults(
     replaceFunc: (arg: T, index: number) => Promise<T>
     removeFunc: (arg: T, index: number) => Promise<any>
     moveFunc: (oldIndex: number, newIndex: number) => Promise<any>
+    /**
+     * 自定义编辑数据与原数据比较函数，比较相等时无需提交至后端，默认采用lodash-isEqual比较
+     * 支持传入接受新旧数据返回布尔值的函数，自定义比较
+     * 或传入false，禁用比较
+     */
+    customEqual?: ((data: T, newData: T) => boolean) | false
   }>(),
   {
     rowKey: 'id',
+    customEqual: isEqual,
   },
 )
 
@@ -132,14 +143,20 @@ function handleList(func: (list: T[]) => T[]) {
   emits('update:modelValue', newList)
 }
 
+function compareData(data: T, newData: T) {
+  if (typeof props.customEqual === 'function') {
+    return props.customEqual(newData, data)
+  }
+  return false
+}
+
 function save(id: string) {
-  listLoading.value = true
   const [index, newData] = getIndexAndData(id)
-  if (isEqual(newData, props.modelValue[index])) {
+  if (compareData(newData, props.modelValue[index])) {
     delete editableData[id]
-    listLoading.value = false
     return
   }
+  listLoading.value = true
   const isAdd = id.startsWith('add')
   const func = isAdd ? props.addFunc : props.replaceFunc
   func(newData, index)
@@ -183,18 +200,19 @@ function remove(id: string) {
     })
 }
 
+// 事件中的index包含占位数据，所以需要-1
 function move({ oldIndex, newIndex }: SortableEvent) {
   if (typeof oldIndex !== 'number' || typeof newIndex !== 'number') return
   listLoading.value = true
   props
-    .moveFunc(oldIndex, newIndex)
+    .moveFunc(oldIndex - 1, newIndex - 1)
     .then(() => {
       message.success('移动成功！')
     })
     .catch(() => {
       message.error('移动失败！')
       handleList(list => {
-        list.splice(oldIndex, 0, list.splice(newIndex, 1)[0])
+        list.splice(oldIndex - 1, 0, list.splice(newIndex - 1, 1)[0])
         return list
       })
     })
@@ -212,6 +230,12 @@ defineExpose({
       list.push(cloneDeep(newItem))
       return list
     })
+    // 滚动到新增行
+    nextTick(() => {
+      const rows = tableEl.value?.$el.querySelectorAll('.ant-table-row')
+      const lastRow: HTMLTableRowElement = rows[rows.length - 1]
+      lastRow.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    })
   },
   clear() {
     for (let key in editableData) {
@@ -220,3 +244,9 @@ defineExpose({
   },
 })
 </script>
+
+<style scoped>
+:deep(.ant-table-measure-row) {
+  visibility: collapse;
+}
+</style>

@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between">
       <h1 class="font-bold">图例</h1>
 
-      <AButton type="primary" @click="add">新增</AButton>
+      <AButton type="primary" @click="add" :disabled="loading">新增</AButton>
     </div>
 
     <AAlert message="拖拽表格行调整顺序" showIcon class="my-2" />
@@ -17,6 +17,7 @@
       :replaceFunc="replaceFunc"
       :removeFunc="removeFunc"
       :moveFunc="moveFunc"
+      :customEqual="customEqual"
       class="flex-1"
     >
       <template #bodyCell="{ column, record, text, editableData }">
@@ -45,14 +46,13 @@
             v-if="editableData[record.id]"
             :fieldNames="{ label: 'name', value: 'id' }"
             :options="typeList"
+            labelInValue
             placeholder="请选择图例类型！"
-            v-model:value="
-              (editableData[record.id] as Recordable)[column.dataIndex]
-            "
+            v-model:value="editableData[record.id][column.dataIndex]"
             style="margin: -5px 0; width: 100%"
           />
           <template v-else>
-            {{ text.name }}
+            {{ text?.label }}
           </template>
         </template>
       </template>
@@ -72,14 +72,15 @@ import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
 import { EditableTable } from '@sp/shared/components'
 import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
-import type { LegendItem, LegendTypeItem } from '#/request'
+import { isEqual } from 'lodash-es'
+import type { LegendEditItem, LegendTypeItem } from '#/request'
 import type { ColumnType } from 'ant-design-vue/es/table'
 
 const typeList = inject<Ref<LegendTypeItem[]>>('typeList', () => ref([]), true)
 
-const tableEl = ref<ComponentExposed<typeof EditableTable<LegendItem>> | null>(
-  null,
-)
+const tableEl = ref<ComponentExposed<
+  typeof EditableTable<LegendEditItem>
+> | null>(null)
 
 const columns: ColumnType[] = [
   {
@@ -99,46 +100,22 @@ const columns: ColumnType[] = [
   },
 ]
 
-const { data: list, loading, send } = useRequest(getLegend, { initialData: [] })
+const {
+  data: list,
+  loading,
+  send,
+  onSuccess,
+} = useRequest(getLegend, { initialData: [] })
 
-function scrollToBottom(element: HTMLElement, duration: number) {
-  const start = element.scrollTop
-  const end = element.scrollHeight - element.clientHeight
-  const change = end - start
-  let currentTime = 0
-  const increment = 20
-
-  function animateScroll() {
-    currentTime += increment
-    const val = easeInOutQuad(currentTime, start, change, duration)
-    element.scrollTop = val
-    if (currentTime < duration) {
-      requestAnimationFrame(animateScroll)
-    }
-  }
-
-  animateScroll()
-}
-
-function easeInOutQuad(t: number, b: number, c: number, d: number): number {
-  t /= d / 2
-  if (t < 1) return (c / 2) * t * t + b
-  t--
-  return (-c / 2) * (t * (t - 2) - 1) + b
-}
+onSuccess(() => {
+  tableEl.value?.clear()
+})
 
 function add() {
   tableEl.value?.add()
-  nextTick(() => {
-    const tbody = ((tableEl.value as any).$el as HTMLDivElement).querySelector(
-      '.ant-table-tbody',
-    ) as HTMLDivElement
-    console.log('tbody: ', tbody)
-    scrollToBottom(tbody!, 1000)
-  })
 }
 
-function validate(data: LegendItem) {
+function validate(data: LegendEditItem) {
   const errMsg = !data.name
     ? '请填写名称！'
     : !data.img
@@ -155,34 +132,40 @@ function validate(data: LegendItem) {
   }
 }
 
-async function addFunc(data: LegendItem) {
+async function addFunc(data: LegendEditItem) {
   await validate(data)
-  const { label: name, value: id } = data.type as unknown as {
-    label: string
-    value: string
-  }
-  return addLegend({ ...data, type: id })
+  return addLegend({ ...data, type: data.type.value })
     .send()
-    .then((newId: string) => ({ ...data, id: newId, type: { name, id } }))
+    .then((newId: string) => ({ ...data, id: newId }))
 }
 
-async function replaceFunc(data: LegendItem) {
+async function replaceFunc(data: LegendEditItem) {
   await validate(data)
-  const { label: name, value: id } = data.type as unknown as {
-    label: string
-    value: string
-  }
-  return setLegend({ ...data, type: id })
+  return setLegend({ ...data, type: data.type.value })
     .send()
-    .then(() => ({ ...data, type: { name, id } }))
+    .then(() => data)
 }
 
-function removeFunc(data: LegendItem) {
+function removeFunc(data: LegendEditItem) {
   return removeLegend(data.id).send()
 }
 
 function moveFunc(oldIndex: number, newIndex: number) {
   return moveLegend({ oldIndex, newIndex }).send()
+}
+
+function customEqual(data: LegendEditItem, newData: LegendEditItem) {
+  const {
+    name,
+    img,
+    type: { value },
+  } = data
+  const {
+    name: newName,
+    img: newImg,
+    type: { value: newValue },
+  } = newData
+  return isEqual([name, img, value], [newName, newImg, newValue])
 }
 
 defineExpose({
