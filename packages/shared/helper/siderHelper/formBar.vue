@@ -89,11 +89,11 @@
 </template>
 
 <script setup lang="ts" generic="T extends SiderItem | DetailItem">
+import { useMenuTree } from '@sp/shared/hooks'
+import { componentForms } from '@sp/shared/materials'
+import { modal } from '@sp/shared/utils'
 import { isEqual, cloneDeep } from 'lodash-es'
 import { ref, nextTick, watchEffect } from 'vue'
-import { componentForms } from '../../components'
-import { useMenuTree } from '../../hooks'
-import { modal } from '../../utils'
 import BaseForm from './baseForm.vue'
 import type { DetailItem, SiderItem } from '#/request'
 import type { Patches } from 'mutative'

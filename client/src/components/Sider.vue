@@ -12,8 +12,8 @@
 
 <script setup lang="ts">
 import { getSider } from '@sp/shared/apis'
-import { components } from '@sp/shared/components'
 import { useLoading } from '@sp/shared/hooks'
+import { components } from '@sp/shared/materials'
 import { useWatcher } from 'alova'
 import type { SiderPosition } from '#/request'
 import { useMenuStore } from '@/store/menu'

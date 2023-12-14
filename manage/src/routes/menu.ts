@@ -16,7 +16,7 @@ export default [
   },
   {
     label: '地图管理',
-    key: 'map',
+    key: 'overlay',
     icon: () => h('i', { class: 'i-material-symbols:map' }),
   },
 ]

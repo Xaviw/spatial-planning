@@ -1,3 +1,4 @@
+import 'pinia'
 import { getMenu as getMenuApi, getSider } from '@sp/shared/apis'
 import { useLoading } from '@sp/shared/hooks'
 import { useFetcher } from 'alova'

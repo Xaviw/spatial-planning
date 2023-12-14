@@ -15,3 +15,8 @@
 ::-webkit-scrollbar-thumb:active {
   background-color: #21b1ff;
 }
+
+.amap-logo,
+.amap-copyright {
+  display: none !important;
+}

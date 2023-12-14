@@ -3,10 +3,10 @@ import '@amap/amap-jsapi-types'
 import { MaybeRef, onMounted, ref, unref, onUnmounted } from 'vue'
 
 interface UseMapOptions {
-  container: MaybeRef<HTMLDivElement> | string
+  container: MaybeRef<HTMLDivElement | null> | string
   loaderOptions?: Partial<Parameters<typeof AMapLoader.load>[0]>
   mapOptions?: Partial<AMap.MapOptions>
-  onComplete?: (map: AMap.Map) => void
+  onComplete?: (map: AMap.Map, loca: any) => void
   enableLoca?: boolean
 }
 
@@ -46,11 +46,12 @@ export function useMap({
     }
 
     if (onComplete) {
-      map.value.on('complete', onComplete.bind(null, map.value))
+      map.value.on('complete', onComplete.bind(null, map.value, loca.value))
     }
   })
 
   onUnmounted(() => {
+    loca.value?.destroy()
     map.value?.destroy()
   })
 

@@ -1,5 +1,5 @@
 import 'alova/GlobalFetch'
-import { request } from '../utils/request'
+import { request } from '@sp/shared/utils'
 import type {
   LegendTypeItem,
   LegendItem,

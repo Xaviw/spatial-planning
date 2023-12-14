@@ -53,20 +53,17 @@
 </template>
 
 <script setup lang="ts" generic="T extends SiderItem | DetailItem">
-import { components } from '@sp/shared/components'
+import { components } from '@sp/shared/materials'
 import { cloneDeep } from 'lodash-es'
 import { unref, useAttrs } from 'vue'
-import { VueDraggable, type UseDraggableOptions } from 'vue-draggable-plus'
+import { VueDraggable } from 'vue-draggable-plus'
+import type { SortableEvent } from '#/components'
 import type {
   DetailItem,
   SiderItem,
   SiderChangeParams,
   SiderPosition,
 } from '#/request'
-
-export type SortableEvent = Parameters<
-  NonNullable<Pick<UseDraggableOptions<any>, 'onAdd'>['onAdd']>
->[0]
 
 const props = withDefaults(
   defineProps<{

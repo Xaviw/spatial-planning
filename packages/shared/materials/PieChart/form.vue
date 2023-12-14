@@ -65,9 +65,9 @@
 </template>
 
 <script setup lang="ts">
+import { CssSizeInput } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import { ref } from 'vue'
-import CssSizeInput from '../CssSizeInput/index.vue'
 import Editor from './editor.vue'
 import type { PieChartProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'

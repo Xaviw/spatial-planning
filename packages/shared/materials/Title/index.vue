@@ -37,8 +37,9 @@
 </template>
 
 <script setup lang="ts">
-import { components, ContentWrapper } from '@sp/shared/components'
+import { ContentWrapper } from '@sp/shared/components'
 import { useModal } from '@sp/shared/hooks'
+import { components } from '@sp/shared/materials'
 import { cloneDeep, merge } from 'lodash-es'
 import { h } from 'vue'
 import type { TitleProps } from '#/components'

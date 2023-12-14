@@ -8,7 +8,7 @@ import { useMap } from '@sp/shared/hooks'
 const container = ref<HTMLDivElement | null>(null)
 
 useMap({
-  container: container as Ref<HTMLDivElement>,
+  container: container,
   mapOptions: {
     viewMode: '3D',
     mapStyle: 'amap://styles/blue',
@@ -17,10 +17,3 @@ useMap({
   },
 })
 </script>
-
-<style>
-.amap-logo,
-.amap-copyright {
-  display: none !important;
-}
-</style>

@@ -40,12 +40,12 @@
 </template>
 
 <script setup lang="ts">
+import { ContentWrapper } from '@sp/shared/components'
+import { FormBar } from '@sp/shared/helper/siderHelper'
+import { useMutative } from '@sp/shared/hooks'
+import { modal } from '@sp/shared/utils'
 import { isEqual, cloneDeep } from 'lodash-es'
 import { ref, watchEffect } from 'vue'
-import { ContentWrapper } from '../../components'
-import { FormBar } from '../../helper/siderHelper'
-import { useMutative } from '../../hooks'
-import { modal } from '../../utils'
 import DraggableList from './draggableList.vue'
 import MaterialBar from './materialBar.vue'
 import type { DetailItem, SiderChangeParams } from '#/request'

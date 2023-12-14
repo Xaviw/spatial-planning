@@ -1,6 +1,11 @@
 import { CSSProperties } from 'vue'
 import type { DetailItem } from './request'
 import type { PieSeriesOption } from 'echarts/charts'
+import type { UseDraggableOptions } from 'vue-draggable-plus'
+
+export type SortableEvent = Parameters<
+  NonNullable<Pick<UseDraggableOptions<any>, 'onAdd'>['onAdd']>
+>[0]
 
 export interface TitleProps {
   title: string

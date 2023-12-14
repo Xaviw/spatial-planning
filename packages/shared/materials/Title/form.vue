@@ -23,12 +23,12 @@
 </template>
 
 <script setup lang="ts">
+import { CssSizeInput } from '@sp/shared/components'
+import { SiderModalEditor } from '@sp/shared/helper/siderHelper'
+import { useModal } from '@sp/shared/hooks'
 import { Form } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
 import { h, ref } from 'vue'
-import { SiderModalEditor } from '../../helper/siderHelper'
-import { useModal } from '../../hooks'
-import CssSizeInput from '../CssSizeInput/index.vue'
 import type { TitleProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 import { DetailItem } from '#/request'

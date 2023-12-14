@@ -9,29 +9,14 @@
 </template>
 
 <script lang="ts" setup>
-export interface LoadingProps {
-  tip: string
-  size: 'small' | 'default' | 'large'
-  absolute: boolean
-  loading: boolean
-  background: string
-}
+import type { LoadingProps } from '@sp/shared/hooks'
 
-withDefaults(
-  defineProps<{
-    tip?: string
-    size?: 'small' | 'default' | 'large'
-    absolute?: boolean
-    loading?: boolean
-    background?: string
-  }>(),
-  {
-    tip: '',
-    size: 'default',
-    absolute: false,
-    loading: false,
-  },
-)
+withDefaults(defineProps<LoadingProps>(), {
+  tip: '',
+  size: 'default',
+  absolute: false,
+  loading: false,
+})
 </script>
 
 <style scoped>
