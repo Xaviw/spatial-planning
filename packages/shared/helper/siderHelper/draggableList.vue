@@ -55,7 +55,6 @@
 <script setup lang="ts" generic="T extends SiderItem | DetailItem">
 import { components } from '@sp/shared/materials'
 import { cloneDeep } from 'lodash-es'
-import { unref, useAttrs } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import type { SortableEvent } from '#/components'
 import type {

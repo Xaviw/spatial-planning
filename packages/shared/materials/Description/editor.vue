@@ -40,7 +40,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { DescriptionItemProps } from '#/components'
 
 const props = withDefaults(

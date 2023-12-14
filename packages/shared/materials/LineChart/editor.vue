@@ -46,7 +46,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import DataEditor from './dataEditor.vue'
 import type { LineChartItem } from '#/components'
 

@@ -33,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { ProgressProps, ProgressItem } from '#/components'
 
 const props = withDefaults(defineProps<ProgressProps>(), {

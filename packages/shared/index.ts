@@ -1,2 +1,6 @@
 import '../../types/global'
 import '../../types/request'
+import '../../types/auto-import-client'
+import '../../types/auto-import-manage'
+import '../../types/auto-components-client'
+import '../../types/auto-components-manage'

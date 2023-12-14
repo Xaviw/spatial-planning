@@ -19,7 +19,6 @@
 
 <script setup lang="ts">
 import { Form } from 'ant-design-vue'
-import { ref } from 'vue'
 import Editor from './editor.vue'
 import type { TimelineProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'

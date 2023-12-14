@@ -46,7 +46,6 @@
 <script setup lang="ts">
 import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
 import { MediaEnum } from '@sp/shared/utils'
-import { computed, reactive } from 'vue'
 import FilePreview from './FilePreview.vue'
 import type { FileListProps, FileListItem } from '#/components'
 

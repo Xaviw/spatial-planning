@@ -1,14 +1,5 @@
 import { Loading } from '@sp/shared/components'
-import {
-  VNode,
-  defineComponent,
-  createVNode,
-  render,
-  reactive,
-  h,
-  Ref,
-  unref,
-} from 'vue'
+import { createVNode, render } from 'vue'
 
 export interface UseLoadingOptions {
   target?: any
@@ -88,7 +79,6 @@ function createLoading(
   vm = createVNode(LoadingWrap)
 
   if (wait) {
-    // TODO fix https://github.com/anncwb/vue-vben-admin/issues/438
     setTimeout(() => {
       render(vm, document.createElement('div'))
     }, 0)

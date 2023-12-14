@@ -1,5 +1,5 @@
 import { Modal } from '@sp/shared/components'
-import { h, render, VNode } from 'vue'
+import { render, VNode } from 'vue'
 import type { ModalProps } from 'ant-design-vue/es/modal/index'
 
 const modalMap = new Map()

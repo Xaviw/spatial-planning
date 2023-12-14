@@ -41,7 +41,6 @@ import { ContentWrapper } from '@sp/shared/components'
 import { useModal } from '@sp/shared/hooks'
 import { components } from '@sp/shared/materials'
 import { cloneDeep, merge } from 'lodash-es'
-import { h } from 'vue'
 import type { TitleProps } from '#/components'
 
 const props = withDefaults(defineProps<TitleProps>(), {

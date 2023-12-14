@@ -1,15 +1,6 @@
 import { Table } from 'ant-design-vue'
 import { debounce } from 'lodash-es'
-import {
-  type MaybeRef,
-  type Ref,
-  onMounted,
-  isRef,
-  ref,
-  reactive,
-  onUnmounted,
-  nextTick,
-} from 'vue'
+import type { MaybeRef } from 'vue'
 
 export function useTableScroll(
   instance: MaybeRef<InstanceType<typeof Table> | null>,

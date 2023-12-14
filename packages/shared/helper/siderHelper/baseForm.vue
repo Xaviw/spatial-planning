@@ -43,7 +43,6 @@
 import { useMenuTree } from '@sp/shared/hooks'
 import { Form } from 'ant-design-vue'
 import { pick } from 'lodash-es'
-import { computed, ref } from 'vue'
 import { componentTypes } from './data'
 import type { Rule } from 'ant-design-vue/es/form'
 import { SiderItem } from '#/request'

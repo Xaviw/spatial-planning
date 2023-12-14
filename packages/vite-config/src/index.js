@@ -7,38 +7,40 @@ import components from 'unplugin-vue-components/vite'
 import { loadEnv, defineConfig } from 'vite'
 import { viteMockServe } from 'vite-plugin-mock'
 
-export const appConfig = defineConfig(({ mode }) => {
-  const env = loadEnv(mode, '../')
-  return {
-    publicDir: '../public',
-    envDir: '../',
-    plugins: [
-      vue(),
-      vueJsx(),
-      autoImport({
-        imports: ['vue', 'vue-router', 'pinia'],
-        vueTemplate: true,
-        eslintrc: {
-          enabled: true,
-          filepath: '../.eslintrc-auto-import.json',
+export default function ({ name } = {}) {
+  return defineConfig(({ mode }) => {
+    const env = loadEnv(mode, '../')
+    return {
+      publicDir: '../public',
+      envDir: '../',
+      plugins: [
+        vue(),
+        vueJsx(),
+        autoImport({
+          imports: ['vue', 'vue-router', 'pinia'],
+          vueTemplate: true,
+          eslintrc: {
+            enabled: true,
+            filepath: '../.eslintrc-auto-import.json',
+          },
+          dts: `../types/auto-import-${name}.d.ts`,
+        }),
+        components({
+          resolvers: [AntDesignVueResolver({ importStyle: false })],
+          dts: `../types/auto-components-${name}.d.ts`,
+        }),
+        unoCSS(),
+        viteMockServe({
+          mockPath: '../mock',
+          localEnabled: env.DEV && env.VITE_MOCK_ENABLE,
+          prodEnabled: env.PROD && env.VITE_MOCK_ENABLE,
+        }),
+      ],
+      resolve: {
+        alias: {
+          '@/': '/src/',
         },
-        dts: 'src/typings/auto-imports.d.ts',
-      }),
-      components({
-        resolvers: [AntDesignVueResolver({ importStyle: false })],
-        dts: 'src/typings/components.d.ts',
-      }),
-      unoCSS(),
-      viteMockServe({
-        mockPath: '../mock',
-        localEnabled: env.DEV && env.VITE_MOCK_ENABLE,
-        prodEnabled: env.PROD && env.VITE_MOCK_ENABLE,
-      }),
-    ],
-    resolve: {
-      alias: {
-        '@/': '/src/',
       },
-    },
-  }
-})
+    }
+  })
+}

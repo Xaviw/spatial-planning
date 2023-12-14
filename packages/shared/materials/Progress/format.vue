@@ -18,8 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-
 const props = defineProps<{ modelValue?: string }>()
 
 const emits = defineEmits<{

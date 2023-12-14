@@ -31,7 +31,6 @@
 
 <script setup lang="ts">
 import { Input, InputNumber } from 'ant-design-vue'
-import { ref, watchEffect } from 'vue'
 
 const props = withDefaults(
   defineProps<{

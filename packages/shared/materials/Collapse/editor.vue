@@ -20,7 +20,6 @@
 <script lang="ts" setup>
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { message } from 'ant-design-vue'
-import { nextTick, onBeforeUnmount, shallowRef } from 'vue'
 import '@wangeditor/editor/dist/css/style.css'
 import type { IToolbarConfig, IEditorConfig } from '@wangeditor/editor'
 import type { AlertType } from 'ant-design-vue/es/alert'

@@ -104,7 +104,6 @@
 
 <script setup lang="ts">
 import { Form, type RadioChangeEvent } from 'ant-design-vue'
-import { ref } from 'vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import Editor from './editor.vue'
 import Format from './format.vue'

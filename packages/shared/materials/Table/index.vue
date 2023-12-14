@@ -10,14 +10,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { TableProps } from '#/components'
+import type { ColumnsType } from 'ant-design-vue/es/table'
 
 const props = withDefaults(defineProps<TableProps>(), {
   data: () => [],
 })
 
-const columns = computed(() => {
+const columns = computed<ColumnsType>(() => {
   return props.data[0]?.map((item, index) => ({
     title: item,
     dataIndex: `column${index}`,

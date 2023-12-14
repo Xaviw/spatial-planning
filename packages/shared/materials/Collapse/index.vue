@@ -22,7 +22,6 @@
 
 <script setup lang="ts">
 import { Editor } from '@wangeditor/editor-for-vue'
-import { ref } from 'vue'
 import '@wangeditor/editor/dist/css/style.css'
 import type { CollapseProps } from '#/components'
 

@@ -69,7 +69,6 @@
 import { useTableScroll } from '@sp/shared/hooks'
 import { message, Table } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
-import { ref, reactive, computed, nextTick } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import type { SortableEvent } from '#/components'
 import type { ColumnType } from 'ant-design-vue/es/table'

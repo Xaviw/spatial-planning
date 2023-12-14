@@ -22,7 +22,6 @@
 
 <script setup lang="ts">
 import { Form } from 'ant-design-vue'
-import { ref } from 'vue'
 import Editor from './editor.vue'
 import type { CollapseProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'

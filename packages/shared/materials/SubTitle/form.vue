@@ -8,7 +8,6 @@
 
 <script setup lang="ts">
 import { Form } from 'ant-design-vue'
-import { ref } from 'vue'
 import type { SubTitleProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 

@@ -28,7 +28,6 @@
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
-import { ref } from 'vue'
 import DataEditor from './dataEditor.vue'
 import Editor from './editor.vue'
 import type { BarChartItem, LineChartProps } from '#/components'

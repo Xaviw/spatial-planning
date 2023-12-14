@@ -1,6 +1,6 @@
 import AMapLoader from '@amap/amap-jsapi-loader'
 import '@amap/amap-jsapi-types'
-import { MaybeRef, onMounted, ref, unref, onUnmounted } from 'vue'
+import type { MaybeRef } from 'vue'
 
 interface UseMapOptions {
   container: MaybeRef<HTMLDivElement | null> | string

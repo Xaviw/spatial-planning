@@ -20,8 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watchEffect } from 'vue'
-
 const props = defineProps<{
   modelValue?: string
   disabled?: boolean

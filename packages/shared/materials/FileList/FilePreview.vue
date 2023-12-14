@@ -33,7 +33,6 @@
 <script setup lang="ts">
 import { Modal } from '@sp/shared/components'
 import { MediaEnum } from '@sp/shared/utils'
-import { ref, watch } from 'vue'
 
 const props = withDefaults(
   defineProps<{

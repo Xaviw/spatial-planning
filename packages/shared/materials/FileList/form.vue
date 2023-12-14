@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
-import { ref } from 'vue'
 import Editor from './editor.vue'
 import type { FileListProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'

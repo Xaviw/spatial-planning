@@ -19,16 +19,19 @@
     "dev:client": "pnpm -F @sp/client dev",
     "dev:manage": "pnpm -F @sp/manage dev",
     "lint": "pnpm -r run lint",
-    "lint:lint-staged": "lint-staged",
+    "lint-staged": "lint-staged",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{cjs,ts,tsx,vue}": [
+    "*.{js,ts,tsx,vue}": [
       "eslint --fix",
       "prettier --write"
     ],
     "*.{html,css,json,md}": [
       "prettier --write"
+    ],
+    "*.{vue,ts,tsx}": [
+      "vue-tsc --noEmit"
     ]
   },
   "dependencies": {

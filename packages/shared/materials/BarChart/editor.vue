@@ -46,7 +46,6 @@
 
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
-import { ref } from 'vue'
 import DataEditor from './dataEditor.vue'
 import type { BarChartItem } from '#/components'
 

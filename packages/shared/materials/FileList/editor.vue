@@ -54,7 +54,6 @@
 
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
-import { ref } from 'vue'
 import type { FileListItem } from '#/components'
 
 const props = withDefaults(

@@ -1,3 +1,3 @@
 declare module '@sp/vite-config' {
-  export const appConfig: Recordable
+  export default (options: { name: string }) => any
 }

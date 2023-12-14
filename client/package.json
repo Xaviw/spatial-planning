@@ -8,7 +8,7 @@
     "build": "vue-tsc && vite build",
     "clean": "rimraf node_modules dist",
     "dev": "vite",
-    "lint": "eslint --max-warnings 0 \"{src,mock}/**/*.{vue,ts,tsx}\" --fix && prettier --write .",
+    "lint": "eslint --max-warnings 0 \"{src,mock}/**/*.{vue,ts,tsx}\" --fix && prettier --write . && vue-tsc --noEmit",
     "preview": "vite preview"
   }
 }
