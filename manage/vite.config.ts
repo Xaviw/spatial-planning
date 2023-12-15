@@ -1,4 +1,5 @@
 /// <reference path="../types/global.d.ts" />
+/// <reference path="../types/loca.d.ts" />
 /// <reference path="../types/request.d.ts" />
 /// <reference path="../types/viteConfig.d.ts" />
 /// <reference path="../types/auto-import-client.d.ts" />

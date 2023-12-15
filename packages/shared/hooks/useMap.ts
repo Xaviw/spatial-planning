@@ -6,7 +6,7 @@ interface UseMapOptions {
   container: MaybeRef<HTMLDivElement | null> | string
   loaderOptions?: Partial<Parameters<typeof AMapLoader.load>[0]>
   mapOptions?: Partial<AMap.MapOptions>
-  onComplete?: (map: AMap.Map, loca: any) => void
+  onComplete?: (map: AMap.Map, loca: Loca.Container) => void
   enableLoca?: boolean
 }
 
@@ -17,7 +17,7 @@ export function useMap({
   onComplete,
   enableLoca,
 }: UseMapOptions) {
-  const loca = ref<typeof window.Loca>()
+  const loca = ref<Loca.Container>()
   const map = ref<AMap.Map>()
 
   onMounted(async () => {
@@ -46,7 +46,7 @@ export function useMap({
     }
 
     if (onComplete) {
-      map.value.on('complete', onComplete.bind(null, map.value, loca.value))
+      map.value.on('complete', onComplete.bind(null, map.value, loca.value!))
     }
   })
 

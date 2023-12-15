@@ -30,10 +30,10 @@
       :columns="columns"
       v-model="typeList"
       :loading="loading"
-      :addFunc="addFunc"
-      :replaceFunc="replaceFunc"
-      :removeFunc="removeFunc"
-      :moveFunc="moveFunc"
+      :addFn="addFn"
+      :replaceFn="replaceFn"
+      :removeFn="removeFn"
+      :moveFn="moveFn"
       class="flex-1"
     >
       <template #bodyCell="{ column, record, text, editableData }">
@@ -118,7 +118,7 @@ function validate(data: LegendTypeItem) {
   }
 }
 
-async function addFunc(data: LegendTypeItem) {
+async function addFn(data: LegendTypeItem) {
   await validate(data)
   return addLegendType(data)
     .send()
@@ -128,7 +128,7 @@ async function addFunc(data: LegendTypeItem) {
     })
 }
 
-async function replaceFunc(data: LegendTypeItem) {
+async function replaceFn(data: LegendTypeItem) {
   await validate(data)
   return setLegendType(data)
     .send()
@@ -138,7 +138,7 @@ async function replaceFunc(data: LegendTypeItem) {
     })
 }
 
-function removeFunc(data: LegendTypeItem) {
+function removeFn(data: LegendTypeItem) {
   return removeLegendType(data.id)
     .send()
     .then(() => {
@@ -146,7 +146,7 @@ function removeFunc(data: LegendTypeItem) {
     })
 }
 
-function moveFunc(oldIndex: number, newIndex: number) {
+function moveFn(oldIndex: number, newIndex: number) {
   return moveLegendType({ oldIndex, newIndex }).send()
 }
 </script>

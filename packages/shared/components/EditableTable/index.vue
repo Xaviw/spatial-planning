@@ -11,6 +11,7 @@
     class="overflow-hidden"
   >
     <ATable
+      v-bind="$attrs"
       :columns="transformColumns"
       :dataSource="modelValue"
       :loading="loading || listLoading"
@@ -79,10 +80,10 @@ const props = withDefaults(
     modelValue: T[]
     loading?: boolean
     rowKey?: string
-    addFunc: (arg: T, index: number) => Promise<T>
-    replaceFunc: (arg: T, index: number) => Promise<T>
-    removeFunc: (arg: T, index: number) => Promise<any>
-    moveFunc: (oldIndex: number, newIndex: number) => Promise<any>
+    addFn: (arg: T, index: number) => Promise<T>
+    replaceFn: (arg: T, index: number) => Promise<T>
+    removeFn: (arg: T, index: number) => Promise<any>
+    moveFn: (oldIndex: number, newIndex: number) => Promise<any>
     /**
      * 自定义编辑数据与原数据比较函数，比较相等时无需提交至后端，默认采用lodash-isEqual比较
      * 支持传入接受新旧数据返回布尔值的函数，自定义比较
@@ -157,7 +158,7 @@ function save(id: string) {
   }
   listLoading.value = true
   const isAdd = id.startsWith('add')
-  const func = isAdd ? props.addFunc : props.replaceFunc
+  const func = isAdd ? props.addFn : props.replaceFn
   func(newData, index)
     .then((data: T) => {
       message.success(`${isAdd ? '新增' : '修改'}成功！`)
@@ -186,7 +187,7 @@ function remove(id: string) {
   listLoading.value = true
   const [index, newData] = getIndexAndData(id)
   props
-    .removeFunc(newData, index)
+    .removeFn(newData, index)
     .then(() => {
       message.success('删除成功！')
       handleList(list => {
@@ -204,7 +205,7 @@ function move({ oldIndex, newIndex }: SortableEvent) {
   if (typeof oldIndex !== 'number' || typeof newIndex !== 'number') return
   listLoading.value = true
   props
-    .moveFunc(oldIndex - 1, newIndex - 1)
+    .moveFn(oldIndex - 1, newIndex - 1)
     .then(() => {
       message.success('移动成功！')
     })
@@ -243,9 +244,3 @@ defineExpose({
   },
 })
 </script>
-
-<style scoped>
-:deep(.ant-table-measure-row) {
-  visibility: collapse;
-}
-</style>

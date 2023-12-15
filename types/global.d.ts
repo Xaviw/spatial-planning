@@ -16,8 +16,6 @@ interface Window {
   WIDGET: object
   /** 高德地图key */
   _AMapSecurityConfig: { securityJsCode: string }
-  /** 高德UI库 */
-  Loca: any
 }
 
 type Nullable<T> = T | null

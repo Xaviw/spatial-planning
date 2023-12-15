@@ -29,9 +29,6 @@
     ],
     "*.{html,css,json,md}": [
       "prettier --write"
-    ],
-    "*.{vue,ts,tsx}": [
-      "vue-tsc --noEmit"
     ]
   },
   "dependencies": {
