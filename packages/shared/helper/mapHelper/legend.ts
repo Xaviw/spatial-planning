@@ -1,51 +1,66 @@
 export function createLegendProxy(
-  opts: Loca.LegendProps,
+  config: Loca.LegendProps,
   loca: Loca.Container,
 ) {
-  let legend: Loca.Legend
-
-  const styleHandler = <
-    T extends Loca.LegendStyle | Loca.LegendTitle,
-  >(): ProxyHandler<T> => ({
-    set(target, key, value, receiver) {
-      const result = Reflect.set(target, key, value, receiver)
-      legend.setStyle(legendProxy)
-      return result
-    },
-  })
-
-  const style = new Proxy(opts.style || {}, styleHandler<Loca.LegendStyle>())
-  const title = new Proxy(opts.title || {}, styleHandler<Loca.LegendTitle>())
-
-  const dataMap = new Proxy(opts.dataMap, {
-    set(target, key, value, receiver) {
-      const result = Reflect.set(target, key, value, receiver)
-      render()
-      return result
-    },
-  })
-
-  const legendProxy = new Proxy(
-    { style, title, dataMap },
-    {
-      set(target, key, value, receiver) {
-        const result = Reflect.set(target, key, value, receiver)
-        if (key === 'title' || key === 'style') {
-          legend.setStyle(legendProxy)
-        } else if (key === 'dataMap') {
-          render()
-        }
-        return result
-      },
-    },
-  )
-
-  render()
-
-  function render() {
-    legend?.remove()
-    legend = new Loca.Legend({ ...legendProxy, loca })
+  const source: Required<Omit<Loca.LegendProps, 'loca'>> = {
+    style: config.style || {},
+    title: config.title || {},
+    dataMap: config.dataMap || [],
   }
 
-  return legendProxy
+  const proxySource = {
+    style: createPropProxy('style'),
+    title: createPropProxy('title'),
+    dataMap: createPropProxy('dataMap'),
+  }
+
+  const proxy = new Proxy(proxySource, {
+    set(target, key, value, receiver) {
+      if (key === 'style' || key === 'title' || key === 'dataMap') {
+        source[key] = value
+        const result = Reflect.set(
+          target,
+          key,
+          createPropProxy(key as any),
+          receiver,
+        )
+        if (['style', 'title'].includes(key)) {
+          instance.setStyle(proxy)
+        } else {
+          instance?.remove()
+          instance = new Loca.Legend({ ...proxy, loca })
+        }
+        return result
+      }
+      return Reflect.set(target, key, value, receiver)
+    },
+  })
+
+  let instance = new Loca.Legend({ ...proxy, loca })
+
+  function createPropProxy(name: 'style'): Loca.LegendStyle
+  function createPropProxy(name: 'title'): Loca.LegendTitle
+  function createPropProxy(name: 'dataMap'): Loca.LegendDataMapItem[]
+  function createPropProxy(name: 'style' | 'title' | 'dataMap') {
+    if (name === 'style' || name === 'title') {
+      return new Proxy(source[name], {
+        set(target, key, value, receiver) {
+          const result = Reflect.set(target, key, value, receiver)
+          instance.setStyle(proxy)
+          return result
+        },
+      })
+    } else {
+      return new Proxy(source.dataMap, {
+        set(target, key, value, receiver) {
+          const result = Reflect.set(target, key, value, receiver)
+          instance?.remove()
+          instance = new Loca.Legend({ ...proxy, loca })
+          return result
+        },
+      })
+    }
+  }
+
+  return { proxy, instance }
 }
