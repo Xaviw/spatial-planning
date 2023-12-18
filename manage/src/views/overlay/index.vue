@@ -1,68 +1,58 @@
 <template>
-  <div class="relative h-full min-w-400 flex">
+  <div class="relative relative h-full min-w-400 flex">
+    <Toolbar
+      class="absolute left-2 top-2 z-1 rounded bg-white"
+      @change="onToolChange"
+    />
+
     <div ref="container" class="mr-2 flex-1 bg-white"></div>
 
-    <div class="w-100 bg-white p-4">
-      <AInput v-model:value="type" />
-      <AInput v-model:value="key" />
-      <AInput v-model:value="value" />
-      <AButton @click="setting">OK</AButton>
-      <AButton @click="add">add</AButton>
-    </div>
+    <div class="w-100 bg-white p-4"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { createLegendProxy } from '@sp/shared/helper/mapHelper'
+// import {} from '@sp/shared/helper/mapHelper'
 import { useMap } from '@sp/shared/hooks'
+import Toolbar from './toolbar.vue'
 
 const container = ref<HTMLDivElement | null>(null)
+const properties = reactive<any>({})
 
-const type = ref()
-const key = ref()
-const value = ref()
-const proxy = ref<any>()
-
-function setting() {
-  proxy.value[type.value][key.value] = value.value
-}
-
-function add() {
-  proxy.value.dataMap.push({ label: 'ggg', color: '#f00' })
-}
-
-useMap({
+useMap(
   container,
-  mapOptions: {
-    viewMode: '3D',
-    mapStyle: 'amap://styles/blue',
-    zooms: [5, 24],
-    zoom: 18,
+  {
+    mapOptions: {
+      viewMode: '3D',
+      mapStyle: 'amap://styles/blue',
+      zooms: [5, 24],
+      zoom: 18,
+    },
+    loaderOptions: {
+      plugins: [
+        'AMap.MouseTool',
+        'AMap.MoveAnimation',
+        'AMap.PolylineEditor',
+        'AMap.PolygonEditor',
+        'AMap.RectangleEditor',
+        'AMap.CircleEditor',
+        'AMap.EllipseEditor',
+        'AMap.BezierCurveEditor',
+      ],
+    },
+    enableLoca: true,
   },
-  loaderOptions: {
-    plugins: ['AMap.MoveAnimation'],
+  (map, _loca) => {
+    const mousetool = new AMap.MouseTool(map)
+    properties.mousetool = mousetool
   },
-  enableLoca: true,
-  onComplete(_map, loca) {
-    proxy.value = createLegendProxy(
-      {
-        title: {
-          label: '图例测试',
-          fontSize: '18px',
-          fontColor: 'red',
-        },
-        style: {
-          left: '10px',
-          bottom: '10px',
-        },
-        dataMap: [
-          { label: 'a', color: '#f00' },
-          { label: 'b', color: '#0f0' },
-          { label: 'c', color: '#00f' },
-        ],
-      },
-      loca,
-    )
-  },
-})
+)
+
+function onToolChange(key?: string) {
+  if (key) {
+    properties.mousetool?.[key]?.()
+  } else {
+    properties.mousetool?.close?.()
+  }
+}
 </script>

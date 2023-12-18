@@ -1,22 +1,23 @@
 import AMapLoader from '@amap/amap-jsapi-loader'
 import '@amap/amap-jsapi-types'
-import type { MaybeRef } from 'vue'
+import type { MaybeRef, Ref } from 'vue'
 
-interface UseMapOptions {
-  container: MaybeRef<HTMLDivElement | null> | string
+interface UseMapOptions<T extends boolean> {
   loaderOptions?: Partial<Parameters<typeof AMapLoader.load>[0]>
   mapOptions?: Partial<AMap.MapOptions>
-  onComplete?: (map: AMap.Map, loca: Loca.Container) => void
-  enableLoca?: boolean
+  enableLoca?: T
 }
 
-export function useMap({
-  container,
-  loaderOptions = {},
-  mapOptions = {},
-  onComplete,
-  enableLoca,
-}: UseMapOptions) {
+export function useMap<T extends boolean = false>(
+  container: MaybeRef<HTMLDivElement | null> | string,
+  { loaderOptions = {}, mapOptions = {}, enableLoca }: UseMapOptions<T> = {},
+  onComplete?: (
+    map: AMap.Map,
+    loca: T extends true ? Loca.Container : undefined,
+  ) => void,
+): T extends true
+  ? { map: Ref<AMap.Map>; loca: Ref<Loca.Container> }
+  : { map: Ref<AMap.Map> } {
   const loca = ref<Loca.Container>()
   const map = ref<AMap.Map>()
 
@@ -46,7 +47,14 @@ export function useMap({
     }
 
     if (onComplete) {
-      map.value.on('complete', onComplete.bind(null, map.value, loca.value!))
+      map.value.on(
+        'complete',
+        onComplete.bind(
+          null,
+          map.value,
+          enableLoca ? loca.value : (undefined as any),
+        ),
+      )
     }
   })
 
@@ -55,5 +63,5 @@ export function useMap({
     map.value?.destroy()
   })
 
-  return { map, loca }
+  return { map, loca: enableLoca ? loca : undefined } as any
 }

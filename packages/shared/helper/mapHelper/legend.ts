@@ -1,6 +1,6 @@
 export function createLegendProxy(
   config: Loca.LegendProps,
-  loca: Loca.Container,
+  loca?: Loca.Container,
 ) {
   const source: Required<Omit<Loca.LegendProps, 'loca'>> = {
     style: config.style || {},
@@ -8,7 +8,7 @@ export function createLegendProxy(
     dataMap: config.dataMap || [],
   }
 
-  const proxySource = {
+  const proxySource: Required<Omit<Loca.LegendProps, 'loca'>> = {
     style: createPropProxy('style'),
     title: createPropProxy('title'),
     dataMap: createPropProxy('dataMap'),
@@ -62,5 +62,26 @@ export function createLegendProxy(
     }
   }
 
-  return { proxy, instance }
+  /** 替换实例，用于手动绘制时替换数据生成的实例 */
+  function replaceInstance(newInstance: Loca.Legend) {
+    instance = newInstance
+  }
+
+  /** 替换原数据，用于手动调整覆盖物时同步原数据 */
+  function replaceSource(config: Omit<Loca.LegendProps, 'loca'>) {
+    if (config.style) {
+      source.style = config.style
+      proxySource.style = createPropProxy('style')
+    }
+    if (config.title) {
+      source.title = config.title
+      proxySource.title = createPropProxy('title')
+    }
+    if (config.dataMap) {
+      source.dataMap = config.dataMap
+      proxySource.dataMap = createPropProxy('dataMap')
+    }
+  }
+
+  return { proxy, instance, replaceInstance, replaceSource }
 }

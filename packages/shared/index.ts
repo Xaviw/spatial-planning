@@ -1,5 +1,6 @@
 import '../../types/global'
 import '../../types/loca'
+import '../../types/amap'
 import '../../types/request'
 import '../../types/auto-import-client'
 import '../../types/auto-import-manage'
