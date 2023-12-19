@@ -29,7 +29,7 @@ import type { ToolKeys, ToolItem } from './data'
 const emits = defineEmits<(e: 'change', key?: ToolKeys) => void>()
 
 const list: ToolItem[] = [
-  { icon: 'i-material-symbols:location-on', name: '标记点', key: 'marker' },
+  { icon: 'i-material-symbols:location-on', name: '点', key: 'marker' },
   { icon: 'i-material-symbols:polyline-outline', name: '线', key: 'polyline' },
   { icon: 'i-ph:polygon', name: '多边形', key: 'polygon' },
   { icon: 'i-mdi:vector-rectangle', name: '矩形', key: 'rectangle' },

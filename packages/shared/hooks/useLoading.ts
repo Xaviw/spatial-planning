@@ -1,4 +1,5 @@
 import { Loading } from '@sp/shared/components'
+import { toRawValue } from '@sp/shared/utils'
 import { createVNode, render } from 'vue'
 
 export interface UseLoadingOptions {
@@ -13,20 +14,15 @@ export interface LoadingProps {
   loading?: boolean
   background?: string
 }
-
-interface Fn {
-  (): void
-}
-
 export function useLoading(
   props?: Partial<LoadingProps>,
-): [Fn, Fn, (tip: string) => void]
+): [EmptyFn, EmptyFn, (tip: string) => void]
 export function useLoading(
   opt?: Partial<UseLoadingOptions>,
-): [Fn, Fn, (tip: string) => void]
+): [EmptyFn, EmptyFn, (tip: string) => void]
 export function useLoading(
   opt: Partial<LoadingProps> | Partial<UseLoadingOptions> = {},
-): [Fn, Fn, (tip: string) => void] {
+): [EmptyFn, EmptyFn, (tip: string) => void] {
   let props: Partial<LoadingProps>
   let target: HTMLElement | Ref<Nullable<HTMLElement>> = document.body
 
@@ -42,7 +38,7 @@ export function useLoading(
   const instance = createLoading(props, undefined, true)
 
   const open = (): void => {
-    const t = unref(target as Ref<Nullable<HTMLElement>>)
+    const t = toRawValue(target as Ref<Nullable<HTMLElement>>)
     if (!t) return
     instance.open(t)
   }

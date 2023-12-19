@@ -1,4 +1,5 @@
 import { Modal, type ModalFuncProps } from 'ant-design-vue'
+import type { MaybeRef, ComputedRef } from 'vue'
 
 export * from './enums'
 export * from './request'
@@ -44,4 +45,10 @@ export function modal(
       },
     })
   })
+}
+
+export function toRawValue<T>(value: MaybeRef<T> | ComputedRef<T>): T {
+  if (isRef(value)) return unref<T>(value)
+  if (isProxy(value)) return toRaw(value)
+  return value
 }

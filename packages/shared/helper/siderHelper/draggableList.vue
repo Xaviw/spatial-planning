@@ -55,6 +55,7 @@
 <script setup lang="ts" generic="T extends SiderItem | DetailItem">
 import { components } from '@sp/shared/materials'
 import { cloneDeep } from 'lodash-es'
+import { toRawValue } from 'utils'
 import { VueDraggable } from 'vue-draggable-plus'
 import type { SortableEvent } from '#/components'
 import type {
@@ -126,11 +127,11 @@ function onChange(e: SortableEvent) {
 }
 
 function onEdit(item: T, index: number) {
-  emits('edit', cloneDeep(unref(item)), index)
+  emits('edit', cloneDeep(toRawValue(item)), index)
 }
 
 function onRemove(item: T, index: number) {
-  emits('remove', attrs.id as SiderPosition, index, cloneDeep(unref(item)))
+  emits('remove', attrs.id as SiderPosition, index, cloneDeep(toRawValue(item)))
 }
 </script>
 

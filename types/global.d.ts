@@ -26,6 +26,10 @@ type ReadonlyRecordable<T = any> = {
   readonly [key: string]: T
 }
 
+type Fn<P extends any[] = any[], R = any> = (...args: P) => R
+
+type EmptyFn = () => void
+
 type ComponentExposed<T> = T extends new () => infer E
   ? E
   : T extends (
