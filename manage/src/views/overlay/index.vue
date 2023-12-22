@@ -19,7 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import { create, data } from '@sp/shared/helper/mapHelper/circleMarker'
 import { useMap } from '@sp/shared/hooks'
 import { debounce } from 'lodash-es'
 import Toolbar from './toolbar.vue'
@@ -52,8 +51,6 @@ function ok() {
     for (let item of parts) {
       source = source[item]
     }
-    console.log(source, value)
-
     source[key!] = value
   }
 }
@@ -93,45 +90,20 @@ useMap(
       console.log(e)
     })
     properties.mousetool = mousetool
-
-    const { proxy } = create(
-      {
-        source: data,
-        style: {
-          unit: 'meter',
-          radius: (_index, f) => {
-            var n = f.properties['人口']
-            return n * 100
-          },
-          color: (_index, f) => {
-            var n = Math.min(7, ~~(f.properties['人均GDP'] / 10000))
-            return [
-              'rgba(254,255,198,0.95)',
-              'rgba(255,238,149,0.95)',
-              'rgba(255,217,99,0.95)',
-              'rgba(255,175,43,0.95)',
-              'rgba(255,135,24,0.95)',
-              'rgba(234,10,0,0.95)',
-              'rgba(195,0,0,0.95)',
-              'rgba(139,0,0,0.95)',
-            ][n]
-          },
-          borderWidth: 0,
-        },
-      },
-      loca,
-    )
-    properties.proxy = proxy
   },
 )
 
 function onToolChange(key?: ToolKeys) {
   if (key) {
     properties.map.setDefaultCursor('crosshair')
-    properties.mousetool?.[key]({})
+    if (key !== 'text') {
+      properties.mousetool?.[key]({})
+    }
   } else {
     properties.map.setDefaultCursor('inherit')
-    properties.mousetool?.close(false)
+    if (key !== 'text') {
+      properties.mousetool?.close(false)
+    }
   }
 }
 

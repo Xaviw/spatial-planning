@@ -20,11 +20,13 @@ declare module 'alova' {
 // -----------------菜单-----------------
 export interface MenuItem {
   id: string
-  parentId?: string
+  parentId: string | null
   name: string
-  sort?: number
-  status: boolean
   children?: MenuItem[]
+  sort: number
+  status: boolean
+  createTime: string
+  updateTime: string
 }
 
 // -----------------侧边栏-----------------
@@ -42,17 +44,33 @@ export type SiderComponents =
   | 'Table'
   | 'Timeline'
   | 'Title'
+
 export type SiderPosition = 'left' | 'right'
+
 export interface SiderItem {
   id: string
   type: SiderComponents
   props: Recordable
   status: boolean
-  menuIds: string[]
   position: SiderPosition
+  createTime: string
+  updateTime: string
 }
-export type DetailItem = Pick<SiderItem, 'id' | 'type' | 'props' | 'status'>
-export interface SiderChangeParams<T extends SiderItem | DetailItem> {
+
+// -----------------标题组件、覆盖物详情-----------------
+export type MaterialItem = Pick<SiderItem, 'id' | 'type' | 'props' | 'status'>
+
+// -----------------变动记录-----------------
+export type OperationType = 'add' | 'remove' | 'replace' | 'move'
+
+export interface OperationItem<T> {
+  op: OperationType
+  id?: string
+  prevId?: string
+  value: Recordable<T>
+}
+
+export interface MutativeParams<T> {
   name: 'add' | 'move' | 'remove'
   from?: string
   to?: string
@@ -61,23 +79,35 @@ export interface SiderChangeParams<T extends SiderItem | DetailItem> {
   data: T
 }
 
-// -----------------图例-----------------
-export interface LegendTypeItem {
+// -----------------地图-----------------
+export type OverlayType =
+  | 'marker'
+  | 'polyline'
+  | 'polygon'
+  | 'rectangle'
+  | 'circle'
+  | 'ellipse'
+  | 'text'
+  | 'image'
+
+export interface OverlayItem {
+  id: string
+  type: OverlayType
+  name: string
+  props: Recordable
+  details: MaterialItem[]
+  status: boolean
+  createTime: string
+  updateTime: string
+}
+
+export interface LayerItem {
   id: string
   name: string
+  asLegend: boolean
+  legendImg: string
+  overlays: OverlayItem[]
+  status: boolean
+  createTime: string
+  updateTime: string
 }
-
-export interface LegendItem {
-  id: string
-  name: string
-  img: string
-  type: LegendTypeItem
-}
-
-export type LegendEditTypeItem = { value: string; label: string }
-
-export type LegendEditItem = Omit<LegendItem, 'type'> & {
-  type: LegendEditTypeItem
-}
-
-export type LegendRequestItem = Omit<LegendItem, 'type'> & { type: string }

@@ -1,5 +1,5 @@
 import { CSSProperties } from 'vue'
-import type { DetailItem } from './request'
+import type { MaterialItem } from './request'
 import type { PieSeriesOption } from 'echarts/charts'
 import type { UseDraggableOptions } from 'vue-draggable-plus'
 
@@ -19,7 +19,7 @@ export interface TitleProps {
    */
   modalTitle?: string
   /** 弹窗内容，提供后组件右侧会显示详情按钮 */
-  modalData?: DetailItem[]
+  modalData?: MaterialItem[]
 }
 
 export interface SubTitleProps {

@@ -16,7 +16,12 @@ export const componentTypes: { label: string; value: SiderComponents }[] = [
   { label: '时间轴', value: 'Timeline' },
 ]
 
-const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
+const materialsMap: {
+  [K in SiderComponents]: Omit<
+    SiderItem,
+    'position' | 'createTime' | 'updateTime'
+  >
+} = {
   Title: {
     id: '',
     type: 'Title',
@@ -24,14 +29,12 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       title: '大标题',
     },
     status: true,
-    menuIds: [],
   },
   SubTitle: {
     id: '',
     type: 'SubTitle',
     props: { title: '小标题' },
     status: true,
-    menuIds: [],
   },
   DataCard: {
     id: '',
@@ -42,7 +45,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       img: 'http://dummyimage.com/300x300',
     },
     status: true,
-    menuIds: [],
   },
   Collapse: {
     id: '',
@@ -52,7 +54,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       content: '<p>自定义富文本</p>',
     },
     status: true,
-    menuIds: [],
   },
   Description: {
     id: '',
@@ -65,7 +66,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       ],
     },
     status: true,
-    menuIds: [],
   },
   Progress: {
     id: '',
@@ -77,7 +77,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       ],
     },
     status: true,
-    menuIds: [],
   },
   Table: {
     id: '',
@@ -89,7 +88,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       ],
     },
     status: true,
-    menuIds: [],
   },
   FileList: {
     id: '',
@@ -107,7 +105,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       ],
     },
     status: true,
-    menuIds: [],
   },
   Carousel: {
     id: '',
@@ -119,7 +116,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       ],
     },
     status: true,
-    menuIds: [],
   },
   PieChart: {
     id: '',
@@ -132,7 +128,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       ],
     },
     status: true,
-    menuIds: [],
   },
   BarChart: {
     id: '',
@@ -142,7 +137,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       series: [{ data: [9, 8, 7] }],
     },
     status: true,
-    menuIds: [],
   },
   LineChart: {
     id: '',
@@ -152,7 +146,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       series: [{ data: [9, 8, 7] }],
     },
     status: true,
-    menuIds: [],
   },
   Timeline: {
     id: '',
@@ -161,7 +154,6 @@ const materialsMap: { [K in SiderComponents]: Omit<SiderItem, 'position'> } = {
       data: [{ content: '时间轴' }, { content: '自定义内容' }],
     },
     status: true,
-    menuIds: [],
   },
 }
 

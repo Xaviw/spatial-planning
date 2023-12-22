@@ -30,7 +30,7 @@ import { Form } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
 import type { TitleProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
-import { DetailItem } from '#/request'
+import { MaterialItem } from '#/request'
 
 withDefaults(
   defineProps<{
@@ -78,7 +78,7 @@ function openDetail() {
   )
 }
 
-function onDetailConfirm(list: DetailItem[]) {
+function onDetailConfirm(list: MaterialItem[]) {
   formModel.value.modalData = list
 }
 

@@ -14,10 +14,11 @@
           group="sider"
           id="left"
           enableContextMenu
+          :disabled="!selectedMenu"
           @edit="onEdit"
           @remove="onRemove"
-          :selectedId="selectedItem?.id"
           @mutative="onMutative"
+          :selectedId="selectedItem?.id"
           :filterMenu="selectedMenu"
         />
       </div>
@@ -35,10 +36,11 @@
           v-model="rightList"
           group="sider"
           enableContextMenu
+          :disabled="!selectedMenu"
           @edit="onEdit"
           @remove="onRemove"
-          :selectedId="selectedItem?.id"
           @mutative="onMutative"
+          :selectedId="selectedItem?.id"
           :filterMenu="selectedMenu"
         />
       </div>
@@ -57,6 +59,7 @@
       @submit="onSubmit"
       @revoke="onRevokeOrRedo(revoke)"
       @redo="onRevokeOrRedo(redo)"
+      @menuChange="onMenuChange"
       ref="formBarEl"
     />
   </div>
@@ -77,10 +80,10 @@ import { message } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
 import { apply, create } from 'mutative'
 import type {
-  SiderChangeParams,
   SiderItem,
   SiderPosition,
-  DetailItem,
+  MaterialItem,
+  MutativeParams,
 } from '#/request'
 
 const formBarEl = ref<ComponentExposed<typeof FormBar<SiderItem>> | null>(null)
@@ -89,19 +92,25 @@ const {
   data: leftList,
   loading: leftLoading,
   send: sendLeft,
-} = useRequest(() => getSider({ position: 'left', filter: false }), {
-  initialData: [],
-  immediate: false,
-})
+} = useRequest(
+  (menuId: string) => getSider({ menuId, position: 'left', filter: false }),
+  {
+    initialData: [],
+    immediate: false,
+  },
+)
 
 const {
   data: rightList,
   loading: rightLoading,
   send: sendRight,
-} = useRequest(() => getSider({ position: 'right', filter: false }), {
-  initialData: [],
-  immediate: false,
-})
+} = useRequest(
+  (menuId: string) => getSider({ menuId, position: 'right', filter: false }),
+  {
+    initialData: [],
+    immediate: false,
+  },
+)
 
 const {
   update,
@@ -115,10 +124,6 @@ const {
   state: currentList,
 } = useMutative<SiderItem[]>([])
 
-Promise.all([sendLeft(), sendRight()]).then(([leftData, rightData]) => {
-  reset([...leftData, ...rightData])
-})
-
 const loading = computed(
   () => leftLoading.value || rightLoading.value || submitLoading.value,
 )
@@ -126,6 +131,22 @@ const loading = computed(
 const selectedItem = ref<SiderItem>()
 
 const selectedMenu = ref<string>()
+
+async function onMenuChange(id: string, oldId: string | undefined) {
+  if (patches.value.length) {
+    await modal('confirm', {
+      title: '警告！',
+      content:
+        '您在当前菜单下的操作还未提交，切换菜单后不会保留您的操作！是否确定切换？',
+    }).catch(() => {
+      selectedMenu.value = oldId
+      return Promise.reject()
+    })
+  }
+  Promise.all([sendLeft(id), sendRight(id)]).then(([leftData, rightData]) => {
+    reset([...leftData, ...rightData])
+  })
+}
 
 async function onEdit(item: SiderItem) {
   if (selectedItem.value) {
@@ -156,7 +177,7 @@ function onRemove(position: SiderPosition, index: number) {
   }
 }
 
-function onConfirm(data: SiderItem | DetailItem, equal: boolean) {
+function onConfirm(data: SiderItem | MaterialItem, equal: boolean) {
   if (!equal) {
     let index = leftList.value.findIndex(
       item => item.id === selectedItem.value?.id,
@@ -211,8 +232,7 @@ function onSubmit() {
 function onCancel() {
   selectedItem.value = undefined
 }
-
-function onMutative(e: SiderChangeParams<SiderItem>) {
+function onMutative(e: MutativeParams<SiderItem>) {
   const leftLength = leftList.value.length
   if (e.name === 'add') {
     update(state => {

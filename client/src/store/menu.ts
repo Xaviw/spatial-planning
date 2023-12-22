@@ -76,7 +76,7 @@ export const useMenuStore = defineStore('menu', () => {
     return data[0]
   }
 
-  function getMenu(openLoading: () => void, closeLoading: () => void) {
+  function getMenu(openLoading: EmptyFn, closeLoading: EmptyFn) {
     openLoading()
     getMenuApi(true)
       .send()

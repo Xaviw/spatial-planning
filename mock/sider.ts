@@ -33,6 +33,7 @@ function genList(
   isInModal: boolean,
   params: GetSiderParams,
 ) {
+  if (!['11', '121', '122', '13'].includes(params.menuId)) return []
   const functions = Object.values(generationFunctions)
   return Array.from({ length: Mock.Random.natural(min, max) }).map(() => {
     return {
@@ -41,16 +42,10 @@ function genList(
         params,
       ),
       id: Mock.Random.id(),
-      status: params.filter ? true : Mock.Random.boolean(),
-      menuIds: isInModal
-        ? undefined
-        : params.menuId
-        ? [params.menuId]
-        : Mock.Random.shuffle(['1', '11', '12', '13', '121', '122']).slice(
-            0,
-            Mock.Random.natural(1, 3),
-          ),
+      status: params.filter ? undefined : Mock.Random.boolean(),
       position: isInModal ? undefined : params.position,
+      createTime: new Date().toLocaleString(),
+      updateTime: new Date().toLocaleString(),
     }
   })
 }

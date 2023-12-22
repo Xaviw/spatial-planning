@@ -4,7 +4,7 @@ import type { SiderPosition, SiderItem } from '#/request'
 import type { Patches } from 'mutative'
 
 export interface GetSiderParams {
-  menuId?: string
+  menuId: string
   filter: boolean
   position: SiderPosition
 }

@@ -1,6 +1,7 @@
 <template>
   <VueDraggable
     v-bind="$attrs"
+    :disabled="disabled"
     class="h-full select-none"
     :modelValue="modelValue"
     @update:modelValue="$emit('update:modelValue', $event)"
@@ -17,7 +18,6 @@
           <ADropdown :trigger="['contextmenu']">
             <div>
               <component
-                v-show="show(comp)"
                 :is="components[comp.type]"
                 :key="comp.id"
                 v-bind="comp.props"
@@ -43,62 +43,57 @@
           v-for="comp of modelValue"
           :key="comp.id"
           :class="['mb-2', selectedId === comp.id && 'sider-selected']"
-          v-show="show(comp)"
           :is="components[comp.type]"
           v-bind="comp.props"
         />
       </template>
     </TransitionGroup>
+
+    <AEmpty
+      v-if="!modelValue.length"
+      :description="
+        disabled ? '请在右侧选择菜单' : '拖动“物料栏”中的组件到这里新增'
+      "
+      class="h-full flex flex-col items-center justify-center"
+    />
   </VueDraggable>
 </template>
 
-<script setup lang="ts" generic="T extends SiderItem | DetailItem">
+<script setup lang="ts" generic="T extends SiderItem | MaterialItem">
 import { components } from '@sp/shared/materials'
+import { toRawValue } from '@sp/shared/utils'
 import { cloneDeep } from 'lodash-es'
-import { toRawValue } from 'utils'
 import { VueDraggable } from 'vue-draggable-plus'
 import type { SortableEvent } from '#/components'
 import type {
-  DetailItem,
+  MaterialItem,
   SiderItem,
-  SiderChangeParams,
   SiderPosition,
+  MutativeParams,
 } from '#/request'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     modelValue: T[]
     selectedId?: string
-    filterMenu?: string
     enableContextMenu?: boolean
+    disabled?: boolean
   }>(),
   {
     modelValue: () => [],
     enableContextMenu: false,
+    disabled: false,
   },
 )
 
 const emits = defineEmits<{
   (e: 'update:modelValue', newList: any[]): void
-  (e: 'mutative', params: SiderChangeParams<T>): void
+  (e: 'mutative', params: MutativeParams<T>): void
   (e: 'edit', item: T, index: number): void
   (e: 'remove', position: SiderPosition, index: number, item: T): void
 }>()
 
 const attrs = useAttrs()
-
-function isSiderItem(item: SiderItem | DetailItem): item is SiderItem {
-  if (Array.isArray((item as SiderItem).menuIds)) return true
-  return false
-}
-
-const show = (item: T) => {
-  if (!props.filterMenu) return true
-  if (isSiderItem(item)) {
-    return item.menuIds.includes(props.filterMenu)
-  }
-  return true
-}
 
 function onChange(e: SortableEvent) {
   let original: T

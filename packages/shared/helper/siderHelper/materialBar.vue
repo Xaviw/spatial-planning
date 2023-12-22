@@ -17,10 +17,10 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="T extends SiderItem | DetailItem">
+<script setup lang="ts" generic="T extends SiderItem | MaterialItem">
 import { materials } from './data'
 import DraggableList from './draggableList.vue'
-import type { SiderItem, DetailItem } from '#/request'
+import type { SiderItem, MaterialItem } from '#/request'
 
 const props = defineProps<{
   selectedMenu?: string

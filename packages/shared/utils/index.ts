@@ -1,4 +1,5 @@
 import { Modal, type ModalFuncProps } from 'ant-design-vue'
+import type { MenuItem } from '#/request'
 import type { MaybeRef, ComputedRef } from 'vue'
 
 export * from './enums'
@@ -51,4 +52,32 @@ export function toRawValue<T>(value: MaybeRef<T> | ComputedRef<T>): T {
   if (isRef(value)) return unref<T>(value)
   if (isProxy(value)) return toRaw(value)
   return value
+}
+
+export function loopMenu(
+  data: MenuItem[],
+  callback: (
+    item: MenuItem,
+    index: number,
+    data: MenuItem[],
+    parent?: MenuItem,
+  ) => void,
+  key?: string,
+  parent?: MenuItem,
+) {
+  data.forEach((item, index) => {
+    if (key) {
+      if (item.id === key) {
+        return callback(item, index, data, parent)
+      }
+      if (item.children?.length) {
+        return loopMenu(item.children, callback, key, item)
+      }
+    } else {
+      if (item.children?.length) {
+        loopMenu(item.children, callback, key, item)
+      }
+      callback(item, index, data, parent)
+    }
+  })
 }

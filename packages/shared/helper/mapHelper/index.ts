@@ -3,31 +3,28 @@ import { isObject, isSymbol } from 'lodash-es'
 
 const proxyMap: WeakMap<object, any> = new WeakMap()
 
-/**
- * 创建响应式覆盖物
- */
+/** 创建响应式覆盖物 */
 export function reactiveOverlay<T extends object>(
   /** 覆盖物配置 */
   config: T,
   /** 覆盖物属性变动时对应触发的方法 */
-  handlers: Record<string, Fn>,
-  /** 无需响应式处理的属性，默认忽略extData */
-  ignore: string[] = ['extData'],
+  handlers: Record<string, Fn<[any, any], void>>,
+  /** 无需响应式处理的属性 */
+  ignore: string[] = [],
 ) {
   const source = config
 
   const proxy = createReactiveObject(
     source,
-    proxyMap,
     ignore,
     (target, key, value, receiver, path) => {
       const res = Reflect.set(target, key, value, receiver)
       // 数据对象本身或数据对象修改时触发操作
       if (path) {
-        handlers[path]?.(value, target)
-        handlers[`${path},${String(key)}`]?.(value, target)
+        handlers[path]?.(value, proxy)
+        handlers[`${path},${String(key)}`]?.(value, proxy)
       } else {
-        handlers[String(key)]?.(value, target)
+        handlers[String(key)]?.(value, proxy)
       }
       return res
     },
@@ -43,24 +40,26 @@ export function reactiveOverlay<T extends object>(
   return { proxy, replaceSource }
 }
 
+/** 创建响应式对象 */
 function createReactiveObject<T>(
   target: T,
-  proxyMap: WeakMap<object, any>,
   ignore: string[],
   handler: (
     target: any,
-    p: string | symbol,
-    newValue: any,
+    key: string | symbol,
+    value: any,
     receiver: any,
-    path?: string,
+    /** 当前变动属于的第一层属性名 */
+    keyName?: string,
   ) => boolean,
-  parentPath?: string,
+  /** 标记变动属于哪个第一层属性，深层次属性触发第一层属性的处理事件 */
+  keyName?: string,
 ): T {
   // 如果是vue响应式对象，解包
   target = toRawValue(target)
 
   // 非对象，或已响应式处理，直接返回
-  if (!isObject(target) || (target as unknown as Recordable).__ro) {
+  if (!isObject(target) || (target as any).__ro) {
     return target
   }
 
@@ -73,29 +72,44 @@ function createReactiveObject<T>(
   // 生成proxy
   const proxy = new Proxy(target, {
     get(target, key, receiver) {
+      // 已处理过的代理对象，标记__ro
+      if (key === '__ro') {
+        return true
+      }
+
       // 如果是vue响应式对象，解包
       const res = toRawValue(Reflect.get(target, key, receiver))
 
       // key是symbol或内置对象时，直接返回
-      if (isSymbol(key) || key === '__proto__') {
+      if (
+        isSymbol(key) ||
+        [
+          '__proto__',
+          '__isVue',
+          '__v_isRef',
+          '__v_isReadonly',
+          '__v_isReactive',
+          '__v_raw',
+        ].includes(key)
+      ) {
         return res
       }
 
-      const currentPath = parentPath ? `${parentPath},${key}` : key
+      const thisKeyName = keyName || key
 
       // 忽略ignore传入的属性
-      if (ignore.includes(currentPath)) {
+      if (ignore.includes(thisKeyName)) {
         return res
       }
 
       // 获取时再创建子代理对象
       if (isObject(res)) {
-        return createReactiveObject(res, proxyMap, ignore, handler, currentPath)
+        return createReactiveObject(res, ignore, handler, thisKeyName)
       }
       return res
     },
     set(target, key, value, receiver) {
-      return handler(target, key, value, receiver, parentPath)
+      return handler(target, key, value, receiver, keyName)
     },
   })
 
@@ -105,6 +119,7 @@ function createReactiveObject<T>(
   return proxy
 }
 
+/** Loca图层公共属性处理 */
 export const commonLayerHandler = (
   instance: Loca.Layer,
 ): Record<string, (value: any, source: any) => void> => ({
@@ -125,7 +140,6 @@ export const commonLayerHandler = (
     }
   },
   source(_value, source) {
-    console.log('source.source: ', source.source)
-    instance.setSource(new Loca.GeoJSONSource(source.source))
+    instance.setSource(new Loca.GeoJSONSource({ data: source.source }))
   },
 })

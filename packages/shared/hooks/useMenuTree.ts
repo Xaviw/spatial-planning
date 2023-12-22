@@ -1,9 +1,11 @@
 import { getMenu } from '@sp/shared/apis'
+import { loopMenu } from '@sp/shared/utils'
 import { useRequest } from 'alova'
+import { cloneDeep } from 'lodash-es'
 import { ref } from 'vue'
 import type { MenuItem } from '#/request'
 
-export function useMenuTree() {
+export function useMenuTree(disableParent: boolean = true) {
   const menuSearchValue = ref<string>()
   const selectedMenu = ref<string>()
 
@@ -13,6 +15,18 @@ export function useMenuTree() {
       initialData: [],
     },
   )
+
+  const transformData = computed(() => {
+    const data = cloneDeep(menuData.value) as (MenuItem & {
+      disabled?: boolean
+    })[]
+    loopMenu(data, item => {
+      if (item.children?.length) {
+        ;(item as MenuItem & { disabled: boolean }).disabled = true
+      }
+    })
+    return data
+  })
 
   function onMenuDropdown(open: boolean) {
     if (!open) return
@@ -28,7 +42,7 @@ export function useMenuTree() {
   return {
     menuSearchValue,
     selectedMenu,
-    menuData,
+    menuData: disableParent ? transformData : menuData,
     onMenuDropdown,
     onMenuFilter,
   }

@@ -47,13 +47,13 @@ import { modal } from '@sp/shared/utils'
 import { isEqual, cloneDeep } from 'lodash-es'
 import DraggableList from './draggableList.vue'
 import MaterialBar from './materialBar.vue'
-import type { DetailItem, SiderChangeParams } from '#/request'
+import type { MaterialItem, MutativeParams } from '#/request'
 
 const props = withDefaults(
   defineProps<{
     modalTitle: string
     modalWidth?: string
-    modalData: DetailItem[]
+    modalData: MaterialItem[]
   }>(),
   {
     modalWidth: '25rem',
@@ -63,15 +63,17 @@ const props = withDefaults(
 
 const emits = defineEmits<{
   (e: 'close'): void
-  (e: 'confirm', list: DetailItem[]): void
+  (e: 'confirm', list: MaterialItem[]): void
 }>()
 
-const formBarEl = ref<ComponentExposed<typeof FormBar<DetailItem>> | null>(null)
+const formBarEl = ref<ComponentExposed<typeof FormBar<MaterialItem>> | null>(
+  null,
+)
 
 const { redo, revoke, reset, patchFlag, inversePatches, update, patches } =
-  useMutative<DetailItem[]>([])
+  useMutative<MaterialItem[]>([])
 
-const list = ref<DetailItem[]>([])
+const list = ref<MaterialItem[]>([])
 
 watchEffect(() => {
   if (props.modalData?.length) {
@@ -80,9 +82,9 @@ watchEffect(() => {
   }
 })
 
-const selectedItem = ref<DetailItem>()
+const selectedItem = ref<MaterialItem>()
 
-async function onEdit(item: DetailItem) {
+async function onEdit(item: MaterialItem) {
   if (selectedItem.value) {
     if (item.id === selectedItem.value.id) return
     const data = await formBarEl.value!.getData()
@@ -104,7 +106,7 @@ function onRemove(_position: string, index: number) {
   })
 }
 
-function onConfirm(data: DetailItem, equal: boolean) {
+function onConfirm(data: MaterialItem, equal: boolean) {
   if (!equal) {
     const index = list.value.findIndex(
       item => item.id === selectedItem.value?.id,
@@ -124,7 +126,7 @@ function onCancel() {
   selectedItem.value = undefined
 }
 
-function onMutative(e: SiderChangeParams<DetailItem>) {
+function onMutative(e: MutativeParams<MaterialItem>) {
   if (e.name === 'add') {
     update(draft => {
       draft.splice(e.newIndex!, 0, e.data)

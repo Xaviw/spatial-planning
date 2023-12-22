@@ -42,7 +42,7 @@
       <div
         class="flex items-center border-0 border-b-1px border-gray-3 border-solid py-2"
       >
-        <span>菜单筛选：</span>
+        <span>选择菜单：</span>
         <ATreeSelect
           :fieldNames="{ label: 'name', value: 'id' }"
           :filterTreeNode="onMenuFilter"
@@ -55,6 +55,7 @@
           allowClear
           :treeData="menuData"
           @dropdownVisibleChange="onMenuDropdown"
+          @change="$emit('menuChange', $event, selectedMenu)"
           class="flex-1"
         />
       </div>
@@ -88,13 +89,13 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="T extends SiderItem | DetailItem">
+<script setup lang="ts" generic="T extends SiderItem | MaterialItem">
 import { useMenuTree } from '@sp/shared/hooks'
 import { componentForms } from '@sp/shared/materials'
 import { modal } from '@sp/shared/utils'
 import { isEqual, cloneDeep } from 'lodash-es'
 import BaseForm from './baseForm.vue'
-import type { DetailItem, SiderItem } from '#/request'
+import type { MaterialItem, SiderItem } from '#/request'
 import type { Patches } from 'mutative'
 
 const props = withDefaults(
@@ -118,6 +119,7 @@ const emits = defineEmits<{
   (e: 'confirm', data: T, equal: boolean): void
   (e: 'cancel'): void
   (e: 'update:selectedMenu', menu: string): void
+  (e: 'menuChange', menuId: string, oldMenuId?: string): void
 }>()
 
 const baseFormEl = ref<InstanceType<typeof BaseForm> | null>(null)

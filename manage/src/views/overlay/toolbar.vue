@@ -34,6 +34,7 @@ const list: ToolItem[] = [
   { icon: 'i-ph:polygon', name: '多边形', key: 'polygon' },
   { icon: 'i-mdi:vector-rectangle', name: '矩形', key: 'rectangle' },
   { icon: 'i-mdi:circle-outline', name: '圆', key: 'circle' },
+  { icon: 'i-ph:text-t', name: '文字', key: 'text' },
   { icon: 'i-ph:ruler', name: '距离测量', key: 'rule' },
   { icon: 'i-radix-icons:ruler-square', name: '面积测量', key: 'measureArea' },
 ]
