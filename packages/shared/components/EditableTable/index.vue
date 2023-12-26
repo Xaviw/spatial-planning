@@ -30,40 +30,48 @@
 
         <template v-else-if="column.dataIndex === 'operation'">
           <template v-if="editableData[record[rowKey]]">
-            <AButton type="link" @click="save(record[rowKey])">
-              <template #icon>
-                <i class="i-ant-design:check-circle-outlined" />
-              </template>
-            </AButton>
+            <ATooltip title="保存">
+              <AButton type="link" @click="save(record[rowKey])">
+                <template #icon>
+                  <i class="i-ant-design:check-circle-outlined" />
+                </template>
+              </AButton>
+            </ATooltip>
             <APopconfirm
               title="是否取消编辑？"
               @confirm="cancel(record[rowKey])"
               v-if="modelValue.length > 1"
             >
-              <AButton type="link" danger>
-                <template #icon>
-                  <i class="i-ant-design:close-circle-outlined" />
-                </template>
-              </AButton>
+              <ATooltip title="取消">
+                <AButton type="link" danger>
+                  <template #icon>
+                    <i class="i-ant-design:close-circle-outlined" />
+                  </template>
+                </AButton>
+              </ATooltip>
             </APopconfirm>
           </template>
 
           <template v-else>
-            <AButton type="link" @click="edit(record[rowKey])">
-              <template #icon>
-                <i class="i-ant-design:edit-outlined" />
-              </template>
-            </AButton>
+            <ATooltip title="编辑">
+              <AButton type="link" @click="edit(record[rowKey])">
+                <template #icon>
+                  <i class="i-ant-design:edit-outlined" />
+                </template>
+              </AButton>
+            </ATooltip>
             <APopconfirm
               title="是否确定删除？"
               @confirm="remove(record[rowKey])"
               v-if="modelValue.length > 1"
             >
-              <AButton type="link" danger>
-                <template #icon>
-                  <i class="i-ant-design:delete-outlined" />
-                </template>
-              </AButton>
+              <ATooltip title="删除">
+                <AButton type="link" danger>
+                  <template #icon>
+                    <i class="i-ant-design:delete-outlined" />
+                  </template>
+                </AButton>
+              </ATooltip>
             </APopconfirm>
           </template>
         </template>
@@ -138,6 +146,7 @@ const transformColumns = computed(() => {
       dataIndex: 'operation',
       width: 80,
       align: 'center',
+      fixed: 'right',
     },
   ]
   if (props.indexColumn) {
@@ -146,6 +155,7 @@ const transformColumns = computed(() => {
       dataIndex: 'index',
       width: 'auto',
       align: 'center',
+      fixed: 'left',
     })
   }
   return baseColumns

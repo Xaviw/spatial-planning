@@ -13,7 +13,7 @@
       </div>
     </div>
 
-    <div class="w-100 flex flex-col">
+    <div class="w-120 flex flex-col">
       <div class="mb-2 bg-white p-4">
         <div class="mb-2 flex">
           <div class="flex-1">
@@ -53,9 +53,7 @@
           </template>
         </AAlert>
 
-        <div
-          class="flex items-center border-0 border-b-1px border-gray-3 border-solid py-2"
-        >
+        <div class="mt-2 flex items-center">
           <span>选择菜单：</span>
           <ATreeSelect
             :fieldNames="{ label: 'name', value: 'id' }"
@@ -77,7 +75,7 @@
       <div class="mb-2 flex-1 bg-white p-4"></div>
 
       <Layer
-        class="mb-2 bg-white p-4"
+        class="mb-2 bg-white"
         :visibleIds="visibleLayers"
         v-model="layers"
       />
@@ -130,7 +128,8 @@ onSuccess(({ data }) => {
   layers.value = []
   data.forEach(item => {
     layers.value.push(omit(item, 'overlays'))
-    createLayer(item.overlays)
+    console.log('item: ', item, layers.value)
+    // createLayer(item.overlays)
   })
 })
 
