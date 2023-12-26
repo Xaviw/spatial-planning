@@ -1,5 +1,6 @@
 import { Modal, type ModalFuncProps } from 'ant-design-vue'
-import type { MenuItem } from '#/request'
+import { isEqual } from 'lodash-es'
+import type { MenuItem, OperationItem } from '#/request'
 import type { MaybeRef, ComputedRef } from 'vue'
 
 export * from './enums'
@@ -80,4 +81,65 @@ export function loopMenu(
       callback(item, index, data, parent)
     }
   })
+}
+
+export function getOperationsFromDiff<T extends Recordable>(
+  newArr: T[],
+  oldArr: T[],
+  key: keyof T = 'id',
+  sortKey = 'sort',
+) {
+  const newMap = new Map(
+    newArr.map((data, index) => [
+      data[key],
+      {
+        index,
+        data,
+      },
+    ]),
+  )
+  const oldMap = new Map(
+    oldArr.map((data, index) => [
+      data[key],
+      {
+        index,
+        data,
+      },
+    ]),
+  )
+
+  const operations: OperationItem<T & { [key: string]: number }>[] = []
+
+  for (const [k, v] of newMap) {
+    if (!oldMap.has(k)) {
+      operations.push({
+        op: 'add',
+        value: { ...v.data, [sortKey]: v.index },
+      })
+    } else {
+      const oldValue = oldMap.get(k)
+      const operation = {
+        op: 'replace',
+        id: k,
+        value: {},
+      } as OperationItem<any>
+      if (v.index !== oldValue!.index) {
+        operation.value[sortKey] = v.index
+      }
+      if (!isEqual(v.data, oldValue!.data)) {
+        operation.value = { ...v.data, ...operation.value }
+      }
+      if (Object.keys(operation.value).length) {
+        operations.push(operation)
+      }
+    }
+  }
+
+  for (const [k] of oldMap) {
+    if (!newMap.has(k)) {
+      operations.push({ op: 'remove', id: k })
+    }
+  }
+
+  return operations
 }

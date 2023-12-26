@@ -1,7 +1,6 @@
 import 'alova/GlobalFetch'
 import { request } from '@sp/shared/utils'
-import type { SiderPosition, SiderItem } from '#/request'
-import type { Patches } from 'mutative'
+import type { SiderPosition, SiderItem, OperationItem } from '#/request'
 
 export interface GetSiderParams {
   menuId: string
@@ -16,6 +15,12 @@ export function getSider(params: GetSiderParams) {
   })
 }
 
-export function setSider(data: Patches) {
+export function setSider(
+  data: OperationItem<
+    SiderItem & {
+      [key: string]: number
+    }
+  >[],
+) {
   return request.Post<boolean>('/sider', data)
 }

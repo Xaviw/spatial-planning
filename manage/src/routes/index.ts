@@ -28,14 +28,9 @@ export default createRouter({
       },
     },
     {
-      path: '/legend',
-      name: 'legend',
-      component: () => import('../views/legend/index.vue'),
-    },
-    {
-      path: '/overlay',
-      name: 'overlay',
-      component: () => import('../views/overlay/index.vue'),
+      path: '/map',
+      name: 'map',
+      component: () => import('../views/map/index.vue'),
       meta: {
         keepAlive: true,
       },

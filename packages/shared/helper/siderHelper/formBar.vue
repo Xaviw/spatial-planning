@@ -52,7 +52,6 @@
           @update:value="$emit('update:selectedMenu', $event)"
           treeDefaultExpandAll
           showSearch
-          allowClear
           :treeData="menuData"
           @dropdownVisibleChange="onMenuDropdown"
           @change="$emit('menuChange', $event, selectedMenu)"

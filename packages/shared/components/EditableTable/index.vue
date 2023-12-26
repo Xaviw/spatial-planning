@@ -30,24 +30,40 @@
 
         <template v-else-if="column.dataIndex === 'operation'">
           <template v-if="editableData[record[rowKey]]">
-            <AButton type="link" @click="save(record[rowKey])">保存</AButton>
+            <AButton type="link" @click="save(record[rowKey])">
+              <template #icon>
+                <i class="i-ant-design:check-circle-outlined" />
+              </template>
+            </AButton>
             <APopconfirm
               title="是否取消编辑？"
               @confirm="cancel(record[rowKey])"
               v-if="modelValue.length > 1"
             >
-              <AButton type="link" danger>取消</AButton>
+              <AButton type="link" danger>
+                <template #icon>
+                  <i class="i-ant-design:close-circle-outlined" />
+                </template>
+              </AButton>
             </APopconfirm>
           </template>
 
           <template v-else>
-            <AButton type="link" @click="edit(record[rowKey])">编辑</AButton>
+            <AButton type="link" @click="edit(record[rowKey])">
+              <template #icon>
+                <i class="i-ant-design:edit-outlined" />
+              </template>
+            </AButton>
             <APopconfirm
               title="是否确定删除？"
               @confirm="remove(record[rowKey])"
               v-if="modelValue.length > 1"
             >
-              <AButton type="link" danger>删除</AButton>
+              <AButton type="link" danger>
+                <template #icon>
+                  <i class="i-ant-design:delete-outlined" />
+                </template>
+              </AButton>
             </APopconfirm>
           </template>
         </template>
@@ -72,6 +88,7 @@ import { message, Table } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import { VueDraggable } from 'vue-draggable-plus'
 import type { SortableEvent } from '#/components'
+import type { OperationType } from '#/request'
 import type { ColumnType } from 'ant-design-vue/es/table'
 
 const props = withDefaults(
@@ -80,20 +97,26 @@ const props = withDefaults(
     modelValue: T[]
     loading?: boolean
     rowKey?: string
-    addFn: (arg: T, index: number) => Promise<T>
-    replaceFn: (arg: T, index: number) => Promise<T>
-    removeFn: (arg: T, index: number) => Promise<any>
-    moveFn: (oldIndex: number, newIndex: number) => Promise<any>
+    /** 操作提交方法，返回promise判断操作是否提交成功，未传递时为同步操作（不会有消息提示） */
+    operation?: (
+      arg: T,
+      type: OperationType | 'move',
+      index: number,
+      oldIndex?: number,
+    ) => Promise<T>
     /**
      * 自定义编辑数据与原数据比较函数，比较相等时无需提交至后端，默认采用lodash-isEqual比较
      * 支持传入接受新旧数据返回布尔值的函数，自定义比较
      * 或传入false，禁用比较
      */
     customEqual?: ((data: T, newData: T) => boolean) | false
+    /** 是否显示序号列，默认显示“序号”，传字符串时作为列标题，传false时不显示 */
+    indexColumn?: string | false
   }>(),
   {
     rowKey: 'id',
     customEqual: isEqual,
+    indexColumn: '序号',
   },
 )
 
@@ -109,20 +132,22 @@ const listLoading = ref(false)
 
 const transformColumns = computed(() => {
   const baseColumns: ColumnType[] = [
-    {
-      title: '序号',
-      dataIndex: 'index',
-      width: 60,
-      align: 'center',
-    },
+    ...props.columns,
     {
       title: '操作',
       dataIndex: 'operation',
-      width: 160,
+      width: 80,
       align: 'center',
     },
   ]
-  baseColumns.splice(1, 0, ...props.columns)
+  if (props.indexColumn) {
+    baseColumns.unshift({
+      title: props.indexColumn,
+      dataIndex: 'index',
+      width: 'auto',
+      align: 'center',
+    })
+  }
   return baseColumns
 })
 
@@ -158,10 +183,10 @@ function save(id: string) {
   }
   listLoading.value = true
   const isAdd = id.startsWith('add')
-  const func = isAdd ? props.addFn : props.replaceFn
-  func(newData, index)
+  const func = props.operation || (() => Promise.resolve(newData))
+  func(newData, isAdd ? 'add' : 'replace', index)
     .then((data: T) => {
-      message.success(`${isAdd ? '新增' : '修改'}成功！`)
+      props.operation && message.success(`${isAdd ? '新增' : '修改'}成功！`)
       handleList(list => {
         list[index] = data
         return list
@@ -186,10 +211,10 @@ function cancel(id: string) {
 function remove(id: string) {
   listLoading.value = true
   const [index, newData] = getIndexAndData(id)
-  props
-    .removeFn(newData, index)
+  const func = props.operation || (() => Promise.resolve())
+  func(newData, 'remove', index)
     .then(() => {
-      message.success('删除成功！')
+      props.operation && message.success('删除成功！')
       handleList(list => {
         list.splice(index, 1)
         return list
@@ -204,13 +229,13 @@ function remove(id: string) {
 function move({ oldIndex, newIndex }: SortableEvent) {
   if (typeof oldIndex !== 'number' || typeof newIndex !== 'number') return
   listLoading.value = true
-  props
-    .moveFn(oldIndex - 1, newIndex - 1)
+  const func = props.operation || (() => Promise.resolve())
+  func(props.modelValue[newIndex], 'move', oldIndex - 1, newIndex - 1)
     .then(() => {
-      message.success('移动成功！')
+      props.operation && message.success('移动成功！')
     })
     .catch(() => {
-      message.error('移动失败！')
+      props.operation && message.error('移动失败！')
       handleList(list => {
         list.splice(oldIndex - 1, 0, list.splice(newIndex - 1, 1)[0])
         return list

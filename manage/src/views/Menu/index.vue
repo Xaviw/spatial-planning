@@ -73,6 +73,12 @@
               unCheckedChildren="禁用"
             />
           </AFormItem>
+          <AFormItem label="创建时间">
+            <AInput :value="formData.createTime" disabled />
+          </AFormItem>
+          <AFormItem label="更新时间">
+            <AInput :value="formData.updateTime" disabled />
+          </AFormItem>
           <div class="ml-100px mt-8 flex justify-center">
             <AButton class="mr-8" @click="cancel">取消</AButton>
             <AButton type="primary" @click="onConfirm">确定</AButton>

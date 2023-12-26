@@ -1,3 +1,5 @@
+import type { LayerItem, MaterialItem, OverlayItem } from '#/request'
+
 export type ToolKeys =
   | keyof Pick<
       AMap.MouseTool,
@@ -15,4 +17,10 @@ export interface ToolItem {
   icon: string
   name: string
   key: ToolKeys
+}
+
+export interface MapMutativeState {
+  layers: Omit<LayerItem, 'overlays'>[]
+  overlays: Omit<OverlayItem, 'details'>[]
+  details: MaterialItem[]
 }

@@ -61,13 +61,12 @@ export interface SiderItem {
 export type MaterialItem = Pick<SiderItem, 'id' | 'type' | 'props' | 'status'>
 
 // -----------------变动记录-----------------
-export type OperationType = 'add' | 'remove' | 'replace' | 'move'
+export type OperationType = 'add' | 'remove' | 'replace'
 
-export interface OperationItem<T> {
+export interface OperationItem<T extends Recordable> {
   op: OperationType
   id?: string
-  prevId?: string
-  value: Recordable<T>
+  value?: T
 }
 
 export interface MutativeParams<T> {
@@ -81,20 +80,49 @@ export interface MutativeParams<T> {
 
 // -----------------地图-----------------
 export type OverlayType =
-  | 'marker'
-  | 'polyline'
-  | 'polygon'
-  | 'rectangle'
-  | 'circle'
-  | 'ellipse'
-  | 'text'
-  | 'image'
+  | 'Marker'
+  | 'Polyline'
+  | 'Polygon'
+  | 'Rectangle'
+  | 'Circle'
+  | 'Text'
+  | 'Image'
 
-export interface OverlayItem {
+export interface OverlayTypeInstance {
+  Marker: AMap.Marker
+  Polyline: AMap.Polyline | AMap.BezierCurve
+  Polygon: AMap.Polygon
+  Rectangle: AMap.Rectangle
+  Circle: AMap.Circle | AMap.Ellipse
+  Text: AMap.Text
+  Image: AMap.ImageLayer
+}
+
+export interface OverlayTypeOptions {
+  Marker: AMap.MarkerOptions
+  Polyline: AMap.PolylineOptions | AMap.BezierCurveOptions
+  Polygon: AMap.PolygonOptions
+  Rectangle: AMap.RectangleOptions
+  Circle: AMap.CircleOptions | AMap.EllipseOptions
+  Text: AMap.TextOptions
+  Image: AMap.ImageLayerOptions
+}
+
+export type ReactiveOverlay<T = OverlayType> = (
+  config: OverlayTypeOptions[T],
+  map?: AMap.Map,
+) => {
+  proxy: OverlayTypeOptions[T]
+  instance: OverlayTypeInstance[T]
+  replaceInstance: (instance: OverlayTypeInstance[T]) => void
+  replaceSource: (config: Partial<OverlayTypeOptions[T]>) => void
+}
+
+export interface OverlayItem<T = OverlayType> {
   id: string
-  type: OverlayType
+  type: T
   name: string
-  props: Recordable
+  props: OverlayTypeOptions[T]
   details: MaterialItem[]
   status: boolean
   createTime: string

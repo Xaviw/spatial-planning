@@ -1,30 +1,14 @@
+import { loopMenu } from '@sp/shared/utils'
 import type { MenuItem } from '#/request'
 
-export function loop(
-  data: MenuItem[],
-  key: string,
-  callback: (
-    item: MenuItem,
-    index: number,
-    data: MenuItem[],
-    parent?: MenuItem,
-  ) => void,
-  parent?: MenuItem,
-) {
-  data.forEach((item, index) => {
-    if (item.id === key) {
-      return callback(item, index, data, parent)
-    }
-    if (item.children?.length) {
-      return loop(item.children, key, callback, item)
-    }
-  })
-}
-
 export function remove(treeData: MenuItem[], id: string) {
-  loop(treeData, id, (_item, index, data) => {
-    data.splice(index, 1)
-  })
+  loopMenu(
+    treeData,
+    (_item, index, data) => {
+      data.splice(index, 1)
+    },
+    id,
+  )
 }
 
 export function move(
@@ -40,10 +24,14 @@ export function move(
   let node: MenuItem | undefined
 
   if (oldParent) {
-    loop(treeData, oldParent, item => {
-      node = item.children![oldIndex]
-      item.children?.splice(oldIndex, 1)
-    })
+    loopMenu(
+      treeData,
+      item => {
+        node = item.children![oldIndex]
+        item.children?.splice(oldIndex, 1)
+      },
+      oldParent,
+    )
   } else {
     node = treeData[oldIndex]
     treeData.splice(oldIndex, 1)
@@ -54,28 +42,54 @@ export function move(
   }
 
   if (currentParent) {
-    loop(treeData, currentParent, item => {
-      item.children = item.children || []
-      item.children.splice(currentIndex, 0, node!)
-    })
+    loopMenu(
+      treeData,
+      item => {
+        item.children = item.children || []
+        item.children.splice(currentIndex, 0, node!)
+      },
+      currentParent,
+    )
   } else {
     treeData.splice(currentIndex, 0, node)
   }
 }
 
 export function update(treeData: MenuItem[], data: MenuItem) {
-  loop(treeData, data.id, (item, index, arr) => {
-    arr[index] = { ...item, ...data }
-  })
+  loopMenu(
+    treeData,
+    (item, index, arr) => {
+      arr[index] = {
+        ...item,
+        ...data,
+        updateTime: new Date().toLocaleString(),
+      }
+    },
+    data.id,
+  )
 }
 
 export function add(treeData: MenuItem[], data: MenuItem) {
+  const createTime = new Date().toLocaleString(),
+    updateTime = new Date().toLocaleString()
   if (!data.parentId) {
-    treeData.push(data)
-  } else {
-    loop(treeData, data.parentId, item => {
-      item.children = item.children || []
-      item.children.push(data)
+    treeData.push({
+      ...data,
+      createTime,
+      updateTime,
     })
+  } else {
+    loopMenu(
+      treeData,
+      item => {
+        item.children = item.children || []
+        item.children.push({
+          ...data,
+          createTime,
+          updateTime,
+        })
+      },
+      data.parentId,
+    )
   }
 }

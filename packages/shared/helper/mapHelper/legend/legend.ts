@@ -1,4 +1,4 @@
-import { reactiveOverlay } from './index'
+import { createReactiveOverlay } from '../util'
 
 export function createLegendProxy(
   config: Loca.LegendProps,
@@ -10,7 +10,7 @@ export function createLegendProxy(
     instance.addTo(loca)
   }
 
-  const { proxy, replaceSource } = reactiveOverlay(config, {
+  const { proxy, replaceSource } = createReactiveOverlay(config, {
     style() {
       instance.setStyle(proxy)
     },

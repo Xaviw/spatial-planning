@@ -74,11 +74,10 @@ import {
   FormBar,
 } from '@sp/shared/helper/siderHelper'
 import { useMutative } from '@sp/shared/hooks'
-import { modal } from '@sp/shared/utils'
+import { getOperationsFromDiff, modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { message } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
-import { apply, create } from 'mutative'
 import type {
   SiderItem,
   SiderPosition,
@@ -205,20 +204,11 @@ function onConfirm(data: SiderItem | MaterialItem, equal: boolean) {
 const submitLoading = ref(false)
 
 function onSubmit() {
-  submitLoading.value = true
-  const [_state, simplePatches] = create(
+  const operations = getOperationsFromDiff(
+    currentList.value,
     originalList.value,
-    state => {
-      patches.value.forEach(patchArr => {
-        patchArr.forEach(patch => {
-          apply(state, [patch])
-        })
-      })
-    },
-    { enablePatches: { arrayLengthAssignment: false } },
   )
-  console.log('simplePatches: ', patches, simplePatches)
-  setSider(simplePatches)
+  setSider(operations)
     .send()
     .then(() => {
       message.success('提交成功！')

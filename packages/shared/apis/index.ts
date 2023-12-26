@@ -1,3 +1,3 @@
 export * from './sider'
 export * from './menu'
-export * from './legend'
+export * from './map'
