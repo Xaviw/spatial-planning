@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import { getMap } from '@sp/shared/apis'
 import { Loading } from '@sp/shared/components'
-import { createLayer } from '@sp/shared/helper/mapHelper'
+// import { createReactiveLayer } from '@sp/shared/helper/mapHelper'
 import { useMap, useMenuTree, useMutative } from '@sp/shared/hooks'
 import { useRequest } from 'alova'
 import { debounce, omit } from 'lodash-es'
@@ -122,16 +122,6 @@ const { loading, onSuccess, send } = useRequest(
 const { reset, patches, patchFlag, inversePatches } = useMutative(
   [] as LayerItem[],
 )
-
-onSuccess(({ data }) => {
-  reset(data)
-  layers.value = []
-  data.forEach(item => {
-    layers.value.push(omit(item, 'overlays'))
-    console.log('item: ', item, layers.value)
-    // createLayer(item.overlays)
-  })
-})
 
 useMap(
   container,
@@ -169,7 +159,19 @@ useMap(
     })
     properties.mousetool = mousetool
 
-    send()
+    onSuccess(({ data }) => {
+      reset(data)
+      layers.value = []
+      data.forEach(item => {
+        layers.value.push(omit(item, 'overlays'))
+        // try {
+        //   createReactiveLayer(item.overlays, map)
+        // } catch (error) {
+        //   console.log('error: ', error)
+        // }
+      })
+      map.setFitView()
+    })
   },
 )
 

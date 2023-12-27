@@ -1,3 +1,4 @@
+import { generateRandomDecimal } from '@sp/shared/utils'
 import Mock from 'mockjs'
 import materialStrategies from './material'
 import type { LayerItem, MaterialItem, OverlayItem } from '../types/request'
@@ -39,6 +40,7 @@ function genList(
   params: GetMapParams,
 ) {
   if (!['11', '121', '122', '13'].includes(params.menuId)) return []
+  const keys = Object.keys(generationFunctions)
   const functions = Object.values(generationFunctions)
   return Array.from({ length: Mock.Random.natural(lMin, lMax) }).map(
     () =>
@@ -51,17 +53,19 @@ function genList(
         createTime: new Date().toLocaleString(),
         updateTime: new Date().toLocaleString(),
         overlays: Array.from({ length: Mock.Random.natural(oMin, oMax) }).map(
-          () =>
-            ({
+          () => {
+            const randomIndex = Mock.Random.natural(0, functions.length - 1)
+            return {
               id: Mock.Random.id(),
+              type: keys[randomIndex],
               name: Mock.Random.cword(),
               status: params.filter ? undefined : Mock.Random.boolean(),
               createTime: new Date().toLocaleString(),
               updateTime: new Date().toLocaleString(),
-              props:
-                functions[Mock.Random.natural(0, functions.length - 1)](params),
+              props: functions[randomIndex](params),
               details: genDetails(dMin, dMax, params),
-            }) as OverlayItem,
+            } as OverlayItem
+          },
         ),
       }) as LayerItem,
   )
@@ -79,11 +83,11 @@ function genDetails(min: number, max: number, params: GetMapParams) {
 }
 
 const generationFunctions = {
-  genMarker(_params: GetMapParams): Recordable {
+  Marker(_params: GetMapParams): Recordable {
     return {
       position: [
-        Mock.Random.float(103.95, 104.2, 6, 6),
-        Mock.Random.float(30.57, 30.7, 6, 6),
+        generateRandomDecimal(103.95, 104.2, 6),
+        generateRandomDecimal(30.57, 30.7, 6),
       ],
       title: Mock.Random.ctitle(),
     }

@@ -143,3 +143,13 @@ export function getOperationsFromDiff<T extends Recordable>(
 
   return operations
 }
+
+export function generateRandomDecimal(
+  min: number,
+  max: number,
+  decimalPlaces: number,
+): number {
+  const randomNum = Math.random() * (max - min) + min
+  const multiplier = Math.pow(10, decimalPlaces)
+  return Math.round(randomNum * multiplier) / multiplier
+}

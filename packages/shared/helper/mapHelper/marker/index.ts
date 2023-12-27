@@ -1,17 +1,17 @@
 import { isEmpty, isString, isObject } from 'lodash-es'
 import { createReactiveOverlay } from '../util'
-import type { ReactiveOverlay } from '#/request'
+import type { ReactiveOverlayExtData, OverlayItem } from '#/request'
 
-export const createMarker: ReactiveOverlay<'Marker'> = (
-  opts: AMap.MarkerOptions,
+export function createMarker(
+  opts: OverlayItem<'Marker'>,
   map?: AMap.Map,
-) => {
-  let instance = new AMap.Marker(opts)
+): ReactiveOverlayExtData<'Marker'> {
+  let instance = new AMap.Marker(opts.props)
   if (map) {
     map.add(instance)
   }
 
-  const { proxy, replaceSource } = createReactiveOverlay(opts, {
+  const { proxy, replaceSource } = createReactiveOverlay(opts.props, {
     position() {
       if (Array.isArray(proxy.position)) {
         instance.setPosition(proxy.position)
@@ -74,12 +74,21 @@ export const createMarker: ReactiveOverlay<'Marker'> = (
     },
   })
 
-  return {
-    proxy,
+  function replaceInstance(newInstance: AMap.Marker) {
+    instance.destroy()
+    instance = newInstance
+  }
+
+  opts.props = proxy
+
+  const ro: ReactiveOverlayExtData<'Marker'> = {
+    ...opts,
     instance,
     replaceSource,
-    replaceInstance(newInstance: AMap.Marker) {
-      instance = newInstance
-    },
+    replaceInstance,
   }
+
+  instance.setExtData(ro)
+
+  return ro
 }

@@ -88,36 +88,6 @@ export type OverlayType =
   | 'Text'
   | 'Image'
 
-export interface OverlayTypeInstance {
-  Marker: AMap.Marker
-  Polyline: AMap.Polyline | AMap.BezierCurve
-  Polygon: AMap.Polygon
-  Rectangle: AMap.Rectangle
-  Circle: AMap.Circle | AMap.Ellipse
-  Text: AMap.Text
-  Image: AMap.ImageLayer
-}
-
-export interface OverlayTypeOptions {
-  Marker: AMap.MarkerOptions
-  Polyline: AMap.PolylineOptions | AMap.BezierCurveOptions
-  Polygon: AMap.PolygonOptions
-  Rectangle: AMap.RectangleOptions
-  Circle: AMap.CircleOptions | AMap.EllipseOptions
-  Text: AMap.TextOptions
-  Image: AMap.ImageLayerOptions
-}
-
-export type ReactiveOverlay<T = OverlayType> = (
-  config: OverlayTypeOptions[T],
-  map?: AMap.Map,
-) => {
-  proxy: OverlayTypeOptions[T]
-  instance: OverlayTypeInstance[T]
-  replaceInstance: (instance: OverlayTypeInstance[T]) => void
-  replaceSource: (config: Partial<OverlayTypeOptions[T]>) => void
-}
-
 export interface OverlayItem<T = OverlayType> {
   id: string
   type: T
@@ -138,4 +108,31 @@ export interface LayerItem {
   status: boolean
   createTime: string
   updateTime: string
+}
+
+export interface OverlayTypeInstance {
+  Marker: AMap.Marker
+  Polyline: AMap.Polyline | AMap.BezierCurve
+  Polygon: AMap.Polygon
+  Rectangle: AMap.Rectangle
+  Circle: AMap.Circle | AMap.Ellipse
+  Text: AMap.Text
+  Image: AMap.ImageLayer
+}
+
+export interface OverlayTypeOptions {
+  Marker: AMap.MarkerOptions
+  Polyline: AMap.PolylineOptions | AMap.BezierCurveOptions
+  Polygon: AMap.PolygonOptions
+  Rectangle: AMap.RectangleOptions
+  Circle: AMap.CircleOptions | AMap.EllipseOptions
+  Text: AMap.TextOptions
+  Image: AMap.ImageLayerOptions
+}
+
+export interface ReactiveOverlayExtData<T extends OverlayType>
+  extends OverlayItem {
+  instance: OverlayTypeInstance[T]
+  replaceInstance: (instance: OverlayTypeInstance[T]) => void
+  replaceSource: (config: Partial<OverlayItem[T]>) => void
 }
