@@ -5,8 +5,6 @@
     class="h-full select-none"
     :modelValue="modelValue"
     @update:modelValue="$emit('update:modelValue', $event)"
-    @add="onChange"
-    @update="onChange"
   >
     <TransitionGroup name="sider">
       <template v-if="enableContextMenu">
@@ -64,13 +62,7 @@ import { components } from '@sp/shared/materials'
 import { toRawValue } from '@sp/shared/utils'
 import { cloneDeep } from 'lodash-es'
 import { VueDraggable } from 'vue-draggable-plus'
-import type { SortableEvent } from '#/components'
-import type {
-  MaterialItem,
-  SiderItem,
-  SiderPosition,
-  MutativeParams,
-} from '#/request'
+import type { MaterialItem, SiderItem, SiderPosition } from '#/request'
 
 withDefaults(
   defineProps<{
@@ -88,38 +80,11 @@ withDefaults(
 
 const emits = defineEmits<{
   (e: 'update:modelValue', newList: any[]): void
-  (e: 'mutative', params: MutativeParams<T>): void
   (e: 'edit', item: T, index: number): void
   (e: 'remove', position: SiderPosition, index: number, item: T): void
 }>()
 
 const attrs = useAttrs()
-
-function onChange(e: SortableEvent) {
-  let original: T
-  for (let symbol of Object.getOwnPropertySymbols(e.item)) {
-    if (symbol.toString() === 'Symbol(cloneElement)') {
-      original = (e.item as any)[symbol]
-    }
-  }
-  if (e.from.id === 'material') {
-    emits('mutative', {
-      name: 'add',
-      to: e.to.id,
-      newIndex: e.newIndex,
-      data: original!,
-    })
-  } else {
-    emits('mutative', {
-      name: 'move',
-      from: e.from.id,
-      to: e.to.id,
-      newIndex: e.newIndex,
-      oldIndex: e.oldIndex,
-      data: original!,
-    })
-  }
-}
 
 function onEdit(item: T, index: number) {
   emits('edit', cloneDeep(toRawValue(item)), index)

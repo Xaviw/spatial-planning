@@ -10,14 +10,13 @@
 
       <div class="flex-1 overflow-auto">
         <DraggableList
-          v-model="leftList"
+          v-model="list.left"
           group="sider"
           id="left"
           enableContextMenu
           :disabled="!selectedMenu"
           @edit="onEdit"
           @remove="onRemove"
-          @mutative="onMutative"
           :selectedId="selectedItem?.id"
           :filterMenu="selectedMenu"
         />
@@ -33,13 +32,12 @@
       <div class="flex-1 overflow-auto">
         <DraggableList
           id="right"
-          v-model="rightList"
+          v-model="list.right"
           group="sider"
           enableContextMenu
           :disabled="!selectedMenu"
           @edit="onEdit"
           @remove="onRemove"
-          @mutative="onMutative"
           :selectedId="selectedItem?.id"
           :filterMenu="selectedMenu"
         />
@@ -49,16 +47,15 @@
     <MaterialBar :inModal="false" :selectedMenu="selectedMenu" />
 
     <FormBar
-      :patches="patches"
-      :inversePatches="inversePatches"
-      :patchFlag="patchFlag"
+      :canUndo="canUndo"
+      :canRedo="canRedo"
       v-model:selected-menu="selectedMenu"
       :selectedItem="selectedItem"
       @cancel="onCancel"
       @confirm="onConfirm"
       @submit="onSubmit"
-      @revoke="onRevokeOrRedo(revoke)"
-      @redo="onRevokeOrRedo(redo)"
+      @undo="undo"
+      @redo="redo"
       @menuChange="onMenuChange"
       ref="formBarEl"
     />
@@ -73,55 +70,32 @@ import {
   MaterialBar,
   FormBar,
 } from '@sp/shared/helper/siderHelper'
-import { useMutative } from '@sp/shared/hooks'
 import { getOperationsFromDiff, modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { message } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
-import type {
-  SiderItem,
-  SiderPosition,
-  MaterialItem,
-  MutativeParams,
-} from '#/request'
+import type { SiderItem, SiderPosition, MaterialItem } from '#/request'
 
 const formBarEl = ref<ComponentExposed<typeof FormBar<SiderItem>> | null>(null)
 
-const {
-  data: leftList,
-  loading: leftLoading,
-  send: sendLeft,
-} = useRequest(
+const list = ref<{ left: SiderItem[]; right: SiderItem[] }>({
+  left: [],
+  right: [],
+})
+
+const { loading: leftLoading, send: sendLeft } = useRequest(
   (menuId: string) => getSider({ menuId, position: 'left', filter: false }),
-  {
-    initialData: [],
-    immediate: false,
-  },
+  { immediate: false },
 )
 
-const {
-  data: rightList,
-  loading: rightLoading,
-  send: sendRight,
-} = useRequest(
+const { loading: rightLoading, send: sendRight } = useRequest(
   (menuId: string) => getSider({ menuId, position: 'right', filter: false }),
-  {
-    initialData: [],
-    immediate: false,
-  },
+  { immediate: false },
 )
 
-const {
-  update,
-  patches,
-  inversePatches,
-  revoke,
-  redo,
-  patchFlag,
-  originalState: originalList,
-  reset,
-  state: currentList,
-} = useMutative<SiderItem[]>([])
+const { canRedo, canUndo, clear, redo, undo, history } = useRefHistory(list, {
+  deep: true,
+})
 
 const loading = computed(
   () => leftLoading.value || rightLoading.value || submitLoading.value,
@@ -132,7 +106,7 @@ const selectedItem = ref<SiderItem>()
 const selectedMenu = ref<string>()
 
 async function onMenuChange(id: string, oldId: string | undefined) {
-  if (patches.value.length) {
+  if (canUndo.value) {
     await modal('confirm', {
       title: '警告！',
       content:
@@ -143,7 +117,9 @@ async function onMenuChange(id: string, oldId: string | undefined) {
     })
   }
   Promise.all([sendLeft(id), sendRight(id)]).then(([leftData, rightData]) => {
-    reset([...leftData, ...rightData])
+    list.value.left = leftData
+    list.value.right = rightData
+    nextTick(clear)
   })
 }
 
@@ -163,38 +139,22 @@ async function onEdit(item: SiderItem) {
 }
 
 function onRemove(position: SiderPosition, index: number) {
-  if (position === 'left') {
-    leftList.value.splice(index, 1)
-    update(draft => {
-      draft.splice(index, 1)
-    })
-  } else {
-    rightList.value.splice(index, 1)
-    update(draft => {
-      draft.splice(leftList.value.length + index, 1)
-    })
-  }
+  list.value[position].splice(index, 1)
 }
 
 function onConfirm(data: SiderItem | MaterialItem, equal: boolean) {
   if (!equal) {
-    let index = leftList.value.findIndex(
+    let index = list.value.left.findIndex(
       item => item.id === selectedItem.value?.id,
     )
     if (index >= 0) {
-      leftList.value[index] = data as SiderItem
-      update(draft => {
-        draft[index] = data as SiderItem
-      })
+      list.value.left[index] = data as SiderItem
     } else {
-      index = rightList.value.findIndex(
+      index = list.value.right.findIndex(
         item => item.id === selectedItem.value?.id,
       )
       if (index >= 0) {
-        rightList.value[index] = data as SiderItem
-        update(draft => {
-          draft[leftList.value.length + index] = data as SiderItem
-        })
+        list.value.right[index] = data as SiderItem
       }
     }
   }
@@ -204,15 +164,17 @@ function onConfirm(data: SiderItem | MaterialItem, equal: boolean) {
 const submitLoading = ref(false)
 
 function onSubmit() {
+  submitLoading.value = true
+  const origin = history.value[history.value.length - 1].snapshot
   const operations = getOperationsFromDiff(
-    currentList.value,
-    originalList.value,
+    [...list.value.left, ...list.value.right],
+    [...origin.left, ...origin.right],
   )
   setSider(operations)
     .send()
     .then(() => {
       message.success('提交成功！')
-      reset(currentList.value)
+      clear()
     })
     .finally(() => {
       submitLoading.value = false
@@ -221,39 +183,6 @@ function onSubmit() {
 
 function onCancel() {
   selectedItem.value = undefined
-}
-function onMutative(e: MutativeParams<SiderItem>) {
-  const leftLength = leftList.value.length
-  if (e.name === 'add') {
-    update(state => {
-      const index = e.to === 'left' ? e.newIndex! : leftLength + e.newIndex!
-      state.splice(index, 0, { ...e.data, position: e.to } as SiderItem)
-    })
-  } else {
-    let oldIndex = e.oldIndex!
-    let newIndex = e.newIndex!
-    if (e.from === 'right' && e.to === 'left') {
-      // 事件触发时，左侧列表长度已经是添加了移动的元素
-      oldIndex += leftLength - 1
-    } else if (e.from === 'left' && e.to === 'right') {
-      // 事件触发时，左侧列表长度还未移除移动的元素
-      newIndex += leftLength - 1
-    } else if (e.from === 'right' && e.to === 'right') {
-      oldIndex += leftLength
-      newIndex += leftLength
-    }
-    update(state => {
-      state.splice(oldIndex, 1)
-      state.splice(newIndex, 0, { ...e.data, position: e.to as SiderPosition })
-    })
-  }
-}
-
-function onRevokeOrRedo(func: typeof revoke | typeof redo) {
-  const fullList = func()
-  const firstRightIndex = fullList.findIndex(item => item.position === 'right')
-  leftList.value = fullList.slice(0, firstRightIndex)
-  rightList.value = fullList.slice(firstRightIndex)
 }
 </script>
 

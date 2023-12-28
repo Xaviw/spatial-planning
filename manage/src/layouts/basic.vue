@@ -44,8 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 import menu from '../routes/menu'
+import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 
 const AppTitle = import.meta.env.VITE_TITLE
 const selectedKeys = ref<string[]>([])

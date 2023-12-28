@@ -70,7 +70,6 @@
 </template>
 
 <script setup lang="ts">
-import { useFullscreen } from '@vueuse/core'
 import type { VueInstance } from '@vueuse/core'
 import type { ColumnType } from 'ant-design-vue/es/table'
 

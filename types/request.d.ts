@@ -69,15 +69,6 @@ export interface OperationItem<T extends Recordable> {
   value?: T
 }
 
-export interface MutativeParams<T> {
-  name: 'add' | 'move' | 'remove'
-  from?: string
-  to?: string
-  oldIndex?: number
-  newIndex?: number
-  data: T
-}
-
 // -----------------地图-----------------
 export type OverlayType =
   | 'Marker'

@@ -2,29 +2,21 @@
   <div class="min-w-100 flex flex-1 flex-col bg-white p-4">
     <div class="mb-2 flex">
       <div class="flex-1">
-        <AButton
-          danger
-          :disabled="inversePatches.length - patchFlag <= 0"
-          @click="$emit('revoke')"
-        >
+        <AButton danger :disabled="!canUndo" @click="$emit('undo')">
           撤销
         </AButton>
         <AButton
           type="primary"
           class="mx-2"
           ghost
-          :disabled="patchFlag <= 0"
+          :disabled="!canRedo"
           @click="$emit('redo')"
         >
           重做
         </AButton>
       </div>
       <div>
-        <AButton
-          type="primary"
-          @click="onSubmit"
-          :disabled="patches.length - patchFlag <= 0"
-        >
+        <AButton type="primary" @click="onSubmit" :disabled="!canUndo">
           提交
         </AButton>
       </div>
@@ -69,6 +61,7 @@
           :key="(selectedItem as T).id"
           ref="componentFormEl"
           :inModal="inModal"
+          :id="(selectedItem as T).id"
         />
       </div>
 
@@ -95,14 +88,12 @@ import { modal } from '@sp/shared/utils'
 import { isEqual, cloneDeep } from 'lodash-es'
 import BaseForm from './baseForm.vue'
 import type { MaterialItem, SiderItem } from '#/request'
-import type { Patches } from 'mutative'
 
 const props = withDefaults(
   defineProps<{
     inModal?: boolean
-    patches: Patches[]
-    inversePatches: Patches[]
-    patchFlag: number
+    canUndo: boolean
+    canRedo: boolean
     selectedMenu?: string
     selectedItem?: T
   }>(),
@@ -112,7 +103,7 @@ const props = withDefaults(
 )
 
 const emits = defineEmits<{
-  (e: 'revoke'): void
+  (e: 'undo'): void
   (e: 'redo'): void
   (e: 'submit'): void
   (e: 'confirm', data: T, equal: boolean): void

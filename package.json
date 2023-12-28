@@ -43,7 +43,6 @@
     "dayjs": "^1.11.10",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
-    "mutative": "^0.7.2",
     "pinia": "^2.1.7",
     "vue": "^3.3.11",
     "vue-draggable-plus": "^0.2.7",

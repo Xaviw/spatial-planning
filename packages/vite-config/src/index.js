@@ -17,7 +17,7 @@ export default function ({ name } = {}) {
         vue(),
         vueJsx(),
         autoImport({
-          imports: ['vue', 'vue-router', 'pinia'],
+          imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
           vueTemplate: true,
           eslintrc: {
             enabled: true,

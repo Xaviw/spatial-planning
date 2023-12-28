@@ -9,8 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import { type MenuProps } from 'ant-design-vue'
 import { useMenuStore, type HandledMenu } from '../store/menu'
+import type { MenuProps } from 'ant-design-vue'
 
 const route = useRoute()
 const router = useRouter()

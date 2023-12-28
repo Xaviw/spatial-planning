@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="relative relative h-full min-w-400 flex">
     <Loading absolute :loading="loading" />
 
@@ -17,31 +17,11 @@
       <div class="mb-2 bg-white p-4">
         <div class="mb-2 flex">
           <div class="flex-1">
-            <AButton
-              danger
-              :disabled="inversePatches.length - patchFlag <= 0"
-              @click="$emit('revoke')"
-            >
-              撤销
-            </AButton>
-            <AButton
-              type="primary"
-              class="mx-2"
-              ghost
-              :disabled="patchFlag <= 0"
-              @click="$emit('redo')"
-            >
-              重做
-            </AButton>
+            <AButton danger>撤销</AButton>
+            <AButton type="primary" class="mx-2" ghost>重做</AButton>
           </div>
           <div>
-            <AButton
-              type="primary"
-              @click="onSubmit"
-              :disabled="patches.length - patchFlag <= 0"
-            >
-              提交
-            </AButton>
+            <AButton type="primary" @click="onSubmit">提交</AButton>
           </div>
         </div>
 
@@ -87,7 +67,7 @@
 import { getMap } from '@sp/shared/apis'
 import { Loading } from '@sp/shared/components'
 // import { createReactiveLayer } from '@sp/shared/helper/mapHelper'
-import { useMap, useMenuTree, useMutative } from '@sp/shared/hooks'
+import { useMap, useMenuTree } from '@sp/shared/hooks'
 import { useRequest } from 'alova'
 import { debounce, omit } from 'lodash-es'
 import Layer from './layer.vue'
@@ -117,10 +97,6 @@ const zoom = ref<number>()
 const { loading, onSuccess, send } = useRequest(
   (id: string) => getMap(id, true),
   { immediate: false, initialData: [] },
-)
-
-const { reset, patches, patchFlag, inversePatches } = useMutative(
-  [] as LayerItem[],
 )
 
 useMap(
@@ -160,7 +136,6 @@ useMap(
     properties.mousetool = mousetool
 
     onSuccess(({ data }) => {
-      reset(data)
       layers.value = []
       data.forEach(item => {
         layers.value.push(omit(item, 'overlays'))
@@ -194,4 +169,51 @@ function onZoomChange() {
 }
 
 function onSubmit() {}
+</script> -->
+<template>
+  <div class="flex flex-col">
+    {{ history.length }}
+    <AButton
+      @click="
+        () => {
+          list.push({ id: mock.Random.id(), value: mock.Random.increment() })
+          commit()
+        }
+      "
+    >
+      +
+    </AButton>
+    <AButton
+      @click="
+        () => {
+          list.pop()
+          commit()
+        }
+      "
+    >
+      -
+    </AButton>
+    <AButton @click="redo">redo</AButton>
+    <AButton @click="undo">undo</AButton>
+    <AButton @click="list[0].value = 999">change</AButton>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { toRawValue } from '@sp/shared/utils'
+import mock from 'mockjs'
+
+const list = ref<any[]>([])
+const { redo, undo, commit, history } = useRefHistory(list, { deep: true })
+watchArray(
+  list,
+  (newList, oldList, newItem, removedItem) => {
+    console.log('newList', toRawValue(newList))
+    console.log('oldList', toRawValue(oldList))
+    console.log('newItem', toRawValue(newItem))
+    console.log('removedItem', toRawValue(removedItem))
+    console.log('-------------------------')
+  },
+  { deep: true },
+)
 </script>

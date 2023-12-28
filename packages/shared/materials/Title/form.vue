@@ -32,9 +32,10 @@ import type { TitleProps } from '#/components'
 import type { Rule } from 'ant-design-vue/es/form'
 import { MaterialItem } from '#/request'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     inModal?: boolean
+    id: string
   }>(),
   {
     inModal: false,
@@ -68,6 +69,7 @@ const { open, close } = useModal('TitleDetailEditor', {
 function openDetail() {
   open(
     h(SiderModalEditor, {
+      id: props.id,
       modalTitle:
         formModel.value.modalTitle || `${formModel.value.title}详情内容`,
       modalData: cloneDeep(formModel.value.modalData),

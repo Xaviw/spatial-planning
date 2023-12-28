@@ -14,7 +14,6 @@
             enableContextMenu
             @edit="onEdit"
             @remove="onRemove"
-            @mutative="onMutative"
             :selectedId="selectedItem?.id"
           />
         </div>
@@ -24,15 +23,14 @@
 
       <FormBar
         inModal
-        :patches="patches"
-        :inversePatches="inversePatches"
-        :patchFlag="patchFlag"
+        :canRedo="canRedo"
+        :canUndo="canUndo"
         :selectedItem="selectedItem"
         @cancel="onCancel"
         @confirm="onConfirm"
         @submit="onSubmit"
-        @redo="onRevokeOrRedo(redo)"
-        @revoke="onRevokeOrRedo(revoke)"
+        @redo="redo"
+        @undo="undo"
         ref="formBarEl"
       />
     </div>
@@ -42,15 +40,15 @@
 <script setup lang="ts">
 import { ContentWrapper } from '@sp/shared/components'
 import { FormBar } from '@sp/shared/helper/siderHelper'
-import { useMutative } from '@sp/shared/hooks'
 import { modal } from '@sp/shared/utils'
 import { isEqual, cloneDeep } from 'lodash-es'
 import DraggableList from './draggableList.vue'
 import MaterialBar from './materialBar.vue'
-import type { MaterialItem, MutativeParams } from '#/request'
+import type { MaterialItem } from '#/request'
 
 const props = withDefaults(
   defineProps<{
+    id: string
     modalTitle: string
     modalWidth?: string
     modalData: MaterialItem[]
@@ -70,17 +68,22 @@ const formBarEl = ref<ComponentExposed<typeof FormBar<MaterialItem>> | null>(
   null,
 )
 
-const { redo, revoke, reset, patchFlag, inversePatches, update, patches } =
-  useMutative<MaterialItem[]>([])
-
 const list = ref<MaterialItem[]>([])
 
-watchEffect(() => {
-  if (props.modalData?.length) {
-    reset(cloneDeep(props.modalData))
-    list.value = cloneDeep(props.modalData)
-  }
+const { redo, undo, canRedo, canUndo, clear } = useRefHistory(list, {
+  deep: true,
 })
+
+watch(
+  () => props.id,
+  id => {
+    if (id) {
+      list.value = cloneDeep(props.modalData)
+      nextTick(clear)
+    }
+  },
+  { immediate: true },
+)
 
 const selectedItem = ref<MaterialItem>()
 
@@ -101,9 +104,6 @@ async function onEdit(item: MaterialItem) {
 
 function onRemove(_position: string, index: number) {
   list.value.splice(index, 1)
-  update(draft => {
-    draft.splice(index, 1)
-  })
 }
 
 function onConfirm(data: MaterialItem, equal: boolean) {
@@ -113,9 +113,6 @@ function onConfirm(data: MaterialItem, equal: boolean) {
     )
     if (index >= 0) {
       list.value[index] = data
-      update(draft => {
-        draft[index] = data
-      })
     }
   }
 
@@ -126,22 +123,10 @@ function onCancel() {
   selectedItem.value = undefined
 }
 
-function onMutative(e: MutativeParams<MaterialItem>) {
-  if (e.name === 'add') {
-    update(draft => {
-      draft.splice(e.newIndex!, 0, e.data)
-    })
-  } else if (e.name === 'move') {
-    update(draft => {
-      draft.splice(e.oldIndex!, 1)
-      draft.splice(e.newIndex!, 0, e.data)
-    })
-  }
-}
-
 function onSubmit() {
-  if (patches.value.length - patchFlag.value) {
+  if (canUndo.value) {
     emits('confirm', list.value)
+    clear()
   }
   emits('close')
 }
@@ -156,17 +141,12 @@ async function onClose() {
       })
     }
   }
-  if (patches.value.length - patchFlag.value) {
+  if (canUndo.value) {
     await modal('confirm', {
       title: '提示！',
       content: '您当前的修改还未提交，关闭弹窗后修改不会保存，是否确定关闭？',
     })
   }
   emits('close')
-}
-
-function onRevokeOrRedo(func: typeof revoke | typeof redo) {
-  const state = func()
-  list.value = [...state]
 }
 </script>

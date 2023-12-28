@@ -99,10 +99,10 @@ import {
   moveMenu,
 } from '@sp/shared/apis'
 import { Loading } from '@sp/shared/components'
-import { modal } from '@sp/shared/utils'
+import { modal, loopMenu } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { Form, message } from 'ant-design-vue'
-import { loop, add, move, remove, update } from './helper'
+import { add, move, remove, update } from './helper'
 import type { MenuItem } from '#/request'
 import type {
   EventDataNode,
@@ -207,10 +207,14 @@ async function onAdd(id: string = '-1') {
   cancel()
   let parentId,
     parentName = '根节点'
-  loop(treeData.value, id, item => {
-    parentId = item.id
-    parentName = item.name
-  })
+  loopMenu(
+    treeData.value,
+    item => {
+      parentId = item.id
+      parentName = item.name
+    },
+    id,
+  )
   selectedKeys.value = ['-1', id]
   resetForm()
   updateForm({ parentId, parentName })
@@ -233,23 +237,23 @@ function onDrop(e: AntTreeNodeDropEvent) {
     currentIndex: number,
     currentParent: string | undefined
 
-  loop(
+  loopMenu(
     treeData.value,
-    e.dragNode.key as string,
     (_item, index, _data, parent) => {
       oldIndex = index
       oldParent = parent?.id
     },
+    e.dragNode.key as string,
   )
 
   if (e.dropToGap) {
     currentIndex = e.dropPosition
-    loop(
+    loopMenu(
       treeData.value,
-      e.node.key as string,
       (_item, _index, _data, parent) => {
         currentParent = parent?.id
       },
+      e.node.key as string,
     )
   } else {
     currentIndex = 0
@@ -271,10 +275,15 @@ function hasModify() {
   const id = selectedKeys.value[0]
   let flag = false
   if (!id || id === '-1') return flag
-  loop(treeData.value, id, item => {
-    flag =
-      item.name !== formData.value.name || item.status !== formData.value.status
-  })
+  loopMenu(
+    treeData.value,
+    item => {
+      flag =
+        item.name !== formData.value.name ||
+        item.status !== formData.value.status
+    },
+    id,
+  )
   return flag
 }
 

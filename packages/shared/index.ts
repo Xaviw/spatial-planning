@@ -1,7 +1,6 @@
 import '../../types/global'
 import '../../types/loca'
-import '../../types/amap'
-import '../../types/request'
+import '../../types/viteConfig'
 import '../../types/auto-import-client'
 import '../../types/auto-import-manage'
 import '../../types/auto-components-client'

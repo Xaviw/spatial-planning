@@ -2,7 +2,6 @@
 // import { createMarker } from '@sp/shared/helper/mapHelper'
 import { useMap } from '@sp/shared/hooks'
 import { debounce } from 'lodash-es'
-import { defineStore } from 'pinia'
 import { MaybeRef, ref } from 'vue'
 // import type { ReactiveOverlayExtData, OverlayType } from '#/request'
 import type { ToolKeys } from '../views/map/data'
