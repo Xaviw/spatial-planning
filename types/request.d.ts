@@ -1,5 +1,7 @@
 import { Method } from 'alova'
 import { ResCode } from '../packages/shared/utils/enums'
+import type { Loca } from './loca'
+import type { AMap } from '@amap/amap-jsapi-types'
 
 export interface Res<T> {
   code: ResCode
@@ -79,6 +81,52 @@ export type OverlayType =
   | 'Text'
   | 'Image'
 
+export type MarkerProps = Pick<
+  AMap.MarkerOptions,
+  | 'content'
+  | 'title'
+  | 'zIndex'
+  | 'offset'
+  | 'angle'
+  | 'size'
+  | 'zooms'
+  | 'label'
+  | 'extData'
+> & {
+  position?: AMap.Vector2
+  icon?: string | AMap.IconOpts
+  anchor?:
+    | 'top-left'
+    | 'top-center'
+    | 'top-right'
+    | 'middle-left'
+    | 'center'
+    | 'middle-right'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right'
+}
+
+export interface OverlayTypeInstance {
+  Marker: AMap.Marker
+  Polyline: AMap.Polyline | AMap.BezierCurve
+  Polygon: AMap.Polygon
+  Rectangle: AMap.Rectangle
+  Circle: AMap.Circle | AMap.Ellipse
+  Text: AMap.Text
+  Image: AMap.ImageLayer
+}
+
+export interface OverlayTypeOptions {
+  Marker: MarkerProps
+  Polyline: AMap.PolylineOptions | AMap.BezierCurveOptions
+  Polygon: AMap.PolygonOptions
+  Rectangle: AMap.RectangleOptions
+  Circle: AMap.CircleOptions | AMap.EllipseOptions
+  Text: AMap.TextOptions
+  Image: AMap.ImageLayerOptions
+}
+
 export interface OverlayItem<T = OverlayType> {
   id: string
   type: T
@@ -99,26 +147,6 @@ export interface LayerItem {
   status: boolean
   createTime: string
   updateTime: string
-}
-
-export interface OverlayTypeInstance {
-  Marker: AMap.Marker
-  Polyline: AMap.Polyline | AMap.BezierCurve
-  Polygon: AMap.Polygon
-  Rectangle: AMap.Rectangle
-  Circle: AMap.Circle | AMap.Ellipse
-  Text: AMap.Text
-  Image: AMap.ImageLayer
-}
-
-export interface OverlayTypeOptions {
-  Marker: AMap.MarkerOptions
-  Polyline: AMap.PolylineOptions | AMap.BezierCurveOptions
-  Polygon: AMap.PolygonOptions
-  Rectangle: AMap.RectangleOptions
-  Circle: AMap.CircleOptions | AMap.EllipseOptions
-  Text: AMap.TextOptions
-  Image: AMap.ImageLayerOptions
 }
 
 export interface ReactiveOverlayExtData<T extends OverlayType>

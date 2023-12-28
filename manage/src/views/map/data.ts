@@ -1,4 +1,5 @@
 import type { LayerItem, MaterialItem, OverlayItem } from '#/request'
+import type { AMap } from '@amap/amap-jsapi-types'
 
 export type ToolKeys =
   | keyof Pick<

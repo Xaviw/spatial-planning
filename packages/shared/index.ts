@@ -1,5 +1,4 @@
 import '../../types/global'
-import '../../types/loca'
 import '../../types/viteConfig'
 import '../../types/auto-import-client'
 import '../../types/auto-import-manage'

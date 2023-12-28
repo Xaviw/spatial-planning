@@ -1,5 +1,6 @@
 import AMapLoader from '@amap/amap-jsapi-loader'
-import '@amap/amap-jsapi-types'
+import type { Loca } from '#/loca'
+import type { AMap } from '@amap/amap-jsapi-types'
 import type { MaybeRef, Ref } from 'vue'
 
 interface UseMapOptions<T extends boolean> {

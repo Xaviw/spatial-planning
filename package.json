@@ -85,7 +85,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@wangeditor/editor-for-vue@5.1.12": "patches/@wangeditor__editor-for-vue@5.1.12.patch"
+      "@wangeditor/editor-for-vue@5.1.12": "patches/@wangeditor__editor-for-vue@5.1.12.patch",
+      "@amap/amap-jsapi-types@0.0.13": "patches/@amap__amap-jsapi-types@0.0.13.patch"
     }
   }
 }
