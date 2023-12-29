@@ -41,11 +41,13 @@
     "alova": "^2.13.1",
     "ant-design-vue": "^4.0.6",
     "dayjs": "^1.11.10",
+    "echarts": "^5.4.3",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "pinia": "^2.1.7",
     "vue": "^3.3.11",
     "vue-draggable-plus": "^0.2.7",
+    "vue-echarts": "^6.6.8",
     "vue-router": "^4.2.5",
     "vue3-colorpicker": "^2.2.3"
   },

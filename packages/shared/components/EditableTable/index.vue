@@ -95,8 +95,8 @@ import { useTableScroll } from '@sp/shared/hooks'
 import { message, Table } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import { VueDraggable } from 'vue-draggable-plus'
-import type { SortableEvent } from '#/components'
-import type { OperationType } from '#/request'
+import type { OperationType } from '#/business'
+import type { SortableEvent } from '#/materials'
 import type { ColumnType } from 'ant-design-vue/es/table'
 
 const props = withDefaults(

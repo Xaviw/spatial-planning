@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
-import type { FileListItem } from '#/components'
+import type { FileListItem } from '#/materials'
 
 const props = withDefaults(
   defineProps<{

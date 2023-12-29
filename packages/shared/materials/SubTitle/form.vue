@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { Form } from 'ant-design-vue'
-import type { SubTitleProps } from '#/components'
+import type { SubTitleProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<SubTitleProps>>({

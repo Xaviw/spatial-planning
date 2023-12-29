@@ -1,6 +1,7 @@
 import 'alova/GlobalFetch'
 import { request } from '@sp/shared/utils'
-import type { MenuItem, RequestMeta } from '#/request'
+import type { MenuItem } from '#/business'
+import type { RequestMeta } from '#/request'
 
 export function getMenu(
   /** 是否筛选掉禁用的菜单 */

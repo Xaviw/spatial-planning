@@ -62,7 +62,7 @@ import { components } from '@sp/shared/materials'
 import { toRawValue } from '@sp/shared/utils'
 import { cloneDeep } from 'lodash-es'
 import { VueDraggable } from 'vue-draggable-plus'
-import type { MaterialItem, SiderItem, SiderPosition } from '#/request'
+import type { MaterialItem, SiderItem, SiderPosition } from '#/business'
 
 withDefaults(
   defineProps<{

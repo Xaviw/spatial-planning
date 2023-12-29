@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DescriptionItemProps } from '#/components'
+import type { DescriptionItemProps } from '#/materials'
 
 const props = withDefaults(
   defineProps<{

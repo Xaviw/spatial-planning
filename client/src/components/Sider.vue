@@ -16,7 +16,7 @@ import { useLoading } from '@sp/shared/hooks'
 import { components } from '@sp/shared/materials'
 import { useWatcher } from 'alova'
 import { useMenuStore } from '../store/menu'
-import type { SiderPosition } from '#/request'
+import type { SiderPosition } from '#/business'
 
 const props = defineProps<{
   position: SiderPosition

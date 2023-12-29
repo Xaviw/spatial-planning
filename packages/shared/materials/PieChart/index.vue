@@ -9,7 +9,7 @@ import { TooltipComponent, LegendComponent } from 'echarts/components'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
-import type { PieChartProps } from '#/components'
+import type { PieChartProps } from '#/materials'
 import type { PieSeriesOption } from 'echarts/charts'
 import type {
   TooltipComponentOption,

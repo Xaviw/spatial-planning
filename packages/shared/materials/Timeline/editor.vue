@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { ColorPicker } from 'vue3-colorpicker'
 import 'vue3-colorpicker/style.css'
-import type { TimelineItem } from '#/components'
+import type { TimelineItem } from '#/materials'
 
 const props = withDefaults(
   defineProps<{

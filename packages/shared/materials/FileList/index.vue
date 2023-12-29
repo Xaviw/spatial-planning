@@ -47,7 +47,7 @@
 import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
 import { MediaEnum } from '@sp/shared/utils'
 import FilePreview from './FilePreview.vue'
-import type { FileListProps, FileListItem } from '#/components'
+import type { FileListProps, FileListItem } from '#/materials'
 
 interface ResolvedFileItem extends FileListItem {
   icon?: string

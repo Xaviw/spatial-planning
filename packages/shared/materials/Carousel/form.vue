@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
-import type { CarouselProps } from '#/components'
+import type { CarouselProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<CarouselProps>>({

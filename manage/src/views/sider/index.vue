@@ -74,7 +74,7 @@ import { getOperationsFromDiff, modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { message } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
-import type { SiderItem, SiderPosition, MaterialItem } from '#/request'
+import type { SiderItem, SiderPosition, MaterialItem } from '#/business'
 
 const formBarEl = ref<ComponentExposed<typeof FormBar<SiderItem>> | null>(null)
 

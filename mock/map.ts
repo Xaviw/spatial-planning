@@ -1,7 +1,12 @@
 import { generateRandomDecimal } from '@sp/shared/utils'
 import Mock from 'mockjs'
 import materialStrategies from './material'
-import type { LayerItem, MaterialItem, OverlayItem } from '../types/request'
+import type {
+  LayerItem,
+  MaterialItem,
+  OverlayItem,
+  OverlayType,
+} from '../types/business'
 import type { GetMapParams } from '@sp/shared/apis'
 import type { MockMethod } from 'vite-plugin-mock'
 
@@ -64,10 +69,10 @@ function genList(
               updateTime: new Date().toLocaleString(),
               props: functions[randomIndex](params),
               details: genDetails(dMin, dMax, params),
-            } as OverlayItem
+            } as OverlayItem<OverlayType>
           },
         ),
-      }) as LayerItem,
+      }) as LayerItem<OverlayType>,
   )
 }
 

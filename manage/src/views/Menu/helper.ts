@@ -1,9 +1,11 @@
-import { loopMenu } from '@sp/shared/utils'
-import type { MenuItem } from '#/request'
+import { loop } from '@sp/shared/utils'
+import type { MenuItem } from '#/business'
 
 export function remove(treeData: MenuItem[], id: string) {
-  loopMenu(
+  loop(
     treeData,
+    'id',
+    'children',
     (_item, index, data) => {
       data.splice(index, 1)
     },
@@ -24,8 +26,10 @@ export function move(
   let node: MenuItem | undefined
 
   if (oldParent) {
-    loopMenu(
+    loop(
       treeData,
+      'id',
+      'children',
       item => {
         node = item.children![oldIndex]
         item.children?.splice(oldIndex, 1)
@@ -42,8 +46,10 @@ export function move(
   }
 
   if (currentParent) {
-    loopMenu(
+    loop(
       treeData,
+      'id',
+      'children',
       item => {
         item.children = item.children || []
         item.children.splice(currentIndex, 0, node!)
@@ -56,8 +62,10 @@ export function move(
 }
 
 export function update(treeData: MenuItem[], data: MenuItem) {
-  loopMenu(
+  loop(
     treeData,
+    'id',
+    'children',
     (item, index, arr) => {
       arr[index] = {
         ...item,
@@ -79,8 +87,10 @@ export function add(treeData: MenuItem[], data: MenuItem) {
       updateTime,
     })
   } else {
-    loopMenu(
+    loop(
       treeData,
+      'id',
+      'children',
       item => {
         item.children = item.children || []
         item.children.push({

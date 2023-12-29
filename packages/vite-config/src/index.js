@@ -36,11 +36,6 @@ export default function ({ name } = {}) {
           prodEnabled: env.PROD && env.VITE_MOCK_ENABLE,
         }),
       ],
-      resolve: {
-        alias: {
-          '@/': '/src/',
-        },
-      },
     }
   })
 }

@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { Form } from 'ant-design-vue'
 import Editor from './editor.vue'
-import type { CollapseProps } from '#/components'
+import type { CollapseProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const editorRef = ref<InstanceType<typeof Editor> | null>(null)

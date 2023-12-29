@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TableProps } from '#/components'
+import type { TableProps } from '#/materials'
 import type { ColumnsType } from 'ant-design-vue/es/table'
 
 const props = withDefaults(defineProps<TableProps>(), {

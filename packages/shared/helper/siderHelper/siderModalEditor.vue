@@ -44,7 +44,7 @@ import { modal } from '@sp/shared/utils'
 import { isEqual, cloneDeep } from 'lodash-es'
 import DraggableList from './draggableList.vue'
 import MaterialBar from './materialBar.vue'
-import type { MaterialItem } from '#/request'
+import type { MaterialItem } from '#/business'
 
 const props = withDefaults(
   defineProps<{

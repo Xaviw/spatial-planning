@@ -30,7 +30,7 @@ import { CssSizeInput } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import DataEditor from './dataEditor.vue'
 import Editor from './editor.vue'
-import type { BarChartItem, BarChartProps } from '#/components'
+import type { BarChartItem, BarChartProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<BarChartProps>>({

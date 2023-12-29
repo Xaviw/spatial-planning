@@ -1,4 +1,9 @@
-import type { LayerItem, MaterialItem, OverlayItem } from '#/request'
+import type {
+  LayerItem,
+  MaterialItem,
+  OverlayItem,
+  OverlayType,
+} from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 export type ToolKeys =
@@ -21,7 +26,7 @@ export interface ToolItem {
 }
 
 export interface MapMutativeState {
-  layers: Omit<LayerItem, 'overlays'>[]
-  overlays: Omit<OverlayItem, 'details'>[]
+  layers: Omit<LayerItem<OverlayType>, 'overlays'>[]
+  overlays: Omit<OverlayItem<OverlayType>, 'details'>[]
   details: MaterialItem[]
 }

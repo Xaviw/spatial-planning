@@ -87,7 +87,7 @@ import { componentForms } from '@sp/shared/materials'
 import { modal } from '@sp/shared/utils'
 import { isEqual, cloneDeep } from 'lodash-es'
 import BaseForm from './baseForm.vue'
-import type { MaterialItem, SiderItem } from '#/request'
+import type { MaterialItem, SiderItem } from '#/business'
 
 const props = withDefaults(
   defineProps<{

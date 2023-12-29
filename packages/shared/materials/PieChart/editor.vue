@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ProgressItem } from '#/components'
+import type { ProgressItem } from '#/materials'
 
 const props = withDefaults(
   defineProps<{

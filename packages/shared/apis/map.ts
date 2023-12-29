@@ -2,11 +2,12 @@ import 'alova/GlobalFetch'
 import { request } from '@sp/shared/utils'
 import type {
   OverlayItem,
-  RequestMeta,
   OperationItem,
   LayerItem,
   MaterialItem,
-} from '#/request'
+  OverlayType,
+} from '#/business'
+import type { RequestMeta } from '#/request'
 
 export interface GetMapParams {
   menuId: string
@@ -14,13 +15,13 @@ export interface GetMapParams {
 }
 
 export interface SetMapParams {
-  layers: OperationItem<Omit<LayerItem, 'overlays'>>[]
-  overlays: OperationItem<Omit<OverlayItem, 'details'>>[]
+  layers: OperationItem<Omit<LayerItem<OverlayType>, 'overlays'>>[]
+  overlays: OperationItem<Omit<OverlayItem<OverlayType>, 'details'>>[]
   details: OperationItem<MaterialItem>[]
 }
 
 export function getMap(menuId: string, filter: boolean) {
-  const method = request.Get<LayerItem[]>('/map', {
+  const method = request.Get<LayerItem<OverlayType>[]>('/map', {
     params: { filter, menuId },
   })
   method.meta = { errorMessageMode: 'none' } as RequestMeta

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DescriptionProps } from '#/components'
+import type { DescriptionProps } from '#/materials'
 
 const props = withDefaults(defineProps<DescriptionProps>(), {
   data: () => [],

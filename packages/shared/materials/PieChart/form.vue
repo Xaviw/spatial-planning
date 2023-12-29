@@ -68,7 +68,7 @@
 import { CssSizeInput } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import Editor from './editor.vue'
-import type { PieChartProps } from '#/components'
+import type { PieChartProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<PieChartProps>>({

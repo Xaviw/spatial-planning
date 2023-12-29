@@ -1,4 +1,4 @@
-import type { SiderItem, SiderComponents } from '#/request'
+import type { SiderItem, SiderComponents } from '#/business'
 
 export const componentTypes: { label: string; value: SiderComponents }[] = [
   { label: '大标题', value: 'Title' },

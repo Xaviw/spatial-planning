@@ -28,9 +28,9 @@ import { SiderModalEditor } from '@sp/shared/helper/siderHelper'
 import { useModal } from '@sp/shared/hooks'
 import { Form } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
-import type { TitleProps } from '#/components'
+import type { TitleProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
-import { MaterialItem } from '#/request'
+import { MaterialItem } from '#/business'
 
 const props = withDefaults(
   defineProps<{

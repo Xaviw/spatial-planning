@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
-import type { DataCardProps } from '#/components'
+import type { DataCardProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<DataCardProps>>({

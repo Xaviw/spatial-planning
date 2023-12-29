@@ -1,9 +1,9 @@
 import { getMenu } from '@sp/shared/apis'
-import { loopMenu } from '@sp/shared/utils'
+import { loop } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { cloneDeep } from 'lodash-es'
 import { ref } from 'vue'
-import type { MenuItem } from '#/request'
+import type { MenuItem } from '#/business'
 
 export function useMenuTree(disableParent: boolean = true) {
   const menuSearchValue = ref<string>()
@@ -20,7 +20,7 @@ export function useMenuTree(disableParent: boolean = true) {
     const data = cloneDeep(menuData.value) as (MenuItem & {
       disabled?: boolean
     })[]
-    loopMenu(data, item => {
+    loop(data, 'id', 'children', item => {
       if (item.children?.length) {
         ;(item as MenuItem & { disabled: boolean }).disabled = true
       }

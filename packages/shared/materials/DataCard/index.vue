@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
-import type { DataCardProps } from '#/components'
+import type { DataCardProps } from '#/materials'
 
 withDefaults(defineProps<DataCardProps>(), {
   imgWidth: '36px',

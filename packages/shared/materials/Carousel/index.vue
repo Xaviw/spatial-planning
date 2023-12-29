@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
-import type { CarouselProps } from '#/components'
+import type { CarouselProps } from '#/materials'
 
 const props = withDefaults(defineProps<CarouselProps>(), {
   data: () => [],

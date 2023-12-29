@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SubTitleProps } from '#/components'
+import type { SubTitleProps } from '#/materials'
 
 defineProps<SubTitleProps>()
 </script>

@@ -1,3 +1,4 @@
+<!-- prettier-ignore -->
 <template>
   <div class="h-full flex">
     <Loading :loading="getting || setting || moving || removing" absolute />
@@ -23,11 +24,11 @@
           draggable
           autoExpandParent
           blockNode
-          :treeData="treeData"
           :fieldNames="{ title: 'name', key: 'id' }"
           :selectedKeys="selectedKeys"
           @click="onMenuClick"
           @drop="onDrop"
+          :treeData="(treeData as unknown as DataNode[])"
           class="w-auto!"
         >
           <template #title="item">
@@ -99,15 +100,16 @@ import {
   moveMenu,
 } from '@sp/shared/apis'
 import { Loading } from '@sp/shared/components'
-import { modal, loopMenu } from '@sp/shared/utils'
+import { modal, loop } from '@sp/shared/utils'
 import { useRequest } from 'alova'
 import { Form, message } from 'ant-design-vue'
 import { add, move, remove, update } from './helper'
-import type { MenuItem } from '#/request'
+import type { MenuItem } from '#/business'
 import type {
   EventDataNode,
   AntTreeNodeDropEvent,
 } from 'ant-design-vue/es/tree'
+import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
 
 // 新增时值为['-1', parentKey || '-1'(根目录时)]
 const selectedKeys = ref<string[]>([])
@@ -207,8 +209,10 @@ async function onAdd(id: string = '-1') {
   cancel()
   let parentId,
     parentName = '根节点'
-  loopMenu(
+  loop(
     treeData.value,
+    'id',
+    'children',
     item => {
       parentId = item.id
       parentName = item.name
@@ -237,8 +241,10 @@ function onDrop(e: AntTreeNodeDropEvent) {
     currentIndex: number,
     currentParent: string | undefined
 
-  loopMenu(
+  loop(
     treeData.value,
+    'id',
+    'children',
     (_item, index, _data, parent) => {
       oldIndex = index
       oldParent = parent?.id
@@ -248,8 +254,10 @@ function onDrop(e: AntTreeNodeDropEvent) {
 
   if (e.dropToGap) {
     currentIndex = e.dropPosition
-    loopMenu(
+    loop(
       treeData.value,
+      'id',
+      'children',
       (_item, _index, _data, parent) => {
         currentParent = parent?.id
       },
@@ -275,8 +283,10 @@ function hasModify() {
   const id = selectedKeys.value[0]
   let flag = false
   if (!id || id === '-1') return flag
-  loopMenu(
+  loop(
     treeData.value,
+    'id',
+    'children',
     item => {
       flag =
         item.name !== formData.value.name ||

@@ -1,6 +1,6 @@
 import 'alova/GlobalFetch'
 import { request } from '@sp/shared/utils'
-import type { SiderPosition, SiderItem, OperationItem } from '#/request'
+import type { SiderPosition, SiderItem, OperationItem } from '#/business'
 
 export interface GetSiderParams {
   menuId: string

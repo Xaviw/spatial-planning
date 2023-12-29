@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { Editor } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
-import type { CollapseProps } from '#/components'
+import type { CollapseProps } from '#/materials'
 
 const props = withDefaults(defineProps<CollapseProps>(), {
   defaultOpen: false,

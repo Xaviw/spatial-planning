@@ -216,7 +216,7 @@ export interface FileListProps {
    * @default 8px
    */
   gap?: string
-  data: FileItem[]
+  data: FileListItem[]
 }
 
 export interface CarouselProps {

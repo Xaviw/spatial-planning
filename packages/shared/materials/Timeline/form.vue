@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { Form } from 'ant-design-vue'
 import Editor from './editor.vue'
-import type { TimelineProps } from '#/components'
+import type { TimelineProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<TimelineProps>>({

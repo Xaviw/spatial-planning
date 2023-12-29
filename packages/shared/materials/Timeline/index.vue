@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TimelineProps } from '#/components'
+import type { TimelineProps } from '#/materials'
 
 const props = withDefaults(defineProps<TimelineProps>(), {
   data: () => [],

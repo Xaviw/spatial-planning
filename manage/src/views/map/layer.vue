@@ -1,160 +1,108 @@
+<!-- prettier-ignore -->
 <template>
-  <div>
-    <div class="flex items-center justify-between px-4 py-2">
-      <h1>图层</h1>
-      <AButton type="primary" size="middle">新增</AButton>
+  <div class="p-2">
+    <div class="mb-2 flex items-center justify-between">
+      <span>图层</span>
+      <AButton type="primary" size="small" @click="onAdd" :disabled="disabled">新增</AButton>
     </div>
-    <EditableTable
+    <VueDraggable
       :modelValue="modelValue"
-      @update:modelValue="
-        $emit('update:modelValue', $event as Omit<LayerItem, 'overlays'>[])
-      "
-      :columns="columns"
-      :indexColumn="false"
-      size="small"
+      @update:modelValue="$emit('update:modelValue', $event)"
+      target="tbody"
+      class="max-h-60 overflow-auto"
     >
-      <template #bodyCell="{ column, record, text, editableData }">
-        <template v-if="column.dataIndex === 'visible'">
-          <ATooltip title="显示/隐藏">
-            <i
-              class="i-ant-design:eye-outlined cursor-pointer"
-              v-if="!visibleIds.includes(record.id)"
-              @click="onVisibleChange('show', record.id)"
-            />
-            <i
-              class="i-ant-design:eye-invisible-outlined cursor-pointer"
-              v-else
-              @click="onVisibleChange('hide', record.id)"
-            />
-          </ATooltip>
-        </template>
-
-        <template v-if="column.dataIndex === 'name'">
-          <AInput
-            v-if="editableData[record.id]"
-            v-model:value="editableData[record.id][column.dataIndex]"
-            style="margin: -5px 0; width: '100%;"
-          />
-          <template v-else>
-            {{ text }}
+      <table class="w-full">
+        <thead class="sticky top-0 z-1">
+          <tr class="outline-1 outline-gray-3 outline">
+            <th>显隐</th>
+            <th>名称</th>
+            <th>作为图例</th>
+            <th>图例</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-if="modelValue?.length">
+            <LayerItemVue
+              v-for="layer of modelValue"
+              :key="layer.id"
+              :layer="layer"
+              :removeable="modelValue.length > 1"
+              @remove="onRemove"
+              @save="onSave"
+            >
+              <template #default="{ visible }">
+                <Marker
+                  v-for="overlay of layer.overlays"
+                  :key="overlay.id"
+                  :visible="visible"
+                  :layerId="layer.id"
+                  :props="(overlay.props as MarkerProps)"
+                  :id="overlay.id"
+                  :details="overlay.details"
+                />
+              </template>
+            </LayerItemVue>
           </template>
-        </template>
-
-        <template v-if="column.dataIndex === 'asLegend'">
-          <ASwitch
-            v-if="editableData[record.id]"
-            v-model:checked="editableData[record.id][column.dataIndex]"
-            checkedChildren="是"
-            unCheckedChildren="否"
-          />
-          <ASwitch
-            v-else
-            :checked="text"
-            disabled
-            checkedChildren="是"
-            unCheckedChildren="否"
-          />
-        </template>
-
-        <template v-if="column.dataIndex === 'legendImg'">
-          <AImage :src="text" :fallback="ImageFailed" class="h-12 w-12" />
-        </template>
-
-        <template v-if="column.dataIndex === 'status'">
-          <ASwitch
-            v-if="editableData[record.id]"
-            v-model:checked="editableData[record.id][column.dataIndex]"
-            checkedChildren="启用"
-            unCheckedChildren="禁用"
-          />
-          <ASwitch
-            v-else
-            :checked="text"
-            disabled
-            checkedChildren="启用"
-            unCheckedChildren="禁用"
-          />
-        </template>
-      </template>
-    </EditableTable>
+          <tr v-else>
+            <th :colspan="6">
+              <AEmpty :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </VueDraggable>
   </div>
 </template>
 
 <script setup lang="ts">
-import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
-import { EditableTable } from '@sp/shared/components'
-import type { LayerItem } from '#/request'
-import type { ColumnType } from 'ant-design-vue/es/table'
+import { Marker } from '@sp/shared/map'
+import { Empty } from 'ant-design-vue'
+import { VueDraggable } from 'vue-draggable-plus'
+import LayerItemVue from './layerItem.vue'
+import type { LayerItem, OverlayType, MarkerProps } from '#/business'
 
-const props = withDefaults(
-  defineProps<{
-    modelValue: Omit<LayerItem, 'overlays'>[]
-    visibleIds: string[]
-  }>(),
-  { visibleIds: () => [] },
-)
-
-const emits = defineEmits<{
-  (e: 'update:modelValue', value: Omit<LayerItem, 'overlays'>[]): void
-  (e: 'update:visibleIds', ids: string[]): void
+const props = defineProps<{
+  modelValue: LayerItem<OverlayType>[]
+  disabled?: boolean
 }>()
 
-const columns: ColumnType[] = [
-  {
-    title: '',
-    dataIndex: 'visible',
-    fixed: 'left',
-    width: 40,
-    align: 'center',
-  },
-  {
-    title: '名称',
-    dataIndex: 'name',
-    fixed: 'left',
-    width: 100,
-  },
-  {
-    title: '作为图例',
-    dataIndex: 'asLegend',
-    width: 80,
-    align: 'center',
-  },
-  {
-    title: '图例图片',
-    dataIndex: 'legendImg',
-    width: 80,
-    align: 'center',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    width: 80,
-    align: 'center',
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    width: 90,
-    align: 'center',
-  },
-  {
-    title: '更新时间',
-    dataIndex: 'updateTime',
-    width: 90,
-    align: 'center',
-  },
-]
+const emits = defineEmits<{
+  (e: 'update:modelValue', value: LayerItem<OverlayType>[]): void
+}>()
 
-function onVisibleChange(type: 'show' | 'hide', id: string) {
-  if (type === 'show') {
-    emits('update:visibleIds', [...props.visibleIds, id])
-  } else {
-    const current = [...props.visibleIds]
-    const index = current.findIndex(item => item === id)
-    if (index > -1) {
-      current.splice(index, 1)
-      emits('update:visibleIds', current)
-    }
-  }
+function onRemove(id: string) {
+  const index = props.modelValue.findIndex(item => item.id === id)
+  const clone = [...props.modelValue]
+  clone.splice(index, 1)
+  emits('update:modelValue', clone)
+}
+
+function onSave(data: Omit<LayerItem<OverlayType>, 'overlays'>) {
+  const index = props.modelValue.findIndex(item => item.id === data.id)
+  const clone = [...props.modelValue]
+  clone[index] = { ...clone[index], ...data }
+  emits('update:modelValue', clone)
+}
+
+function onAdd() {
+  emits('update:modelValue', [
+    ...props.modelValue,
+    {
+      id: `add_${Date.now()}`,
+      asLegend: false,
+      name: '新增图层',
+      overlays: [],
+      status: true,
+    } as unknown as LayerItem<OverlayType>,
+  ])
 }
 </script>
+
+<style scoped>
+thead th {
+  padding: 0 0 7px 0;
+  background-color: #fff;
+}
+</style>

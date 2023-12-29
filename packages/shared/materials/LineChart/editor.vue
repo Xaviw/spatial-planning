@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import DataEditor from './dataEditor.vue'
-import type { LineChartItem } from '#/components'
+import type { LineChartItem } from '#/materials'
 
 const props = withDefaults(
   defineProps<{

@@ -41,7 +41,7 @@ import { ContentWrapper } from '@sp/shared/components'
 import { useModal } from '@sp/shared/hooks'
 import { components } from '@sp/shared/materials'
 import { cloneDeep, merge } from 'lodash-es'
-import type { TitleProps } from '#/components'
+import type { TitleProps } from '#/materials'
 
 const props = withDefaults(defineProps<TitleProps>(), {
   modalWidth: '25rem',

@@ -20,7 +20,7 @@
 <script setup lang="ts" generic="T extends SiderItem | MaterialItem">
 import { materials } from './data'
 import DraggableList from './draggableList.vue'
-import type { SiderItem, MaterialItem } from '#/request'
+import type { SiderItem, MaterialItem } from '#/business'
 
 const props = defineProps<{
   selectedMenu?: string

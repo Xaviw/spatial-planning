@@ -108,7 +108,7 @@ import { ColorPicker } from 'vue3-colorpicker'
 import Editor from './editor.vue'
 import Format from './format.vue'
 import 'vue3-colorpicker/style.css'
-import type { ProgressProps } from '#/components'
+import type { ProgressProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const formModel = ref<Partial<ProgressProps>>({

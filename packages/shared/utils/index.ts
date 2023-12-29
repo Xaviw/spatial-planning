@@ -1,6 +1,6 @@
 import { Modal, type ModalFuncProps } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
-import type { MenuItem, OperationItem } from '#/request'
+import type { OperationItem } from '#/business'
 import type { MaybeRef, ComputedRef } from 'vue'
 
 export * from './enums'
@@ -55,28 +55,39 @@ export function toRawValue<T>(value: MaybeRef<T> | ComputedRef<T>): T {
   return value
 }
 
-export function loopMenu(
-  data: MenuItem[],
-  callback: (
-    item: MenuItem,
-    index: number,
-    data: MenuItem[],
-    parent?: MenuItem,
-  ) => void,
-  key?: string,
-  parent?: MenuItem,
+export function loop<T extends Recordable>(
+  data: T[],
+  primaryKey: string,
+  childrenKey: string,
+  callback: (item: T, index: number, data: T[], parent?: T) => void,
+  searchKey?: string,
+  parent?: T,
 ) {
   data.forEach((item, index) => {
-    if (key) {
-      if (item.id === key) {
+    if (searchKey) {
+      if (item[primaryKey] === searchKey) {
         return callback(item, index, data, parent)
       }
-      if (item.children?.length) {
-        return loopMenu(item.children, callback, key, item)
+      if (item[childrenKey]?.length) {
+        return loop(
+          item[childrenKey],
+          primaryKey,
+          childrenKey,
+          callback,
+          searchKey,
+          item,
+        )
       }
     } else {
-      if (item.children?.length) {
-        loopMenu(item.children, callback, key, item)
+      if (item[childrenKey]?.length) {
+        loop(
+          item[childrenKey],
+          primaryKey,
+          childrenKey,
+          callback,
+          searchKey,
+          item,
+        )
       }
       callback(item, index, data, parent)
     }
