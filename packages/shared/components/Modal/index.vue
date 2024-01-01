@@ -10,8 +10,7 @@
     }"
     wrapClassName="sp-modal"
     v-bind="$attrs"
-    :open="modelValue"
-    @update:open="(e: boolean) => $emit('update:modelValue', e)"
+    v-model:open="model"
   >
     <AConfigProvider :locale="zhCN">
       <slot />
@@ -22,13 +21,7 @@
 <script setup lang="ts">
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
 
-defineProps<{
-  modelValue: boolean
-}>()
-
-defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
-}>()
+const model = defineModel<boolean>({ required: true })
 </script>
 
 <style>

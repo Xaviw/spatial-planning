@@ -6,8 +6,7 @@
       <AButton type="primary" size="small" @click="onAdd" :disabled="disabled">新增</AButton>
     </div>
     <VueDraggable
-      :modelValue="modelValue"
-      @update:modelValue="$emit('update:modelValue', $event)"
+      v-model="model"
       target="tbody"
       class="max-h-60 overflow-auto"
     >
@@ -23,12 +22,12 @@
           </tr>
         </thead>
         <tbody>
-          <template v-if="modelValue?.length">
+          <template v-if="model?.length">
             <LayerItemVue
-              v-for="layer of modelValue"
+              v-for="layer of model"
               :key="layer.id"
               :layer="layer"
-              :removeable="modelValue.length > 1"
+              :removeable="model.length > 1"
               @remove="onRemove"
               @save="onSave"
             >
@@ -63,40 +62,33 @@ import { VueDraggable } from 'vue-draggable-plus'
 import LayerItemVue from './layerItem.vue'
 import type { LayerItem, OverlayType, MarkerProps } from '#/business'
 
-const props = defineProps<{
-  modelValue: LayerItem<OverlayType>[]
+defineProps<{
   disabled?: boolean
 }>()
 
-const emits = defineEmits<{
-  (e: 'update:modelValue', value: LayerItem<OverlayType>[]): void
-}>()
+const model = defineModel<LayerItem<OverlayType>[]>({
+  default: [],
+  required: true,
+})
 
 function onRemove(id: string) {
-  const index = props.modelValue.findIndex(item => item.id === id)
-  const clone = [...props.modelValue]
-  clone.splice(index, 1)
-  emits('update:modelValue', clone)
+  const index = model.value.findIndex(item => item.id === id)
+  model.value.splice(index, 1)
 }
 
 function onSave(data: Omit<LayerItem<OverlayType>, 'overlays'>) {
-  const index = props.modelValue.findIndex(item => item.id === data.id)
-  const clone = [...props.modelValue]
-  clone[index] = { ...clone[index], ...data }
-  emits('update:modelValue', clone)
+  const index = model.value.findIndex(item => item.id === data.id)
+  model.value[index] = { ...model.value[index], ...data }
 }
 
 function onAdd() {
-  emits('update:modelValue', [
-    ...props.modelValue,
-    {
-      id: `add_${Date.now()}`,
-      asLegend: false,
-      name: '新增图层',
-      overlays: [],
-      status: true,
-    } as unknown as LayerItem<OverlayType>,
-  ])
+  model.value.push({
+    id: `add_${Date.now()}`,
+    asLegend: false,
+    name: '新增图层',
+    overlays: [],
+    status: true,
+  } as unknown as LayerItem<OverlayType>)
 }
 </script>
 

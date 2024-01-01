@@ -1,7 +1,7 @@
 <template>
   <div>
     <AForm
-      v-for="(item, index) of modelValue"
+      v-for="(item, index) of model"
       :model="item"
       :key="index"
       class="mb-2"
@@ -30,7 +30,7 @@
         <AFormItem>
           <div
             class="editor-btn"
-            v-if="index === modelValue.length - 1"
+            v-if="index === model.length - 1"
             @click="onAdd"
           >
             <i class="i-ant-design:plus-outlined" />
@@ -49,17 +49,14 @@ import { CssSizeInput } from '@sp/shared/components'
 import DataEditor from './dataEditor.vue'
 import type { BarChartItem } from '#/materials'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue?: BarChartItem[]
     xAxis?: string[]
   }>(),
-  { modelValue: () => [], xAxis: () => [] },
+  { xAxis: () => [] },
 )
 
-const emits = defineEmits<{
-  (e: 'update:modelValue', data: BarChartItem[]): void
-}>()
+const model = defineModel<BarChartItem[]>({ default: [] })
 
 const refs = ref<any[]>([])
 
@@ -71,13 +68,11 @@ const dataValidator = (_rule: any, value: number[]) => {
 }
 
 function onAdd() {
-  emits('update:modelValue', [...props.modelValue, {} as BarChartItem])
+  model.value.push({} as BarChartItem)
 }
 
 function onRemove(index: number) {
-  const clone = [...props.modelValue]
-  clone.splice(index, 1)
-  emits('update:modelValue', clone)
+  model.value.splice(index, 1)
 }
 
 defineExpose({

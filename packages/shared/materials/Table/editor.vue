@@ -75,23 +75,19 @@ import type { ColumnType } from 'ant-design-vue/es/table'
 
 type HeaderColumn = ColumnType & { name?: string }
 
-const props = withDefaults(defineProps<{ modelValue?: string[][] }>(), {
-  modelValue: () => [],
-})
-
-defineEmits<{ (e: 'update:modelValue', newData: string[][]): void }>()
+const model = defineModel<string[][]>({ default: [] })
 
 const tableData = ref<string[][]>([])
 
 watchEffect(() => {
-  if (props.modelValue.length) {
-    tableData.value = props.modelValue
+  if (model.value.length) {
+    tableData.value = model.value
   }
 })
 
 const columns = computed<HeaderColumn[]>(() => [
   { dataIndex: 'index' },
-  ...(props.modelValue[0] || []).map((item: string, index: number) => ({
+  ...(model.value[0] || []).map((item: string, index: number) => ({
     dataIndex: index,
     name: item,
   })),

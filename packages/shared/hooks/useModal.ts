@@ -1,3 +1,4 @@
+import 'vue/jsx'
 import { Modal } from '@sp/shared/components'
 import { render, VNode } from 'vue'
 import type { ModalProps } from 'ant-design-vue/es/modal/index'

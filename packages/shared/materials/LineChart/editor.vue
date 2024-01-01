@@ -1,6 +1,6 @@
 <template>
   <AForm
-    v-for="(item, index) of modelValue"
+    v-for="(item, index) of model"
     :model="item"
     :key="index"
     class="mb-2"
@@ -32,7 +32,7 @@
       <AFormItem>
         <div
           class="editor-btn"
-          v-if="index === modelValue.length - 1"
+          v-if="index === model.length - 1"
           @click="onAdd"
         >
           <i class="i-ant-design:plus-outlined" />
@@ -49,17 +49,11 @@
 import DataEditor from './dataEditor.vue'
 import type { LineChartItem } from '#/materials'
 
-const props = withDefaults(
-  defineProps<{
-    modelValue?: LineChartItem[]
-    xAxis?: string[]
-  }>(),
-  { modelValue: () => [], xAxis: () => [] },
-)
-
-const emits = defineEmits<{
-  (e: 'update:modelValue', data: LineChartItem[]): void
+defineProps<{
+  xAxis?: string[]
 }>()
+
+const model = defineModel<LineChartItem[]>({ default: [] })
 
 const refs = ref<any[]>([])
 
@@ -70,13 +64,11 @@ const dataValidator = (_rule: any, value: number[]) => {
 }
 
 function onAdd() {
-  emits('update:modelValue', [...props.modelValue, {} as LineChartItem])
+  model.value.push({} as LineChartItem)
 }
 
 function onRemove(index: number) {
-  const clone = [...props.modelValue]
-  clone.splice(index, 1)
-  emits('update:modelValue', clone)
+  model.value.splice(index, 1)
 }
 
 defineExpose({

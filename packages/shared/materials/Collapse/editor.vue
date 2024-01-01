@@ -8,8 +8,7 @@
     />
     <Editor
       class="min-h-[300px] overflow-auto"
-      :modelValue="modelValue"
-      @update:modelValue="$emit('update:modelValue', $event)"
+      v-model="model"
       :defaultConfig="editorConfig"
       mode="simple"
       @onCreated="handleCreated"
@@ -24,13 +23,7 @@ import '@wangeditor/editor/dist/css/style.css'
 import type { IToolbarConfig, IEditorConfig } from '@wangeditor/editor'
 import type { AlertType } from 'ant-design-vue/es/alert'
 
-defineProps<{
-  modelValue?: string
-}>()
-
-const emits = defineEmits<{
-  (e: 'update:modelValue', value: string): void
-}>()
+const model = defineModel<string>()
 
 const editorRef = shallowRef()
 const toolbarConfig: Partial<IToolbarConfig> = { modalAppendToBody: true }

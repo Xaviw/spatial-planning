@@ -1,8 +1,5 @@
 <template>
-  <Modal
-    :modelValue="modelValue"
-    @update:modelValue="(e: any) => $emit('update:modelValue', e)"
-  >
+  <Modal :modelValue="model" @update:modelValue="e => (model = e)">
     <i
       class="i-svg-spinners:12-dots-scale-rotate absolute left-50% top-50% translate--50% text-4xl"
     />
@@ -34,21 +31,13 @@
 import { Modal } from '@sp/shared/components'
 import { MediaEnum } from '@sp/shared/utils'
 
-const props = withDefaults(
-  defineProps<{
-    modelValue: boolean
-    type: MediaEnum
-    src: string
-    extName: string
-  }>(),
-  {
-    modelValue: false,
-  },
-)
-
-defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
+const props = defineProps<{
+  type: MediaEnum
+  src: string
+  extName: string
 }>()
+
+const model = defineModel<boolean>({ default: false })
 
 const videoRef = ref<HTMLVideoElement | null>(null)
 const audioRef = ref<HTMLAudioElement | null>(null)
@@ -59,7 +48,7 @@ const loading = ref(true)
 const currentOfficeSrc = ref<string>()
 
 watch(
-  () => props.modelValue,
+  () => model,
   (val, oldVal) => {
     if (!val && oldVal) {
       // 关闭时暂停播放

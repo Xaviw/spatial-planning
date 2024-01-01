@@ -20,16 +20,13 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  modelValue?: string
+defineProps<{
   disabled?: boolean
   min?: number
   max?: number
 }>()
 
-const emits = defineEmits<{
-  (e: 'update:modelValue', newValue: string): void
-}>()
+const model = defineModel<string>()
 
 const unitsOptions = [
   { label: 'px', value: 'px' },
@@ -46,14 +43,14 @@ const data = reactive({
 })
 
 watchEffect(() => {
-  if (props.modelValue?.length) {
-    const [value, unit] = (/^(\d+)(\w*)$/.exec(props.modelValue) || []).slice(1)
+  if (model.value?.length) {
+    const [value, unit] = (/^(\d+)(\w*)$/.exec(model.value) || []).slice(1)
     data.value = value
     data.unit = unit || 'px'
   }
 })
 
 function onChange() {
-  emits('update:modelValue', data.value && `${data.value}${data.unit}`)
+  model.value = data.value && `${data.value}${data.unit}`
 }
 </script>

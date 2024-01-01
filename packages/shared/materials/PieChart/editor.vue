@@ -1,6 +1,6 @@
 <template>
   <AForm
-    v-for="(item, index) of modelValue"
+    v-for="(item, index) of model"
     :model="item"
     :key="index"
     class="mb-2"
@@ -26,7 +26,7 @@
       <AFormItem>
         <div
           class="editor-btn"
-          v-if="index === modelValue.length - 1"
+          v-if="index === model.length - 1"
           @click="onAdd"
         >
           <i class="i-ant-design:plus-outlined" />
@@ -42,27 +42,16 @@
 <script setup lang="ts">
 import type { ProgressItem } from '#/materials'
 
-const props = withDefaults(
-  defineProps<{
-    modelValue?: ProgressItem[]
-  }>(),
-  { modelValue: () => [] },
-)
-
-const emits = defineEmits<{
-  (e: 'update:modelValue', data: ProgressItem[]): void
-}>()
+const model = defineModel<ProgressItem[]>({ default: [] })
 
 const refs = ref<any[]>([])
 
 function onAdd() {
-  emits('update:modelValue', [...props.modelValue, {} as ProgressItem])
+  model.value.push({} as ProgressItem)
 }
 
 function onRemove(index: number) {
-  const clone = [...props.modelValue]
-  clone.splice(index, 1)
-  emits('update:modelValue', clone)
+  model.value.splice(index, 1)
 }
 
 defineExpose({

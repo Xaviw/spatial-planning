@@ -45,7 +45,7 @@
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "pinia": "^2.1.7",
-    "vue": "^3.3.11",
+    "vue": "^3.4.1",
     "vue-draggable-plus": "^0.2.7",
     "vue-echarts": "^6.6.8",
     "vue-router": "^4.2.5",

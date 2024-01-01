@@ -32,28 +32,23 @@
 <script setup lang="ts">
 import { Input, InputNumber } from 'ant-design-vue'
 
-const props = withDefaults(
-  defineProps<{
-    xAxis?: string[]
-    modelValue?: (string | number)[]
-    type: 'string' | 'number'
-  }>(),
-  {
-    modelValue: () => [],
-  },
-)
+const props = defineProps<{
+  xAxis?: string[]
+  type: 'string' | 'number'
+}>()
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', newValue: string[]): void
   (e: 'remove', index: number): void
   (e: 'add'): void
 }>()
 
+const model = defineModel<(string | number)[]>({ default: [] })
+
 const data = ref<(string | number)[]>([])
 
 watchEffect(() => {
-  if (props.modelValue.length) {
-    data.value = props.modelValue
+  if (model.value.length) {
+    data.value = model.value
   }
 })
 

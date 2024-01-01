@@ -3,13 +3,12 @@
     v-bind="$attrs"
     :disabled="disabled"
     class="h-full select-none"
-    :modelValue="modelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    v-model="model"
   >
     <TransitionGroup name="sider">
       <template v-if="enableContextMenu">
         <div
-          v-for="(comp, index) of modelValue"
+          v-for="(comp, index) of model"
           :key="comp.id"
           :class="['mb-2', selectedId === comp.id && 'sider-selected']"
         >
@@ -38,7 +37,7 @@
 
       <template v-else>
         <component
-          v-for="comp of modelValue"
+          v-for="comp of model"
           :key="comp.id"
           :class="['mb-2', selectedId === comp.id && 'sider-selected']"
           :is="components[comp.type]"
@@ -48,7 +47,7 @@
     </TransitionGroup>
 
     <AEmpty
-      v-if="!modelValue.length"
+      v-if="!model.length"
       :description="
         disabled ? '请在右侧选择菜单' : '拖动“物料栏”中的组件到这里新增'
       "
@@ -66,23 +65,22 @@ import type { MaterialItem, SiderItem, SiderPosition } from '#/business'
 
 withDefaults(
   defineProps<{
-    modelValue: T[]
     selectedId?: string
     enableContextMenu?: boolean
     disabled?: boolean
   }>(),
   {
-    modelValue: () => [],
     enableContextMenu: false,
     disabled: false,
   },
 )
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', newList: any[]): void
   (e: 'edit', item: T, index: number): void
   (e: 'remove', position: SiderPosition, index: number, item: T): void
 }>()
+
+const model = defineModel<T[]>({ default: [], required: true })
 
 const attrs = useAttrs()
 

@@ -40,8 +40,7 @@
           :filterTreeNode="onMenuFilter"
           placeholder="选择或搜索菜单进行筛选"
           v-model:searchValue="menuSearchValue"
-          :value="selectedMenu"
-          @update:value="$emit('update:selectedMenu', $event)"
+          v-model="selectedMenu"
           treeDefaultExpandAll
           showSearch
           :treeData="menuData"
@@ -94,7 +93,6 @@ const props = withDefaults(
     inModal?: boolean
     canUndo: boolean
     canRedo: boolean
-    selectedMenu?: string
     selectedItem?: T
   }>(),
   {
@@ -108,9 +106,10 @@ const emits = defineEmits<{
   (e: 'submit'): void
   (e: 'confirm', data: T, equal: boolean): void
   (e: 'cancel'): void
-  (e: 'update:selectedMenu', menu: string): void
   (e: 'menuChange', menuId: string, oldMenuId?: string): void
 }>()
+
+const selectedMenu = defineModel<string>('selectedMenu')
 
 const baseFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
 const componentFormEl = ref<InstanceType<typeof BaseForm> | null>(null)

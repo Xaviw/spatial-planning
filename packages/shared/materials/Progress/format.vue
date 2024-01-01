@@ -18,24 +18,20 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ modelValue?: string }>()
-
-const emits = defineEmits<{
-  (e: 'update:modelValue', newValue: string): void
-}>()
+const model = defineModel<string>()
 
 const before = ref('')
 const after = ref('')
 
 watchEffect(() => {
-  if (props.modelValue?.includes('</>')) {
-    const [l, r] = props.modelValue.split('</>')
+  if (model.value?.includes('</>')) {
+    const [l, r] = model.value.split('</>')
     before.value = l
     after.value = r
   }
 })
 
 function onChange() {
-  emits('update:modelValue', `${before.value}</>${after.value}`)
+  model.value = `${before.value}</>${after.value}`
 }
 </script>
