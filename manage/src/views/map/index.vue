@@ -57,9 +57,9 @@
         </div>
       </div>
 
-      <div class="mb-2 flex flex-1 flex-col overflow-auto bg-white p-4">
+      <div class="mb-2 flex flex-1 flex-col overflow-hidden bg-white p-4">
         <template v-if="activeOverlay">
-          <div class="flex-1 overflow-auto">
+          <div class="flex-1 overflow-x-hidden overflow-y-auto">
             <BaseForm ref="baseFormEl" />
 
             <component
@@ -241,7 +241,15 @@ async function onConfirm() {
       'id',
       'overlays',
       (_item, index, _data, parent) => {
-        parent!.overlays[index] = formData
+        if (parent!.overlays[index].layerId !== formData.layerId) {
+          const layerIndex = data.value.findIndex(
+            layer => layer.id === formData.layerId,
+          )
+          data.value[layerIndex].overlays.push(formData)
+          parent?.overlays.splice(index, 1)
+        } else {
+          parent!.overlays[index] = formData
+        }
       },
       activeOverlay.value!.id,
     )

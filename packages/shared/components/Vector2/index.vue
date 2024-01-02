@@ -7,7 +7,12 @@
     <AFormItemRest>
       <AInputNumber
         :class="[direction === 'horizontal' && 'first-vector']"
-        :style="[gap && `margin-right:${gap}`]"
+        :style="[
+          gap &&
+            (direction === 'horizontal'
+              ? `margin-right:${gap}`
+              : `margin-bottom:${gap}`),
+        ]"
         :value="modelValue[0]"
         @update:value="onUpdate($event as number, 0)"
         v-bind="props0"

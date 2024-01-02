@@ -20,6 +20,7 @@
         :props0="{ addonBefore: '宽', addonAfter: 'px', min: 0 }"
         :props1="{ addonBefore: '高', addonAfter: 'px', min: 0 }"
         direction="vertical"
+        gap="8px"
       />
     </AFormItem>
 
@@ -29,6 +30,7 @@
         :props0="{ addonBefore: '横轴', addonAfter: 'px', min: 0 }"
         :props1="{ addonBefore: '竖轴', addonAfter: 'px', min: 0 }"
         direction="vertical"
+        gap="8px"
       />
     </AFormItem>
 
@@ -79,6 +81,7 @@
         :props0="{ addonBefore: '横轴', addonAfter: 'px', min: 0 }"
         :props1="{ addonBefore: '竖轴', addonAfter: 'px', min: 0 }"
         direction="vertical"
+        gap="8px"
       />
     </AFormItem>
   </AForm>

@@ -105,10 +105,12 @@ export interface OverlayInstance {
 
 export interface OverlayOptions {
   Marker: MarkerProps
-  Polyline: AMap.PolylineOptions | AMap.BezierCurveOptions
+  Polyline: AMap.PolylineOptions
+  BezierCurve: AMap.BezierCurveOptions
   Polygon: AMap.PolygonOptions
   Rectangle: AMap.RectangleOptions
-  Circle: AMap.CircleOptions | AMap.EllipseOptions
+  Circle: AMap.CircleOptions
+  Ellipse: AMap.EllipseOptions
   Text: AMap.TextOptions
   Image: AMap.ImageLayerOptions
 }

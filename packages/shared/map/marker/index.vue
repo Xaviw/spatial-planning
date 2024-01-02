@@ -6,10 +6,7 @@ import { isObject, omit } from 'lodash-es'
 import { bindMenu, mapKey } from '../utils'
 import type { OverlayItem } from '#/business'
 
-const componentProps = withDefaults(
-  defineProps<OverlayItem<'Marker'> & { visible: boolean }>(),
-  {},
-)
+const componentProps = defineProps<OverlayItem<'Marker'>>()
 
 const map = inject(mapKey)
 
