@@ -47,33 +47,36 @@ function genList(
   if (!['11', '121', '122', '13'].includes(params.menuId)) return []
   const keys = Object.keys(generationFunctions)
   const functions = Object.values(generationFunctions)
-  return Array.from({ length: Mock.Random.natural(lMin, lMax) }).map(
-    () =>
-      ({
-        id: Mock.Random.id(),
-        name: Mock.Random.cword(),
-        asLegend: Mock.Random.boolean(),
-        legendImg: Mock.Random.image('60x60'),
-        status: params.filter ? undefined : Mock.Random.boolean(),
-        createTime: new Date().toLocaleString(),
-        updateTime: new Date().toLocaleString(),
-        overlays: Array.from({ length: Mock.Random.natural(oMin, oMax) }).map(
-          () => {
-            const randomIndex = Mock.Random.natural(0, functions.length - 1)
-            return {
-              id: Mock.Random.id(),
-              type: keys[randomIndex],
-              name: Mock.Random.cword(),
-              status: params.filter ? undefined : Mock.Random.boolean(),
-              createTime: new Date().toLocaleString(),
-              updateTime: new Date().toLocaleString(),
-              props: functions[randomIndex](params),
-              details: genDetails(dMin, dMax, params),
-            } as OverlayItem<OverlayType>
-          },
-        ),
-      }) as LayerItem<OverlayType>,
-  )
+  return Array.from({ length: Mock.Random.natural(lMin, lMax) }).map(() => {
+    const layerId = Mock.Random.id()
+    return {
+      id: layerId,
+      name: Mock.Random.cword(),
+      asLegend: Mock.Random.boolean(),
+      legendImg: Mock.Random.image('60x60'),
+      status: params.filter ? undefined : Mock.Random.boolean(),
+      createTime: new Date().toLocaleString(),
+      updateTime: new Date().toLocaleString(),
+      overlays: Array.from({ length: Mock.Random.natural(oMin, oMax) }).map(
+        () => {
+          const randomIndex = Mock.Random.natural(0, functions.length - 1)
+          return {
+            id: Mock.Random.id(),
+            layerId,
+            type: keys[randomIndex],
+            name: Mock.Random.cword(),
+            status: params.filter ? undefined : Mock.Random.boolean(),
+            createTime: new Date().toLocaleString(),
+            updateTime: new Date().toLocaleString(),
+            props: functions[randomIndex](params),
+            detailTitle: Mock.Random.ctitle(),
+            detailWidth: Mock.Random.natural(25, 80) + 'rem',
+            details: genDetails(dMin, dMax, params),
+          } as OverlayItem<OverlayType>
+        },
+      ),
+    } as LayerItem<OverlayType>
+  })
 }
 
 function genDetails(min: number, max: number, params: GetMapParams) {

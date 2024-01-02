@@ -2,7 +2,7 @@
   <ContentWrapper :title="modalTitle" @close="onClose">
     <div class="h-80vh flex overflow-auto">
       <div class="sidebar" :style="{ width: modalWidth }">
-        <div class="header">
+        <div class="materials-modal-header">
           <i class="i-ic:outline-menu mr-2" />
           详情栏
         </div>

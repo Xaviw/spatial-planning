@@ -2,12 +2,12 @@
 <template></template>
 
 <script setup lang="ts">
-import { isObject } from 'lodash-es'
-import { bindMenu, mapKey } from '../index'
-import type { MarkerProps, ReactiveOverlayProps } from '#/business'
+import { isObject, omit } from 'lodash-es'
+import { bindMenu, mapKey } from '../utils'
+import type { OverlayItem } from '#/business'
 
 const componentProps = withDefaults(
-  defineProps<ReactiveOverlayProps<MarkerProps>>(),
+  defineProps<OverlayItem<'Marker'> & { visible: boolean }>(),
   {},
 )
 
@@ -22,7 +22,7 @@ const marker = new window.AMap.Marker({
   map: map?.value,
 })
 
-marker.setExtData({ ...componentProps })
+marker.setExtData(omit({ ...componentProps }, 'visible'))
 
 bindMenu(marker)
 
@@ -35,7 +35,6 @@ onUnmounted(() => {
 watch(
   () => componentProps.visible,
   visible => {
-    console.log('visible: ', visible)
     if (visible) {
       marker.show()
     } else {

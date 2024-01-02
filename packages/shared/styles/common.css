@@ -20,3 +20,10 @@
 .amap-copyright {
   display: none !important;
 }
+
+.sidebar {
+  @apply mr-2 w-100 flex flex-col bg-[#001231] text-white;
+}
+.materials-modal-header {
+  @apply border-0 border-b-1 border-white border-solid px-4 py-2 text-lg font-600 text-white flex items-center;
+}

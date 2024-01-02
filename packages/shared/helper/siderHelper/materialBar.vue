@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <div class="header">
+    <div class="materials-modal-header">
       <i class="i-uiw:component" />
       <span class="mx-2">物料栏</span>
     </div>

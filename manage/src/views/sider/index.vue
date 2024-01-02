@@ -3,7 +3,7 @@
     <Loading absolute :loading="loading" />
 
     <div class="sidebar">
-      <div class="header">
+      <div class="materials-modal-header">
         <i class="i-ant-design:pic-left-outlined mr-2" />
         左栏
       </div>
@@ -24,7 +24,7 @@
     </div>
 
     <div class="sidebar">
-      <div class="header">
+      <div class="materials-modal-header">
         <i class="i-ant-design:pic-right-outlined mr-2" />
         右栏
       </div>
@@ -187,13 +187,6 @@ function onCancel() {
 </script>
 
 <style>
-.sidebar {
-  @apply mr-2 w-100 flex flex-col bg-[#001231] text-white;
-}
-.header {
-  @apply border-0 border-b-1 border-white border-solid px-4 py-2 text-lg font-600 text-white flex items-center;
-}
-
 .editor-block {
   @apply max-w-100 flex items-center border border-[#d9d9d9] border-dashed p-2 pb-0;
 }

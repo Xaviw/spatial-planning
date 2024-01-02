@@ -1,5 +1,5 @@
 <template>
-  <VChart :option="option" :style="{ height: props.height }" />
+  <VChart :option="option" autoresize :style="{ height: props.height }" />
 </template>
 
 <script setup lang="ts">

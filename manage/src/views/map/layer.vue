@@ -23,7 +23,7 @@
         </thead>
         <tbody>
           <template v-if="model?.length">
-            <LayerItemVue
+            <LayerItemComponent
               v-for="layer of model"
               :key="layer.id"
               :layer="layer"
@@ -32,17 +32,15 @@
               @save="onSave"
             >
               <template #default="{ visible }">
-                <Marker
+                <component
                   v-for="overlay of layer.overlays"
+                  :is="overlays[overlay.type]"
                   :key="overlay.id"
                   :visible="visible"
-                  :layerId="layer.id"
-                  :props="(overlay.props as MarkerProps)"
-                  :id="overlay.id"
-                  :details="overlay.details"
+                  v-bind="overlay"
                 />
               </template>
-            </LayerItemVue>
+            </LayerItemComponent>
           </template>
           <tr v-else>
             <th :colspan="6">
@@ -56,11 +54,11 @@
 </template>
 
 <script setup lang="ts">
-import { Marker } from '@sp/shared/map'
+import { overlays } from '@sp/shared/map'
 import { Empty } from 'ant-design-vue'
 import { VueDraggable } from 'vue-draggable-plus'
-import LayerItemVue from './layerItem.vue'
-import type { LayerItem, OverlayType, MarkerProps } from '#/business'
+import LayerItemComponent from './layerItem.vue'
+import type { LayerItem, OverlayType } from '#/business'
 
 defineProps<{
   disabled?: boolean

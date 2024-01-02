@@ -39,13 +39,13 @@
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "alova": "^2.13.1",
-    "ant-design-vue": "^4.0.6",
+    "ant-design-vue": "^4.0.8",
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "pinia": "^2.1.7",
-    "vue": "^3.4.1",
+    "vue": "^3.4.3",
     "vue-draggable-plus": "^0.2.7",
     "vue-echarts": "^6.6.8",
     "vue-router": "^4.2.5",
@@ -78,7 +78,7 @@
     "vite": "^4.5.0",
     "vite-plugin-mock": "^2.9.8",
     "vue-eslint-parser": "^9.3.2",
-    "vue-tsc": "^1.8.18"
+    "vue-tsc": "^1.8.27"
   },
   "packageManager": "pnpm@8.6.9",
   "engines": {
@@ -88,7 +88,8 @@
   "pnpm": {
     "patchedDependencies": {
       "@wangeditor/editor-for-vue@5.1.12": "patches/@wangeditor__editor-for-vue@5.1.12.patch",
-      "@amap/amap-jsapi-types@0.0.13": "patches/@amap__amap-jsapi-types@0.0.13.patch"
+      "@amap/amap-jsapi-types@0.0.13": "patches/@amap__amap-jsapi-types@0.0.13.patch",
+      "ant-design-vue@4.0.8": "patches/ant-design-vue@4.0.8.patch"
     }
   }
 }

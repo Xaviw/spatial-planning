@@ -57,21 +57,41 @@
         </div>
       </div>
 
-      <div class="mb-2 flex-1 bg-white p-4"></div>
+      <div class="mb-2 flex flex-1 flex-col overflow-auto bg-white p-4">
+        <template v-if="activeOverlay">
+          <div class="flex-1 overflow-auto">
+            <BaseForm ref="baseFormEl" />
+
+            <component
+              :is="overlayForms[activeOverlay.type]"
+              :key="activeOverlay.id"
+              ref="overlayFormEl"
+            />
+          </div>
+
+          <div class="flex">
+            <AButton class="mr-4 flex-1" type="primary" @click="onConfirm">
+              确定
+            </AButton>
+            <AButton class="flex-1" danger @click="onCancel">取消</AButton>
+          </div>
+        </template>
+        <AEmpty
+          v-else
+          description="请右击地图中的覆盖物，选择“编辑”"
+          class="h-full flex flex-col items-center justify-center"
+        />
+      </div>
 
       <Layer class="bg-white" v-model="data" :disabled="!selectedMenu" />
     </div>
 
     <AModal
-      v-model:open="moveModalOpen"
+      v-model:open="moveInfo.open"
       title="请选择要移动到的图层"
       @ok="onOverlayMove"
     >
-      <ARadioGroup v-model:value="moveTarget">
-        <ARadio v-for="item of data" :key="item.id" :value="item.id">
-          {{ item.name }}
-        </ARadio>
-      </ARadioGroup>
+      <ARadioGroup v-model:value="moveInfo.target" :options="layerOptions" />
     </AModal>
   </div>
 </template>
@@ -80,15 +100,25 @@
 import { getMap } from '@sp/shared/apis'
 import { Loading } from '@sp/shared/components'
 import { useMap, useMenuTree } from '@sp/shared/hooks'
-import { mapKey, eventHook, type MapEvent } from '@sp/shared/map'
-import { loop } from '@sp/shared/utils'
+import {
+  mapKey,
+  eventHook,
+  overlayForms,
+  layerOptionsKey,
+  BaseForm,
+  type MapEvent,
+} from '@sp/shared/map'
+import { loop, modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
-import { debounce } from 'lodash-es'
+import { cloneDeep, debounce, isEqual, omit } from 'lodash-es'
 import Layer from './layer.vue'
 import Toolbar from './toolbar.vue'
 import type { ToolKeys } from './data'
 import type { AMap } from '@amap/amap-jsapi-types'
-import { OverlayItem, OverlayType } from '#/business'
+import { OverlayItem, OverlayType, ReactiveOverlayExtData } from '#/business'
+
+const baseFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
+const overlayFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
 
 const { menuData, menuSearchValue, onMenuDropdown, onMenuFilter } =
   useMenuTree()
@@ -102,6 +132,7 @@ function onMenuChange(id: string) {
 const container = ref<HTMLDivElement | null>(null)
 const zoom = ref<number>()
 const map = ref<AMap.Map>()
+const activeOverlay = ref<ReactiveOverlayExtData<OverlayType>>()
 
 provide(mapKey, map)
 
@@ -110,31 +141,17 @@ const { data, loading, send } = useRequest((id: string) => getMap(id, true), {
   initialData: [],
 })
 
+const layerOptions = computed(() => {
+  return data.value.map(item => ({ label: item.name, value: item.id }))
+})
+
+provide(layerOptionsKey, layerOptions)
+
 const { canRedo, canUndo, clear, redo, undo } = useRefHistory(data, {
   deep: true,
 })
 
-const moveModalOpen = ref(false)
-const moveId = ref<string>()
-const moveTarget = ref<string>()
-function onOverlayMove() {
-  let overlay: OverlayItem<OverlayType> | undefined
-  loop(
-    data.value,
-    'id',
-    'overlays',
-    (_item, index, _data, parent) => {
-      overlay = parent?.overlays?.splice(index, 1)?.[0]
-    },
-    moveId.value,
-  )
-  const layerIndex = data.value.findIndex(item => item.id === moveTarget.value)
-  // BUG: 最终的数据需要记录图层id
-  data.value[layerIndex].overlays.push(overlay!)
-  moveModalOpen.value = false
-}
-
-eventHook.on((e: MapEvent) => {
+eventHook.on(async (e: MapEvent) => {
   const ext = (e.instance as any).getExtData()
   if (e.type === 'remove') {
     loop(
@@ -157,11 +174,91 @@ eventHook.on((e: MapEvent) => {
       ext.id,
     )
   } else if (e.type === 'move') {
-    moveId.value = ext.id
-    moveTarget.value = ext.layerId
-    moveModalOpen.value = true
+    moveInfo.id = ext.id
+    moveInfo.target = ext.layerId
+    moveInfo.open = true
+  } else if (e.type === 'edit') {
+    if (activeOverlay.value) {
+      if (ext.id === activeOverlay.value.id) return
+      const data = await getData()
+      if (!isEqual(data, activeOverlay)) {
+        await modal('confirm', {
+          title: '提示！',
+          content: '您有正在编辑的覆盖物还未保存，是否直接切换？',
+          okText: '切换',
+        })
+      }
+    }
+    activeOverlay.value = ext
+    await nextTick()
+    baseFormEl.value!.formModel = cloneDeep(omit(ext, 'props'))
+    overlayFormEl.value!.formModel = cloneDeep(ext.props)
   }
 })
+
+const moveInfo = reactive<{ open: boolean; id?: string; target?: string }>({
+  open: false,
+  id: undefined,
+  target: undefined,
+})
+function onOverlayMove() {
+  let overlay: OverlayItem<OverlayType> | undefined
+  loop(
+    data.value,
+    'id',
+    'overlays',
+    (_item, index, _data, parent) => {
+      overlay = parent?.overlays?.splice(index, 1)?.[0]
+    },
+    moveInfo.id,
+  )
+  const layerIndex = data.value.findIndex(item => item.id === moveInfo.target)
+  data.value[layerIndex].overlays.push({
+    ...overlay!,
+    layerId: data.value[layerIndex].id,
+  })
+  moveInfo.open = false
+}
+
+async function getData() {
+  await nextTick()
+  return {
+    ...baseFormEl.value!.formModel,
+    props: overlayFormEl.value!.formModel,
+  } as OverlayItem<OverlayType>
+}
+
+async function onConfirm() {
+  await baseFormEl.value?.validate()
+  await overlayFormEl.value?.validate()
+
+  const formData = await getData()
+  const equal = isEqual(formData, activeOverlay.value)
+  if (!equal) {
+    ;(formData.props as any).extData = cloneDeep(formData)
+    loop(
+      data.value,
+      'id',
+      'overlays',
+      (_item, index, _data, parent) => {
+        parent!.overlays[index] = formData
+      },
+      activeOverlay.value!.id,
+    )
+  }
+  activeOverlay.value = undefined
+}
+
+async function onCancel() {
+  const data = await getData()
+  if (!isEqual(data, activeOverlay.value)) {
+    await modal('confirm', {
+      title: '警告！',
+      content: '您当前的编辑还未保存，是否确定取消？',
+    })
+  }
+  activeOverlay.value = undefined
+}
 
 useMap(
   container,

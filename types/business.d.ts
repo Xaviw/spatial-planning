@@ -56,27 +56,21 @@ export interface OperationItem<T extends Recordable> {
 export type OverlayType =
   | 'Marker'
   | 'Polyline'
+  | 'BezierCurve'
   | 'Polygon'
   | 'Rectangle'
   | 'Circle'
+  | 'Ellipse'
   | 'Text'
   | 'Image'
 
 export type MarkerProps = Pick<
   AMap.MarkerOptions,
-  | 'content'
-  | 'title'
-  | 'zIndex'
-  | 'offset'
-  | 'angle'
-  | 'size'
-  | 'zooms'
-  | 'label'
-  | 'extData'
-  | 'visible'
+  'content' | 'title' | 'zIndex' | 'angle' | 'zooms' | 'extData' | 'visible'
 > & {
   position?: AMap.Vector2
   icon?: string | AMap.IconOpts
+  content?: string
   anchor?:
     | 'top-left'
     | 'top-center'
@@ -87,14 +81,24 @@ export type MarkerProps = Pick<
     | 'bottom-left'
     | 'bottom-center'
     | 'bottom-right'
+  size?: AMap.Vector2
+  offset?: AMap.Vector2
+  label?: {
+    content: string
+    direction: 'top' | 'right' | 'bottom' | 'left' | 'center'
+    offset: AMap.Vector2
+    _needUpdate?: boolean
+  }
 }
 
 export interface OverlayInstance {
   Marker: AMap.Marker
-  Polyline: AMap.Polyline | AMap.BezierCurve
+  Polyline: AMap.Polyline
+  BezierCurve: AMap.BezierCurve
   Polygon: AMap.Polygon
   Rectangle: AMap.Rectangle
-  Circle: AMap.Circle | AMap.Ellipse
+  Circle: AMap.Circle
+  Ellipse: AMap.Ellipse
   Text: AMap.Text
   Image: AMap.ImageLayer
 }
@@ -111,9 +115,12 @@ export interface OverlayOptions {
 
 export interface OverlayItem<T extends OverlayType> {
   id: string
+  layerId: string
   type: T
   name: string
   props: OverlayOptions[T]
+  detailTitle?: string
+  detailWidth?: string
   details: MaterialItem[]
   status: boolean
   createTime: string
@@ -129,14 +136,6 @@ export interface LayerItem<T extends OverlayType> {
   status: boolean
   createTime: string
   updateTime: string
-}
-
-export interface ReactiveOverlayProps<T> {
-  layerId: string
-  id: string
-  details: MaterialItem[]
-  props: T
-  visible: boolean
 }
 
 export interface ReactiveOverlayExtData<T extends OverlayType>

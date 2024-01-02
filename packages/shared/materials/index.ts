@@ -1,18 +1,3 @@
-import BarChart from './BarChart/index.vue'
-import Carousel from './Carousel/index.vue'
-import Collapse from './Collapse/index.vue'
-import DataCard from './DataCard/index.vue'
-import Description from './Description/index.vue'
-import FileList from './FileList/index.vue'
-import LineChart from './LineChart/index.vue'
-import Progress from './Progress/index.vue'
-import SubTitle from './SubTitle/index.vue'
-import Table from './Table/index.vue'
-import Timeline from './Timeline/index.vue'
-import Title from './Title/index.vue'
-
-import '../../../unocss-icon'
-
 const componentModules: Record<string, any> = import.meta.glob(
   './**/index.vue',
   {
@@ -40,19 +25,4 @@ for (const path in formModules) {
   }
 }
 
-export {
-  Title,
-  Timeline,
-  Table,
-  SubTitle,
-  Progress,
-  LineChart,
-  Description,
-  DataCard,
-  Collapse,
-  Carousel,
-  BarChart,
-  FileList,
-  components,
-  componentForms,
-}
+export { components, componentForms }

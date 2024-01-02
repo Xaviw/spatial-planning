@@ -34,8 +34,8 @@
 import { Form } from 'ant-design-vue'
 import { pick } from 'lodash-es'
 import { componentTypes } from './data'
+import type { SiderItem } from '#/business'
 import type { Rule } from 'ant-design-vue/es/form'
-import { SiderItem } from '#/business'
 
 const props = withDefaults(
   defineProps<{
