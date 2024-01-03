@@ -32,13 +32,7 @@
               @save="onSave"
             >
               <template #default="{ visible }">
-                <component
-                  v-for="overlay of layer.overlays"
-                  :is="overlays[overlay.type]"
-                  :key="overlay.id"
-                  :visible="visible"
-                  v-bind="overlay"
-                />
+                <slot :visible="visible" :list="layer.overlays" />
               </template>
             </LayerItemComponent>
           </template>
@@ -54,7 +48,6 @@
 </template>
 
 <script setup lang="ts">
-import { overlays } from '@sp/shared/map'
 import { Empty } from 'ant-design-vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import LayerItemComponent from './layerItem.vue'

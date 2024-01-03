@@ -1,21 +1,21 @@
 <template>
-  <AModal
-    centered
-    :footer="null"
-    :closable="false"
-    width="auto"
-    :bodyStyle="{
-      padding: 0,
-      background: 'transparent',
-    }"
-    wrapClassName="sp-modal"
-    v-bind="$attrs"
-    v-model:open="model"
-  >
-    <AConfigProvider :locale="zhCN">
+  <AConfigProvider :locale="zhCN">
+    <AModal
+      centered
+      :footer="null"
+      :closable="false"
+      width="auto"
+      :bodyStyle="{
+        padding: 0,
+        background: 'transparent',
+      }"
+      wrapClassName="sp-modal"
+      v-bind="$attrs"
+      v-model:open="model"
+    >
       <slot />
-    </AConfigProvider>
-  </AModal>
+    </AModal>
+  </AConfigProvider>
 </template>
 
 <script setup lang="ts">

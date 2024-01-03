@@ -53,6 +53,16 @@ export interface OperationItem<T extends Recordable> {
 }
 
 // -----------------地图-----------------
+export interface MapEvent {
+  lnglat: AMap.LngLat
+  originEvent: Event
+  pixel: AMap.Pixel
+  pos: AMap.Vector2
+  target: ValueTypes<OverlayInstance> & { _map: AMap.Map }
+  type: string
+  vectorIndex: number
+}
+
 export type OverlayType =
   | 'Marker'
   | 'Polyline'
@@ -66,7 +76,7 @@ export type OverlayType =
 
 export type MarkerProps = Pick<
   AMap.MarkerOptions,
-  'content' | 'title' | 'zIndex' | 'angle' | 'zooms' | 'extData' | 'visible'
+  'content' | 'title' | 'zIndex' | 'angle' | 'zooms'
 > & {
   position?: AMap.Vector2
   icon?: string | AMap.IconOpts
@@ -129,6 +139,10 @@ export interface OverlayItem<T extends OverlayType> {
   updateTime: string
 }
 
+export type OverlayProps<T extends OverlayType> = OverlayItem<T> & {
+  visible: boolean
+}
+
 export interface LayerItem<T extends OverlayType> {
   id: string
   name: string
@@ -138,11 +152,4 @@ export interface LayerItem<T extends OverlayType> {
   status: boolean
   createTime: string
   updateTime: string
-}
-
-export interface ReactiveOverlayExtData<T extends OverlayType>
-  extends OverlayItem<T> {
-  instance: OverlayInstance[T]
-  replaceInstance: (instance: OverlayInstance[T]) => void
-  replaceSource: (config: Partial<OverlayItem<T>>) => void
 }

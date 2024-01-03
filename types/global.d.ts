@@ -18,6 +18,8 @@ interface Window {
   _AMapSecurityConfig: { securityJsCode: string }
 }
 
+type ValueTypes<T> = T[keyof T]
+
 type Nullable<T> = T | null
 
 type Recordable<T = any> = Record<string, T>

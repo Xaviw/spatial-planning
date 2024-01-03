@@ -4,10 +4,8 @@
   "private": true,
   "description": "vite-config配置库",
   "type": "module",
-  "main": "./src/index.js",
-  "files": [
-    "dist"
-  ],
+  "main": "/index.js",
+  "types": "/index.d.ts",
   "scripts": {
     "clean": "rimraf node_modules dist",
     "lint": "eslint --max-warnings 0 --fix && prettier --write ."

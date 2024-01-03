@@ -1,3 +1,4 @@
 import config from '@sp/vite-config'
+import { UserConfig } from 'vite'
 
-export default config({ name: 'client' })
+export default config('client') as UserConfig

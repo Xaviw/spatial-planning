@@ -1,7 +1,4 @@
 import { capitalize } from 'lodash-es'
-import BaseForm from './baseForm.vue'
-import type { RadioGroupChildOption } from 'ant-design-vue/es/radio/Group'
-import type { InjectionKey, Ref } from 'vue'
 
 const overlayModules: Record<string, any> = import.meta.glob('./**/index.vue', {
   eager: true,
@@ -27,9 +24,6 @@ for (const path in formModules) {
   }
 }
 
-export const layerOptionsKey: InjectionKey<Ref<RadioGroupChildOption[]>> =
-  Symbol('layer-options-key')
-
 export const overlayOptions = [
   { label: '标记点', value: 'Marker' },
   { label: '折线', value: 'Polyline' },
@@ -43,4 +37,5 @@ export const overlayOptions = [
 ]
 
 export * from './utils'
-export { BaseForm, overlays, overlayForms }
+export * from './mapStore'
+export { overlays, overlayForms }

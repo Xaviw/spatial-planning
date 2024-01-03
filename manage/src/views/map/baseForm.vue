@@ -9,7 +9,7 @@
     </AFormItem>
 
     <AFormItem label="所属图层" v-bind="validateInfos.layerId">
-      <ASelect v-model:value="formModel.layerId" :options="layerOptions" />
+      <ASelect v-model:value="formModel.layerId" :options="layers" />
     </AFormItem>
 
     <AFormItem label="覆盖物类型">
@@ -56,15 +56,15 @@
 import { CssSizeInput } from '@sp/shared/components'
 import { SiderModalEditor } from '@sp/shared/helper/siderHelper'
 import { useModal } from '@sp/shared/hooks'
-import { layerOptionsKey, overlayOptions } from '@sp/shared/map'
+import { overlayOptions, useMapStore } from '@sp/shared/map'
 import { Form } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
 import type { MaterialItem, OverlayItem, OverlayType } from '#/business'
 import type { Rule } from 'ant-design-vue/es/form'
 
-const layerOptions = inject(layerOptionsKey)
-
 type BaseOverlay = Partial<Omit<OverlayItem<OverlayType>, 'props'>>
+
+const { layers } = storeToRefs(useMapStore())
 
 const formModel = ref<BaseOverlay>({})
 

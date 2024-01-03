@@ -2,35 +2,35 @@
 <template></template>
 
 <script setup lang="ts">
-import { isObject, omit } from 'lodash-es'
-import { bindMenu, mapKey } from '../utils'
-import type { OverlayItem } from '#/business'
+import { isObject } from 'lodash-es'
+import { useMapStore } from '../mapStore'
+import type { OverlayProps } from '#/business'
 
-const componentProps = defineProps<OverlayItem<'Marker'>>()
+const markerProps = defineProps<OverlayProps<'Marker'>>()
 
-const map = inject(mapKey)
+const mapStore = useMapStore()
 
 const marker = new window.AMap.Marker({
-  ...componentProps.props,
+  ...markerProps.props,
   icon:
-    componentProps.props.icon && typeof componentProps.props.icon === 'object'
-      ? new window.AMap.Icon(componentProps.props.icon)
-      : componentProps.props.icon,
-  map: map?.value,
+    markerProps.props.icon && typeof markerProps.props.icon === 'object'
+      ? new window.AMap.Icon(markerProps.props.icon)
+      : markerProps.props.icon,
+  map: mapStore.map,
 })
 
-marker.setExtData(omit({ ...componentProps }, 'visible'))
+marker.setExtData(markerProps.id)
 
-bindMenu(marker)
+mapStore.bindMenu(marker)
 
-map?.value?.setFitView()
+mapStore.map?.setFitView()
 
 onUnmounted(() => {
   marker.destroy()
 })
 
 watch(
-  () => componentProps.visible,
+  () => markerProps.visible,
   visible => {
     if (visible) {
       marker.show()
@@ -41,14 +41,14 @@ watch(
 )
 
 watch(
-  () => componentProps.props.title,
+  () => markerProps.props.title,
   title => {
     title && marker.setTitle(title)
   },
 )
 
 watch(
-  () => componentProps.props.icon,
+  () => markerProps.props.icon,
   icon => {
     if (icon) {
       if (typeof icon === 'string') {
@@ -61,49 +61,42 @@ watch(
 )
 
 watch(
-  () => componentProps.props.label,
+  () => markerProps.props.label,
   label => {
     label && marker.setLabel(label as any)
   },
 )
 
 watch(
-  () => componentProps.props.extData,
-  extData => {
-    marker.setExtData(extData)
-  },
-)
-
-watch(
-  () => componentProps.props.position,
+  () => markerProps.props.position,
   position => {
     position && marker.setPosition(position)
   },
 )
 
 watch(
-  () => componentProps.props.anchor,
+  () => markerProps.props.anchor,
   anchor => {
     anchor && marker.setAnchor(anchor)
   },
 )
 
 watch(
-  () => componentProps.props.offset,
+  () => markerProps.props.offset,
   offset => {
     offset && marker.setOffset(offset)
   },
 )
 
 watch(
-  () => componentProps.props.size,
+  () => markerProps.props.size,
   size => {
     size && marker.setSize(size)
   },
 )
 
 watch(
-  () => componentProps.props.content,
+  () => markerProps.props.content,
   content => {
     content && marker.setContent(content)
   },
