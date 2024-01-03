@@ -15,20 +15,24 @@
     </AFormItem>
 
     <AFormItem label="图标尺寸" help="图标宽、高">
-      <Vector2
+      <Vector
         v-model="formModel.size"
-        :props0="{ addonBefore: '宽', addonAfter: 'px', min: 0 }"
-        :props1="{ addonBefore: '高', addonAfter: 'px', min: 0 }"
+        :props="[
+          { addonBefore: '宽', addonAfter: 'px', min: 0 },
+          { addonBefore: '高', addonAfter: 'px', min: 0 },
+        ]"
         direction="vertical"
         gap="8px"
       />
     </AFormItem>
 
     <AFormItem label="图标偏移量" help="图标在横、竖轴上偏移的位置">
-      <Vector2
+      <Vector
         v-model="formModel.offset"
-        :props0="{ addonBefore: '横轴', addonAfter: 'px', min: 0 }"
-        :props1="{ addonBefore: '竖轴', addonAfter: 'px', min: 0 }"
+        :props="[
+          { addonBefore: '横轴', addonAfter: 'px', min: 0 },
+          { addonBefore: '竖轴', addonAfter: 'px', min: 0 },
+        ]"
         direction="vertical"
         gap="8px"
       />
@@ -52,10 +56,12 @@
       help="仅在缩放等级范围内显示"
       extra="可在地图右上角查看缩放等级"
     >
-      <Vector2
+      <Vector
         v-model="formModel.zooms"
-        :props0="{ addonAfter: '-', min: 2 }"
-        :props1="{ addonAfter: '级', min: 2 }"
+        :props="[
+          { addonAfter: '-', min: 2 },
+          { addonAfter: '级', min: 2 },
+        ]"
       />
     </AFormItem>
 
@@ -75,11 +81,13 @@
     </AFormItem>
 
     <AFormItem label="标注偏移量" help="以标注方位基准点进行偏移">
-      <Vector2
+      <Vector
         :modelValue="formModel.label?.offset"
         @update:value="onLabelUpdate($event, 'offset')"
-        :props0="{ addonBefore: '横轴', addonAfter: 'px', min: 0 }"
-        :props1="{ addonBefore: '竖轴', addonAfter: 'px', min: 0 }"
+        :props="[
+          { addonBefore: '横轴', addonAfter: 'px', min: 0 },
+          { addonBefore: '竖轴', addonAfter: 'px', min: 0 },
+        ]"
         direction="vertical"
         gap="8px"
       />
@@ -88,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { Vector2 } from '@sp/shared/components'
+import { Vector } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import type { MarkerProps } from '#/business'
 

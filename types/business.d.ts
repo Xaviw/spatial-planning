@@ -9,7 +9,7 @@ export interface MenuItem {
   sort: number
   status: boolean
   createTime: string
-  updateTime: string
+  updateTime?: string
 }
 
 // -----------------侧边栏-----------------
@@ -37,7 +37,7 @@ export interface SiderItem {
   status: boolean
   position: SiderPosition
   createTime: string
-  updateTime: string
+  updateTime?: string
 }
 
 // -----------------标题组件、覆盖物详情-----------------
@@ -101,6 +101,24 @@ export type MarkerProps = Pick<
   }
 }
 
+export type PolylineProps = Pick<
+  AMap.PolylineOptions,
+  | 'strokeColor'
+  | 'strokeOpacity'
+  | 'strokeWeight'
+  | 'isOutline'
+  | 'borderWeight'
+  | 'outlineColor'
+  | 'strokeStyle'
+  | 'strokeDasharray'
+  | 'lineJoin'
+  | 'lineCap'
+  | 'geodesic'
+  | 'showDir'
+> & {
+  path?: AMap.Vector2[]
+}
+
 export interface OverlayInstance {
   Marker: AMap.Marker
   Polyline: AMap.Polyline
@@ -115,7 +133,7 @@ export interface OverlayInstance {
 
 export interface OverlayOptions {
   Marker: MarkerProps
-  Polyline: AMap.PolylineOptions
+  Polyline: PolylineProps
   BezierCurve: AMap.BezierCurveOptions
   Polygon: AMap.PolygonOptions
   Rectangle: AMap.RectangleOptions
@@ -136,7 +154,7 @@ export interface OverlayItem<T extends OverlayType> {
   details: MaterialItem[]
   status: boolean
   createTime: string
-  updateTime: string
+  updateTime?: string
 }
 
 export type OverlayProps<T extends OverlayType> = OverlayItem<T> & {
@@ -151,5 +169,22 @@ export interface LayerItem<T extends OverlayType> {
   overlays: OverlayItem<T>[]
   status: boolean
   createTime: string
-  updateTime: string
+  updateTime?: string
+}
+
+export type ToolKeys =
+  | 'marker'
+  | 'polygon'
+  | 'polyline'
+  | 'rectangle'
+  | 'circle'
+  | 'rule'
+  | 'measureArea'
+  | 'text'
+  | 'image'
+
+export interface MapMutativeState {
+  layers: Omit<LayerItem<OverlayType>, 'overlays'>[]
+  overlays: Omit<OverlayItem<OverlayType>, 'details'>[]
+  details: MaterialItem[]
 }

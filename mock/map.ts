@@ -3,9 +3,11 @@ import Mock from 'mockjs'
 import materialStrategies from './material'
 import type {
   LayerItem,
+  MarkerProps,
   MaterialItem,
   OverlayItem,
   OverlayType,
+  PolylineProps,
 } from '../types/business'
 import type { GetMapParams } from '@sp/shared/apis'
 import type { MockMethod } from 'vite-plugin-mock'
@@ -91,13 +93,21 @@ function genDetails(min: number, max: number, params: GetMapParams) {
 }
 
 const generationFunctions = {
-  Marker(_params: GetMapParams): Recordable {
+  Marker(_params: GetMapParams): MarkerProps {
     return {
       position: [
         generateRandomDecimal(103.95, 104.2, 6),
         generateRandomDecimal(30.57, 30.7, 6),
       ],
       title: Mock.Random.ctitle(),
+    }
+  },
+  Polyline(): PolylineProps {
+    return {
+      path: Array.from({ length: Mock.Random.integer(2, 20) }).map(() => [
+        generateRandomDecimal(103.95, 104.2, 6),
+        generateRandomDecimal(30.57, 30.7, 6),
+      ]),
     }
   },
 }

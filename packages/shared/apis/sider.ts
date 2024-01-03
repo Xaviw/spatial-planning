@@ -15,12 +15,6 @@ export function getSider(params: GetSiderParams) {
   })
 }
 
-export function setSider(
-  data: OperationItem<
-    SiderItem & {
-      [key: string]: number
-    }
-  >[],
-) {
+export function setSider(data: OperationItem<SiderItem>[]) {
   return request.Post<boolean>('/sider', data)
 }

@@ -11,7 +11,7 @@ import { useMap } from '@sp/shared/hooks'
 import { useMapStore } from '@sp/shared/map'
 import { debounce } from 'lodash-es'
 
-const { map, loca } = storeToRefs(useMapStore())
+const { map, loca, mousetool } = storeToRefs(useMapStore())
 
 const container = ref<HTMLDivElement | null>(null)
 const zoom = ref<number>()
@@ -40,6 +40,7 @@ useMap(
   (_map, _loca) => {
     map.value = _map
     loca.value = _loca
+    mousetool.value = new window.AMap.MouseTool(_map)
     watchZoom()
   },
 )

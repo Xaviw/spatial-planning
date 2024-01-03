@@ -1,9 +1,12 @@
 <!-- prettier-ignore -->
 <template>
   <div class="p-2">
-    <div class="mb-2 flex items-center justify-between">
-      <span>图层</span>
-      <AButton type="primary" size="small" @click="onAdd" :disabled="disabled">新增</AButton>
+    <div class="mb-2 flex items-center justify-between text-base">
+      <span class="mr-2">图层</span>
+      <ATag color="processing" class="text-base">新增覆盖物将放于选中图层中</ATag>
+      <div class="flex-1 text-end">
+        <AButton type="primary" @click="onAdd" :disabled="disabled" class="text-base">新增</AButton>
+      </div>
     </div>
     <VueDraggable
       v-model="model"
@@ -48,6 +51,7 @@
 </template>
 
 <script setup lang="ts">
+import { useMapStore } from '@sp/shared/map'
 import { Empty } from 'ant-design-vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import LayerItemComponent from './layerItem.vue'
@@ -62,6 +66,8 @@ const model = defineModel<LayerItem<OverlayType>[]>({
   required: true,
 })
 
+const { activeId } = storeToRefs(useMapStore())
+
 function onRemove(id: string) {
   const index = model.value.findIndex(item => item.id === id)
   model.value.splice(index, 1)
@@ -73,13 +79,18 @@ function onSave(data: Omit<LayerItem<OverlayType>, 'overlays'>) {
 }
 
 function onAdd() {
+  const id = `add_${Date.now()}`
   model.value.push({
-    id: `add_${Date.now()}`,
+    id,
     asLegend: false,
     name: '新增图层',
     overlays: [],
     status: true,
-  } as unknown as LayerItem<OverlayType>)
+    createTime: new Date().toLocaleString(),
+  })
+  if (!activeId.value) {
+    activeId.value = id
+  }
 }
 </script>
 

@@ -6,22 +6,19 @@
   >
     <AFormItemRest>
       <AInputNumber
-        :class="[direction === 'horizontal' && 'first-vector']"
+        v-for="item of num"
+        :key="item"
+        :class="itemClass(item)"
         :style="[
           gap &&
+            item !== num &&
             (direction === 'horizontal'
               ? `margin-right:${gap}`
               : `margin-bottom:${gap}`),
         ]"
-        :value="modelValue[0]"
-        @update:value="onUpdate($event as number, 0)"
-        v-bind="props0"
-      />
-      <AInputNumber
-        :class="[direction === 'horizontal' && 'secend-vector']"
-        :value="modelValue[1]"
-        @update:value="onUpdate($event as number, 1)"
-        v-bind="props1"
+        :value="modelValue[item - 1]"
+        @update:value="onUpdate($event as number, item - 1)"
+        v-bind="props.props[item - 1] || {}"
       />
     </AFormItemRest>
   </AInputGroup>
@@ -30,16 +27,18 @@
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
+    num?: number
     modelValue?: (number | undefined)[]
-    props0?: Recordable
-    props1?: Recordable
+    props?: Recordable[]
     events?: Recordable<Fn>
     direction?: 'horizontal' | 'vertical'
     gap?: string
   }>(),
   {
+    num: 2,
     direction: 'horizontal',
     modelValue: () => [],
+    props: () => [],
   },
 )
 
@@ -47,17 +46,18 @@ const emits = defineEmits<{
   (e: 'update:modelValue', val: (number | undefined)[]): void
 }>()
 
-// const model = defineModel<number[]>({ default: [] })
+function itemClass(index: number) {
+  if (props.direction === 'horizontal' && !props.gap) {
+    if (index === 1) return 'first-vector'
+    else if (index === props.num) return 'last-vector'
+    return 'middle-vector'
+  }
+}
 
 function onUpdate(value: number, index: number) {
-  console.log(props.modelValue, index, value)
   let copy = [...props.modelValue]
   copy[index] = value
   emits('update:modelValue', copy)
-  // if (!Array.isArray(props.modelValue)) {
-  //   model.value = []
-  // }
-  // model.value[index] = value
 }
 </script>
 
@@ -71,12 +71,19 @@ function onUpdate(value: number, index: number) {
   border-end-end-radius: 0;
 }
 
-.secend-vector :deep(.ant-input-number-group-addon:first-child) {
+.middle-vector :deep(.ant-input-number-group-addon) {
+  border-radius: 0;
+}
+.middle-vector :deep(.ant-input-number) {
+  border-radius: 0;
+}
+
+.last-vector :deep(.ant-input-number-group-addon:first-child) {
   border-start-start-radius: 0;
   border-end-start-radius: 0;
 }
 
-.secend-vector :deep(.ant-input-number:first-child) {
+.last-vector :deep(.ant-input-number:first-child) {
   border-start-start-radius: 0;
   border-end-start-radius: 0;
 }

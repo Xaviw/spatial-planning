@@ -169,6 +169,7 @@ function onSubmit() {
   const operations = getOperationsFromDiff(
     [...list.value.left, ...list.value.right],
     [...origin.left, ...origin.right],
+    'sort',
   )
   setSider(operations)
     .send()

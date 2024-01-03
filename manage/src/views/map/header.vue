@@ -25,6 +25,8 @@
     <AAlert showIcon>
       <template #message>
         <div>右击地图覆盖物进行操作</div>
+        <div>点击左侧工具栏中的图标绘制或取消绘制覆盖物</div>
+        <div v-if="activeOverlay?.type === 'Marker'">拖动标记点移动位置</div>
       </template>
     </AAlert>
 
@@ -55,8 +57,15 @@ import { omit } from 'lodash-es'
 
 const mapStore = useMapStore()
 
-const { canRedo, canUndo, selectedMenu, loading, sourceData, mapData } =
-  storeToRefs(mapStore)
+const {
+  canRedo,
+  canUndo,
+  selectedMenu,
+  loading,
+  sourceData,
+  mapData,
+  activeOverlay,
+} = storeToRefs(mapStore)
 
 const { menuData, menuSearchValue, onMenuDropdown, onMenuFilter } =
   useMenuTree()
@@ -99,9 +108,9 @@ function onSubmit() {
     currentLayers.push(omit(layer, 'overlays'))
   }
 
-  const layers = getOperationsFromDiff(currentLayers, sourceLayers)
+  const layers = getOperationsFromDiff(currentLayers, sourceLayers, 'sort')
   const overlays = getOperationsFromDiff(currentOverlays, sourceOverlays)
-  const details = getOperationsFromDiff(currentDetails, sourceDetails)
+  const details = getOperationsFromDiff(currentDetails, sourceDetails, 'sort')
 
   console.log({ layers, overlays, details })
   loading.value = false

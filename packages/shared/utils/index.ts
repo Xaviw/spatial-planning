@@ -97,8 +97,8 @@ export function loop<T extends Recordable>(
 export function getOperationsFromDiff<T extends Recordable>(
   newArr: T[],
   oldArr: T[],
+  sortKey?: string,
   key: keyof T = 'id',
-  sortKey = 'sort',
 ) {
   const newMap = new Map(
     newArr.map((data, index) => [
@@ -119,22 +119,26 @@ export function getOperationsFromDiff<T extends Recordable>(
     ]),
   )
 
-  const operations: OperationItem<T & { [key: string]: number }>[] = []
+  const operations: OperationItem<T>[] = []
 
   for (const [k, v] of newMap) {
     if (!oldMap.has(k)) {
-      operations.push({
+      const operate: OperationItem<T> = {
         op: 'add',
-        value: { ...v.data, [sortKey]: v.index },
-      })
+        value: { ...v.data },
+      }
+      if (sortKey) {
+        ;(operate.value as any)[sortKey] = v.index
+      }
+      operations.push(operate)
     } else {
-      const oldValue = oldMap.get(k)
+      const oldValue = oldMap.get(k)!
       const operation = {
         op: 'replace',
         id: k,
         value: {},
       } as OperationItem<any>
-      if (v.index !== oldValue!.index) {
+      if (sortKey && v.index !== oldValue.index) {
         operation.value[sortKey] = v.index
       }
       if (!isEqual(v.data, oldValue!.data)) {

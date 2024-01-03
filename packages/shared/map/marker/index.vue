@@ -5,29 +5,36 @@
 import { isObject } from 'lodash-es'
 import { useMapStore } from '../mapStore'
 import type { OverlayProps } from '#/business'
+import type { AMap } from '@amap/amap-jsapi-types'
 
 const markerProps = defineProps<OverlayProps<'Marker'>>()
 
 const mapStore = useMapStore()
 
-const marker = new window.AMap.Marker({
-  ...markerProps.props,
-  icon:
-    markerProps.props.icon && typeof markerProps.props.icon === 'object'
-      ? new window.AMap.Icon(markerProps.props.icon)
-      : markerProps.props.icon,
-  map: mapStore.map,
-})
+let marker: AMap.Marker
 
-marker.setExtData(markerProps.id)
-
-mapStore.bindMenu(marker)
+createMarker()
 
 mapStore.map?.setFitView()
 
 onUnmounted(() => {
   marker.destroy()
 })
+
+function createMarker() {
+  marker = new window.AMap.Marker({
+    ...markerProps.props,
+    icon:
+      markerProps.props.icon && typeof markerProps.props.icon === 'object'
+        ? new window.AMap.Icon(markerProps.props.icon)
+        : markerProps.props.icon,
+    map: mapStore.map,
+  })
+
+  marker.setExtData(markerProps.id)
+
+  mapStore.bindMenu(marker)
+}
 
 watch(
   () => markerProps.visible,
@@ -58,6 +65,7 @@ watch(
       }
     }
   },
+  { deep: true },
 )
 
 watch(
@@ -65,6 +73,7 @@ watch(
   label => {
     label && marker.setLabel(label as any)
   },
+  { deep: true },
 )
 
 watch(
@@ -99,6 +108,22 @@ watch(
   () => markerProps.props.content,
   content => {
     content && marker.setContent(content)
+  },
+)
+
+watch(
+  () => markerProps.props.angle,
+  angle => {
+    typeof angle === 'number' && marker.setAngle(angle)
+  },
+)
+watch(
+  () => markerProps.props.zooms,
+  zooms => {
+    if (zooms) {
+      marker.destroy()
+      createMarker()
+    }
   },
 )
 </script>

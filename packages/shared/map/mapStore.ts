@@ -8,6 +8,7 @@ import type {
   OverlayItem,
   OverlayInstance,
   MapEvent,
+  ToolKeys,
 } from '#/business'
 import type { Loca } from '#/loca'
 import type { AMap } from '@amap/amap-jsapi-types'
@@ -17,9 +18,14 @@ export const useMapStore = defineStore('map', () => {
     data: mapData,
     loading,
     send: getMapData,
+    onSuccess,
   } = useRequest((id: string) => getMap(id, true), {
     immediate: false,
     initialData: [],
+  })
+
+  onSuccess(() => {
+    activeLayer.value = mapData.value[0]?.id
   })
 
   const { canRedo, canUndo, clear, redo, undo, history, pause, resume } =
@@ -37,10 +43,14 @@ export const useMapStore = defineStore('map', () => {
 
   const map = ref<AMap.Map>()
   const loca = ref<Loca.Container>()
+  const mousetool = ref<AMap.MouseTool>()
+
   const activeOverlay = ref<OverlayItem<OverlayType>>()
   const activeInstance = ref<ValueTypes<OverlayInstance>>()
   const activeId = ref<string>()
   const editData = ref<OverlayItem<OverlayType>>()
+  const activeTool = ref<ToolKeys>()
+  const activeLayer = ref<string>()
 
   const selectedMenu = ref<string>()
   const layerModalOpen = ref(false)
@@ -146,5 +156,8 @@ export const useMapStore = defineStore('map', () => {
     cancelEdit,
     pause,
     resume,
+    mousetool,
+    activeTool,
+    activeLayer,
   }
 })

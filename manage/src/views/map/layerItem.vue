@@ -1,5 +1,9 @@
 <template>
-  <tr class="border-0 border-b border-gray-3 border-solid">
+  <tr
+    class="border-0 border-b border-gray-3 border-solid"
+    :style="[activeLayer === layer.id ? 'background-color: #bae0ff' : '']"
+    @click="activeLayer = layer.id"
+  >
     <td class="w-30px text-center">
       <template v-if="!visible">
         <ATooltip title="显示">
@@ -122,6 +126,7 @@
 
 <script setup lang="ts">
 import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
+import { useMapStore } from '@sp/shared/map'
 import { cloneDeep, omit } from 'lodash-es'
 import type { LayerItem, OverlayType } from '#/business'
 
@@ -134,6 +139,8 @@ const emits = defineEmits<{
   (e: 'remove', id: string): void
   (e: 'save', newData: Omit<LayerItem<OverlayType>, 'overlays'>): void
 }>()
+
+const { activeLayer } = storeToRefs(useMapStore())
 
 const visible = ref(true)
 const editData = ref<Omit<LayerItem<OverlayType>, 'overlays'>>()

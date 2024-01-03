@@ -4,7 +4,7 @@ import unoCSS from 'unocss/vite'
 import autoImport from 'unplugin-auto-import/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import components from 'unplugin-vue-components/vite'
-import { loadEnv, defineConfig, UserConfig } from 'vite'
+import { loadEnv, defineConfig } from 'vite'
 import { viteMockServe } from 'vite-plugin-mock'
 
 export default function (name) {
