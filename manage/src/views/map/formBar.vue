@@ -32,31 +32,25 @@ import {
   useMapStore,
   findOverlay,
   handleOverlayEdit,
-  handleOverlayCancelEdit,
+  restoreOverlayFromEdit,
 } from '@sp/shared/map'
 import { modal } from '@sp/shared/utils'
 import { cloneDeep, isEqual } from 'lodash-es'
 import BaseForm from './baseForm.vue'
-import { OverlayItem } from '#/business'
 
 const baseFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
 const overlayFormEl = ref<any | null>(null)
 
 const mapStore = useMapStore()
 
-const { activeOverlay, mapData, activeInstance, editData } =
-  storeToRefs(mapStore)
+const { activeOverlay, mapData, editData } = storeToRefs(mapStore)
 
 watch(activeOverlay, async overlay => {
   if (overlay) {
     await nextTick()
     if (baseFormEl.value && overlayFormEl.value) {
       editData.value = cloneDeep(overlay)
-      handleOverlayEdit(
-        editData.value as OverlayItem<'Marker'>,
-        activeInstance.value!,
-        true,
-      )
+      handleOverlayEdit(true)
       baseFormEl.value.formModel = editData.value
       overlayFormEl.value.formModel = editData.value.props
     }
@@ -78,11 +72,7 @@ function onConfirm() {
       mapData.value[layerIndex].overlays.push(newData)
     }
   }
-  handleOverlayEdit(
-    editData.value as OverlayItem<'Marker'>,
-    activeInstance.value!,
-    false,
-  )
+  handleOverlayEdit(false)
   mapStore.cancelEdit()
 }
 
@@ -93,19 +83,9 @@ async function onCancel() {
       content: '您的修改将不会保留，是否确定？',
     })
   }
-  handleOverlayEdit(
-    editData.value as OverlayItem<'Marker'>,
-    activeInstance.value!,
-    false,
-  )
+  handleOverlayEdit(false)
 
-  handleOverlayCancelEdit(
-    mapData.value,
-    editData.value!,
-    activeOverlay.value!,
-    mapStore.pause,
-    mapStore.resume,
-  )
+  restoreOverlayFromEdit()
 
   mapStore.cancelEdit()
 }

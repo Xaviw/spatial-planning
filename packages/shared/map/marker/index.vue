@@ -18,7 +18,7 @@ createMarker()
 mapStore.map?.setFitView()
 
 onUnmounted(() => {
-  marker.destroy()
+  mapStore.map?.remove(marker)
 })
 
 function createMarker() {
@@ -28,12 +28,15 @@ function createMarker() {
       markerProps.props.icon && typeof markerProps.props.icon === 'object'
         ? new window.AMap.Icon(markerProps.props.icon)
         : markerProps.props.icon,
-    map: mapStore.map,
   })
 
   marker.setExtData(markerProps.id)
 
   mapStore.bindMenu(marker)
+
+  if (mapStore.map) {
+    mapStore.map.add(marker)
+  }
 }
 
 watch(
@@ -117,6 +120,14 @@ watch(
     typeof angle === 'number' && marker.setAngle(angle)
   },
 )
+
+watch(
+  () => markerProps.props.zIndex,
+  zIndex => {
+    typeof zIndex === 'number' && marker.setzIndex(zIndex)
+  },
+)
+
 watch(
   () => markerProps.props.zooms,
   zooms => {

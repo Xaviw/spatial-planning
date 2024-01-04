@@ -90,7 +90,7 @@
 import { Vector } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import { ColorPicker } from 'vue3-colorpicker'
-import type { PolylineProps } from '#/business'
+import type { BezierCurveProps } from '#/business'
 
 const strokeStyleOptions = [
   { label: '实线', value: 'solid' },
@@ -109,7 +109,7 @@ const lineCapOptions = [
   { label: '方头', value: 'square' },
 ]
 
-const formModel = ref<PolylineProps>({})
+const formModel = ref<BezierCurveProps>({})
 
 const { resetFields, clearValidate, validate, initialModel } =
   Form.useForm(formModel)

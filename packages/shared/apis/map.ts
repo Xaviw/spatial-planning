@@ -28,6 +28,6 @@ export function getMap(menuId: string, filter: boolean) {
   return method
 }
 
-export function setMap(menuId: string, data: SetMapParams) {
-  return request.Post('/map', { menuId, data })
+export function setMap(data: SetMapParams) {
+  return request.Post('/map', data)
 }

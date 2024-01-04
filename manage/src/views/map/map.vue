@@ -11,10 +11,23 @@ import { useMap } from '@sp/shared/hooks'
 import { useMapStore } from '@sp/shared/map'
 import { debounce } from 'lodash-es'
 
-const { map, loca, mousetool } = storeToRefs(useMapStore())
+const {
+  map,
+  loca,
+  mousetool,
+  polylineEditor,
+  loading,
+  polygonEditor,
+  bezierCurveEditor,
+  rectangleEditor,
+  circleEditor,
+  ellipseEditor,
+} = storeToRefs(useMapStore())
 
 const container = ref<HTMLDivElement | null>(null)
 const zoom = ref<number>()
+
+loading.value = true
 
 useMap(
   container,
@@ -38,9 +51,16 @@ useMap(
     enableLoca: true,
   },
   (_map, _loca) => {
+    loading.value = false
     map.value = _map
     loca.value = _loca
     mousetool.value = new window.AMap.MouseTool(_map)
+    polylineEditor.value = new window.AMap.PolygonEditor(_map)
+    polygonEditor.value = new window.AMap.PolygonEditor(_map)
+    bezierCurveEditor.value = new window.AMap.BezierCurveEditor(_map)
+    rectangleEditor.value = new window.AMap.RectangleEditor(_map)
+    circleEditor.value = new window.AMap.CircleEditor(_map)
+    ellipseEditor.value = new window.AMap.EllipseEditor(_map)
     watchZoom()
   },
 )

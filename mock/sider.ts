@@ -44,7 +44,10 @@ function genList(
     return {
       ...material,
       id: Mock.Random.id(),
-      status: params.filter ? undefined : Mock.Random.boolean(),
+      status:
+        (params.filter as unknown as string) === 'true'
+          ? undefined
+          : Mock.Random.boolean(),
       position: isInModal ? undefined : params.position,
       createTime: new Date().toLocaleString(),
       updateTime: new Date().toLocaleString(),

@@ -41,7 +41,7 @@ export interface SiderItem {
 }
 
 // -----------------标题组件、覆盖物详情-----------------
-export type MaterialItem = Pick<SiderItem, 'id' | 'type' | 'props' | 'status'>
+export type MaterialItem = Pick<SiderItem, 'id' | 'type' | 'props'>
 
 // -----------------变动记录-----------------
 export type OperationType = 'add' | 'remove' | 'replace'
@@ -76,7 +76,7 @@ export type OverlayType =
 
 export type MarkerProps = Pick<
   AMap.MarkerOptions,
-  'content' | 'title' | 'zIndex' | 'angle' | 'zooms'
+  'title' | 'zIndex' | 'angle' | 'zooms' | 'position'
 > & {
   position?: AMap.Vector2
   icon?: string | AMap.IconOpts
@@ -115,8 +115,126 @@ export type PolylineProps = Pick<
   | 'lineCap'
   | 'geodesic'
   | 'showDir'
+  | 'zIndex'
+  | 'zooms'
 > & {
   path?: AMap.Vector2[]
+}
+
+export type BezierCurveProps = Pick<
+  AMap.BezierCurveOptions,
+  | 'strokeColor'
+  | 'strokeOpacity'
+  | 'strokeWeight'
+  | 'isOutline'
+  | 'borderWeight'
+  | 'outlineColor'
+  | 'strokeStyle'
+  | 'strokeDasharray'
+  | 'lineJoin'
+  | 'lineCap'
+  | 'geodesic'
+  | 'showDir'
+  | 'zIndex'
+  | 'zooms'
+> & {
+  path?: AMap.Vector[]
+}
+
+export type PolygonProps = Pick<
+  AMap.PolygonOptions,
+  | 'strokeColor'
+  | 'strokeOpacity'
+  | 'strokeWeight'
+  | 'strokeStyle'
+  | 'strokeDasharray'
+  | 'fillColor'
+  | 'fillOpacity'
+  | 'extrusionHeight'
+  | 'wallColor'
+  | 'roofColor'
+  | 'zIndex'
+  | 'zooms'
+> & {
+  path?: AMap.Vector2[]
+  fillOpacity?: number
+}
+
+export type RectangleProps = Pick<
+  AMap.RectangleOptions,
+  | 'strokeColor'
+  | 'strokeOpacity'
+  | 'strokeWeight'
+  | 'strokeStyle'
+  | 'strokeDasharray'
+  | 'fillColor'
+  | 'fillOpacity'
+  | 'zIndex'
+  | 'extrusionHeight'
+  | 'roofColor'
+  | 'wallColor'
+  | 'zooms'
+> & {
+  bounds?: AMap.Vector2[]
+  fillOpacity?: number
+}
+
+export type CircleProps = Pick<
+  AMap.CircleOptions,
+  | 'center'
+  | 'radius'
+  | 'zIndex'
+  | 'strokeColor'
+  | 'strokeOpacity'
+  | 'strokeDasharray'
+  | 'strokeStyle'
+  | 'strokeWeight'
+  | 'fillColor'
+  | 'fillOpacity'
+  | 'extrusionHeight'
+  | 'roofColor'
+  | 'wallColor'
+  | 'zooms'
+> & {
+  fillOpacity?: number
+}
+
+export type EllipseProps = Pick<
+  AMap.EllipseOptions,
+  | 'center'
+  | 'radius'
+  | 'zIndex'
+  | 'strokeColor'
+  | 'strokeOpacity'
+  | 'strokeDasharray'
+  | 'strokeStyle'
+  | 'strokeWeight'
+  | 'fillColor'
+  | 'fillOpacity'
+  | 'extrusionHeight'
+  | 'roofColor'
+  | 'wallColor'
+  | 'zooms'
+> & {
+  fillOpacity?: number
+}
+
+export type TextProps = Pick<
+  AMap.TextOptions,
+  'position' | 'text' | 'title' | 'zIndex' | 'angle' | 'zooms' | 'style'
+> & {
+  position?: AMap.Vector2
+  offset?: AMap.Vector2
+  anchor?:
+    | 'top-left'
+    | 'top-center'
+    | 'top-right'
+    | 'middle-left'
+    | 'center'
+    | 'middle-right'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right'
 }
 
 export interface OverlayInstance {
@@ -134,12 +252,12 @@ export interface OverlayInstance {
 export interface OverlayOptions {
   Marker: MarkerProps
   Polyline: PolylineProps
-  BezierCurve: AMap.BezierCurveOptions
-  Polygon: AMap.PolygonOptions
-  Rectangle: AMap.RectangleOptions
-  Circle: AMap.CircleOptions
-  Ellipse: AMap.EllipseOptions
-  Text: AMap.TextOptions
+  BezierCurve: BezierCurveProps
+  Polygon: PolygonProps
+  Rectangle: RectangleProps
+  Circle: CircleProps
+  Ellipse: EllipseProps
+  Text: TextProps
   Image: AMap.ImageLayerOptions
 }
 
@@ -176,12 +294,22 @@ export type ToolKeys =
   | 'marker'
   | 'polygon'
   | 'polyline'
+  | 'bezierCurve'
   | 'rectangle'
   | 'circle'
+  | 'ellipse'
   | 'rule'
   | 'measureArea'
   | 'text'
   | 'image'
+
+export interface ToolItem {
+  icon: string
+  name: string
+  key: ToolKeys
+  style?: string
+  handler: Fn
+}
 
 export interface MapMutativeState {
   layers: Omit<LayerItem<OverlayType>, 'overlays'>[]

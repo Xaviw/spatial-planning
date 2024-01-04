@@ -1,5 +1,3 @@
-import { capitalize } from 'lodash-es'
-
 const overlayModules: Record<string, any> = import.meta.glob('./**/index.vue', {
   eager: true,
   import: 'default',
@@ -8,7 +6,7 @@ const overlays: Record<string, any> = {}
 for (const path in overlayModules) {
   const name = /^.*\/(.*?)\/index.vue$/.exec(path)?.[1]
   if (name) {
-    overlays[capitalize(name)] = overlayModules[path]
+    overlays[name[0].toUpperCase() + name.slice(1)] = overlayModules[path]
   }
 }
 
@@ -20,7 +18,7 @@ const overlayForms: Record<string, any> = {}
 for (const path in formModules) {
   const name = /^.*\/(.*?)\/form.vue$/.exec(path)?.[1]
   if (name) {
-    overlayForms[capitalize(name)] = formModules[path]
+    overlayForms[name[0].toUpperCase() + name.slice(1)] = formModules[path]
   }
 }
 

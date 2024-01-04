@@ -1,14 +1,16 @@
 import { getMap } from '@sp/shared/apis'
 import { modal } from '@sp/shared/utils'
 import { useRequest } from 'alova'
+import { message } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
-import { findOverlay, openDetail } from './utils'
+import { findOverlay, handleOverlayEdit, openDetail } from './utils'
 import type {
   OverlayType,
   OverlayItem,
   OverlayInstance,
   MapEvent,
   ToolKeys,
+  ToolItem,
 } from '#/business'
 import type { Loca } from '#/loca'
 import type { AMap } from '@amap/amap-jsapi-types'
@@ -19,7 +21,7 @@ export const useMapStore = defineStore('map', () => {
     loading,
     send: getMapData,
     onSuccess,
-  } = useRequest((id: string) => getMap(id, true), {
+  } = useRequest((id: string) => getMap(id, false), {
     immediate: false,
     initialData: [],
   })
@@ -44,6 +46,12 @@ export const useMapStore = defineStore('map', () => {
   const map = ref<AMap.Map>()
   const loca = ref<Loca.Container>()
   const mousetool = ref<AMap.MouseTool>()
+  const polylineEditor = ref<AMap.PolylineEditor>()
+  const polygonEditor = ref<AMap.PolygonEditor>()
+  const bezierCurveEditor = ref<AMap.BezierCurveEditor>()
+  const rectangleEditor = ref<AMap.RectangleEditor>()
+  const circleEditor = ref<AMap.CircleEditor>()
+  const ellipseEditor = ref<AMap.EllipseEditor>()
 
   const activeOverlay = ref<OverlayItem<OverlayType>>()
   const activeInstance = ref<ValueTypes<OverlayInstance>>()
@@ -60,6 +68,26 @@ export const useMapStore = defineStore('map', () => {
     activeInstance.value = undefined
     activeId.value = undefined
     editData.value = undefined
+  }
+
+  function toolManage(item?: ToolItem) {
+    if (activeOverlay.value) {
+      message.warn('请先完成编辑再绘制新覆盖物！')
+      return
+    }
+    if (!item || activeTool.value === item.key) {
+      map.value?.setDefaultCursor('inherit')
+      activeTool.value = undefined
+      mousetool.value?.close(false)
+    } else {
+      if (!activeLayer.value) {
+        message.warn('请先新增图层！')
+        return
+      }
+      map.value?.setDefaultCursor('crosshair')
+      activeTool.value = item.key
+      item.handler()
+    }
   }
 
   let contextMenu: AMap.ContextMenu
@@ -116,9 +144,51 @@ export const useMapStore = defineStore('map', () => {
         },
         0,
       )
+      contextMenu.addItem(
+        '隐藏',
+        () => {
+          activeInstance.value?.hide()
+          message.success('可通过切换图层隐藏、显示恢复覆盖物显示')
+          contextMenu.close()
+        },
+        0,
+      )
+      contextMenu.addItem(
+        '上移一层',
+        () => {
+          const { layer, index } =
+            findOverlay(mapData.value, activeId.value!) || {}
+          if (layer) {
+            layer.overlays[index!].props.zIndex =
+              (layer.overlays[index!].props.zIndex || 10) + 1
+          }
+          contextMenu.close()
+        },
+        0,
+      )
+      contextMenu.addItem(
+        '下移一层',
+        () => {
+          const { layer, index } =
+            findOverlay(mapData.value, activeId.value!) || {}
+          if (layer) {
+            layer.overlays[index!].props.zIndex =
+              (layer.overlays[index!].props.zIndex || 10) - 1
+          }
+          contextMenu.close()
+        },
+        0,
+      )
     }
 
     overlay.on('rightclick', (e: MapEvent) => {
+      // 右击时关闭覆盖物编辑和绘制，避免单击选项时产生多余绘制操作
+      if (activeOverlay.value) {
+        handleOverlayEdit(false)
+      }
+      if (activeTool.value) {
+        toolManage()
+      }
       activeInstance.value = e.target
       activeId.value = (e.target as any).getExtData()
       contextMenu.open(e.target._map, [e.lnglat.lng, e.lnglat.lat])
@@ -159,5 +229,12 @@ export const useMapStore = defineStore('map', () => {
     mousetool,
     activeTool,
     activeLayer,
+    polylineEditor,
+    polygonEditor,
+    toolManage,
+    bezierCurveEditor,
+    rectangleEditor,
+    circleEditor,
+    ellipseEditor,
   }
 })

@@ -17,17 +17,21 @@ createPolyline()
 mapStore.map?.setFitView()
 
 onUnmounted(() => {
-  polyline.destroy()
+  // 如果调用 destroy 方法，切换数据后地图报错
+  // polyline.destroy()
+  mapStore.map?.remove(polyline)
 })
 
 function createPolyline() {
   polyline = new window.AMap.Polyline({
     ...polylineProps.props,
+    cursor: 'pointer',
   })
 
   polyline.setExtData(polylineProps.id)
 
   mapStore.bindMenu(polyline)
+
   if (mapStore.map) {
     mapStore.map.add(polyline)
   }
@@ -41,6 +45,13 @@ watch(
     } else {
       polyline.hide()
     }
+  },
+)
+
+watch(
+  () => polylineProps.props.path,
+  path => {
+    path && polyline.setPath(path)
   },
 )
 

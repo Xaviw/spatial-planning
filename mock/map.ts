@@ -7,6 +7,7 @@ import type {
   MaterialItem,
   OverlayItem,
   OverlayType,
+  PolygonProps,
   PolylineProps,
 } from '../types/business'
 import type { GetMapParams } from '@sp/shared/apis'
@@ -20,7 +21,7 @@ export default [
     statusCode: 200,
     response: ({ query }) => ({
       code: 1,
-      data: genList(1, 3, 5, 10, 3, 10, query as GetMapParams),
+      data: genList(1, 3, 3, 6, 3, 6, query as GetMapParams),
       message: 'ok',
     }),
   },
@@ -56,7 +57,10 @@ function genList(
       name: Mock.Random.cword(),
       asLegend: Mock.Random.boolean(),
       legendImg: Mock.Random.image('60x60'),
-      status: params.filter ? undefined : Mock.Random.boolean(),
+      status:
+        (params.filter as unknown as string) === 'true'
+          ? undefined
+          : Mock.Random.boolean(),
       createTime: new Date().toLocaleString(),
       updateTime: new Date().toLocaleString(),
       overlays: Array.from({ length: Mock.Random.natural(oMin, oMax) }).map(
@@ -67,13 +71,16 @@ function genList(
             layerId,
             type: keys[randomIndex],
             name: Mock.Random.cword(),
-            status: params.filter ? undefined : Mock.Random.boolean(),
+            status:
+              (params.filter as unknown as string) === 'true'
+                ? undefined
+                : Mock.Random.boolean(),
             createTime: new Date().toLocaleString(),
             updateTime: new Date().toLocaleString(),
             props: functions[randomIndex](params),
             detailTitle: Mock.Random.ctitle(),
             detailWidth: Mock.Random.natural(25, 80) + 'rem',
-            details: genDetails(dMin, dMax, params),
+            details: genDetails(dMin, dMax),
           } as OverlayItem<OverlayType>
         },
       ),
@@ -81,13 +88,12 @@ function genList(
   })
 }
 
-function genDetails(min: number, max: number, params: GetMapParams) {
+function genDetails(min: number, max: number) {
   const strategies = Object.values(materialStrategies)
   return Array.from({ length: Mock.Random.natural(min, max) }).map(() => {
     return {
       ...strategies[Mock.Random.natural(0, strategies.length - 1)](),
       id: Mock.Random.id(),
-      status: params.filter ? undefined : Mock.Random.boolean(),
     } as MaterialItem
   })
 }
@@ -104,7 +110,15 @@ const generationFunctions = {
   },
   Polyline(): PolylineProps {
     return {
-      path: Array.from({ length: Mock.Random.integer(2, 20) }).map(() => [
+      path: Array.from({ length: Mock.Random.integer(2, 5) }).map(() => [
+        generateRandomDecimal(103.95, 104.2, 6),
+        generateRandomDecimal(30.57, 30.7, 6),
+      ]),
+    }
+  },
+  Polygon(): PolygonProps {
+    return {
+      path: Array.from({ length: Mock.Random.integer(2, 5) }).map(() => [
         generateRandomDecimal(103.95, 104.2, 6),
         generateRandomDecimal(30.57, 30.7, 6),
       ]),
