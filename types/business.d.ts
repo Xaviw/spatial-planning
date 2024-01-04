@@ -72,6 +72,7 @@ export type OverlayType =
   | 'Circle'
   | 'Ellipse'
   | 'Text'
+  | 'LabelMarker'
   | 'Image'
 
 export type MarkerProps = Pick<
@@ -237,6 +238,11 @@ export type TextProps = Pick<
     | 'bottom-right'
 }
 
+export type LabelMarkerProps = Pick<
+  AMap.LabelMarkerOptions,
+  'name' | 'zooms' | 'opacity' | 'rank' | 'zIndex' | 'icon' | 'text'
+>
+
 export interface OverlayInstance {
   Marker: AMap.Marker
   Polyline: AMap.Polyline
@@ -246,6 +252,7 @@ export interface OverlayInstance {
   Circle: AMap.Circle
   Ellipse: AMap.Ellipse
   Text: AMap.Text
+  LabelMarker: AMap.LabelMarker
   Image: AMap.ImageLayer
 }
 
@@ -258,6 +265,7 @@ export interface OverlayOptions {
   Circle: CircleProps
   Ellipse: EllipseProps
   Text: TextProps
+  LabelMarker: LabelMarkerProps
   Image: AMap.ImageLayerOptions
 }
 
@@ -301,6 +309,7 @@ export type ToolKeys =
   | 'rule'
   | 'measureArea'
   | 'text'
+  | 'labelMarker'
   | 'image'
 
 export interface ToolItem {

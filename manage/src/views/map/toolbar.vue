@@ -174,27 +174,33 @@ const list: ToolItem[] = [
     name: '文字',
     key: 'text',
     handler: () => {
-      const centerLnglat = map.value!.getCenter()
-
-      const layerIndex = mapData.value.findIndex(
-        item => item.id === activeLayer.value,
-      )
-      mapData.value[layerIndex].overlays.push({
-        createTime: new Date().toLocaleString(),
-        details: [],
-        id: `add_${Date.now()}`,
-        layerId: activeLayer.value!,
-        name: '',
-        props: {
-          position: [centerLnglat.lng, centerLnglat.lat],
-          text: '新增文本',
-        },
-        status: true,
-        type: 'Text',
+      map.value?.setDefaultCursor('crosshair')
+      map.value?.on('click', (e: MapEvent) => {
+        console.log('e: ', e)
+        const layerIndex = mapData.value.findIndex(
+          item => item.id === activeLayer.value,
+        )
+        mapData.value[layerIndex].overlays.push({
+          createTime: new Date().toLocaleString(),
+          details: [],
+          id: `add_${Date.now()}`,
+          layerId: activeLayer.value!,
+          name: '',
+          props: {
+            position: [e.lnglat.lng, e.lnglat.lat],
+            text: '新增文本',
+          },
+          status: true,
+          type: 'Text',
+        })
       })
-      message.info('请右击地图中心新增的文本进行编辑！')
-      mapStore.toolManage()
     },
+  },
+  {
+    icon: 'i-ic:outline-text-fields',
+    name: '文字标注',
+    key: 'labelMarker',
+    handler: () => {},
   },
   {
     icon: 'i-material-symbols:image-outline',

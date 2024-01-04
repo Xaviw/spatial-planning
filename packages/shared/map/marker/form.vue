@@ -47,7 +47,7 @@
         v-model:value="formModel.angle"
         :min="0"
         :max="360"
-        addonAfter="°"
+        addonAfter="度"
       />
     </AFormItem>
 
