@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" class="relative">
+  <div ref="container" class="relative select-none">
     <div class="absolute right-0 top-0 z-1 bg-white px-4 py-2">
       当前缩放等级：{{ zoom }}
     </div>
@@ -22,6 +22,7 @@ const {
   rectangleEditor,
   circleEditor,
   ellipseEditor,
+  labelsLayer,
 } = storeToRefs(useMapStore())
 
 const container = ref<HTMLDivElement | null>(null)
@@ -41,11 +42,11 @@ useMap(
         'AMap.MouseTool',
         'AMap.MoveAnimation',
         'AMap.PolylineEditor',
+        'AMap.BezierCurveEditor',
         'AMap.PolygonEditor',
         'AMap.RectangleEditor',
         'AMap.CircleEditor',
         'AMap.EllipseEditor',
-        'AMap.BezierCurveEditor',
       ],
     },
     enableLoca: true,
@@ -54,10 +55,15 @@ useMap(
     loading.value = false
     map.value = _map
     loca.value = _loca
+    labelsLayer.value = new window.AMap.LabelsLayer({
+      allowCollision: true,
+      collision: true,
+    })
+    _map.add(labelsLayer.value)
     mousetool.value = new window.AMap.MouseTool(_map)
     polylineEditor.value = new window.AMap.PolygonEditor(_map)
-    polygonEditor.value = new window.AMap.PolygonEditor(_map)
     bezierCurveEditor.value = new window.AMap.BezierCurveEditor(_map)
+    polygonEditor.value = new window.AMap.PolygonEditor(_map)
     rectangleEditor.value = new window.AMap.RectangleEditor(_map)
     circleEditor.value = new window.AMap.CircleEditor(_map)
     ellipseEditor.value = new window.AMap.EllipseEditor(_map)

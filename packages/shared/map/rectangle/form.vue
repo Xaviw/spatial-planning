@@ -66,20 +66,6 @@
     <AFormItem label="立面体顶面颜色" help="仅“高度”大于0时生效">
       <ColorPicker v-model:pureColor="formModel.roofColor" />
     </AFormItem>
-
-    <AFormItem
-      label="显示范围"
-      help="仅在缩放等级范围内显示"
-      extra="可在地图右上角查看缩放等级"
-    >
-      <Vector
-        v-model="formModel.zooms"
-        :props="[
-          { addonAfter: '-', min: 2 },
-          { addonAfter: '级', min: 2 },
-        ]"
-      />
-    </AFormItem>
   </AForm>
 </template>
 

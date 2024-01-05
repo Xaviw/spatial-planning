@@ -1,4 +1,5 @@
 import type { AMap } from '@amap/amap-jsapi-types'
+import type { ComponentPublicInstance } from 'vue'
 
 // -----------------菜单-----------------
 export interface MenuItem {
@@ -240,8 +241,44 @@ export type TextProps = Pick<
 
 export type LabelMarkerProps = Pick<
   AMap.LabelMarkerOptions,
-  'name' | 'zooms' | 'opacity' | 'rank' | 'zIndex' | 'icon' | 'text'
->
+  | 'name'
+  | 'position'
+  | 'zooms'
+  | 'opacity'
+  | 'rank'
+  | 'zIndex'
+  | 'icon'
+  | 'text'
+> & {
+  icon?: {
+    image: string
+    size?: Vector2
+    clipOrigin?: Vector2
+    clipSize?: Vector2
+    anchor?: string
+    offset?: Vector2
+    retina?: boolean
+  }
+  text?: {
+    content: string
+    direction?: string
+    offset?: Vector2
+    zooms?: Vector2
+    style?: {
+      fontSize?: number
+      fontFamily?: string
+      fontWeight?: string
+      fillColor?: string
+      strokeColor?: string
+      strokeWidth?: number
+      padding?: number[]
+      backgroundColor?: string
+      borderColor?: string
+      borderWidth?: number
+      fold?: boolean
+    }
+  }
+}
 
 export interface OverlayInstance {
   Marker: AMap.Marker
@@ -298,26 +335,19 @@ export interface LayerItem<T extends OverlayType> {
   updateTime?: string
 }
 
-export type ToolKeys =
-  | 'marker'
-  | 'polygon'
-  | 'polyline'
-  | 'bezierCurve'
-  | 'rectangle'
-  | 'circle'
-  | 'ellipse'
-  | 'rule'
-  | 'measureArea'
-  | 'text'
-  | 'labelMarker'
-  | 'image'
-
-export interface ToolItem {
-  icon: string
+export interface OverlayModule {
+  type: OverlayType
+  overlay: ComponentPublicInstance
+  form: ComponentPublicInstance
   name: string
-  key: ToolKeys
-  style?: string
-  handler: Fn
+  icon: string
+  description?: string
+  drawHelp: string[]
+  editHelp: string[]
+  beforeDraw: Fn
+  afterDraw?: Fn<[ValueTypes<OverlayInstance>]>
+  handleEdit: Fn<[boolean]>
+  cancelEdit: Fn<[LayerItem<OverlayType>, number, OverlayItem<OverlayType>]>
 }
 
 export interface MapMutativeState {

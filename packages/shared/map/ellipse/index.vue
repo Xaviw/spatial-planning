@@ -22,6 +22,7 @@ onUnmounted(() => {
 })
 
 function createEllipse() {
+  console.log('ellipseProps.props: ', ellipseProps.props)
   ellipse = new window.AMap.Ellipse({
     ...ellipseProps.props,
     cursor: 'pointer',

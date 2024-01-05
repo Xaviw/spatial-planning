@@ -69,20 +69,6 @@
     <AFormItem label="是否显示方向箭头" help="建议线条宽度大于6时使用">
       <ASwitch v-model:checked="formModel.showDir" />
     </AFormItem>
-
-    <AFormItem
-      label="显示范围"
-      help="仅在缩放等级范围内显示"
-      extra="可在地图右上角查看缩放等级"
-    >
-      <Vector
-        v-model="formModel.zooms"
-        :props="[
-          { addonAfter: '-', min: 2 },
-          { addonAfter: '级', min: 2 },
-        ]"
-      />
-    </AFormItem>
   </AForm>
 </template>
 

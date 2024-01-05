@@ -17,8 +17,6 @@ createBezierCurve()
 mapStore.map?.setFitView()
 
 onUnmounted(() => {
-  // 如果调用 destroy 方法，切换数据后地图报错
-  // bezierCurve.destroy()
   mapStore.map?.remove(bezierCurve)
 })
 

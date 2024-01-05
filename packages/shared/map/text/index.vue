@@ -98,7 +98,7 @@ watch(
   () => textProps.props.zooms,
   zooms => {
     if (zooms) {
-      text.destroy()
+      mapStore.map?.remove(text)
       createText()
     }
   },

@@ -49,11 +49,26 @@
     <AFormItem label="详情弹窗宽度" help="默认“25rem”">
       <CssSizeInput v-model="formModel.detailWidth" />
     </AFormItem>
+
+    <AFormItem
+      label="显示范围"
+      help="仅在缩放等级范围内显示"
+      extra="可在地图右上角查看缩放等级"
+    >
+      <Vector
+        :modelValue="formModel.props?.zooms"
+        @update:modelValue="onZoomsUpdate"
+        :props="[
+          { addonAfter: '-', min: 2, max: 26 },
+          { addonAfter: '级', min: 2, max: 26 },
+        ]"
+      />
+    </AFormItem>
   </AForm>
 </template>
 
 <script setup lang="ts">
-import { CssSizeInput } from '@sp/shared/components'
+import { CssSizeInput, Vector } from '@sp/shared/components'
 import { SiderModalEditor } from '@sp/shared/helper/siderHelper'
 import { useModal } from '@sp/shared/hooks'
 import { overlayOptions, useMapStore } from '@sp/shared/map'
@@ -62,11 +77,9 @@ import { cloneDeep } from 'lodash-es'
 import type { MaterialItem, OverlayItem, OverlayType } from '#/business'
 import type { Rule } from 'ant-design-vue/es/form'
 
-type BaseOverlay = Partial<Omit<OverlayItem<OverlayType>, 'props'>>
-
 const { layers } = storeToRefs(useMapStore())
 
-const formModel = ref<BaseOverlay>({})
+const formModel = ref({} as OverlayItem<OverlayType>)
 
 const rules = ref<Record<string, Rule[]>>({
   name: [
@@ -91,6 +104,13 @@ const rules = ref<Record<string, Rule[]>>({
 
 const { validateInfos, resetFields, validate, clearValidate, initialModel } =
   Form.useForm(formModel, rules)
+
+function onZoomsUpdate(zooms: any[]) {
+  if (!formModel.value.props) {
+    formModel.value.props = {}
+  }
+  formModel.value.props.zooms = zooms as [number, number]
+}
 
 const { open, close } = useModal('OverlayDetailEditor', {
   keyboard: false,

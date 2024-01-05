@@ -5,7 +5,7 @@
         <BaseForm ref="baseFormEl" />
 
         <component
-          :is="overlayForms[activeOverlay.type]"
+          :is="overlays[activeOverlay.type].form"
           :key="activeOverlay.id"
           ref="overlayFormEl"
         />
@@ -27,13 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  overlayForms,
-  useMapStore,
-  findOverlay,
-  handleOverlayEdit,
-  restoreOverlayFromEdit,
-} from '@sp/shared/map'
+import { overlays, useMapStore, findOverlay } from '@sp/shared/map'
 import { modal } from '@sp/shared/utils'
 import { cloneDeep, isEqual } from 'lodash-es'
 import BaseForm from './baseForm.vue'
@@ -49,8 +43,10 @@ watch(activeOverlay, async overlay => {
   if (overlay) {
     await nextTick()
     if (baseFormEl.value && overlayFormEl.value) {
+      // 开启覆盖物编辑
+      overlays[overlay.type].handleEdit(true)
+      // 开启表单编辑
       editData.value = cloneDeep(overlay)
-      handleOverlayEdit(true)
       baseFormEl.value.formModel = editData.value
       overlayFormEl.value.formModel = editData.value.props
     }
@@ -58,6 +54,7 @@ watch(activeOverlay, async overlay => {
 })
 
 function onConfirm() {
+  // 同步修改的值
   const newData = editData.value!
   if (!isEqual(newData, activeOverlay.value)) {
     const { layer, index } =
@@ -72,7 +69,8 @@ function onConfirm() {
       mapData.value[layerIndex].overlays.push(newData)
     }
   }
-  handleOverlayEdit(false)
+  // 关闭编辑
+  overlays[activeOverlay.value!.type]?.handleEdit(false)
   mapStore.cancelEdit()
 }
 
@@ -83,10 +81,20 @@ async function onCancel() {
       content: '您的修改将不会保留，是否确定？',
     })
   }
-  handleOverlayEdit(false)
+  // 暂停历史记录追踪
+  mapStore.pause()
+  // 恢复覆盖物编辑器产生的修改
+  const { layer, index, overlay } = findOverlay(
+    mapData.value,
+    activeOverlay.value!.id,
+  )!
+  overlays[activeOverlay.value!.type].cancelEdit(layer, index, overlay)
+  nextTick(() => {
+    mapStore.resume()
+  })
 
-  restoreOverlayFromEdit()
-
+  // 关闭编辑
+  overlays[activeOverlay.value!.type]?.handleEdit(false)
   mapStore.cancelEdit()
 }
 </script>

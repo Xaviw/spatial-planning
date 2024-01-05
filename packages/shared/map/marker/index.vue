@@ -132,7 +132,7 @@ watch(
   () => markerProps.props.zooms,
   zooms => {
     if (zooms) {
-      marker.destroy()
+      mapStore.map?.remove(marker)
       createMarker()
     }
   },

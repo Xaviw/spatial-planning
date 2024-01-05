@@ -15,68 +15,12 @@
           重做
         </AButton>
       </div>
-      <div class="flex items-center">
-        <ATooltip placement="bottom">
-          <ATag color="processing">
-            操作帮助
-            <template #icon>
-              <i class="i-ant-design:question-circle-outlined" />
-            </template>
-          </ATag>
-
-          <template #title>
-            <div>右击地图覆盖物进行操作；</div>
-            <div>点击左侧工具栏中工具绘制覆盖物(再次点击取消)；</div>
-
-            <div v-if="['Marker', 'Text'].includes(activeOverlay?.type || '')">
-              拖动移动位置；
-            </div>
-            <div v-if="activeTool === 'marker'">
-              点击地图目标位置新增标记点；
-            </div>
-
-            <template
-              v-if="['Polyline', 'Polygon'].includes(activeOverlay?.type || '')"
-            >
-              <div>拖动白色控制点移动端点位置；</div>
-              <div>拖动蓝色控制点新增端点；</div>
-              <div>点击白色控制点删除端点；</div>
-              <div>拖动非控制点移动整体位置；</div>
-            </template>
-            <div v-if="['polyline', 'polygon'].includes(activeTool || '')">
-              点击地图目标位置新增端点，双击目标位置或右击完成绘制；
-            </div>
-
-            <template
-              v-if="['BezierCurve'].includes(activeOverlay?.type || '')"
-            >
-              <div>拖动白色控制点移动端点位置；</div>
-              <div>拖动蓝色控制点新增端点；</div>
-              <div>右击白色控制点新增曲度控制点；</div>
-              <div>左击删除控制点；</div>
-              <div>拖动非控制点移动整体位置；</div>
-            </template>
-
-            <div v-if="['rectangle', 'circle'].includes(activeTool || '')">
-              从目标位置开始按住鼠标左键并拖动绘制
-            </div>
-            <template
-              v-if="['Rectangle', 'Circle'].includes(activeOverlay?.type || '')"
-            >
-              <div>拖动控制点改变尺寸；</div>
-              <div>拖动非控制点移动整体位置；</div>
-            </template>
-
-            <div v-if="activeOverlay?.type === 'Ellipse'">
-              拖动中心控制点改变位置；拖动边缘控制点改变尺寸；
-            </div>
-          </template>
-        </ATooltip>
-        <AButton type="primary" :disabled="!canUndo" @click="onSubmit">
-          提交
-        </AButton>
-      </div>
+      <AButton type="primary" :disabled="!canUndo" @click="onSubmit">
+        提交
+      </AButton>
     </div>
+
+    <AAlert showIcon message="右击覆盖物进行操作" />
 
     <div class="mt-2 flex items-center">
       <span>选择菜单：</span>
@@ -107,16 +51,8 @@ import { omit } from 'lodash-es'
 
 const mapStore = useMapStore()
 
-const {
-  canRedo,
-  canUndo,
-  selectedMenu,
-  loading,
-  sourceData,
-  mapData,
-  activeOverlay,
-  activeTool,
-} = storeToRefs(mapStore)
+const { canRedo, canUndo, selectedMenu, loading, sourceData, mapData } =
+  storeToRefs(mapStore)
 
 const { menuData, menuSearchValue, onMenuDropdown, onMenuFilter } =
   useMenuTree()

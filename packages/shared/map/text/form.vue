@@ -34,20 +34,6 @@
     </AFormItem>
 
     <AFormItem
-      label="显示范围"
-      help="仅在缩放等级范围内显示"
-      extra="可在地图右上角查看缩放等级"
-    >
-      <Vector
-        v-model="formModel.zooms"
-        :props="[
-          { addonAfter: '-', min: 2 },
-          { addonAfter: '级', min: 2 },
-        ]"
-      />
-    </AFormItem>
-
-    <AFormItem
       label="文本样式"
       help="CSS代码，如：“{'background-color':'red'}”"
     >
@@ -58,20 +44,9 @@
 
 <script setup lang="ts">
 import { Vector } from '@sp/shared/components'
+import { anchorOptions } from '@sp/shared/map'
 import { Form } from 'ant-design-vue'
 import type { TextProps } from '#/business'
-
-const anchorOptions = [
-  { value: 'top-left', label: '左上角' },
-  { value: 'top-center', label: '顶部中点' },
-  { value: 'top-right', label: '右上角' },
-  { value: 'middle-left', label: '左侧中点' },
-  { value: 'center', label: '中点' },
-  { value: 'middle-right', label: '右侧中点' },
-  { value: 'bottom-left', label: '左下角' },
-  { value: 'bottom-center', label: '底部中点' },
-  { value: 'bottom-right', label: '右下角' },
-]
 
 const formModel = ref<TextProps>({})
 
