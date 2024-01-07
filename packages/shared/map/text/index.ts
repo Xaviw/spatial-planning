@@ -34,6 +34,7 @@ function synchronization() {
 
 export default {
   type: 'Text',
+  sort: 2,
   overlay: Overlay,
   form: Form,
   name: '文本',

@@ -23,6 +23,7 @@ const {
 
 export default {
   type: 'Marker',
+  sort: 1,
   overlay: Overlay,
   form: Form,
   name: '标记点',

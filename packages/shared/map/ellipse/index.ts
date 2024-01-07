@@ -42,6 +42,7 @@ function synchronization() {
 
 export default {
   type: 'Ellipse',
+  sort: 9,
   overlay: Overlay,
   form: Form,
   name: '椭圆形',

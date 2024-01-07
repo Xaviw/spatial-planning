@@ -36,6 +36,7 @@ function synchronization() {
 
 export default {
   type: 'Polygon',
+  sort: 6,
   overlay: Overlay,
   form: Form,
   name: '多边形',

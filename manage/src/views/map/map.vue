@@ -47,6 +47,7 @@ useMap(
         'AMap.RectangleEditor',
         'AMap.CircleEditor',
         'AMap.EllipseEditor',
+        'AMap.ElasticMarker',
       ],
     },
     enableLoca: true,

@@ -36,6 +36,7 @@ function synchronization() {
 
 export default {
   type: 'Polyline',
+  sort: 4,
   overlay: Overlay,
   form: Form,
   name: '折线',

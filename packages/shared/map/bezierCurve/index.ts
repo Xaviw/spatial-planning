@@ -35,6 +35,7 @@ function synchronization() {
 
 export default {
   type: 'BezierCurve',
+  sort: 5,
   overlay: Overlay,
   form: Form,
   name: '曲线',

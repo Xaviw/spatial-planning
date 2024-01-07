@@ -5,7 +5,13 @@ import { useRequest } from 'alova'
 import { message } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
 import { findOverlay, openDetail } from './utils'
-import type { OverlayType, OverlayItem, OverlayInstance } from '#/business'
+import type {
+  OverlayType,
+  OverlayItem,
+  OverlayInstance,
+  ToolType,
+  OverlayModule,
+} from '#/business'
 import type { Loca } from '#/loca'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -52,7 +58,7 @@ export const useMapStore = defineStore('map', () => {
   const activeInstance = ref<ValueTypes<OverlayInstance>>()
   const activeId = ref<string>()
   const editData = ref<OverlayItem<OverlayType>>()
-  const activeTool = ref<OverlayType | 'Rule' | 'MeasureArea'>()
+  const activeTool = ref<ToolType>()
   const activeLayer = ref<string>()
   const activeLayerIndex = computed(() => {
     if (activeLayer.value) {
@@ -70,25 +76,43 @@ export const useMapStore = defineStore('map', () => {
     editData.value = undefined
   }
 
-  function toolManage(item?: OverlayType | 'Rule' | 'MeasureArea') {
+  function toolManage(
+    item?: Pick<
+      OverlayModule,
+      | 'icon'
+      | 'name'
+      | 'description'
+      | 'drawHelp'
+      | 'editHelp'
+      | 'beforeDraw'
+      | 'afterDraw'
+      | 'closeDraw'
+    > & {
+      style?: string
+      type: ToolType
+    },
+  ) {
     if (activeOverlay.value) {
       message.warn('请先完成编辑再绘制新覆盖物！')
       return
     }
 
-    if (!item || activeTool.value === item) {
+    if (!item || activeTool.value === item.type) {
       map.value?.setDefaultCursor('inherit')
       activeTool.value = undefined
       mousetool.value?.close(false)
+      item?.closeDraw?.()
     } else {
       if (!activeLayer.value) {
         message.warn('请先新增图层！')
         return
       }
 
+      mousetool.value?.close(false)
+      item?.closeDraw?.()
       map.value?.setDefaultCursor('crosshair')
-      activeTool.value = item
-      overlays?.[activeTool.value!]?.beforeDraw()
+      activeTool.value = item.type
+      item?.beforeDraw()
     }
   }
 

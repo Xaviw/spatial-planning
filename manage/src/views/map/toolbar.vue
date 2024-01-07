@@ -15,16 +15,16 @@
             item.type === activeTool && 'bg-blue text-white',
           ]"
           :style="item.style"
-          @click="mapStore.toolManage(item.type)"
+          @click="mapStore.toolManage(item)"
         >
           <i :class="item.icon" />
         </div>
 
         <template #title>
           <div class="mb-1 flex items-center justify-between">
-            <span class="text-sm">{{ item.name }}：</span>
+            <span class="text-sm">{{ item.name }}</span>
             <span v-if="item.description" class="text-xs">
-              {{ item.description }}
+              ({{ item.description }})
             </span>
           </div>
 
@@ -36,7 +36,7 @@
             - {{ help }}
           </div>
 
-          <div class="my-1 text-sm">编辑帮助：</div>
+          <div class="my-1 text-sm" v-if="item.editHelp.length">编辑帮助</div>
           <div
             class="text-xs"
             v-for="(help, index) of item.editHelp"
@@ -52,34 +52,60 @@
 
 <script setup lang="ts">
 import { useMapStore, overlays } from '@sp/shared/map'
-import type { MapEvent, OverlayType, OverlayModule } from '#/business'
+import { message } from 'ant-design-vue'
+import type { MapEvent, ToolType, OverlayModule } from '#/business'
 
 const mapStore = useMapStore()
 
 const { activeTool, mousetool, map } = storeToRefs(mapStore)
 
+const { copy } = useClipboard({ legacy: true })
+
+function copyLocation(e: MapEvent) {
+  copy(`${e.lnglat.lng},${e.lnglat.lat}`).then(() => {
+    message.success('经纬度已复制！')
+  })
+}
+
 const list: (Pick<
   OverlayModule,
-  'icon' | 'name' | 'description' | 'drawHelp' | 'editHelp'
+  | 'icon'
+  | 'name'
+  | 'description'
+  | 'drawHelp'
+  | 'editHelp'
+  | 'beforeDraw'
+  | 'afterDraw'
+  | 'closeDraw'
 > & {
   style?: string
-  type: OverlayType | 'Rule' | 'MeasureArea'
+  type: ToolType
 })[] = [
-  ...Object.values(overlays),
-  // {
-  //   icon: 'i-material-symbols:image-outline',
-  //   name: '贴图',
-  //   key: 'image',
-  //   style: 'border-bottom: 3px solid #666',
-  //   handler: () => {},
-  // },
+  ...Object.values(overlays).sort((a, b) => a.sort - b.sort),
+  {
+    icon: 'i-material-symbols:my-location-outline',
+    name: '经纬度拾取',
+    type: 'Location',
+    drawHelp: [
+      '启用后点击地图目标位置会自动复制经纬度',
+      '复制后可以直接粘贴到经纬度输入框中',
+    ],
+    editHelp: [],
+    style: 'border-top: 3px solid #666',
+    beforeDraw: () => {
+      map.value?.on('click', copyLocation)
+    },
+    closeDraw: () => {
+      map.value?.off('click', copyLocation)
+    },
+  },
   {
     icon: 'i-ph:ruler',
     name: '距离测量',
     type: 'Rule',
     drawHelp: [],
     editHelp: [],
-    style: 'border-top: 3px solid #666',
+    beforeDraw: () => {},
   },
   {
     icon: 'i-radix-icons:ruler-square',
@@ -87,6 +113,7 @@ const list: (Pick<
     drawHelp: [],
     editHelp: [],
     type: 'MeasureArea',
+    beforeDraw: () => {},
   },
 ]
 

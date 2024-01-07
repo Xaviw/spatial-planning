@@ -20,6 +20,6 @@ export const icons = [
   'i-material-symbols:polyline-outline',
   'i-mdi:vector-rectangle',
   'i-ph:text-t',
-  'i-ic:outline-text-fields',
+  'i-mdi:image-text',
   'i-material-symbols:image-outline',
 ]

@@ -42,6 +42,7 @@ function synchronization() {
 
 export default {
   type: 'Circle',
+  sort: 8,
   overlay: Overlay,
   form: Form,
   name: '圆形',

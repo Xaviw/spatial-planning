@@ -16,13 +16,14 @@ const { activeOverlay, editData, map, mapData, activeLayerIndex, activeLayer } =
 
 export default {
   type: 'LabelMarker',
+  sort: 3,
   overlay: Overlay,
   form: Form,
   name: '文本标注',
   description: '相比于标记点支持设置文本以及标记间避让',
-  icon: 'i-ic:outline-text-fields',
+  icon: 'i-mdi:image-text',
   drawHelp: ['在目标位置单击新增文本标注'],
-  editHelp: ['无法移动位置'],
+  editHelp: ['无法拖动移动位置，请使用坐标拾取工具选择坐标后手动填写'],
   beforeDraw: () => {
     map.value?.setDefaultCursor('crosshair')
     map.value?.on('click', (e: MapEvent) => {

@@ -54,6 +54,17 @@ export interface OperationItem<T extends Recordable> {
 }
 
 // -----------------地图-----------------
+export type Anchor =
+  | 'top-left'
+  | 'top-center'
+  | 'top-right'
+  | 'middle-left'
+  | 'center'
+  | 'middle-right'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'bottom-right'
+
 export interface MapEvent {
   lnglat: AMap.LngLat
   originEvent: Event
@@ -74,7 +85,10 @@ export type OverlayType =
   | 'Ellipse'
   | 'Text'
   | 'LabelMarker'
+  | 'ElasticMarker'
   | 'Image'
+
+export type ToolType = OverlayType | 'Location' | 'Rule' | 'MeasureArea'
 
 export type MarkerProps = Pick<
   AMap.MarkerOptions,
@@ -83,16 +97,7 @@ export type MarkerProps = Pick<
   position?: AMap.Vector2
   icon?: string | AMap.IconOpts
   content?: string
-  anchor?:
-    | 'top-left'
-    | 'top-center'
-    | 'top-right'
-    | 'middle-left'
-    | 'center'
-    | 'middle-right'
-    | 'bottom-left'
-    | 'bottom-center'
-    | 'bottom-right'
+  anchor?: Anchor
   size?: AMap.Vector2
   offset?: AMap.Vector2
   label?: {
@@ -227,16 +232,7 @@ export type TextProps = Pick<
 > & {
   position?: AMap.Vector2
   offset?: AMap.Vector2
-  anchor?:
-    | 'top-left'
-    | 'top-center'
-    | 'top-right'
-    | 'middle-left'
-    | 'center'
-    | 'middle-right'
-    | 'bottom-left'
-    | 'bottom-center'
-    | 'bottom-right'
+  anchor?: Anchor
 }
 
 export type LabelMarkerProps = Pick<
@@ -250,12 +246,13 @@ export type LabelMarkerProps = Pick<
   | 'icon'
   | 'text'
 > & {
+  position: AMap.Vector2
   icon?: {
     image: string
     size?: Vector2
     clipOrigin?: Vector2
     clipSize?: Vector2
-    anchor?: string
+    anchor?: Anchor
     offset?: Vector2
     retina?: boolean
   }
@@ -280,6 +277,56 @@ export type LabelMarkerProps = Pick<
   }
 }
 
+export interface ElasticMarkerIcon {
+  img: string
+  size?: AMap.Vector2
+  anchor?: Anchor
+  imageOffset?: AMap.Vector2
+  imageSize?: number
+  fitZoom?: number
+  scaleFactor?: number
+  maxScale?: number
+  minScale?: number
+}
+
+export interface ElasticMarkerLabel {
+  content: string
+  position?: 'BL' | 'BM' | 'BR' | 'ML' | 'MR' | 'TL' | 'TM' | 'TR'
+  offset?: AMap.Vector2
+  minZoom?: number
+}
+
+export interface ElasticMarkerStyle {
+  icon?: ElasticMarkerIcon
+  label?: ElasticMarkerLabel
+}
+
+export interface ElasticMarkerProps {
+  position: AMap.Vector2
+  zIndex?: number
+  anchor?: Anchor
+  offset?: AMap.Vector2
+  styles?: ElasticMarkerStyle[]
+}
+
+export interface ElasticMarker extends AMap.Eventable {
+  setTitle: Fn<[string]>
+  show: EmptyFn
+  hide: EmptyFn
+  setPosition: Fn<[AMap.Vector2]>
+  setAnchor: Fn<[Anchor]>
+  setOffset: Fn<[AMap.Vector]>
+  setStyle: Fn<[ElasticMarkerStyle[]]>
+  setzIndex: Fn<[number]>
+  setDraggable: Fn<[boolean]>
+  setCursor: Fn<[string]>
+  setExtData: Fn<[any]>
+  on: Fn<[string, Fn]>
+  off: Fn<[string, Fn]>
+  clearEvents: Fn<[string]>
+  getPosition: Fn<any[], AMap.LngLat>
+}
+
 export interface OverlayInstance {
   Marker: AMap.Marker
   Polyline: AMap.Polyline
@@ -290,6 +337,7 @@ export interface OverlayInstance {
   Ellipse: AMap.Ellipse
   Text: AMap.Text
   LabelMarker: AMap.LabelMarker
+  ElasticMarker: ElasticMarker
   Image: AMap.ImageLayer
 }
 
@@ -303,6 +351,7 @@ export interface OverlayOptions {
   Ellipse: EllipseProps
   Text: TextProps
   LabelMarker: LabelMarkerProps
+  ElasticMarker: ElasticMarkerProps
   Image: AMap.ImageLayerOptions
 }
 
@@ -337,6 +386,7 @@ export interface LayerItem<T extends OverlayType> {
 
 export interface OverlayModule {
   type: OverlayType
+  sort: number
   overlay: ComponentPublicInstance
   form: ComponentPublicInstance
   name: string
@@ -346,6 +396,7 @@ export interface OverlayModule {
   editHelp: string[]
   beforeDraw: Fn
   afterDraw?: Fn<[ValueTypes<OverlayInstance>]>
+  closeDraw?: Fn
   handleEdit: Fn<[boolean]>
   cancelEdit: Fn<[LayerItem<OverlayType>, number, OverlayItem<OverlayType>]>
 }

@@ -41,6 +41,7 @@ function synchronization() {
 
 export default {
   type: 'Rectangle',
+  sort: 7,
   overlay: Overlay,
   form: Form,
   name: '矩形',
