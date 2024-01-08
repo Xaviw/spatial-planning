@@ -40,7 +40,6 @@ useMap(
     loaderOptions: {
       plugins: [
         'AMap.MouseTool',
-        'AMap.MoveAnimation',
         'AMap.PolylineEditor',
         'AMap.BezierCurveEditor',
         'AMap.PolygonEditor',
@@ -59,6 +58,7 @@ useMap(
     labelsLayer.value = new window.AMap.LabelsLayer({
       allowCollision: true,
       collision: true,
+      zIndex: 999,
     })
     _map.add(labelsLayer.value)
     mousetool.value = new window.AMap.MouseTool(_map)

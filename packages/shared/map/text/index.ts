@@ -8,6 +8,7 @@ import type {
   OverlayItem,
   OverlayType,
   MapEvent,
+  OverlayModule,
 } from '#/business'
 
 const mapStore = useMapStore()
@@ -32,24 +33,32 @@ function synchronization() {
   }
 }
 
+function add(e: MapEvent) {
+  const newText = overlayFactory('Text', activeLayer.value!, {
+    position: [e.lnglat.lng, e.lnglat.lat],
+    text: '新增文本',
+  })
+  mapData.value[activeLayerIndex.value!].overlays.push(newText)
+}
+
 export default {
   type: 'Text',
   sort: 2,
+  defaultZIndex: 12,
   overlay: Overlay,
   form: Form,
   name: '文本',
   icon: 'i-ph:text-t',
   drawHelp: ['在目标位置单击新增文本'],
   editHelp: ['拖动文本移动位置'],
-  beforeDraw: () => {
-    map.value?.setDefaultCursor('crosshair')
-    map.value?.on('click', (e: MapEvent) => {
-      const newText = overlayFactory('Text', activeLayer.value!, {
-        position: [e.lnglat.lng, e.lnglat.lat],
-        text: '新增文本',
-      })
-      mapData.value[activeLayerIndex.value!].overlays.push(newText)
-    })
+  handleDraw: (open: boolean) => {
+    if (open) {
+      map.value?.setDefaultCursor('crosshair')
+      map.value?.on('click', add)
+    } else {
+      map.value?.setDefaultCursor('inherit')
+      map.value?.off('click', add)
+    }
   },
   handleEdit: (open: boolean) => {
     if (!(activeInstance.value instanceof window.AMap.Text)) return
@@ -81,4 +90,4 @@ export default {
       )
     }
   },
-}
+} as OverlayModule

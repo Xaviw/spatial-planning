@@ -30,7 +30,7 @@
         </template>
         <template #title>
           <div>创建时间：{{ layer.createTime }}</div>
-          <div>更新时间：{{ layer.updateTime }}</div>
+          <div v-if="layer.updateTime">更新时间：{{ layer.updateTime }}</div>
         </template>
       </ATooltip>
     </td>

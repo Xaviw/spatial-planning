@@ -8,15 +8,26 @@ import type {
   OverlayItem,
   OverlayType,
   MapEvent,
+  OverlayModule,
 } from '#/business'
 
 const mapStore = useMapStore()
 const { activeOverlay, editData, map, mapData, activeLayerIndex, activeLayer } =
   storeToRefs(mapStore)
 
+function add(e: MapEvent) {
+  const newLabelMarker = overlayFactory('LabelMarker', activeLayer.value!, {
+    position: [e.lnglat.lng, e.lnglat.lat],
+    name: '新增文本',
+    text: { content: '新增文本' },
+  })
+  mapData.value[activeLayerIndex.value!].overlays.push(newLabelMarker)
+}
+
 export default {
   type: 'LabelMarker',
   sort: 3,
+  defaultZIndex: 1,
   overlay: Overlay,
   form: Form,
   name: '文本标注',
@@ -24,18 +35,13 @@ export default {
   icon: 'i-mdi:image-text',
   drawHelp: ['在目标位置单击新增文本标注'],
   editHelp: ['无法拖动移动位置，请使用坐标拾取工具选择坐标后手动填写'],
-  beforeDraw: () => {
-    map.value?.setDefaultCursor('crosshair')
-    map.value?.on('click', (e: MapEvent) => {
-      const newLabelMarker = overlayFactory('LabelMarker', activeLayer.value!, {
-        position: [e.lnglat.lng, e.lnglat.lat],
-        name: '新增文本',
-        text: { content: '新增文本' },
-      })
-      mapData.value[activeLayerIndex.value!].overlays.push(newLabelMarker)
-    })
+  handleDraw: (open: boolean) => {
+    if (open) {
+      map.value?.on('click', add)
+    } else {
+      map.value?.off('click', add)
+    }
   },
-  handleEdit: () => {},
   cancelEdit: (
     layer: LayerItem<OverlayType>,
     index: number,
@@ -53,4 +59,4 @@ export default {
       )
     }
   },
-}
+} as OverlayModule

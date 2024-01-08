@@ -7,6 +7,7 @@ import type {
   MarkerProps,
   OverlayInstance,
   OverlayItem,
+  OverlayModule,
   OverlayType,
 } from '#/business'
 
@@ -19,19 +20,25 @@ const {
   mapData,
   activeLayerIndex,
   activeLayer,
+  map,
 } = storeToRefs(mapStore)
 
 export default {
   type: 'Marker',
   sort: 1,
+  defaultZIndex: 12,
   overlay: Overlay,
   form: Form,
   name: '标记点',
   icon: 'i-material-symbols:location-on',
   drawHelp: ['在目标位置单击新增标记点'],
   editHelp: ['拖动标记点移动位置'],
-  beforeDraw: () => {
-    mousetool.value?.marker({})
+  handleDraw: (open: boolean) => {
+    if (open) {
+      mousetool.value?.marker({})
+    } else {
+      mousetool.value?.close(false)
+    }
   },
   afterDraw: (obj: OverlayInstance['Marker']) => {
     const pos = obj.getPosition()!
@@ -40,6 +47,7 @@ export default {
     })
 
     mapData.value[activeLayerIndex.value!].overlays.push(newMarker)
+    map.value?.remove(obj)
   },
   handleEdit: (open: boolean) => {
     if (!(activeInstance.value instanceof window.AMap.Marker)) return
@@ -80,4 +88,4 @@ export default {
       )
     }
   },
-}
+} as OverlayModule

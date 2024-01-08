@@ -9,6 +9,7 @@ import type {
   MapEvent,
   ElasticMarker,
   ElasticMarkerProps,
+  OverlayModule,
 } from '#/business'
 
 const mapStore = useMapStore()
@@ -33,41 +34,43 @@ function synchronization() {
   }
 }
 
+function add(e: MapEvent) {
+  const newElasticMarker = overlayFactory('ElasticMarker', activeLayer.value!, {
+    position: [e.lnglat.lng, e.lnglat.lat],
+    styles: [
+      { icon: { fitZoom: 12, scaleFactor: 1.2, maxScale: 10, minScale: 0.1 } },
+    ],
+  })
+  mapData.value[activeLayerIndex.value!].overlays.push(newElasticMarker)
+}
+
 export default {
   type: 'ElasticMarker',
   sort: 4,
+  defaultZIndex: 1,
   overlay: Overlay,
   form: Form,
   name: '灵活点标记',
   description: '相比于标记点支持随地图缩放',
-  icon: 'i-mdi:image-text',
+  icon: 'i-mdi:map-marker-circle',
   drawHelp: ['在目标位置单击新增文本标注'],
   editHelp: ['拖动移动标记位置'],
-  beforeDraw: () => {
-    map.value?.setDefaultCursor('crosshair')
-    map.value?.on('click', (e: MapEvent) => {
-      const newElasticMarker = overlayFactory(
-        'ElasticMarker',
-        activeLayer.value!,
-        {
-          position: [e.lnglat.lng, e.lnglat.lat],
-          styles: [{ label: { content: '新增文本' } }],
-        },
-      )
-      mapData.value[activeLayerIndex.value!].overlays.push(newElasticMarker)
-    })
+  handleDraw: (open: boolean) => {
+    if (open) {
+      map.value?.on('click', add)
+    } else {
+      map.value?.off('click', add)
+    }
   },
   handleEdit: (open: boolean) => {
     if (open) {
-      ;(activeInstance.value as ElasticMarker)
-        .setDraggable(true)(activeInstance.value as ElasticMarker)
-        .setCursor('grab')(activeInstance.value as ElasticMarker)
-        .on('dragend', synchronization)
+      ;(activeInstance.value as ElasticMarker).setDraggable(true)
+      ;(activeInstance.value as ElasticMarker).setCursor('grab')
+      ;(activeInstance.value as ElasticMarker).on('dragend', synchronization)
     } else {
-      ;(activeInstance.value as ElasticMarker)
-        .clearEvents('dragend')(activeInstance.value as ElasticMarker)
-        .setDraggable(false)(activeInstance.value as ElasticMarker)
-        .setCursor('pointer')
+      ;(activeInstance.value as ElasticMarker).off('dragend', synchronization)
+      ;(activeInstance.value as ElasticMarker).setDraggable(false)
+      ;(activeInstance.value as ElasticMarker).setCursor('pointer')
     }
   },
   cancelEdit: (
@@ -87,4 +90,4 @@ export default {
       )
     }
   },
-}
+} as OverlayModule

@@ -1,5 +1,15 @@
 import type { AMap } from '@amap/amap-jsapi-types'
-import type { ComponentPublicInstance } from 'vue'
+import type { ComponentOptions } from 'vue'
+
+// -----------------系统配置-----------------
+export type Config = Partial<AMap.MapOptions> & {
+  scalebar?: boolean
+  scalebarPosition?: number[]
+  toolbar?: boolean
+  toolbarPosition?: number[]
+  controlbar?: boolean
+  controlbarPosition?: number[]
+}
 
 // -----------------菜单-----------------
 export interface MenuItem {
@@ -88,7 +98,7 @@ export type OverlayType =
   | 'ElasticMarker'
   | 'Image'
 
-export type ToolType = OverlayType | 'Location' | 'Rule' | 'MeasureArea'
+export type ToolType = OverlayType | 'Location'
 
 export type MarkerProps = Pick<
   AMap.MarkerOptions,
@@ -278,7 +288,7 @@ export type LabelMarkerProps = Pick<
 }
 
 export interface ElasticMarkerIcon {
-  img: string
+  img?: string
   size?: AMap.Vector2
   anchor?: Anchor
   imageOffset?: AMap.Vector2
@@ -290,7 +300,7 @@ export interface ElasticMarkerIcon {
 }
 
 export interface ElasticMarkerLabel {
-  content: string
+  content?: string
   position?: 'BL' | 'BM' | 'BR' | 'ML' | 'MR' | 'TL' | 'TM' | 'TR'
   offset?: AMap.Vector2
   minZoom?: number
@@ -307,6 +317,7 @@ export interface ElasticMarkerProps {
   anchor?: Anchor
   offset?: AMap.Vector2
   styles?: ElasticMarkerStyle[]
+  zoomStyleMapping?: Recordable<number>
 }
 
 export interface ElasticMarker extends AMap.Eventable {
@@ -385,20 +396,21 @@ export interface LayerItem<T extends OverlayType> {
 }
 
 export interface OverlayModule {
-  type: OverlayType
+  type: ToolType
   sort: number
-  overlay: ComponentPublicInstance
-  form: ComponentPublicInstance
+  defaultZIndex?: number
+  toolItemStyle?: string
+  overlay?: ComponentOptions
+  form?: ComponentOptions
   name: string
   icon: string
   description?: string
-  drawHelp: string[]
-  editHelp: string[]
-  beforeDraw: Fn
+  drawHelp?: string[]
+  editHelp?: string[]
+  handleDraw?: Fn<[boolean]>
   afterDraw?: Fn<[ValueTypes<OverlayInstance>]>
-  closeDraw?: Fn
-  handleEdit: Fn<[boolean]>
-  cancelEdit: Fn<[LayerItem<OverlayType>, number, OverlayItem<OverlayType>]>
+  handleEdit?: Fn<[boolean]>
+  cancelEdit?: Fn<[LayerItem<OverlayType>, number, OverlayItem<OverlayType>]>
 }
 
 export interface MapMutativeState {

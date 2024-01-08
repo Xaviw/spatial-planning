@@ -72,10 +72,11 @@ export function moveOverlayToOtherLayer(
 ) {
   const { layer, index, overlay } = findOverlay(mapData, overlayId) || {}
   // 目标图层等于原图层，不操作
-  if (layer && layer.id !== layerId && index && overlay) {
-    layer.overlays.splice(index, 1)
+  if (layer && layer.id !== layerId) {
+    layer.overlays.splice(index!, 1)
     const layerIndex = mapData.findIndex(item => item.id === layerId)
-    mapData[layerIndex].overlays.push(overlay)
+    mapData[layerIndex].overlays.push(overlay!)
+    console.log(layer, layerIndex, mapData)
   }
 }
 

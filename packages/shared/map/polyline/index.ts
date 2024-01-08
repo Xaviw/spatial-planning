@@ -1,4 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/map'
+import { message } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
@@ -8,6 +9,7 @@ import type {
   OverlayItem,
   OverlayInstance,
   OverlayType,
+  OverlayModule,
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -21,6 +23,7 @@ const {
   activeLayer,
   mousetool,
   polylineEditor,
+  map,
 } = storeToRefs(mapStore)
 
 function synchronization() {
@@ -36,7 +39,8 @@ function synchronization() {
 
 export default {
   type: 'Polyline',
-  sort: 4,
+  sort: 5,
+  defaultZIndex: 10,
   overlay: Overlay,
   form: Form,
   name: '折线',
@@ -48,16 +52,26 @@ export default {
     '单击白色控制点删除端点',
     '拖动非控制点移动整体位置',
   ],
-  beforeDraw: () => {
-    mousetool.value?.polyline({})
+  handleDraw: (open: boolean) => {
+    if (open) {
+      mousetool.value?.polyline({})
+    } else {
+      mousetool.value?.close(false)
+    }
   },
   afterDraw: (obj: OverlayInstance['Polyline']) => {
     const path = obj.getPath() as AMap.LngLat[]
+    if (path.length < 2) {
+      message.warn('请至少添加两个端点！')
+      map.value?.remove(obj)
+      return
+    }
 
     const newPolyline = overlayFactory('Polyline', activeLayer.value!, {
       path: path.map((item): AMap.Vector2 => [item.lng, item.lat]),
     })
     mapData.value[activeLayerIndex.value!].overlays.push(newPolyline)
+    map.value?.remove(obj)
   },
   handleEdit: (open: boolean) => {
     if (!(activeInstance.value instanceof window.AMap.Polyline)) return
@@ -93,4 +107,4 @@ export default {
       )
     }
   },
-}
+} as OverlayModule

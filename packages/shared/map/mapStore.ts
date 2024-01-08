@@ -10,7 +10,6 @@ import type {
   OverlayItem,
   OverlayInstance,
   ToolType,
-  OverlayModule,
 } from '#/business'
 import type { Loca } from '#/loca'
 import type { AMap } from '@amap/amap-jsapi-types'
@@ -76,43 +75,34 @@ export const useMapStore = defineStore('map', () => {
     editData.value = undefined
   }
 
-  function toolManage(
-    item?: Pick<
-      OverlayModule,
-      | 'icon'
-      | 'name'
-      | 'description'
-      | 'drawHelp'
-      | 'editHelp'
-      | 'beforeDraw'
-      | 'afterDraw'
-      | 'closeDraw'
-    > & {
-      style?: string
-      type: ToolType
-    },
-  ) {
+  function toolManage(item?: ToolType) {
     if (activeOverlay.value) {
       message.warn('请先完成编辑再绘制新覆盖物！')
       return
     }
 
-    if (!item || activeTool.value === item.type) {
+    if (!item || activeTool.value === item) {
+      // 未传递参数，或item是已开启的工具，关闭
       map.value?.setDefaultCursor('inherit')
+      overlays[activeTool.value!]?.handleDraw?.(false)
       activeTool.value = undefined
-      mousetool.value?.close(false)
-      item?.closeDraw?.()
     } else {
       if (!activeLayer.value) {
         message.warn('请先新增图层！')
         return
       }
 
-      mousetool.value?.close(false)
-      item?.closeDraw?.()
+      // 有已开启的工具时，关闭已开启的
+      if (activeTool.value) {
+        map.value?.setDefaultCursor('inherit')
+        overlays[activeTool.value!]?.handleDraw?.(false)
+        activeTool.value = undefined
+      }
+
+      // 开启当前选中的工具
       map.value?.setDefaultCursor('crosshair')
-      activeTool.value = item.type
-      item?.beforeDraw()
+      activeTool.value = item
+      overlays[activeTool.value!]?.handleDraw?.(true)
     }
   }
 
@@ -141,6 +131,7 @@ export const useMapStore = defineStore('map', () => {
         findOverlay(mapData.value, activeId.value!) || {}
       if (layer && overlay) {
         layer.overlays.push({ ...overlay, id: `add_${Date.now()}` })
+        message.success('已复制，复制的覆盖物与原覆盖物重叠，请编辑！')
       }
     },
     move() {
@@ -157,17 +148,21 @@ export const useMapStore = defineStore('map', () => {
       message.success('可通过切换图层隐藏、显示恢复覆盖物显示')
     },
     moveUp() {
-      const { layer, index } = findOverlay(mapData.value, activeId.value!) || {}
-      if (layer) {
+      const { layer, index, overlay } =
+        findOverlay(mapData.value, activeId.value!) || {}
+      if (layer && overlay) {
         layer.overlays[index!].props.zIndex =
-          (layer.overlays[index!].props.zIndex || 10) + 1
+          (layer.overlays[index!].props.zIndex ||
+            overlays[overlay.type].defaultZIndex!) + 1
       }
     },
     moveDown() {
-      const { layer, index } = findOverlay(mapData.value, activeId.value!) || {}
-      if (layer) {
+      const { layer, index, overlay } =
+        findOverlay(mapData.value, activeId.value!) || {}
+      if (layer && overlay) {
         layer.overlays[index!].props.zIndex =
-          (layer.overlays[index!].props.zIndex || 10) - 1
+          (layer.overlays[index!].props.zIndex ||
+            overlays[overlay.type].defaultZIndex!) - 1
       }
     },
     click(e) {
@@ -180,7 +175,7 @@ export const useMapStore = defineStore('map', () => {
     rightClick(e) {
       // 右击时关闭覆盖物编辑和绘制，避免单击选项时产生多余绘制操作
       if (activeOverlay.value) {
-        overlays[activeOverlay.value.type]?.handleEdit(false)
+        overlays[activeOverlay.value.type]?.handleEdit?.(false)
       }
       if (activeTool.value) {
         toolManage()

@@ -62,10 +62,7 @@ watch(
 watch(
   () => labelMarkerProps.props.zooms,
   zooms => {
-    if (zooms) {
-      mapStore.map?.remove(labelMarker)
-      createLabelMarker()
-    }
+    zooms && labelMarker.setZooms(zooms)
   },
 )
 

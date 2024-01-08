@@ -1,5 +1,10 @@
 export default [
   {
+    label: '系统设置',
+    key: 'setting',
+    icon: () => h('i', { class: 'i-ant-design:setting-outlined' }),
+  },
+  {
     label: '菜单管理',
     key: 'menu',
     icon: () => h('i', { class: 'i-ant-design:menu-outlined' }),

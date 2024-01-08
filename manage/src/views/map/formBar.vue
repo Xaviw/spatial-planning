@@ -44,7 +44,7 @@ watch(activeOverlay, async overlay => {
     await nextTick()
     if (baseFormEl.value && overlayFormEl.value) {
       // 开启覆盖物编辑
-      overlays[overlay.type].handleEdit(true)
+      overlays[overlay.type].handleEdit?.(true)
       // 开启表单编辑
       editData.value = cloneDeep(overlay)
       baseFormEl.value.formModel = editData.value
@@ -70,7 +70,7 @@ function onConfirm() {
     }
   }
   // 关闭编辑
-  overlays[activeOverlay.value!.type]?.handleEdit(false)
+  overlays[activeOverlay.value!.type]?.handleEdit?.(false)
   mapStore.cancelEdit()
 }
 
@@ -88,13 +88,13 @@ async function onCancel() {
     mapData.value,
     activeOverlay.value!.id,
   )!
-  overlays[activeOverlay.value!.type].cancelEdit(layer, index, overlay)
+  overlays[activeOverlay.value!.type].cancelEdit?.(layer, index, overlay)
   nextTick(() => {
     mapStore.resume()
   })
 
   // 关闭编辑
-  overlays[activeOverlay.value!.type]?.handleEdit(false)
+  overlays[activeOverlay.value!.type]?.handleEdit?.(false)
   mapStore.cancelEdit()
 }
 </script>

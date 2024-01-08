@@ -1,4 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/map'
+import { message } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
@@ -8,6 +9,7 @@ import type {
   OverlayItem,
   OverlayInstance,
   OverlayType,
+  OverlayModule,
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -21,6 +23,7 @@ const {
   activeLayer,
   mousetool,
   polygonEditor,
+  map,
 } = storeToRefs(mapStore)
 
 function synchronization() {
@@ -36,7 +39,8 @@ function synchronization() {
 
 export default {
   type: 'Polygon',
-  sort: 6,
+  sort: 7,
+  defaultZIndex: 10,
   overlay: Overlay,
   form: Form,
   name: '多边形',
@@ -48,16 +52,26 @@ export default {
     '单击白色控制点删除顶点',
     '拖动非控制点移动整体位置',
   ],
-  beforeDraw: () => {
-    mousetool.value?.polygon({})
+  handleDraw: (open: boolean) => {
+    if (open) {
+      mousetool.value?.polygon({})
+    } else {
+      mousetool.value?.close(false)
+    }
   },
   afterDraw: (obj: OverlayInstance['Polygon']) => {
     const path = obj.getPath() as AMap.LngLat[]
+    if (path.length < 3) {
+      message.warn('请至少添加三个端点！')
+      map.value?.remove(obj)
+      return
+    }
 
     const newPolygon = overlayFactory('Polygon', activeLayer.value!, {
       path: path.map((item): AMap.Vector2 => [item.lng, item.lat]),
     })
     mapData.value[activeLayerIndex.value!].overlays.push(newPolygon)
+    map.value?.remove(obj)
   },
   handleEdit: (open: boolean) => {
     if (!(activeInstance.value instanceof window.AMap.Polygon)) return
@@ -93,4 +107,4 @@ export default {
       )
     }
   },
-}
+} as OverlayModule

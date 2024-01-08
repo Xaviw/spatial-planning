@@ -21,7 +21,7 @@ export default [
     statusCode: 200,
     response: ({ query }) => ({
       code: 1,
-      data: genList(1, 1, 1, 3, 3, 6, query as GetMapParams),
+      data: genList(2, 2, 1, 3, 3, 6, query as GetMapParams),
       message: 'ok',
     }),
   },

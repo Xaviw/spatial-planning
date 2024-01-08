@@ -67,6 +67,28 @@
       <ColorPicker v-model:pureColor="formModel.roofColor" />
     </AFormItem>
   </AForm>
+
+  <AFormItem
+    label="显示范围"
+    help="仅在缩放等级范围内显示"
+    extra="可在地图右上角查看缩放等级"
+  >
+    <Vector
+      v-model="formModel.zooms"
+      :props="[
+        { addonAfter: '-', min: 2, max: 26 },
+        { addonAfter: '级', min: 2, max: 26 },
+      ]"
+    />
+  </AFormItem>
+
+  <AFormItem
+    label="层叠顺序"
+    help="重叠时层叠顺序高的覆盖物会在上层显示"
+    extra="默认10"
+  >
+    <AInputNumber v-model:value="formModel.zIndex" :min="1" :precision="0" />
+  </AFormItem>
 </template>
 
 <script setup lang="ts">

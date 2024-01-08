@@ -1,4 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/map'
+import { message } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
@@ -8,6 +9,7 @@ import type {
   OverlayItem,
   OverlayInstance,
   OverlayType,
+  OverlayModule,
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -21,6 +23,7 @@ const {
   activeLayer,
   mousetool,
   circleEditor,
+  map,
 } = storeToRefs(mapStore)
 
 function synchronization() {
@@ -42,24 +45,34 @@ function synchronization() {
 
 export default {
   type: 'Circle',
-  sort: 8,
+  sort: 9,
+  defaultZIndex: 10,
   overlay: Overlay,
   form: Form,
   name: '圆形',
   icon: 'i-mdi:circle-outline',
   drawHelp: ['从圆心位置点击并拖动，松开鼠标后完成绘制'],
   editHelp: ['拖动边缘控制点调整尺寸', '拖动中心控制点移动位置'],
-  beforeDraw: () => {
-    mousetool.value?.circle({})
+  handleDraw: (open: boolean) => {
+    if (open) {
+      mousetool.value?.circle({})
+    } else {
+      mousetool.value?.close(false)
+    }
   },
   afterDraw: (obj: OverlayInstance['Circle']) => {
-    const center = obj.getCenter()
     const radius = obj.getRadius()
+    if (radius === 0) {
+      message.warn('请拖动扩展圆形面积！')
+      return
+    }
+    const center = obj.getCenter()
     const newCircle = overlayFactory('Circle', activeLayer.value!, {
       center: [center.lng, center.lat],
       radius,
     })
     mapData.value[activeLayerIndex.value!].overlays.push(newCircle)
+    map.value?.remove(obj)
   },
   handleEdit: (open: boolean) => {
     if (!(activeInstance.value instanceof window.AMap.Circle)) return
@@ -106,4 +119,4 @@ export default {
       }
     }
   },
-}
+} as OverlayModule

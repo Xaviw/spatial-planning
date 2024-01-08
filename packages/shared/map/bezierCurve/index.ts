@@ -1,4 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/map'
+import { message } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
@@ -7,6 +8,7 @@ import type {
   LayerItem,
   OverlayInstance,
   OverlayItem,
+  OverlayModule,
   OverlayType,
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
@@ -21,6 +23,7 @@ const {
   activeLayerIndex,
   activeLayer,
   bezierCurveEditor,
+  map,
 } = storeToRefs(mapStore)
 
 function synchronization() {
@@ -35,7 +38,8 @@ function synchronization() {
 
 export default {
   type: 'BezierCurve',
-  sort: 5,
+  sort: 6,
+  defaultZIndex: 10,
   overlay: Overlay,
   form: Form,
   name: '曲线',
@@ -52,16 +56,26 @@ export default {
     '单击删除端点',
     '拖动非控制点移动整体位置',
   ],
-  beforeDraw: () => {
-    mousetool.value?.polyline({})
+  handleDraw: (open: boolean) => {
+    if (open) {
+      mousetool.value?.polyline({})
+    } else {
+      mousetool.value?.close(false)
+    }
   },
   afterDraw: (obj: OverlayInstance['Polyline']) => {
     const path = obj.getPath() as AMap.LngLat[]
+    if (path.length < 2) {
+      message.warn('请至少添加两个端点！')
+      map.value?.remove(obj)
+      return
+    }
 
     const newPolyline = overlayFactory('BezierCurve', activeLayer.value!, {
       path: path.map((item): AMap.Vector2 => [item.lng, item.lat]),
     })
     mapData.value[activeLayerIndex.value!].overlays.push(newPolyline)
+    map.value?.remove(obj)
   },
   handleEdit: (open: boolean) => {
     if (!(activeInstance.value instanceof window.AMap.BezierCurve)) return
@@ -104,4 +118,4 @@ export default {
       )
     }
   },
-}
+} as OverlayModule

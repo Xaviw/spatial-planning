@@ -1,4 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/map'
+import { message } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
@@ -8,6 +9,7 @@ import type {
   OverlayItem,
   OverlayInstance,
   OverlayType,
+  OverlayModule,
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -21,6 +23,7 @@ const {
   activeLayer,
   mousetool,
   ellipseEditor,
+  map,
 } = storeToRefs(mapStore)
 
 function synchronization() {
@@ -42,7 +45,8 @@ function synchronization() {
 
 export default {
   type: 'Ellipse',
-  sort: 9,
+  sort: 10,
+  defaultZIndex: 10,
   overlay: Overlay,
   form: Form,
   name: '椭圆形',
@@ -52,17 +56,26 @@ export default {
     '先绘制圆形后再在编辑中调整弧度',
   ],
   editHelp: ['拖动边缘控制点调整尺寸', '拖动中心控制点移动位置'],
-  beforeDraw: () => {
-    mousetool.value?.circle({})
+  handleDraw: (open: boolean) => {
+    if (open) {
+      mousetool.value?.circle({})
+    } else {
+      mousetool.value?.close(false)
+    }
   },
   afterDraw: (obj: OverlayInstance['Circle']) => {
-    const center = obj.getCenter()
     const radius = obj.getRadius()
+    if (radius === 0) {
+      message.warn('请拖动扩展椭圆形面积！')
+      return
+    }
+    const center = obj.getCenter()
     const newEllipse = overlayFactory('Ellipse', activeLayer.value!, {
       center: [center.lng, center.lat],
       radius: [radius, radius],
     })
     mapData.value[activeLayerIndex.value!].overlays.push(newEllipse)
+    map.value?.remove(obj)
   },
   handleEdit: (open: boolean) => {
     if (!(activeInstance.value instanceof window.AMap.Ellipse)) return
@@ -109,4 +122,4 @@ export default {
       }
     }
   },
-}
+} as OverlayModule
