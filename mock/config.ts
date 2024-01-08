@@ -8,7 +8,14 @@ export default [
     statusCode: 200,
     response: () => ({
       code: 1,
-      data: {},
+      data: {
+        scalebar: true,
+        scalebarPosition: [null, 5, null, 5],
+        toolbar: true,
+        toolbarPosition: [null, null, 5, 5],
+        controlbar: true,
+        controlbarPosition: [37, null, 5, null],
+      },
       message: 'ok',
     }),
   },

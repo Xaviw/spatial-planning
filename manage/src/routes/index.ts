@@ -15,9 +15,9 @@ export default createRouter({
       },
     },
     {
-      path: '/setting',
-      name: 'setting',
-      component: () => import('../views/setting/index.vue'),
+      path: '/config',
+      name: 'config',
+      component: () => import('../views/config/index.vue'),
     },
     {
       path: '/menu',

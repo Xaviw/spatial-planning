@@ -7,8 +7,9 @@
 </template>
 
 <script setup lang="ts">
+import { getConfig } from '@sp/shared/apis'
 import { useMap } from '@sp/shared/hooks'
-import { useMapStore } from '@sp/shared/map'
+import { useMapStore, arrayToPosition } from '@sp/shared/map'
 import { debounce } from 'lodash-es'
 
 const {
@@ -30,24 +31,37 @@ const zoom = ref<number>()
 
 loading.value = true
 
+const configs = await getConfig().send()
+
+const plugins = [
+  'AMap.MouseTool',
+  'AMap.PolylineEditor',
+  'AMap.BezierCurveEditor',
+  'AMap.PolygonEditor',
+  'AMap.RectangleEditor',
+  'AMap.CircleEditor',
+  'AMap.EllipseEditor',
+  'AMap.ElasticMarker',
+]
+if (configs.scalebar && configs.scalebarPosition) {
+  plugins.push('AMap.Scale')
+}
+if (configs.toolbar && configs.toolbarPosition) {
+  plugins.push('AMap.ToolBar')
+}
+if (configs.controlbar && configs.controlbarPosition) {
+  plugins.push('AMap.ControlBar')
+}
+
 useMap(
   container,
   {
     mapOptions: {
-      viewMode: '3D',
       mapStyle: 'amap://styles/blue',
+      ...configs,
     },
     loaderOptions: {
-      plugins: [
-        'AMap.MouseTool',
-        'AMap.PolylineEditor',
-        'AMap.BezierCurveEditor',
-        'AMap.PolygonEditor',
-        'AMap.RectangleEditor',
-        'AMap.CircleEditor',
-        'AMap.EllipseEditor',
-        'AMap.ElasticMarker',
-      ],
+      plugins,
     },
     enableLoca: true,
   },
@@ -68,9 +82,31 @@ useMap(
     rectangleEditor.value = new window.AMap.RectangleEditor(_map)
     circleEditor.value = new window.AMap.CircleEditor(_map)
     ellipseEditor.value = new window.AMap.EllipseEditor(_map)
+    if (configs.scalebar && configs.scalebarPosition) {
+      _map.addControl(
+        new (window.AMap as any).Scale({
+          position: arrayToPosition(configs.scalebarPosition),
+        }),
+      )
+    }
+    if (configs.scalebar && configs.toolbarPosition) {
+      _map.addControl(
+        new (window.AMap as any).ToolBar({
+          position: arrayToPosition(configs.toolbarPosition),
+        }),
+      )
+    }
+    if (configs.scalebar && configs.controlbarPosition) {
+      _map.addControl(
+        new (window.AMap as any).ControlBar({
+          position: arrayToPosition(configs.controlbarPosition),
+        }),
+      )
+    }
     watchZoom()
   },
 )
+
 function watchZoom() {
   zoom.value = map.value?.getZoom()
   map.value?.on(

@@ -4,7 +4,12 @@
 
     <Toolbar class="absolute left-2 top-2 z-1 rounded bg-white" />
 
-    <Map class="mr-2 flex-1 bg-white" />
+    <Suspense>
+      <Map class="mr-2 flex-1 bg-white" />
+      <template #fallback>
+        <div class="mr-2 flex-1 bg-white"></div>
+      </template>
+    </Suspense>
 
     <div class="w-100 flex flex-col">
       <Header class="mb-2 bg-white p-4" />
