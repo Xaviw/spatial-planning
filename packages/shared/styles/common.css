@@ -31,3 +31,11 @@
 .materials-modal-header {
   @apply border-0 border-b-1 border-white border-solid px-4 py-2 text-lg font-600 text-white flex items-center;
 }
+
+.client-trigger-btn {
+  @apply cursor-pointer opacity-50 hover:opacity-100 select-none bg-[#007fd9];
+}
+
+.client-arrow {
+  @apply py-2 absolute top-[50%] translate-y-[50%] flex items-center justify-center;
+}

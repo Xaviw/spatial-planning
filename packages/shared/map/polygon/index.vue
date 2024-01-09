@@ -2,22 +2,28 @@
 <template></template>
 
 <script setup lang="ts">
-import { useMapStore } from '../mapStore'
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+} from '@sp/shared/map'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const polygonProps = defineProps<OverlayProps<'Polygon'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
 
 let polygon: AMap.Polygon
 
 createPolygon()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
-  mapStore.map?.remove(polygon)
+  map?.value?.remove(polygon)
 })
 
 function createPolygon() {
@@ -28,10 +34,12 @@ function createPolygon() {
 
   polygon.setExtData(polygonProps.id)
 
-  mapStore.bindMenu(polygon, polygonProps.bindMenu)
+  bindClickEvent(polygon)
 
-  if (mapStore.map) {
-    mapStore.map.add(polygon)
+  hasRightMenu && bindRightClickEvent(polygon)
+
+  if (map?.value) {
+    map?.value?.add(polygon)
   }
 }
 

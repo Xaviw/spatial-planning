@@ -2,23 +2,29 @@
 <template></template>
 
 <script setup lang="ts">
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+} from '@sp/shared/map'
 import { omit } from 'lodash-es'
-import { useMapStore } from '../mapStore'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const ellipseProps = defineProps<OverlayProps<'Ellipse'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
 
 let ellipse: AMap.Ellipse
 
 createEllipse()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
-  mapStore.map?.remove(ellipse)
+  map?.value?.remove(ellipse)
 })
 
 function createEllipse() {
@@ -29,10 +35,12 @@ function createEllipse() {
 
   ellipse.setExtData(ellipseProps.id)
 
-  mapStore.bindMenu(ellipse, ellipseProps.bindMenu)
+  bindClickEvent(ellipse)
 
-  if (mapStore.map) {
-    mapStore.map.add(ellipse)
+  hasRightMenu && bindRightClickEvent(ellipse)
+
+  if (map?.value) {
+    map?.value?.add(ellipse)
   }
 }
 

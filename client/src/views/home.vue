@@ -7,33 +7,11 @@
 
     <div class="min-h-0 flex flex-1">
       <!-- 左侧 -->
-      <div
-        :class="[
-          'relative',
-          'w-100',
-          'transition-all',
-          'z-1',
-          !layoutState.left && 'ml--100',
-        ]"
-      >
-        <Sider :data="leftData" :loading="menuLoading || leftLoading" />
-
-        <div
-          class="trigger arrow right-0 translate-x-[100%] rounded-r"
-          @click="layoutState.left = !layoutState.left"
-        >
-          <i
-            :class="[
-              'i-material-symbols:arrow-forward-ios',
-              'transition-all',
-              layoutState.left && 'rotate-180',
-            ]"
-          />
-        </div>
-      </div>
+      <Sider position="left" />
 
       <div class="relative flex flex-1 flex-col">
         <Loading absolute :loading="menuLoading || mapLoading" />
+
         <!-- 菜单 -->
         <Menu class="absolute left-6 top-4 z-200" />
 
@@ -41,7 +19,9 @@
         <Suspense>
           <Map class="flex-1" />
           <template #fallback>
-            <div class="flex-1"></div>
+            <div class="flex flex-1 items-center justify-center text-black">
+              地图参数获取失败，请尝试刷新页面！
+            </div>
           </template>
         </Suspense>
 
@@ -54,43 +34,18 @@
       </div>
 
       <!-- 右侧 -->
-      <div
-        :class="[
-          'relative',
-          'w-100',
-          'transition-all',
-          !layoutState.right && 'mr--100',
-        ]"
-      >
-        <Sider :data="rightData" :loading="menuLoading || rightLoading" />
-
-        <div
-          class="trigger arrow left-0 translate-x-[-100%] rounded-l"
-          @click="layoutState.right = !layoutState.right"
-        >
-          <i
-            :class="[
-              'i-material-symbols:arrow-forward-ios',
-              'transition-all',
-              !layoutState.right && 'rotate-180',
-            ]"
-          />
-        </div>
-      </div>
+      <Sider position="right" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Loading } from '@sp/shared/components'
-import { useMapStore } from '@sp/shared/map'
 import Layer from '../components/Layer.vue'
+import Sider from '../components/Sider.vue'
 import { useMainStore } from '../store/main'
 
-const { leftData, rightData, leftLoading, rightLoading, menuLoading } =
-  storeToRefs(useMainStore())
-
-const { loading: mapLoading } = storeToRefs(useMapStore())
+const { menuLoading, mapLoading } = storeToRefs(useMainStore())
 
 const layoutState = reactive({
   left: true,

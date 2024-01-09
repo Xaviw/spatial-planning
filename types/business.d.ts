@@ -396,7 +396,6 @@ export interface OverlayItem<T extends OverlayType> {
 
 export type OverlayProps<T extends OverlayType> = OverlayItem<T> & {
   visible: boolean
-  bindMenu?: boolean
 }
 
 export interface LayerItem<T extends OverlayType> {

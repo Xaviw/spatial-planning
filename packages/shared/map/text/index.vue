@@ -2,22 +2,28 @@
 <template></template>
 
 <script setup lang="ts">
-import { useMapStore } from '../mapStore'
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+} from '@sp/shared/map'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const textProps = defineProps<OverlayProps<'Text'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
 
 let text: AMap.Text
 
 createText()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
-  mapStore.map?.remove(text)
+  map?.value?.remove(text)
 })
 
 function createText() {
@@ -27,10 +33,12 @@ function createText() {
 
   text.setExtData(textProps.id)
 
-  mapStore.bindMenu(text, textProps.bindMenu)
+  bindClickEvent(text)
 
-  if (mapStore.map) {
-    mapStore.map.add(text)
+  hasRightMenu && bindRightClickEvent(text)
+
+  if (map?.value) {
+    map?.value?.add(text)
   }
 }
 
@@ -109,7 +117,7 @@ watch(
 watch(
   () => textProps.props.zooms,
   () => {
-    mapStore.map?.remove(text)
+    map?.value?.remove(text)
     createText()
   },
 )

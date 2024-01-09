@@ -24,7 +24,6 @@
             :key="overlay.id"
             v-bind="overlay"
             :visible="visible"
-            bindMenu
           />
         </template>
       </Layer>
@@ -36,7 +35,7 @@
 
 <script setup lang="ts">
 import { Loading } from '@sp/shared/components'
-import { useMapStore, overlays } from '@sp/shared/map'
+import { useMapStore, overlays, hasRightMenuKey } from '@sp/shared/map'
 import FormBar from './formBar.vue'
 import Header from './header.vue'
 import Layer from './layer.vue'
@@ -45,4 +44,6 @@ import Map from './map.vue'
 import Toolbar from './toolbar.vue'
 
 const { loading, mapData, selectedMenu } = storeToRefs(useMapStore())
+
+provide(hasRightMenuKey, true)
 </script>

@@ -2,8 +2,8 @@
   <AMenu
     forceSubMenuRender
     mode="horizontal"
-    :items="menuData"
-    v-model:selectedKeys="selectedKeys"
+    :items="mainStore.menuData"
+    v-model:selectedKeys="mainStore.selectedKeys"
     @click="handleClick"
   />
 </template>
@@ -16,11 +16,9 @@ import type { MenuProps } from 'ant-design-vue'
 const router = useRouter()
 
 const mainStore = useMainStore()
-const { menuData, selectedKeys } = storeToRefs(mainStore)
-const { setSelectMenu } = mainStore
 
 const handleClick: MenuProps['onClick'] = ({ key, item }) => {
-  setSelectMenu(item.originItemValue as HandledMenu)
+  mainStore.setSelectMenu(item.originItemValue as HandledMenu)
   router.push(key as string)
 }
 </script>

@@ -2,23 +2,29 @@
 <template></template>
 
 <script setup lang="ts">
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+} from '@sp/shared/map'
 import { isObject } from 'lodash-es'
-import { useMapStore } from '../mapStore'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const markerProps = defineProps<OverlayProps<'Marker'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
 
 let marker: AMap.Marker
 
 createMarker()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
-  mapStore.map?.remove(marker)
+  map?.value?.remove(marker)
 })
 
 function createMarker() {
@@ -32,10 +38,12 @@ function createMarker() {
 
   marker.setExtData(markerProps.id)
 
-  mapStore.bindMenu(marker, markerProps.bindMenu)
+  bindClickEvent(marker)
 
-  if (mapStore.map) {
-    mapStore.map.add(marker)
+  hasRightMenu && bindRightClickEvent(marker)
+
+  if (map?.value) {
+    map?.value?.add(marker)
   }
 }
 
@@ -131,7 +139,7 @@ watch(
 watch(
   () => markerProps.props.zooms,
   () => {
-    mapStore.map?.remove(marker)
+    map?.value?.remove(marker)
     createMarker()
   },
 )

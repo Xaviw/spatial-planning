@@ -2,23 +2,29 @@
 <template></template>
 
 <script setup lang="ts">
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+} from '@sp/shared/map'
 import { omit } from 'lodash-es'
-import { useMapStore } from '../mapStore'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const circleProps = defineProps<OverlayProps<'Circle'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
 
 let circle: AMap.Circle
 
 createCircle()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
-  mapStore.map?.remove(circle)
+  map?.value?.remove(circle)
 })
 
 function createCircle() {
@@ -29,10 +35,12 @@ function createCircle() {
 
   circle.setExtData(circleProps.id)
 
-  mapStore.bindMenu(circle, circleProps.bindMenu)
+  bindClickEvent(circle)
 
-  if (mapStore.map) {
-    mapStore.map.add(circle)
+  hasRightMenu && bindRightClickEvent(circle)
+
+  if (map?.value) {
+    map?.value?.add(circle)
   }
 }
 

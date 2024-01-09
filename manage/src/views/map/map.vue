@@ -9,12 +9,16 @@
 <script setup lang="ts">
 import { getConfig } from '@sp/shared/apis'
 import { useMap } from '@sp/shared/hooks'
-import { useMapStore, arrayToPosition } from '@sp/shared/map'
+import {
+  useMapStore,
+  arrayToPosition,
+  mapKey,
+  labelsLayerKey,
+} from '@sp/shared/map'
 import { debounce } from 'lodash-es'
+import type { AMap } from '@amap/amap-jsapi-types'
 
 const {
-  map,
-  loca,
   mousetool,
   polylineEditor,
   loading,
@@ -23,8 +27,15 @@ const {
   rectangleEditor,
   circleEditor,
   ellipseEditor,
+  map,
   labelsLayer,
 } = storeToRefs(useMapStore())
+
+const injectMap = ref<AMap.Map>()
+const injectLabelsLayer = ref<AMap.LabelsLayer>()
+
+provide(mapKey, map)
+provide(labelsLayerKey, labelsLayer)
 
 const container = ref<HTMLDivElement | null>(null)
 const zoom = ref<number>()
@@ -63,17 +74,17 @@ useMap(
     loaderOptions: {
       plugins,
     },
-    enableLoca: true,
   },
   (_map, _loca) => {
     loading.value = false
     map.value = _map
-    loca.value = _loca
+    injectMap.value = _map
     labelsLayer.value = new window.AMap.LabelsLayer({
       allowCollision: true,
       collision: true,
       zIndex: 999,
     })
+    injectLabelsLayer.value = labelsLayer.value
     _map.add(labelsLayer.value)
     mousetool.value = new window.AMap.MouseTool(_map)
     polylineEditor.value = new window.AMap.PolygonEditor(_map)

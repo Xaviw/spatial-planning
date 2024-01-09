@@ -2,7 +2,12 @@
 <template></template>
 
 <script setup lang="ts">
-import { useMapStore } from '../mapStore'
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+} from '@sp/shared/map'
 import type {
   ElasticMarker,
   OverlayProps,
@@ -11,16 +16,17 @@ import type {
 
 const elasticMarkerProps = defineProps<OverlayProps<'ElasticMarker'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
 
 let elasticMarker: ElasticMarker
 
 createElasticMarker()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
-  mapStore.map?.remove(elasticMarker as any)
+  map?.value?.remove(elasticMarker as any)
 })
 
 function createElasticMarker() {
@@ -58,10 +64,12 @@ function createElasticMarker() {
 
   elasticMarker.setExtData(elasticMarkerProps.id)
 
-  mapStore.bindMenu(elasticMarker, elasticMarkerProps.bindMenu)
+  bindClickEvent(elasticMarker)
 
-  if (mapStore.map) {
-    mapStore.map.add(elasticMarker as any)
+  hasRightMenu && bindRightClickEvent(elasticMarker)
+
+  if (map?.value) {
+    map?.value?.add(elasticMarker as any)
   }
 }
 

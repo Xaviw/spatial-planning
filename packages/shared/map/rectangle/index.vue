@@ -2,23 +2,29 @@
 <template></template>
 
 <script setup lang="ts">
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+} from '@sp/shared/map'
 import { omit } from 'lodash-es'
-import { useMapStore } from '../mapStore'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const rectangleProps = defineProps<OverlayProps<'Rectangle'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
 
 let rectangle: AMap.Rectangle
 
 createRectangle()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
-  mapStore.map?.remove(rectangle)
+  map?.value?.remove(rectangle)
 })
 
 function createRectangle() {
@@ -31,10 +37,12 @@ function createRectangle() {
 
   rectangle.setExtData(rectangleProps.id)
 
-  mapStore.bindMenu(rectangle, rectangleProps.bindMenu)
+  bindClickEvent(rectangle)
 
-  if (mapStore.map) {
-    mapStore.map.add(rectangle)
+  hasRightMenu && bindRightClickEvent(rectangle)
+
+  if (map?.value) {
+    map?.value?.add(rectangle)
   }
 }
 

@@ -2,22 +2,30 @@
 <template></template>
 
 <script setup lang="ts">
-import { useMapStore } from '../mapStore'
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+  labelsLayerKey,
+} from '@sp/shared/map'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const labelMarkerProps = defineProps<OverlayProps<'LabelMarker'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
+const labelsLayer = inject(labelsLayerKey)
 
 let labelMarker: AMap.LabelMarker
 
 createLabelMarker()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
-  ;(mapStore.labelsLayer as any).remove(labelMarker)
+  ;(labelsLayer?.value as any)?.remove(labelMarker)
 })
 
 function createLabelMarker() {
@@ -27,10 +35,12 @@ function createLabelMarker() {
 
   labelMarker.setExtData(labelMarkerProps.id)
 
-  mapStore.bindMenu(labelMarker, labelMarkerProps.bindMenu)
+  bindClickEvent(labelMarker)
 
-  if (mapStore.map) {
-    ;(mapStore.labelsLayer as any).add(labelMarker)
+  hasRightMenu && bindRightClickEvent(labelMarker)
+
+  if (map?.value) {
+    ;(labelsLayer?.value as any)?.add(labelMarker)
   }
 }
 

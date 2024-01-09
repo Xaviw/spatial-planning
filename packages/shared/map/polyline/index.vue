@@ -2,24 +2,30 @@
 <template></template>
 
 <script setup lang="ts">
-import { useMapStore } from '../mapStore'
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+} from '@sp/shared/map'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const polylineProps = defineProps<OverlayProps<'Polyline'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
 
 let polyline: AMap.Polyline
 
 createPolyline()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
   // 如果调用 destroy 方法，切换数据后地图报错
   // polyline.destroy()
-  mapStore.map?.remove(polyline)
+  map?.value?.remove(polyline)
 })
 
 function createPolyline() {
@@ -30,10 +36,12 @@ function createPolyline() {
 
   polyline.setExtData(polylineProps.id)
 
-  mapStore.bindMenu(polyline, polylineProps.bindMenu)
+  bindClickEvent(polyline)
 
-  if (mapStore.map) {
-    mapStore.map.add(polyline)
+  hasRightMenu && bindRightClickEvent(polyline)
+
+  if (map?.value) {
+    map?.value?.add(polyline)
   }
 }
 

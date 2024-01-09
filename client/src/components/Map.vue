@@ -5,13 +5,18 @@
 <script setup lang="ts">
 import { getConfig } from '@sp/shared/apis'
 import { useMap } from '@sp/shared/hooks'
-import { arrayToPosition, useMapStore } from '@sp/shared/map'
+import { arrayToPosition, labelsLayerKey, mapKey } from '@sp/shared/map'
+import type { AMap } from '@amap/amap-jsapi-types'
 
 const config = await getConfig().send()
 
 const container = ref<HTMLDivElement | null>(null)
 
-const { map, labelsLayer } = storeToRefs(useMapStore())
+const map = ref<AMap.Map>()
+const labelsLayer = ref<AMap.LabelsLayer>()
+
+provide(mapKey, map)
+provide(labelsLayerKey, labelsLayer)
 
 const plugins = ['AMap.ElasticMarker']
 if (config.mapType && config.mapTypePosition) {

@@ -22,6 +22,7 @@ const overlayOptions = Object.values(overlays).map(v => ({
 }))
 
 export * from './utils'
-export * from './rightMenu'
+export * from './click'
+export * from './rightClick'
 export * from './mapStore'
 export { overlays, overlayOptions }

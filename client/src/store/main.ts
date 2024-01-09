@@ -1,14 +1,11 @@
-import { getMenu, getSider } from '@sp/shared/apis'
-import { useMapStore } from '@sp/shared/map'
+import { getMap, getMenu, getSider } from '@sp/shared/apis'
 import { useRequest } from 'alova'
 import { Modal } from 'ant-design-vue'
 import { h } from 'vue'
 import type { MenuItem, HandledMenu } from '#/business'
 
 export const useMainStore = defineStore('main', () => {
-  const route = useRoute()
-  const router = useRouter()
-
+  // -------------------------加载菜单-------------------------
   const menuData = ref()
   const keysMap = ref<Map<string, HandledMenu>>(new Map())
   const selectedKeys = ref<string[]>([])
@@ -19,26 +16,6 @@ export const useMainStore = defineStore('main', () => {
     onSuccess: onMenuSuccess,
     onError: onMenuError,
   } = useRequest(getMenu(true), { initialData: [] })
-
-  const {
-    data: leftData,
-    loading: leftLoading,
-    send: sendLeft,
-  } = useRequest(
-    (menuId: string) => getSider({ menuId, filter: true, position: 'left' }),
-    { initialData: [], immediate: false },
-  )
-
-  const {
-    data: rightData,
-    loading: rightLoading,
-    send: sendright,
-  } = useRequest(
-    (menuId: string) => getSider({ menuId, filter: true, position: 'right' }),
-    { initialData: [], immediate: false },
-  )
-
-  const mapStore = useMapStore()
 
   onMenuError(() => {
     Modal.confirm({
@@ -67,6 +44,39 @@ export const useMainStore = defineStore('main', () => {
     menuData.value = transformMenu(data)
   })
 
+  // -------------------------边栏数据-------------------------
+  const {
+    data: leftData,
+    loading: leftLoading,
+    send: sendLeft,
+  } = useRequest(
+    (menuId: string) => getSider({ menuId, filter: true, position: 'left' }),
+    { initialData: [], immediate: false },
+  )
+
+  const {
+    data: rightData,
+    loading: rightLoading,
+    send: sendright,
+  } = useRequest(
+    (menuId: string) => getSider({ menuId, filter: true, position: 'right' }),
+    { initialData: [], immediate: false },
+  )
+
+  // -------------------------地图数据-------------------------
+  const {
+    data: mapData,
+    loading: mapLoading,
+    send: sendMap,
+  } = useRequest((menuId: string) => getMap(menuId, true), {
+    immediate: false,
+    initialData: [],
+  })
+
+  // -------------------------菜单加载完成后监听路由-------------------------
+  const route = useRoute()
+  const router = useRouter()
+
   watch(
     [menuData, () => route.params.id as string],
     ([menuData, paramsId]) => {
@@ -90,14 +100,16 @@ export const useMainStore = defineStore('main', () => {
     { immediate: true },
   )
 
+  // ----------------------选中菜单后加载数据并设置标题----------------------
   function setSelectMenu(item: HandledMenu) {
     sendLeft(item.key)
     sendright(item.key)
-    mapStore.getMapData(item.key)
+    sendMap(item.key)
     selectedKeys.value = item.keys
     menuData.value[item.index].label = item.labels.join('-')
   }
 
+  // 从地图数据中获取第一个菜单
   function getFirstMenu(data: HandledMenu[] = menuData.value) {
     if (data[0].children?.length) {
       return getFirstMenu(data[0].children)
@@ -144,5 +156,7 @@ export const useMainStore = defineStore('main', () => {
     setSelectMenu,
     selectedKeys,
     menuData,
+    mapData,
+    mapLoading,
   }
 })

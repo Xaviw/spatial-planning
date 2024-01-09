@@ -2,22 +2,28 @@
 <template></template>
 
 <script setup lang="ts">
-import { useMapStore } from '../mapStore'
+import {
+  hasRightMenuKey,
+  mapKey,
+  bindClickEvent,
+  bindRightClickEvent,
+} from '@sp/shared/map'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const bezierCurveProps = defineProps<OverlayProps<'BezierCurve'>>()
 
-const mapStore = useMapStore()
+const map = inject(mapKey)
+const hasRightMenu = inject(hasRightMenuKey)
 
 let bezierCurve: AMap.BezierCurve
 
 createBezierCurve()
 
-mapStore.map?.setFitView()
+map?.value?.setFitView()
 
 onUnmounted(() => {
-  mapStore.map?.remove(bezierCurve)
+  map?.value?.remove(bezierCurve)
 })
 
 function createBezierCurve() {
@@ -28,10 +34,12 @@ function createBezierCurve() {
 
   bezierCurve.setExtData(bezierCurveProps.id)
 
-  mapStore.bindMenu(bezierCurve, bezierCurveProps.bindMenu)
+  bindClickEvent(bezierCurve)
 
-  if (mapStore.map) {
-    mapStore.map.add(bezierCurve)
+  hasRightMenu && bindRightClickEvent(bezierCurve)
+
+  if (map?.value) {
+    map?.value?.add(bezierCurve)
   }
 }
 

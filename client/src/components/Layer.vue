@@ -56,9 +56,3 @@ defineEmits<{ (e: 'trigger'): void }>()
 
 const { mapData } = storeToRefs(useMapStore())
 </script>
-
-<style scoped>
-.trigger {
-  @apply cursor-pointer opacity-50 hover:opacity-100 select-none bg-[#007fd9];
-}
-</style>

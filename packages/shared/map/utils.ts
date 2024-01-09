@@ -1,48 +1,19 @@
-import { ContentWrapper } from '@sp/shared/components'
-import { useModal } from '@sp/shared/hooks'
-import { components } from '@sp/shared/materials'
-import { cloneDeep, isNumber, merge } from 'lodash-es'
+import { AMap } from '@amap/amap-jsapi-types'
+import { isNumber } from 'lodash-es'
 import type {
   LayerItem,
   OverlayItem,
   OverlayOptions,
   OverlayType,
 } from '#/business'
+import type { InjectionKey, Ref } from 'vue'
 
-const { open, close } = useModal('OverlayDetail')
-/** 覆盖物详情弹窗 */
-export function openDetail(data: OverlayItem<OverlayType>) {
-  open(
-    h(
-      ContentWrapper,
-      {
-        title: data.detailTitle || `${data.name}详情`,
-        onClose: close,
-        style: { width: data.detailWidth || '25rem' },
-      },
-      () =>
-        h(
-          'div',
-          {
-            style: {
-              maxHeight: '80vh',
-              overflow: 'auto',
-              backgroundColor: '#001231',
-              color: '#fff',
-            },
-          },
-          data.details.map(comp =>
-            h(
-              components[comp.type],
-              merge(cloneDeep(comp.props), {
-                style: { marginBottom: '0.5rem' },
-              }),
-            ),
-          ),
-        ),
-    ),
-  )
-}
+export const mapKey: InjectionKey<Ref<AMap.Map | undefined>> = Symbol('map')
+
+export const hasRightMenuKey: InjectionKey<boolean> = Symbol('hasRightMenu')
+
+export const labelsLayerKey: InjectionKey<Ref<AMap.LabelsLayer | undefined>> =
+  Symbol('labelsLayer')
 
 /** 在地图数据中查找覆盖物，返回图层、覆盖物、覆盖物下标 */
 export function findOverlay(

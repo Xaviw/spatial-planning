@@ -1,10 +1,7 @@
 import { getMap } from '@sp/shared/apis'
-import { overlays, rightMenu } from '@sp/shared/map'
-import { modal } from '@sp/shared/utils'
+import { overlays } from '@sp/shared/map'
 import { useRequest } from 'alova'
 import { message } from 'ant-design-vue'
-import { isEqual } from 'lodash-es'
-import { findOverlay, openDetail } from './utils'
 import type {
   OverlayType,
   OverlayItem,
@@ -106,90 +103,6 @@ export const useMapStore = defineStore('map', () => {
     }
   }
 
-  const bindMenu = rightMenu({
-    async edit() {
-      // 查找要编辑的覆盖物
-      const { overlay } = findOverlay(mapData.value, activeId.value!) || {}
-      if (overlay) {
-        // 正在编辑，不做操作
-        if (activeOverlay.value && activeOverlay.value.id === overlay.id) {
-          return
-        }
-        // 有其他编辑中的覆盖物，且已有改动，提示
-        if (activeOverlay.value && !isEqual(activeOverlay.value, overlay)) {
-          await modal('confirm', {
-            title: '提示！',
-            content: '您有正在编辑的覆盖物还未保存，是否直接切换？',
-            okText: '切换',
-          })
-        }
-        activeOverlay.value = overlay
-      }
-    },
-    copy() {
-      const { layer, overlay } =
-        findOverlay(mapData.value, activeId.value!) || {}
-      if (layer && overlay) {
-        layer.overlays.push({ ...overlay, id: `add_${Date.now()}` })
-        message.success('已复制，复制的覆盖物与原覆盖物重叠，请编辑！')
-      }
-    },
-    move() {
-      layerModalOpen.value = true
-    },
-    remove() {
-      const { layer, index, overlay } =
-        findOverlay(mapData.value, activeId.value!) || {}
-      if (layer && overlay) {
-        layer.overlays.splice(index!, 1)
-        if (overlay.id === activeOverlay.value?.id) {
-          cancelEdit()
-        }
-      }
-    },
-    hide() {
-      activeInstance.value?.hide()
-      message.success('可通过切换图层隐藏、显示恢复覆盖物显示')
-    },
-    moveUp() {
-      const { layer, index, overlay } =
-        findOverlay(mapData.value, activeId.value!) || {}
-      if (layer && overlay) {
-        layer.overlays[index!].props.zIndex =
-          (layer.overlays[index!].props.zIndex ||
-            overlays[overlay.type].defaultZIndex!) + 1
-      }
-    },
-    moveDown() {
-      const { layer, index, overlay } =
-        findOverlay(mapData.value, activeId.value!) || {}
-      if (layer && overlay) {
-        layer.overlays[index!].props.zIndex =
-          (layer.overlays[index!].props.zIndex ||
-            overlays[overlay.type].defaultZIndex!) - 1
-      }
-    },
-    click(e) {
-      const id = (e.target as any).getExtData()
-      const { overlay } = findOverlay(mapData.value, id) || {}
-      if (overlay?.details.length) {
-        openDetail(overlay)
-      }
-    },
-    rightClick(e) {
-      // 右击时关闭覆盖物编辑和绘制，避免单击选项时产生多余绘制操作
-      if (activeOverlay.value) {
-        overlays[activeOverlay.value.type]?.handleEdit?.(false)
-      }
-      if (activeTool.value) {
-        toolManage()
-      }
-      activeInstance.value = e.target
-      activeId.value = (e.target as any).getExtData()
-      e.originEvent.stopPropagation()
-    },
-  })
-
   return {
     mapData,
     loading,
@@ -204,7 +117,6 @@ export const useMapStore = defineStore('map', () => {
     redo,
     undo,
     selectedMenu,
-    bindMenu,
     layerModalOpen,
     activeId,
     activeInstance,
