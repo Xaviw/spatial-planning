@@ -3,8 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { useScript } from '@sp/shared/hooks'
-
 onMounted(() => {
   window.WIDGET = {
     CONFIG: {
@@ -30,7 +28,7 @@ onMounted(() => {
   }
 })
 
-useScript({
-  src: 'https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0',
-})
+useScriptTag(
+  'https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0',
+)
 </script>

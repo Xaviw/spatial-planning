@@ -31,7 +31,7 @@ const zoom = ref<number>()
 
 loading.value = true
 
-const configs = await getConfig().send()
+const config = await getConfig().send()
 
 const plugins = [
   'AMap.MouseTool',
@@ -43,23 +43,23 @@ const plugins = [
   'AMap.EllipseEditor',
   'AMap.ElasticMarker',
 ]
-if (configs.scalebar && configs.scalebarPosition) {
+if (config.mapType && config.mapTypePosition) {
+  plugins.push('AMap.MapType')
+}
+if (config.scalebar && config.scalebarPosition) {
   plugins.push('AMap.Scale')
 }
-if (configs.toolbar && configs.toolbarPosition) {
+if (config.toolbar && config.toolbarPosition) {
   plugins.push('AMap.ToolBar')
 }
-if (configs.controlbar && configs.controlbarPosition) {
+if (config.controlbar && config.controlbarPosition) {
   plugins.push('AMap.ControlBar')
 }
 
 useMap(
   container,
   {
-    mapOptions: {
-      mapStyle: 'amap://styles/blue',
-      ...configs,
-    },
+    mapOptions: { ...config, mapStyle: `amap://styles/${config.mapStyle}` },
     loaderOptions: {
       plugins,
     },
@@ -82,24 +82,34 @@ useMap(
     rectangleEditor.value = new window.AMap.RectangleEditor(_map)
     circleEditor.value = new window.AMap.CircleEditor(_map)
     ellipseEditor.value = new window.AMap.EllipseEditor(_map)
-    if (configs.scalebar && configs.scalebarPosition) {
+    if (config.mapType && config.mapTypePosition) {
+      _map.addControl(
+        new (window.AMap as any).MapType({
+          defaultType: config.defaultMapType,
+          showTraffic: config.showTraffic,
+          showRoad: config.showRoad,
+          position: arrayToPosition(config.mapTypePosition),
+        }),
+      )
+    }
+    if (config.scalebar && config.scalebarPosition) {
       _map.addControl(
         new (window.AMap as any).Scale({
-          position: arrayToPosition(configs.scalebarPosition),
+          position: arrayToPosition(config.scalebarPosition),
         }),
       )
     }
-    if (configs.scalebar && configs.toolbarPosition) {
+    if (config.scalebar && config.toolbarPosition) {
       _map.addControl(
         new (window.AMap as any).ToolBar({
-          position: arrayToPosition(configs.toolbarPosition),
+          position: arrayToPosition(config.toolbarPosition),
         }),
       )
     }
-    if (configs.scalebar && configs.controlbarPosition) {
+    if (config.scalebar && config.controlbarPosition) {
       _map.addControl(
         new (window.AMap as any).ControlBar({
-          position: arrayToPosition(configs.controlbarPosition),
+          position: arrayToPosition(config.controlbarPosition),
         }),
       )
     }

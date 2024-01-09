@@ -27,7 +27,7 @@ function createLabelMarker() {
 
   labelMarker.setExtData(labelMarkerProps.id)
 
-  mapStore.bindMenu(labelMarker)
+  mapStore.bindMenu(labelMarker, labelMarkerProps.bindMenu)
 
   if (mapStore.map) {
     ;(mapStore.labelsLayer as any).add(labelMarker)
@@ -48,7 +48,7 @@ watch(
 watch(
   () => labelMarkerProps.props.name,
   name => {
-    name && labelMarker.setName(name)
+    labelMarker.setName(name!)
   },
 )
 
@@ -62,35 +62,35 @@ watch(
 watch(
   () => labelMarkerProps.props.zooms,
   zooms => {
-    zooms && labelMarker.setZooms(zooms)
+    labelMarker.setZooms(zooms)
   },
 )
 
 watch(
   () => labelMarkerProps.props.opacity,
   opacity => {
-    opacity && labelMarker.setOpacity(opacity)
+    labelMarker.setOpacity(opacity!)
   },
 )
 
 watch(
   () => labelMarkerProps.props.rank,
   rank => {
-    rank && labelMarker.setRank(rank)
+    labelMarker.setRank(rank!)
   },
 )
 
 watch(
   () => labelMarkerProps.props.zIndex,
   zIndex => {
-    typeof zIndex === 'number' && labelMarker.setzIndex(zIndex)
+    labelMarker.setzIndex(zIndex!)
   },
 )
 
 watch(
   () => labelMarkerProps.props.icon,
   icon => {
-    icon && labelMarker.setIcon(icon)
+    labelMarker.setIcon(icon!)
   },
   { deep: true },
 )
@@ -98,7 +98,7 @@ watch(
 watch(
   () => labelMarkerProps.props.text,
   text => {
-    text && labelMarker.setText(text)
+    labelMarker.setText(text!)
   },
   { deep: true },
 )

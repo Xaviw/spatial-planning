@@ -1,7 +1,7 @@
 <template>
   <AForm>
     <AFormItem label="填充颜色">
-      <ColorPicker v-model:pureColor="formModel.fillColor" />
+      <ColorPicker v-model:pureColor="formModel.fillColor" disableAlpha />
     </AFormItem>
 
     <AFormItem label="填充透明度">
@@ -14,7 +14,7 @@
     </AFormItem>
 
     <AFormItem label="线条颜色">
-      <ColorPicker v-model:pureColor="formModel.strokeColor" />
+      <ColorPicker v-model:pureColor="formModel.strokeColor" disableAlpha />
     </AFormItem>
 
     <AFormItem label="线条透明度">
@@ -41,13 +41,15 @@
       />
     </AFormItem>
 
-    <AFormItem label="虚线间隙" help="仅在线条样式为虚线时生效">
+    <AFormItem
+      label="虚线间隙"
+      help="仅在线条样式为虚线时生效"
+      extra="生成的线条会反复使用传入的值，表现为 [实线,虚线,实线,虚线]。例如 [10,2,10] 表示10个像素的实线和2个像素的空白 + 10个像素的实线和10个像素的空白 （如此反复）"
+    >
       <Vector
         v-model="formModel.strokeDasharray"
-        :props="[
-          { addonAfter: '像素', min: 0 },
-          { addonAfter: '像素', min: 0 },
-        ]"
+        :props="{ addonAfter: '像素', min: 0 }"
+        gap="8px"
       />
     </AFormItem>
 
@@ -74,6 +76,7 @@
     >
       <Vector
         v-model="formModel.zooms"
+        :num="2"
         :props="[
           { addonAfter: '-', min: 2, max: 26 },
           { addonAfter: '级', min: 2, max: 26 },

@@ -50,7 +50,7 @@ export default {
   form: Form,
   name: '矩形',
   icon: 'i-mdi:vector-rectangle',
-  drawHelp: ['从目标位置点击并拖动，松开鼠标后完成绘制'],
+  drawHelp: ['从目标位置点击并拖动，松开鼠标后完成绘制', '不能连续绘制'],
   editHelp: ['拖动控制点移动顶点位置', '拖动非控制点移动整体位置'],
   handleDraw: (open: boolean) => {
     if (open) {
@@ -75,6 +75,7 @@ export default {
     })
     mapData.value[activeLayerIndex.value!].overlays.push(newRectangle)
     map.value?.remove(obj)
+    mapStore.toolManage()
   },
   handleEdit: (open: boolean) => {
     if (!(activeInstance.value instanceof window.AMap.Rectangle)) return

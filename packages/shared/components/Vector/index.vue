@@ -2,25 +2,47 @@
   <AInputGroup
     compact
     class="flex!"
-    :style="{ flexDirection: direction === 'horizontal' ? 'row' : 'column' }"
+    :style="{
+      flexDirection: direction === 'vertical' || !num ? 'column' : 'row',
+    }"
   >
     <AFormItemRest>
-      <AInputNumber
-        v-for="item of num"
+      <div
+        class="flex items-center"
+        v-for="item of num || Math.max(1, modelValue.length)"
         :key="item"
-        :class="itemClass(item)"
-        :style="[
-          gap &&
-            item !== num &&
-            (direction === 'horizontal'
-              ? `margin-right:${gap}`
-              : `margin-bottom:${gap}`),
-        ]"
-        :value="modelValue[item - 1]"
-        @update:value="onUpdate($event as number, item - 1)"
-        v-bind="props.props[item - 1] || {}"
-        @paste="onPaste(item - 1, $event)"
-      />
+      >
+        <AInputNumber
+          :class="itemClass(item)"
+          :style="[
+            gap &&
+              item !== num &&
+              (direction === 'vertical' || !num
+                ? `margin-bottom:${gap}`
+                : `margin-right:${gap}`),
+          ]"
+          :value="modelValue[item - 1]"
+          @update:value="onUpdate($event as number, item - 1)"
+          v-bind="
+            Array.isArray(props.props)
+              ? props.props[item - 1] || {}
+              : props.props || {}
+          "
+          @paste="onPaste(item - 1, $event)"
+        />
+
+        <i
+          class="i-ant-design:close-outlined ml-2 cursor-pointer text-red"
+          v-if="!num && item < modelValue.length && modelValue.length > 1"
+          @click="decrement(item - 1)"
+        />
+
+        <i
+          class="i-ant-design:plus-outlined ml-2 cursor-pointer"
+          v-if="!num && item === Math.max(1, modelValue.length)"
+          @click="increment"
+        />
+      </div>
     </AFormItemRest>
   </AInputGroup>
 </template>
@@ -30,23 +52,29 @@ import { message } from 'ant-design-vue'
 
 const props = withDefaults(
   defineProps<{
+    modelValue?: (number | null)[]
+    /** 输入框数量，未提供时可以手动增减 */
     num?: number
-    modelValue?: (number | undefined)[]
-    props?: Recordable[]
-    events?: Recordable<Fn>
+    /**
+     * 排列方式，未提供 num 时仅支持 'vertical'
+     * @default 'horizontal'
+     */
     direction?: 'horizontal' | 'vertical'
+    /** 输入框间隔，方向跟随 direction */
     gap?: string
+    /** AInputNumber props，为对象时应用到所有输入框，为数组时按下标对应 */
+    props?: Recordable[] | Recordable
+    /** AInputNumber event，为对象时应用到所有输入框，为数组时按下标对应 */
+    events?: Recordable<Fn>[] | Recordable<Fn>
   }>(),
   {
-    num: 2,
     direction: 'horizontal',
     modelValue: () => [],
-    props: () => [],
   },
 )
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', val: (number | undefined)[]): void
+  (e: 'update:modelValue', val: (number | null)[]): void
 }>()
 
 function itemClass(index: number) {
@@ -58,9 +86,23 @@ function itemClass(index: number) {
 }
 
 function onUpdate(value: number, index: number) {
-  let copy = [...props.modelValue]
+  const copy = [...props.modelValue]
   copy[index] = value
   emits('update:modelValue', copy)
+}
+
+function decrement(index: number) {
+  const copy = [...props.modelValue]
+  copy.splice(index, 1)
+  emits('update:modelValue', copy)
+}
+
+function increment() {
+  const copied = [...props.modelValue, null]
+  if (copied.length === 1) {
+    copied.push(null)
+  }
+  emits('update:modelValue', copied)
 }
 
 function onPaste(index: number, e: ClipboardEvent) {
@@ -75,7 +117,7 @@ function onPaste(index: number, e: ClipboardEvent) {
       return
     }
     const copied = [...props.modelValue]
-    for (let i = 0; i < Math.min(props.num, values.length); i++) {
+    for (let i = 0; i < Math.min(props.num || Infinity, values.length); i++) {
       copied[i] = values[i]
     }
     emits('update:modelValue', copied)

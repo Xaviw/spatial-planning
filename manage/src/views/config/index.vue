@@ -6,41 +6,99 @@
     >
       <Loading absolute :loading="loading" />
 
+      <ADivider orientation="left" class="col-span-3">地图类型控件</ADivider>
+
+      <AFormItem
+        label="是否显示地图类型控件"
+        help="可以切换默认图层、卫星图层，以及叠加路网、交通等"
+      >
+        <ASwitch v-model:checked="formModel.mapType" />
+      </AFormItem>
+
+      <AFormItem label="地图类型位置" class="col-span-2">
+        <Vector
+          v-model="formModel.mapTypePosition"
+          gap="8px"
+          :num="4"
+          :props="[
+            {
+              addonBefore: '距顶部',
+              addonAfter: '像素',
+              min: 0,
+              class: 'w-44',
+            },
+            {
+              addonBefore: '距左侧',
+              addonAfter: '像素',
+              min: 0,
+              class: 'w-44',
+            },
+            {
+              addonBefore: '距底部',
+              addonAfter: '像素',
+              min: 0,
+              class: 'w-44',
+            },
+            {
+              addonBefore: '距右侧',
+              addonAfter: '像素',
+              min: 0,
+              class: 'w-44',
+            },
+          ]"
+        />
+      </AFormItem>
+
+      <AFormItem label="图层类型" v-bind="validateInfos.defaultMapType">
+        <ARadioGroup
+          :options="mapDefaultTypeOptions"
+          v-model:value="formModel.defaultMapType"
+        />
+      </AFormItem>
+
+      <AFormItem label="叠加交通图层">
+        <ASwitch v-model:checked="formModel.showTraffic" />
+      </AFormItem>
+
+      <AFormItem label="叠加路网图层">
+        <ASwitch v-model:checked="formModel.showRoad" />
+      </AFormItem>
+
       <ADivider orientation="left" class="col-span-3">比例尺控件</ADivider>
 
       <AFormItem label="是否显示比例尺控件">
         <ASwitch v-model:checked="formModel.scalebar" />
       </AFormItem>
 
-      <AFormItem label="比例尺控件位置">
+      <AFormItem label="比例尺控件位置" class="col-span-2">
         <Vector
           v-model="formModel.scalebarPosition"
-          direction="vertical"
           gap="8px"
+          :num="4"
           :props="[
             {
               addonBefore: '距顶部',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
             {
               addonBefore: '距左侧',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
             {
-              addonBefore: '距下部',
+              addonBefore: '距底部',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
             {
               addonBefore: '距右侧',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
           ]"
         />
@@ -52,35 +110,35 @@
         <ASwitch v-model:checked="formModel.toolbar" />
       </AFormItem>
 
-      <AFormItem label="缩放控件位置">
+      <AFormItem label="缩放控件位置" class="col-span-2">
         <Vector
           v-model="formModel.toolbarPosition"
-          direction="vertical"
           gap="8px"
+          :num="4"
           :props="[
             {
               addonBefore: '距顶部',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
             {
               addonBefore: '距左侧',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
             {
-              addonBefore: '距下部',
+              addonBefore: '距底部',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
             {
               addonBefore: '距右侧',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
           ]"
         />
@@ -95,41 +153,57 @@
         <ASwitch v-model:checked="formModel.controlbar" />
       </AFormItem>
 
-      <AFormItem label="视角控件位置">
+      <AFormItem label="视角控件位置" class="col-span-2">
         <Vector
           v-model="formModel.controlbarPosition"
-          direction="vertical"
           gap="8px"
+          :num="4"
           :props="[
             {
               addonBefore: '距顶部',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
             {
               addonBefore: '距左侧',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
             {
-              addonBefore: '距下部',
+              addonBefore: '距底部',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
             {
               addonBefore: '距右侧',
               addonAfter: '像素',
               min: 0,
-              class: 'w-50',
+              class: 'w-44',
             },
           ]"
         />
       </AFormItem>
 
       <ADivider orientation="left" class="col-span-3">地图参数</ADivider>
+
+      <AFormItem
+        label="地图样式"
+        v-bind="validateInfos.mapStyle"
+        class="col-span-3"
+      >
+        <div class="flex items-center">
+          <ARadioGroup
+            :options="mapStyleOptions"
+            v-model:value="formModel.mapStyle"
+            @change="onMapStyleChange"
+          />
+
+          <div ref="container" class="h-30 flex-1"></div>
+        </div>
+      </AFormItem>
 
       <AFormItem label="显示元素" v-bind="validateInfos.features">
         <ACheckboxGroup
@@ -187,6 +261,7 @@
       <AFormItem label="缩放范围" v-bind="validateInfos.zooms">
         <Vector
           v-model="formModel.zooms"
+          :num="2"
           :props="[
             { addonAfter: '-', min: 2, max: 26, class: 'w-30' },
             { min: 2, max: 26, class: 'w-26' },
@@ -238,9 +313,9 @@
 </template>
 
 <script setup lang="ts">
-import 'vue3-colorpicker/style.css'
 import { getConfig, setConfig } from '@sp/shared/apis'
 import { Loading, Vector } from '@sp/shared/components'
+import { useMap } from '@sp/shared/hooks'
 import { useRequest } from 'alova'
 import { Form, message } from 'ant-design-vue'
 import { Rule } from 'ant-design-vue/es/form'
@@ -272,6 +347,15 @@ const defaultConfig = (): Config => ({
   wallColor: '#989898',
   roofColor: '#D6D6D6',
   skyColor: '#CCE8FF',
+  mapType: false,
+  defaultMapType: 0,
+  showTraffic: false,
+  showRoad: false,
+  mapStyle: 'blue',
+  mapTypePosition: [null, 5, null, 30],
+  scalebarPosition: [null, 5, null, 5],
+  toolbarPosition: [null, null, 5, 5],
+  controlbarPosition: [37, null, 5, null],
 })
 
 onSuccess(({ data }) => {
@@ -289,6 +373,7 @@ const rules = ref<Record<string, Rule[]>>({
   ],
   features: [{ required: true, message: '请选择显示元素！' }],
   zooms: [{ required: true, message: '请输入缩放范围！' }],
+  defaultMapType: [{ required: true, message: '请选择默认图层类型！' }],
 })
 
 const { validateInfos, resetFields, validate } = Form.useForm(formModel, rules)
@@ -317,4 +402,31 @@ const featuresOptions = [
   { label: '道路', value: 'road' },
   { label: '建筑物', value: 'building' },
 ]
+
+const mapDefaultTypeOptions = [
+  { label: '默认底图', value: 0 },
+  { label: '卫星底图', value: 1 },
+]
+
+const mapStyleOptions = [
+  { label: '标准', value: 'normal' },
+  { label: '幻影黑', value: 'dark' },
+  { label: '月光银', value: 'light' },
+  { label: '远山黛', value: 'whitesmoke' },
+  { label: '草色青', value: 'fresh' },
+  { label: '雅士灰', value: 'grey' },
+  { label: '涂鸦', value: 'graffiti' },
+  { label: '马卡龙', value: 'macaron' },
+  { label: '靛青蓝', value: 'blue' },
+  { label: '极夜蓝', value: 'darkblue' },
+  { label: '酱籽', value: 'wine' },
+]
+
+const container = ref<HTMLDivElement | null>(null)
+const { map } = useMap(container, {
+  mapOptions: { mapStyle: `amap://styles/${formModel.value.mapStyle}` },
+})
+function onMapStyleChange() {
+  map.value.setMapStyle(`amap://styles/${formModel.value.mapStyle}`)
+}
 </script>

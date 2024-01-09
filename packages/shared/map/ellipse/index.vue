@@ -22,7 +22,6 @@ onUnmounted(() => {
 })
 
 function createEllipse() {
-  console.log('ellipseProps.props: ', ellipseProps.props)
   ellipse = new window.AMap.Ellipse({
     ...ellipseProps.props,
     cursor: 'pointer',
@@ -30,7 +29,7 @@ function createEllipse() {
 
   ellipse.setExtData(ellipseProps.id)
 
-  mapStore.bindMenu(ellipse)
+  mapStore.bindMenu(ellipse, ellipseProps.bindMenu)
 
   if (mapStore.map) {
     mapStore.map.add(ellipse)

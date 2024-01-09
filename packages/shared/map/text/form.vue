@@ -15,9 +15,10 @@
     <AFormItem label="图标偏移量" help="横、竖轴上偏移的位置">
       <Vector
         v-model="formModel.offset"
+        :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: 'px', min: 0 },
-          { addonBefore: '竖轴', addonAfter: 'px', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -35,9 +36,14 @@
 
     <AFormItem
       label="文本样式"
-      help="CSS代码，如：“{'background-color':'red'}”"
+      help='JSON格式CSS代码，如：{"background-color":"red"}'
     >
-      <ATextarea v-model:value="formModel.style" />
+      <CodeInput
+        type="json"
+        v-model="formModel.style"
+        :style="{ height: '200px' }"
+        placeholder="请输入样式代码：用英文花括号包裹样式，属性用英文双引号包裹，样式代码间使用英文逗号分隔（最后一条样式后不能有逗号）"
+      />
     </AFormItem>
 
     <AFormItem
@@ -47,6 +53,7 @@
     >
       <Vector
         v-model="formModel.zooms"
+        :num="2"
         :props="[
           { addonAfter: '-', min: 2, max: 26 },
           { addonAfter: '级', min: 2, max: 26 },
@@ -65,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { Vector } from '@sp/shared/components'
+import { Vector, CodeInput } from '@sp/shared/components'
 import { anchorOptions } from '@sp/shared/map'
 import { Form } from 'ant-design-vue'
 import type { TextProps } from '#/business'

@@ -3,12 +3,17 @@ import type { ComponentOptions } from 'vue'
 
 // -----------------系统配置-----------------
 export type Config = Partial<AMap.MapOptions> & {
+  mapType?: boolean
+  mapTypePosition?: (number | null)[]
+  defaultMapType?: 0 | 1
+  showTraffic?: boolean
+  showRoad?: boolean
   scalebar?: boolean
-  scalebarPosition?: number[]
+  scalebarPosition?: (number | null)[]
   toolbar?: boolean
-  toolbarPosition?: number[]
+  toolbarPosition?: (number | null)[]
   controlbar?: boolean
-  controlbarPosition?: number[]
+  controlbarPosition?: (number | null)[]
 }
 
 // -----------------菜单-----------------
@@ -21,6 +26,15 @@ export interface MenuItem {
   status: boolean
   createTime: string
   updateTime?: string
+}
+
+export interface HandledMenu {
+  label: string
+  key: string
+  index: number
+  keys: string[]
+  labels: string[]
+  children?: HandledMenu[]
 }
 
 // -----------------侧边栏-----------------
@@ -382,6 +396,7 @@ export interface OverlayItem<T extends OverlayType> {
 
 export type OverlayProps<T extends OverlayType> = OverlayItem<T> & {
   visible: boolean
+  bindMenu?: boolean
 }
 
 export interface LayerItem<T extends OverlayType> {

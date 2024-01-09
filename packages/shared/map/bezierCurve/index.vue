@@ -28,7 +28,7 @@ function createBezierCurve() {
 
   bezierCurve.setExtData(bezierCurveProps.id)
 
-  mapStore.bindMenu(bezierCurve)
+  mapStore.bindMenu(bezierCurve, bezierCurveProps.bindMenu)
 
   if (mapStore.map) {
     mapStore.map.add(bezierCurve)

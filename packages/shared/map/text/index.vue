@@ -27,7 +27,7 @@ function createText() {
 
   text.setExtData(textProps.id)
 
-  mapStore.bindMenu(text)
+  mapStore.bindMenu(text, textProps.bindMenu)
 
   if (mapStore.map) {
     mapStore.map.add(text)
@@ -48,14 +48,14 @@ watch(
 watch(
   () => textProps.props.text,
   txt => {
-    txt && text.setText(txt)
+    text.setText(txt!)
   },
 )
 
 watch(
   () => textProps.props.title,
   title => {
-    title && text.setTitle(title)
+    text.setTitle(title!)
   },
 )
 
@@ -69,38 +69,48 @@ watch(
 watch(
   () => textProps.props.anchor,
   anchor => {
-    anchor && text.setAnchor(anchor)
+    text.setAnchor(anchor!)
   },
 )
 
 watch(
   () => textProps.props.angle,
   angle => {
-    typeof angle === 'number' && text.setAngle(angle)
+    text.setAngle(angle!)
   },
 )
 
 watch(
   () => textProps.props.offset,
   offset => {
-    offset && text.setOffset(offset)
+    text.setOffset(offset!)
+  },
+)
+
+watch(
+  () => textProps.props.style,
+  style => {
+    try {
+      style = JSON.parse(style)
+    } catch (error) {
+      console.log('error: ', error)
+    }
+    text.setStyle(style || undefined)
   },
 )
 
 watch(
   () => textProps.props.zIndex,
   zIndex => {
-    typeof zIndex === 'number' && text.setzIndex(zIndex)
+    text.setzIndex(zIndex!)
   },
 )
 
 watch(
   () => textProps.props.zooms,
-  zooms => {
-    if (zooms) {
-      mapStore.map?.remove(text)
-      createText()
-    }
+  () => {
+    mapStore.map?.remove(text)
+    createText()
   },
 )
 </script>

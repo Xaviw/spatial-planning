@@ -20,6 +20,7 @@ export default {
   drawHelp: [
     '启用后点击地图目标位置会自动复制经纬度',
     '复制后可以直接粘贴到经纬度输入框中',
+    '如目标位置被遮挡可以先右击覆盖物选择“隐藏”',
   ],
   toolItemStyle: 'border-top: 3px solid #666',
   handleDraw: (open: boolean) => {

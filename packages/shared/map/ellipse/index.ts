@@ -54,6 +54,7 @@ export default {
   drawHelp: [
     '从圆心位置点击并拖动，松开鼠标后完成绘制',
     '先绘制圆形后再在编辑中调整弧度',
+    '不能连续绘制',
   ],
   editHelp: ['拖动边缘控制点调整尺寸', '拖动中心控制点移动位置'],
   handleDraw: (open: boolean) => {
@@ -76,6 +77,7 @@ export default {
     })
     mapData.value[activeLayerIndex.value!].overlays.push(newEllipse)
     map.value?.remove(obj)
+    mapStore.toolManage()
   },
   handleEdit: (open: boolean) => {
     if (!(activeInstance.value instanceof window.AMap.Ellipse)) return

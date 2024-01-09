@@ -16,7 +16,7 @@
           !layoutState.left && 'ml--100',
         ]"
       >
-        <Sider position="left" />
+        <Sider :data="leftData" :loading="menuLoading || leftLoading" />
 
         <div
           class="trigger arrow right-0 translate-x-[100%] rounded-r"
@@ -33,34 +33,24 @@
       </div>
 
       <div class="relative flex flex-1 flex-col">
+        <Loading absolute :loading="menuLoading || mapLoading" />
         <!-- 菜单 -->
         <Menu class="absolute left-6 top-4 z-200" />
 
         <!-- 地图 -->
-        <Map class="flex-1" />
+        <Suspense>
+          <Map class="flex-1" />
+          <template #fallback>
+            <div class="flex-1"></div>
+          </template>
+        </Suspense>
 
         <!-- 图例 -->
-        <div
-          :class="[
-            'relative',
-            'h-20',
-            'transition-all',
-            !layoutState.bottom && 'mb--20',
-          ]"
-        >
-          <div class="absolute left-0 top-0 flex translate-y-[-100%] text-10px">
-            <div
-              class="trigger px-2 py-1"
-              @click="layoutState.bottom = !layoutState.bottom"
-            >
-              {{ `${layoutState.bottom ? '折叠' : '展开'}图例` }}
-            </div>
-            <div class="w-1px bg-[#ffe14d] py-1 opacity-50" />
-            <div class="trigger px-2 py-1">全部隐藏</div>
-            <div class="w-1px bg-[#ffe14d] py-1 opacity-50" />
-            <div class="trigger px-2 py-1">全部显示</div>
-          </div>
-        </div>
+        <Layer
+          :open="layoutState.bottom"
+          @trigger="layoutState.bottom = !layoutState.bottom"
+          class="max-h-40 overflow-auto"
+        />
       </div>
 
       <!-- 右侧 -->
@@ -72,7 +62,7 @@
           !layoutState.right && 'mr--100',
         ]"
       >
-        <Sider position="right" />
+        <Sider :data="rightData" :loading="menuLoading || rightLoading" />
 
         <div
           class="trigger arrow left-0 translate-x-[-100%] rounded-l"
@@ -92,6 +82,16 @@
 </template>
 
 <script setup lang="ts">
+import { Loading } from '@sp/shared/components'
+import { useMapStore } from '@sp/shared/map'
+import Layer from '../components/Layer.vue'
+import { useMainStore } from '../store/main'
+
+const { leftData, rightData, leftLoading, rightLoading, menuLoading } =
+  storeToRefs(useMainStore())
+
+const { loading: mapLoading } = storeToRefs(useMapStore())
+
 const layoutState = reactive({
   left: true,
   right: true,
@@ -100,10 +100,6 @@ const layoutState = reactive({
 </script>
 
 <style scoped>
-.trigger {
-  @apply cursor-pointer opacity-50 hover:opacity-100 select-none bg-[#007fd9];
-}
-
 .arrow {
   @apply py-2 absolute top-[50%] translate-y-[50%] flex items-center justify-center;
 }

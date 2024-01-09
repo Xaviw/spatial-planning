@@ -28,7 +28,7 @@ function createPolygon() {
 
   polygon.setExtData(polygonProps.id)
 
-  mapStore.bindMenu(polygon)
+  mapStore.bindMenu(polygon, polygonProps.bindMenu)
 
   if (mapStore.map) {
     mapStore.map.add(polygon)

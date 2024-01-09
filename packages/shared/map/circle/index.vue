@@ -29,7 +29,7 @@ function createCircle() {
 
   circle.setExtData(circleProps.id)
 
-  mapStore.bindMenu(circle)
+  mapStore.bindMenu(circle, circleProps.bindMenu)
 
   if (mapStore.map) {
     mapStore.map.add(circle)
@@ -57,7 +57,7 @@ watch(
 watch(
   () => circleProps.props.radius,
   radius => {
-    typeof radius === 'number' && circle.setRadius(radius)
+    radius && circle.setRadius(radius)
   },
 )
 

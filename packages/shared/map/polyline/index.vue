@@ -30,7 +30,7 @@ function createPolyline() {
 
   polyline.setExtData(polylineProps.id)
 
-  mapStore.bindMenu(polyline)
+  mapStore.bindMenu(polyline, polylineProps.bindMenu)
 
   if (mapStore.map) {
     mapStore.map.add(polyline)

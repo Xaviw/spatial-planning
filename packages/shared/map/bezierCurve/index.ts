@@ -101,11 +101,6 @@ export default {
     index: number,
     overlay: OverlayItem<'Marker'>,
   ) => {
-    console.log(
-      (editData.value!.props as BezierCurveProps).path,
-      (activeOverlay.value!.props as BezierCurveProps).path,
-    )
-
     if (
       (editData.value!.props as BezierCurveProps).path &&
       !isEqual(

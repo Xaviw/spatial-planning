@@ -3,6 +3,7 @@
     <AFormItem label="偏移量">
       <Vector
         v-model="formModel.offset"
+        :num="2"
         :props="[{ addonBefore: '横轴' }, { addonBefore: '竖轴' }]"
         gap="8px"
       />
@@ -19,6 +20,7 @@
       <Vector
         :modelValue="formModel.styles?.[0]?.icon?.size"
         @update:modelValue="onUpdate('icon', 'size', $event)"
+        :num="2"
         :props="[{ addonBefore: '宽' }, { addonBefore: '高' }]"
         gap="8px"
       />
@@ -88,6 +90,7 @@
     <AFormItem label="文本偏移量">
       <Vector
         :modelValue="formModel.styles?.[0]?.label?.offset"
+        :num="2"
         @update:modelValue="onUpdate('label', 'offset', $event)"
         :props="[{ addonBefore: '横轴' }, { addonBefore: '竖轴' }]"
         gap="8px"

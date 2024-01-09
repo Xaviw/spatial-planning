@@ -2,46 +2,22 @@
   <AMenu
     forceSubMenuRender
     mode="horizontal"
-    :items="menu"
+    :items="menuData"
     v-model:selectedKeys="selectedKeys"
     @click="handleClick"
   />
 </template>
 
 <script setup lang="ts">
-import { useMenuStore, type HandledMenu } from '../store/menu'
+import { useMainStore } from '../store/main'
+import type { HandledMenu } from '#/business'
 import type { MenuProps } from 'ant-design-vue'
 
-const route = useRoute()
 const router = useRouter()
 
-const menuStore = useMenuStore()
-const { menu, selectedKeys, keysMap } = storeToRefs(menuStore)
-const { setSelectMenu, getFirstMenu } = menuStore
-
-// 仅监听params.id，手动选择菜单时可以避免没必要的判断触发
-watch(
-  [menu, () => route.params.id as string],
-  ([menuData, paramsId]) => {
-    if (
-      !menuData.length ||
-      paramsId === selectedKeys.value[selectedKeys.value.length - 1]
-    )
-      return
-
-    const item = keysMap.value.get(paramsId)
-
-    // 没有选择菜单或菜单key错误时，切换到第一个菜单
-    if (!paramsId || !item) {
-      const firstMenu = getFirstMenu()
-      setSelectMenu(firstMenu)
-      router.replace('/' + firstMenu.key)
-    } else {
-      setSelectMenu(item)
-    }
-  },
-  { immediate: true },
-)
+const mainStore = useMainStore()
+const { menuData, selectedKeys } = storeToRefs(mainStore)
+const { setSelectMenu } = mainStore
 
 const handleClick: MenuProps['onClick'] = ({ key, item }) => {
   setSelectMenu(item.originItemValue as HandledMenu)

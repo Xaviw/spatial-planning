@@ -9,6 +9,7 @@ export default [
     response: () => ({
       code: 1,
       data: {
+        mapStyle: 'blue',
         scalebar: true,
         scalebarPosition: [null, 5, null, 5],
         toolbar: true,

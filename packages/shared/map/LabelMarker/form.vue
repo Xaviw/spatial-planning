@@ -7,6 +7,7 @@
     <AFormItem label="经纬度">
       <Vector
         v-model="formModel.position"
+        :num="2"
         :props="[{ addonBefore: '精度' }, { addonBefore: '纬度' }]"
         direction="vertical"
         gap="8px"
@@ -39,10 +40,11 @@
     <AFormItem label="图标大小">
       <Vector
         :modelValue="formModel.icon?.size"
+        :num="2"
         @update:modelValue="onIconUpdate('size', $event)"
         :props="[
-          { addonBefore: '宽', addonAfter: 'px', min: 0 },
-          { addonBefore: '高', addonAfter: 'px', min: 0 },
+          { addonBefore: '宽', addonAfter: '像素', min: 0 },
+          { addonBefore: '高', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -53,9 +55,10 @@
       <Vector
         :modelValue="formModel.icon?.offset"
         @update:modelValue="onIconUpdate('offset', $event)"
+        :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: 'px', min: 0 },
-          { addonBefore: '竖轴', addonAfter: 'px', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -66,9 +69,10 @@
       <Vector
         :modelValue="formModel.icon?.clipOrigin"
         @update:modelValue="onIconUpdate('clipOrigin', $event)"
+        :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: 'px', min: 0 },
-          { addonBefore: '竖轴', addonAfter: 'px', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -79,9 +83,10 @@
       <Vector
         :modelValue="formModel.icon?.clipSize"
         @update:modelValue="onIconUpdate('clipSize', $event)"
+        :num="2"
         :props="[
-          { addonBefore: '宽', addonAfter: 'px', min: 0 },
-          { addonBefore: '高', addonAfter: 'px', min: 0 },
+          { addonBefore: '宽', addonAfter: '像素', min: 0 },
+          { addonBefore: '高', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -115,9 +120,10 @@
       <Vector
         :modelValue="formModel.text?.offset"
         @update:modelValue="onTextUpdate('offset', $event)"
+        :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: 'px', min: 0 },
-          { addonBefore: '竖轴', addonAfter: 'px', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -128,6 +134,7 @@
       <Vector
         :modelValue="formModel.text?.zooms"
         @update:modelValue="onTextUpdate('zooms', $event)"
+        :num="2"
         :props="[
           { addonAfter: '-', min: 2, max: 26 },
           { addonAfter: '级', min: 2, max: 26 },
@@ -140,6 +147,7 @@
         :value="formModel.text?.style?.fontSize"
         @update:value="onTextStyleUpdate('fontSize', $event)"
         :min="8"
+        addonAfter="像素"
       />
     </AFormItem>
 
@@ -161,6 +169,8 @@
       <Vector
         :modelValue="formModel.text?.style?.padding"
         @update:modelValue="onTextStyleUpdate('padding', $event)"
+        :num="4"
+        direction="vertical"
         :props="[
           { addonBefore: '上', addonAfter: '像素', min: 0 },
           { addonBefore: '右', addonAfter: '像素', min: 0 },
@@ -207,6 +217,7 @@
     >
       <Vector
         v-model="formModel.zooms"
+        :num="2"
         :props="[
           { addonAfter: '-', min: 2, max: 26 },
           { addonAfter: '级', min: 2, max: 26 },

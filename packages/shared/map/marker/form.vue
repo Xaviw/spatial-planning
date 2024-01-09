@@ -5,7 +5,12 @@
     </AFormItem>
 
     <AFormItem label="内容" help="设置后图标将不再显示" extra="支持HTML字符串">
-      <ATextarea allowClear autoSize v-model:value="formModel.content" />
+      <CodeInput
+        type="html"
+        v-model="formModel.content"
+        :style="{ height: '200px' }"
+        placeholder='请输入内容，例如：<span style="color: red">内容</span>'
+      />
     </AFormItem>
 
     <AFormItem label="图标">
@@ -17,9 +22,10 @@
     <AFormItem label="图标尺寸" help="图标宽、高">
       <Vector
         v-model="formModel.size"
+        :num="2"
         :props="[
-          { addonBefore: '宽', addonAfter: 'px', min: 0 },
-          { addonBefore: '高', addonAfter: 'px', min: 0 },
+          { addonBefore: '宽', addonAfter: '像素', min: 0 },
+          { addonBefore: '高', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -29,9 +35,10 @@
     <AFormItem label="图标偏移量" help="图标在横、竖轴上偏移的位置">
       <Vector
         v-model="formModel.offset"
+        :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: 'px', min: 0 },
-          { addonBefore: '竖轴', addonAfter: 'px', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -70,9 +77,10 @@
       <Vector
         :modelValue="formModel.label?.offset"
         @update:value="onLabelUpdate($event, 'offset')"
+        :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: 'px', min: 0 },
-          { addonBefore: '竖轴', addonAfter: 'px', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -86,6 +94,7 @@
     >
       <Vector
         v-model="formModel.zooms"
+        :num="2"
         :props="[
           { addonAfter: '-', min: 2, max: 26 },
           { addonAfter: '级', min: 2, max: 26 },
@@ -104,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import { Vector } from '@sp/shared/components'
+import { CodeInput, Vector } from '@sp/shared/components'
 import { anchorOptions, directionOptions } from '@sp/shared/map'
 import { Form } from 'ant-design-vue'
 import type { MarkerProps } from '#/business'

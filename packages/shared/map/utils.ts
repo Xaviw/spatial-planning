@@ -76,7 +76,6 @@ export function moveOverlayToOtherLayer(
     layer.overlays.splice(index!, 1)
     const layerIndex = mapData.findIndex(item => item.id === layerId)
     mapData[layerIndex].overlays.push(overlay!)
-    console.log(layer, layerIndex, mapData)
   }
 }
 
@@ -124,12 +123,11 @@ export const directionOptions = [
   { label: '居中', value: 'center' },
 ]
 
-export function arrayToPosition(arr: number[]) {
+export function arrayToPosition(arr: any[]) {
   const result: Recordable = {}
   if (isNumber(arr[0])) result.top = arr[0] + 'px'
   if (isNumber(arr[1])) result.left = arr[1] + 'px'
   if (isNumber(arr[2])) result.right = arr[2] + 'px'
   if (isNumber(arr[3])) result.bottom = arr[3] + 'px'
-  console.log('result: ', result)
   return result
 }

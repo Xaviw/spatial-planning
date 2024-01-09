@@ -138,9 +138,13 @@ export const useMapStore = defineStore('map', () => {
       layerModalOpen.value = true
     },
     remove() {
-      const { layer, index } = findOverlay(mapData.value, activeId.value!) || {}
-      if (layer) {
+      const { layer, index, overlay } =
+        findOverlay(mapData.value, activeId.value!) || {}
+      if (layer && overlay) {
         layer.overlays.splice(index!, 1)
+        if (overlay.id === activeOverlay.value?.id) {
+          cancelEdit()
+        }
       }
     },
     hide() {
@@ -182,6 +186,7 @@ export const useMapStore = defineStore('map', () => {
       }
       activeInstance.value = e.target
       activeId.value = (e.target as any).getExtData()
+      e.originEvent.stopPropagation()
     },
   })
 

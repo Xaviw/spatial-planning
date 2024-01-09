@@ -31,7 +31,7 @@ function createRectangle() {
 
   rectangle.setExtData(rectangleProps.id)
 
-  mapStore.bindMenu(rectangle)
+  mapStore.bindMenu(rectangle, rectangleProps.bindMenu)
 
   if (mapStore.map) {
     mapStore.map.add(rectangle)

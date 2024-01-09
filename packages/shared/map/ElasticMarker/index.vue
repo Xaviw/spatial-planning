@@ -58,7 +58,7 @@ function createElasticMarker() {
 
   elasticMarker.setExtData(elasticMarkerProps.id)
 
-  mapStore.bindMenu(elasticMarker)
+  mapStore.bindMenu(elasticMarker, elasticMarkerProps.bindMenu)
 
   if (mapStore.map) {
     mapStore.map.add(elasticMarker as any)
@@ -86,21 +86,21 @@ watch(
 watch(
   () => elasticMarkerProps.props.zIndex,
   zIndex => {
-    typeof zIndex === 'number' && elasticMarker.setzIndex(zIndex)
+    elasticMarker.setzIndex(zIndex!)
   },
 )
 
 watch(
   () => elasticMarkerProps.props.offset,
   offset => {
-    offset && elasticMarker.setOffset(offset)
+    elasticMarker.setOffset(offset!)
   },
 )
 
 watch(
   () => elasticMarkerProps.props.styles,
   styles => {
-    styles?.length && elasticMarker.setStyle(styles)
+    elasticMarker.setStyle(styles!)
   },
   { deep: true },
 )
@@ -108,7 +108,7 @@ watch(
 watch(
   () => elasticMarkerProps.props.anchor,
   anchor => {
-    anchor && elasticMarker.setAnchor(anchor)
+    elasticMarker.setAnchor(anchor!)
   },
 )
 </script>

@@ -32,7 +32,7 @@ function createMarker() {
 
   marker.setExtData(markerProps.id)
 
-  mapStore.bindMenu(marker)
+  mapStore.bindMenu(marker, markerProps.bindMenu)
 
   if (mapStore.map) {
     mapStore.map.add(marker)
@@ -53,7 +53,7 @@ watch(
 watch(
   () => markerProps.props.title,
   title => {
-    title && marker.setTitle(title)
+    marker.setTitle(title!)
   },
 )
 
@@ -61,10 +61,10 @@ watch(
   () => markerProps.props.icon,
   icon => {
     if (icon) {
-      if (typeof icon === 'string') {
+      if (isObject(icon)) {
+        marker.setIcon(new window.AMap.Icon(icon))
+      } else {
         marker.setIcon(icon)
-      } else if (isObject(icon)) {
-        marker.setIcon(new window.AMap.Icon(icon as any))
       }
     }
   },
@@ -74,7 +74,7 @@ watch(
 watch(
   () => markerProps.props.label,
   label => {
-    label && marker.setLabel(label as any)
+    marker.setLabel(label!)
   },
   { deep: true },
 )
@@ -89,52 +89,50 @@ watch(
 watch(
   () => markerProps.props.anchor,
   anchor => {
-    anchor && marker.setAnchor(anchor)
+    marker.setAnchor(anchor!)
   },
 )
 
 watch(
   () => markerProps.props.offset,
   offset => {
-    offset && marker.setOffset(offset)
+    marker.setOffset(offset!)
   },
 )
 
 watch(
   () => markerProps.props.size,
   size => {
-    size && marker.setSize(size)
+    marker.setSize(size!)
   },
 )
 
 watch(
   () => markerProps.props.content,
   content => {
-    content && marker.setContent(content)
+    marker.setContent(content)
   },
 )
 
 watch(
   () => markerProps.props.angle,
   angle => {
-    typeof angle === 'number' && marker.setAngle(angle)
+    marker.setAngle(angle!)
   },
 )
 
 watch(
   () => markerProps.props.zIndex,
   zIndex => {
-    typeof zIndex === 'number' && marker.setzIndex(zIndex)
+    marker.setzIndex(zIndex!)
   },
 )
 
 watch(
   () => markerProps.props.zooms,
-  zooms => {
-    if (zooms) {
-      mapStore.map?.remove(marker)
-      createMarker()
-    }
+  () => {
+    mapStore.map?.remove(marker)
+    createMarker()
   },
 )
 </script>

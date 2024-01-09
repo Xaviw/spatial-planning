@@ -22,8 +22,9 @@
             v-for="overlay of list"
             :is="overlays[overlay.type]?.overlay"
             :key="overlay.id"
-            :visible="visible"
             v-bind="overlay"
+            :visible="visible"
+            bindMenu
           />
         </template>
       </Layer>

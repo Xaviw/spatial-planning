@@ -1,5 +1,7 @@
 <template>
   <div class="relative h-full overflow-auto" ref="siderRef">
+    <Loading absolute :loading="loading" />
+
     <component
       v-for="item of data"
       :key="item.id"
@@ -11,47 +13,23 @@
 </template>
 
 <script setup lang="ts">
-import { getSider } from '@sp/shared/apis'
-import { useLoading } from '@sp/shared/hooks'
+import { Loading } from '@sp/shared/components'
 import { components } from '@sp/shared/materials'
-import { useWatcher } from 'alova'
-import { useMenuStore } from '../store/menu'
-import type { SiderPosition } from '#/business'
+import type { SiderItem } from '#/business'
 
 const props = defineProps<{
-  position: SiderPosition
+  data: SiderItem[]
+  loading: boolean
 }>()
 
 const siderRef = ref<HTMLDivElement | null>(null)
-const { selectedKeys } = storeToRefs(useMenuStore())
-const menuId = computed(() => selectedKeys.value[selectedKeys.value.length - 1])
-const [openLoading, closeLoading] = useLoading({
-  target: siderRef,
-  props: {
-    absolute: true,
-  },
-})
 
-const { data, onSuccess, onComplete } = useWatcher(
+watch(
+  () => props.data,
   () => {
-    openLoading()
-    return getSider({
-      position: props.position,
-      menuId: menuId.value,
-      filter: true,
-    })
+    siderRef.value?.scrollTo({ top: 0, behavior: 'smooth' })
   },
-  [menuId],
-  { immediate: false, initialData: [], sendable: () => !!menuId.value },
 )
-
-onSuccess(() => {
-  siderRef.value?.scrollTo({ top: 0, behavior: 'smooth' })
-})
-
-onComplete(() => {
-  closeLoading()
-})
 </script>
 
 <style>

@@ -21,6 +21,10 @@
   display: none !important;
 }
 
+.vc-color-wrap {
+  border: 1px dashed #333;
+}
+
 .sidebar {
   @apply mr-2 w-100 flex flex-col bg-[#001231] text-white;
 }
