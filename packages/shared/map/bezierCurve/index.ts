@@ -13,26 +13,13 @@ import type {
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
-const mapStore = useMapStore()
-const {
-  activeInstance,
-  activeOverlay,
-  editData,
-  mousetool,
-  mapData,
-  activeLayerIndex,
-  activeLayer,
-  bezierCurveEditor,
-  map,
-} = storeToRefs(mapStore)
+function synchronization(mapStore: ReturnType<typeof useMapStore>) {
+  if (!(mapStore.activeInstance instanceof window.AMap.BezierCurve)) return
 
-function synchronization() {
-  if (!(activeInstance.value instanceof window.AMap.BezierCurve)) return
+  const path = mapStore.activeInstance.getPath() as AMap.Vector[]
 
-  const path = activeInstance.value.getPath() as AMap.Vector[]
-
-  if (!isEqual((editData.value!.props as BezierCurveProps).path, path)) {
-    ;(editData.value!.props as BezierCurveProps).path = path
+  if (!isEqual((mapStore.editData!.props as BezierCurveProps).path, path)) {
+    ;(mapStore.editData!.props as BezierCurveProps).path = path
   }
 }
 
@@ -56,56 +43,75 @@ export default {
     '单击删除端点',
     '拖动非控制点移动整体位置',
   ],
-  handleDraw: (open: boolean) => {
+  handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      mousetool.value?.polyline({})
+      mapStore.mousetool?.polyline({})
     } else {
-      mousetool.value?.close(false)
+      mapStore.mousetool?.close(false)
     }
   },
-  afterDraw: (obj: OverlayInstance['Polyline']) => {
+  afterDraw: (
+    mapStore: ReturnType<typeof useMapStore>,
+    obj: OverlayInstance['Polyline'],
+  ) => {
     const path = obj.getPath() as AMap.LngLat[]
     if (path.length < 2) {
       message.warn('请至少添加两个端点！')
-      map.value?.remove(obj)
+      mapStore.map?.remove(obj)
       return
     }
 
-    const newPolyline = overlayFactory('BezierCurve', activeLayer.value!, {
+    const newPolyline = overlayFactory('BezierCurve', mapStore.activeLayer!, {
       path: path.map((item): AMap.Vector2 => [item.lng, item.lat]),
     })
-    mapData.value[activeLayerIndex.value!].overlays.push(newPolyline)
-    map.value?.remove(obj)
+    mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newPolyline)
+    mapStore.map?.remove(obj)
   },
-  handleEdit: (open: boolean) => {
-    if (!(activeInstance.value instanceof window.AMap.BezierCurve)) return
+  handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
+    if (!(mapStore.activeInstance instanceof window.AMap.BezierCurve)) return
 
     if (open) {
-      bezierCurveEditor.value?.setTarget(activeInstance.value)
-      bezierCurveEditor.value?.open()
-      activeInstance.value.setOptions({ cursor: 'grab', draggable: true })
-      activeInstance.value.on('dragend', synchronization)
-      ;(bezierCurveEditor.value as any).on('addnode', synchronization)
-      ;(bezierCurveEditor.value as any).on('adjust', synchronization)
-      ;(bezierCurveEditor.value as any).on('removenode', synchronization)
+      mapStore.bezierCurveEditor?.setTarget(mapStore.activeInstance)
+      mapStore.bezierCurveEditor?.open()
+      mapStore.activeInstance.setOptions({ cursor: 'grab', draggable: true })
+      mapStore.activeInstance.on(
+        'dragend',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.bezierCurveEditor as any).on(
+        'addnode',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.bezierCurveEditor as any).on(
+        'adjust',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.bezierCurveEditor as any).on(
+        'removenode',
+        synchronization.bind(null, mapStore),
+      )
     } else {
-      activeInstance.value.clearEvents('dragend')
-      ;(bezierCurveEditor.value as any).clearEvents()
-      bezierCurveEditor.value?.close()
-      bezierCurveEditor.value?.setTarget()
-      activeInstance.value.setOptions({ cursor: 'pointer', draggable: false })
+      mapStore.activeInstance.clearEvents('dragend')
+      ;(mapStore.bezierCurveEditor as any).clearEvents()
+      mapStore.bezierCurveEditor?.close()
+      mapStore.bezierCurveEditor?.setTarget()
+      mapStore.activeInstance.setOptions({
+        cursor: 'pointer',
+        draggable: false,
+      })
     }
   },
   cancelEdit: (
+    mapStore: ReturnType<typeof useMapStore>,
     layer: LayerItem<OverlayType>,
     index: number,
     overlay: OverlayItem<'Marker'>,
   ) => {
     if (
-      (editData.value!.props as BezierCurveProps).path &&
+      (mapStore.editData!.props as BezierCurveProps).path &&
       !isEqual(
-        (editData.value!.props as BezierCurveProps).path,
-        (activeOverlay.value!.props as BezierCurveProps).path,
+        (mapStore.editData!.props as BezierCurveProps).path,
+        (mapStore.activeOverlay!.props as BezierCurveProps).path,
       )
     ) {
       ;(layer.overlays[index].props as BezierCurveProps).path = cloneDeep(

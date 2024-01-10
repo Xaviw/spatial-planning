@@ -13,37 +13,56 @@ import type {
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
-function synchronization(mapStore: ReturnType<typeof useMapStore>) {
+function synchronization(
+  mapStore: ReturnType<typeof useMapStore>,
+  imageLayer: AMap.ImageLayer,
+) {
   if (!(mapStore.activeInstance instanceof window.AMap.Rectangle)) return
 
   const bounds = mapStore.activeInstance.getBounds()
   const sw = bounds!.getSouthWest()
   const ne = bounds!.getNorthEast()
-  const newBounds: AMap.Vector2[] = [
-    [sw.lng, sw.lat],
-    [ne.lng, ne.lat],
+  const newBounds: AMap.ImageLayerOptions['bounds'] = [
+    sw.lng,
+    sw.lat,
+    ne.lng,
+    ne.lat,
   ]
 
+  imageLayer.setBounds(bounds!)
+
   if (
-    !isEqual((mapStore.editData!.props as RectangleProps).bounds, newBounds)
+    !isEqual(
+      (mapStore.editData!.props as AMap.ImageLayerOptions).bounds,
+      newBounds,
+    )
   ) {
-    ;(mapStore.editData!.props as RectangleProps).bounds = newBounds
+    ;(mapStore.editData!.props as AMap.ImageLayerOptions).bounds = newBounds
   }
 }
 
 export default {
-  type: 'Rectangle',
-  sort: 8,
-  defaultZIndex: 10,
+  type: 'ImageLayer',
+  sort: 11,
+  defaultZIndex: 6,
   overlay: Overlay,
   form: Form,
-  name: '矩形',
-  icon: 'i-mdi:vector-rectangle',
-  drawHelp: ['从目标位置点击并拖动，松开鼠标后完成绘制', '不能连续绘制'],
+  name: '贴图',
+  icon: 'i-material-symbols:image-outline',
+  drawHelp: [
+    '从目标位置点击并拖动，松开鼠标后完成绘制',
+    '绘制后在编辑中上传贴图',
+    '不能连续绘制',
+    '绘制或修改图片链接后加载图片需要时间（根据图片大小而定），请耐心等待',
+  ],
   editHelp: ['拖动控制点移动顶点位置', '拖动非控制点移动整体位置'],
   handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      mapStore.mousetool?.rectangle({})
+      mapStore.mousetool?.rectangle({
+        zIndex: 7,
+        cursor: 'pointer',
+        fillOpacity: 0,
+      })
     } else {
       mapStore.mousetool?.close(false)
     }
@@ -56,16 +75,14 @@ export default {
     const sw = bounds.getSouthWest()
     const ne = bounds.getNorthEast()
     if (sw.lng === ne.lng && sw.lat === ne.lat) {
-      message.warn('请拖动扩展矩形面积！')
+      message.warn('请拖动扩展覆盖面积！')
       return
     }
-    const newRectangle = overlayFactory('Rectangle', mapStore.activeLayer!, {
-      bounds: [
-        [sw.lng, sw.lat],
-        [ne.lng, ne.lat],
-      ],
+    const newImageLayer = overlayFactory('ImageLayer', mapStore.activeLayer!, {
+      url: '/imageLayer.png',
+      bounds: [sw.lng, sw.lat, ne.lng, ne.lat],
     })
-    mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newRectangle)
+    mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newImageLayer)
     mapStore.map?.remove(obj)
     toolManage(mapStore)
   },
@@ -73,20 +90,34 @@ export default {
     if (!(mapStore.activeInstance instanceof window.AMap.Rectangle)) return
 
     if (open) {
+      const layers: any[] = mapStore.map!.getLayers()
+      const imageLayer = layers.find(item => {
+        if (!item.getBounds) return
+        const layerBounds = item.getBounds()
+        const rectangleBounds = (
+          mapStore.activeInstance as AMap.Rectangle
+        ).getBounds()
+
+        return (
+          rectangleBounds?.toString().replace(';', ',') ===
+          layerBounds.toString().replace(';', ',')
+        )
+      })
+
       mapStore.rectangleEditor?.setTarget(mapStore.activeInstance)
       mapStore.rectangleEditor?.open()
       mapStore.activeInstance.setOptions({ cursor: 'grab' })
       ;(mapStore.rectangleEditor as any).on(
         'addnode',
-        synchronization.bind(null, mapStore),
+        synchronization.bind(null, mapStore, imageLayer),
       )
       ;(mapStore.rectangleEditor as any).on(
         'adjust',
-        synchronization.bind(null, mapStore),
+        synchronization.bind(null, mapStore, imageLayer),
       )
       ;(mapStore.rectangleEditor as any).on(
         'move',
-        synchronization.bind(null, mapStore),
+        synchronization.bind(null, mapStore, imageLayer),
       )
     } else {
       mapStore.rectangleEditor?.close()

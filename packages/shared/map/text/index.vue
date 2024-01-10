@@ -33,7 +33,7 @@ function createText() {
 
   text.setExtData(textProps.id)
 
-  bindClickEvent(text)
+  bindClickEvent(text, toRef(textProps))
 
   hasRightMenu && bindRightClickEvent(text)
 

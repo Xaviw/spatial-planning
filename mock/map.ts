@@ -21,7 +21,7 @@ export default [
     statusCode: 200,
     response: ({ query }) => ({
       code: 1,
-      data: genList(2, 2, 1, 3, 3, 6, query as GetMapParams),
+      data: genList(2, 4, 1, 3, 3, 6, query as GetMapParams),
       message: 'ok',
     }),
   },
@@ -56,7 +56,7 @@ function genList(
       id: layerId,
       name: Mock.Random.cword(),
       asLegend: Mock.Random.boolean(),
-      legendImg: Mock.Random.image('60x60'),
+      legendImg: Mock.Random.image('60x60', Mock.Random.color()),
       status:
         (params.filter as unknown as string) === 'true'
           ? undefined

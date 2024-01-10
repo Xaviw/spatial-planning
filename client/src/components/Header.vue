@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex select-none items-center justify-between px-18 py-4 text-white"
+    class="flex select-none items-center justify-between px-18 py-1 text-white"
   >
     <div class="flex flex-1 items-center text-4xl font-bold">
       <i
@@ -16,8 +16,8 @@
       <Weather />
 
       <div class="ml-2 flex flex-col items-center tracking-wide">
-        <span class="mb-1 text-3xl font-bold">{{ currentTime }}</span>
-        <span class="text-justify">{{ currentDate }}</span>
+        <span class="mb-1 text-xl font-bold">{{ currentTime }}</span>
+        <span>{{ currentDate }}</span>
       </div>
     </div>
   </div>

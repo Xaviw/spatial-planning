@@ -38,7 +38,7 @@ function createMarker() {
 
   marker.setExtData(markerProps.id)
 
-  bindClickEvent(marker)
+  bindClickEvent(marker, toRef(markerProps))
 
   hasRightMenu && bindRightClickEvent(marker)
 

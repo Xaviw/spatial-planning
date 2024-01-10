@@ -2,8 +2,6 @@ import { useMapStore } from '@sp/shared/map'
 import { message } from 'ant-design-vue'
 import type { MapEvent, OverlayModule } from '#/business'
 
-const { map } = storeToRefs(useMapStore())
-
 const { copy } = useClipboard({ legacy: true })
 
 function copyLocation(e: MapEvent) {
@@ -14,7 +12,7 @@ function copyLocation(e: MapEvent) {
 
 export default {
   type: 'Location',
-  sort: 11,
+  sort: 12,
   name: '经纬度拾取',
   icon: 'i-material-symbols:my-location-outline',
   drawHelp: [
@@ -23,11 +21,11 @@ export default {
     '如目标位置被遮挡可以先右击覆盖物选择“隐藏”',
   ],
   toolItemStyle: 'border-top: 3px solid #666',
-  handleDraw: (open: boolean) => {
+  handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      map.value?.on('click', copyLocation)
+      mapStore.map?.on('click', copyLocation)
     } else {
-      map.value?.off('click', copyLocation)
+      mapStore.map?.off('click', copyLocation)
     }
   },
 } as OverlayModule

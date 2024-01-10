@@ -35,15 +35,24 @@
 
 <script setup lang="ts">
 import { Loading } from '@sp/shared/components'
-import { useMapStore, overlays, hasRightMenuKey } from '@sp/shared/map'
+import {
+  useMapStore,
+  overlays,
+  hasRightMenuKey,
+  mapKey,
+  labelsLayerKey,
+} from '@sp/shared/map'
 import FormBar from './formBar.vue'
 import Header from './header.vue'
 import Layer from './layer.vue'
 import LayerModal from './layerModal.vue'
 import Map from './map.vue'
 import Toolbar from './toolbar.vue'
+import type { AMap } from '@amap/amap-jsapi-types'
 
 const { loading, mapData, selectedMenu } = storeToRefs(useMapStore())
 
+provide(mapKey, ref<AMap.Map>())
+provide(labelsLayerKey, ref<AMap.LabelsLayer>())
 provide(hasRightMenuKey, true)
 </script>

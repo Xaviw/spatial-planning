@@ -1,4 +1,4 @@
-import { findOverlay, overlays, useMapStore } from '@sp/shared/map'
+import { findOverlay, overlays, toolManage, useMapStore } from '@sp/shared/map'
 import { modal } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
@@ -7,18 +7,18 @@ import type { AMap } from '@amap/amap-jsapi-types'
 
 let contextMenu: AMap.ContextMenu
 
-const mapStore = useMapStore()
-const {
-  mapData,
-  activeId,
-  activeOverlay,
-  layerModalOpen,
-  activeInstance,
-  activeTool,
-} = storeToRefs(mapStore)
-const { cancelEdit, toolManage } = mapStore
-
 export function bindRightClickEvent(overlay: AMap.Eventable) {
+  const mapStore = useMapStore()
+  const {
+    mapData,
+    activeId,
+    activeOverlay,
+    layerModalOpen,
+    activeInstance,
+    activeTool,
+  } = storeToRefs(mapStore)
+  const { cancelEdit } = mapStore
+
   if (!contextMenu) {
     contextMenu = new window.AMap.ContextMenu()
     contextMenu.addItem(
@@ -123,10 +123,10 @@ export function bindRightClickEvent(overlay: AMap.Eventable) {
   overlay.on('rightclick', (e: MapEvent) => {
     // 右击时关闭覆盖物编辑和绘制，避免单击选项时产生多余绘制操作
     if (activeOverlay.value) {
-      overlays[activeOverlay.value.type]?.handleEdit?.(false)
+      overlays[activeOverlay.value.type]?.handleEdit?.(mapStore, false)
     }
     if (activeTool.value) {
-      toolManage()
+      toolManage(mapStore)
     }
     activeInstance.value = e.target
     activeId.value = (e.target as any).getExtData()

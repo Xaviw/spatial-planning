@@ -18,7 +18,7 @@
         :height="item.imgHeight"
         :width="item.imgWidth"
         :src="item.img"
-        :fallback="ImageFailed"
+        fallback="/failed.png"
       >
         <template #previewMask>
           <i class="i-ant-design:eye-outlined" />
@@ -44,7 +44,6 @@
 </template>
 
 <script setup lang="ts">
-import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
 import { MediaEnum } from '@sp/shared/utils'
 import FilePreview from './FilePreview.vue'
 import type { FileListProps, FileListItem } from '#/materials'

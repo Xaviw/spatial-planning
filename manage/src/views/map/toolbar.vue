@@ -15,7 +15,7 @@
             item.type === activeTool && 'bg-blue text-white',
           ]"
           :style="item?.toolItemStyle"
-          @click="mapStore.toolManage(item.type)"
+          @click="toolManage(mapStore, item.type)"
         >
           <i :class="item.icon" />
         </div>
@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMapStore, overlays } from '@sp/shared/map'
+import { useMapStore, overlays, toolManage } from '@sp/shared/map'
 import type { MapEvent } from '#/business'
 
 const mapStore = useMapStore()
@@ -65,7 +65,7 @@ watchEffect(() => {
     ;(mousetool.value as any).on(
       'draw',
       ({ obj }: { obj: MapEvent['target'] }) => {
-        overlays[activeTool.value!]?.afterDraw?.(obj)
+        overlays[activeTool.value!]?.afterDraw?.(mapStore, obj)
       },
     )
   }

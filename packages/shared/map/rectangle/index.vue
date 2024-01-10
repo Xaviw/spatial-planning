@@ -37,7 +37,7 @@ function createRectangle() {
 
   rectangle.setExtData(rectangleProps.id)
 
-  bindClickEvent(rectangle)
+  bindClickEvent(rectangle, toRef(rectangleProps))
 
   hasRightMenu && bindRightClickEvent(rectangle)
 

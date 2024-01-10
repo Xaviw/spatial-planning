@@ -34,7 +34,7 @@ function createPolygon() {
 
   polygon.setExtData(polygonProps.id)
 
-  bindClickEvent(polygon)
+  bindClickEvent(polygon, toRef(polygonProps))
 
   hasRightMenu && bindRightClickEvent(polygon)
 

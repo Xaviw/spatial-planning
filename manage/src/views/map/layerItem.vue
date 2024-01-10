@@ -53,7 +53,7 @@
       <AImage
         v-if="layer.legendImg"
         :src="layer.legendImg"
-        :fallback="ImageFailed"
+        fallback="/failed.png"
         :width="40"
         :height="40"
       />
@@ -125,7 +125,6 @@
 </template>
 
 <script setup lang="ts">
-import ImageFailed from '@sp/shared/assets/images/image-failed-filled.png'
 import { useMapStore } from '@sp/shared/map'
 import { cloneDeep, omit } from 'lodash-es'
 import type { LayerItem, OverlayType } from '#/business'

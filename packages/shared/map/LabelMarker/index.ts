@@ -11,17 +11,13 @@ import type {
   OverlayModule,
 } from '#/business'
 
-const mapStore = useMapStore()
-const { activeOverlay, editData, map, mapData, activeLayerIndex, activeLayer } =
-  storeToRefs(mapStore)
-
-function add(e: MapEvent) {
-  const newLabelMarker = overlayFactory('LabelMarker', activeLayer.value!, {
+function add(mapStore: ReturnType<typeof useMapStore>, e: MapEvent) {
+  const newLabelMarker = overlayFactory('LabelMarker', mapStore.activeLayer!, {
     position: [e.lnglat.lng, e.lnglat.lat],
     name: '新增文本',
     text: { content: '新增文本' },
   })
-  mapData.value[activeLayerIndex.value!].overlays.push(newLabelMarker)
+  mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newLabelMarker)
 }
 
 export default {
@@ -35,23 +31,24 @@ export default {
   icon: 'i-mdi:image-text',
   drawHelp: ['在目标位置单击新增文本标注'],
   editHelp: ['无法拖动移动位置，请使用坐标拾取工具选择坐标后手动填写'],
-  handleDraw: (open: boolean) => {
+  handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      map.value?.on('click', add)
+      mapStore.map?.on('click', e => add(mapStore, e))
     } else {
-      map.value?.off('click', add)
+      mapStore.map?.off('click', e => add(mapStore, e))
     }
   },
   cancelEdit: (
+    mapStore: ReturnType<typeof useMapStore>,
     layer: LayerItem<OverlayType>,
     index: number,
     overlay: OverlayItem<'LabelMarker'>,
   ) => {
     if (
-      (editData.value!.props as LabelMarkerProps).position &&
+      (mapStore.editData!.props as LabelMarkerProps).position &&
       !isEqual(
-        (editData.value!.props as LabelMarkerProps).position,
-        (activeOverlay.value!.props as LabelMarkerProps).position,
+        (mapStore.editData!.props as LabelMarkerProps).position,
+        (mapStore.activeOverlay!.props as LabelMarkerProps).position,
       )
     ) {
       ;(layer.overlays[index].props as LabelMarkerProps).position = cloneDeep(

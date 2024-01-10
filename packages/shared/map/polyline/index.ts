@@ -13,27 +13,14 @@ import type {
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
-const mapStore = useMapStore()
-const {
-  activeInstance,
-  activeOverlay,
-  editData,
-  mapData,
-  activeLayerIndex,
-  activeLayer,
-  mousetool,
-  polylineEditor,
-  map,
-} = storeToRefs(mapStore)
+function synchronization(mapStore: ReturnType<typeof useMapStore>) {
+  if (!(mapStore.activeInstance instanceof window.AMap.Polyline)) return
 
-function synchronization() {
-  if (!(activeInstance.value instanceof window.AMap.Polyline)) return
-
-  const path = activeInstance.value.getPath() as AMap.LngLat[]
+  const path = mapStore.activeInstance.getPath() as AMap.LngLat[]
   const newPath = path.map((item): AMap.Vector2 => [item.lng, item.lat])
 
-  if (!isEqual((editData.value!.props as PolylineProps).path, newPath)) {
-    ;(editData.value!.props as PolylineProps).path = newPath
+  if (!isEqual((mapStore.editData!.props as PolylineProps).path, newPath)) {
+    ;(mapStore.editData!.props as PolylineProps).path = newPath
   }
 }
 
@@ -52,54 +39,70 @@ export default {
     '单击白色控制点删除端点',
     '拖动非控制点移动整体位置',
   ],
-  handleDraw: (open: boolean) => {
+  handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      mousetool.value?.polyline({})
+      mapStore.mousetool?.polyline({})
     } else {
-      mousetool.value?.close(false)
+      mapStore.mousetool?.close(false)
     }
   },
-  afterDraw: (obj: OverlayInstance['Polyline']) => {
+  afterDraw: (
+    mapStore: ReturnType<typeof useMapStore>,
+    obj: OverlayInstance['Polyline'],
+  ) => {
     const path = obj.getPath() as AMap.LngLat[]
     if (path.length < 2) {
       message.warn('请至少添加两个端点！')
-      map.value?.remove(obj)
+      mapStore.map?.remove(obj)
       return
     }
 
-    const newPolyline = overlayFactory('Polyline', activeLayer.value!, {
+    const newPolyline = overlayFactory('Polyline', mapStore.activeLayer!, {
       path: path.map((item): AMap.Vector2 => [item.lng, item.lat]),
     })
-    mapData.value[activeLayerIndex.value!].overlays.push(newPolyline)
-    map.value?.remove(obj)
+    mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newPolyline)
+    mapStore.map?.remove(obj)
   },
-  handleEdit: (open: boolean) => {
-    if (!(activeInstance.value instanceof window.AMap.Polyline)) return
+  handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
+    if (!(mapStore.activeInstance instanceof window.AMap.Polyline)) return
 
     if (open) {
-      polylineEditor.value?.setTarget(activeInstance.value)
-      polylineEditor.value?.open()
-      activeInstance.value.setOptions({ cursor: 'grab', draggable: true })
-      activeInstance.value.on('dragend', synchronization)
-      ;(polylineEditor.value as any).on('addnode', synchronization)
-      ;(polylineEditor.value as any).on('adjust', synchronization)
+      mapStore.polylineEditor?.setTarget(mapStore.activeInstance)
+      mapStore.polylineEditor?.open()
+      mapStore.activeInstance.setOptions({ cursor: 'grab', draggable: true })
+      mapStore.activeInstance.on(
+        'dragend',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.polylineEditor as any).on(
+        'addnode',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.polylineEditor as any).on(
+        'adjust',
+        synchronization.bind(null, mapStore),
+      )
     } else {
-      activeInstance.value.clearEvents('dragend')
-      polylineEditor.value?.close()
-      activeInstance.value.setOptions({ cursor: 'pointer', draggable: false })
-      ;(polylineEditor.value as any).clearEvents()
+      mapStore.activeInstance.clearEvents('dragend')
+      mapStore.polylineEditor?.close()
+      mapStore.activeInstance.setOptions({
+        cursor: 'pointer',
+        draggable: false,
+      })
+      ;(mapStore.polylineEditor as any).clearEvents()
     }
   },
   cancelEdit: (
+    mapStore: ReturnType<typeof useMapStore>,
     layer: LayerItem<OverlayType>,
     index: number,
     overlay: OverlayItem<'Polyline'>,
   ) => {
     if (
-      (editData.value!.props as PolylineProps).path &&
+      (mapStore.editData!.props as PolylineProps).path &&
       !isEqual(
-        (editData.value!.props as PolylineProps).path,
-        (activeOverlay.value!.props as PolylineProps).path,
+        (mapStore.editData!.props as PolylineProps).path,
+        (mapStore.activeOverlay!.props as PolylineProps).path,
       )
     ) {
       ;(layer.overlays[index].props as PolylineProps).path = cloneDeep(

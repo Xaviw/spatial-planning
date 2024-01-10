@@ -35,7 +35,7 @@ function createEllipse() {
 
   ellipse.setExtData(ellipseProps.id)
 
-  bindClickEvent(ellipse)
+  bindClickEvent(ellipse, toRef(ellipseProps))
 
   hasRightMenu && bindRightClickEvent(ellipse)
 

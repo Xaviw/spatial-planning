@@ -1,3 +1,4 @@
+import { useMapStore } from '@sp/shared/map'
 import type { AMap } from '@amap/amap-jsapi-types'
 import type { ComponentOptions } from 'vue'
 
@@ -110,7 +111,7 @@ export type OverlayType =
   | 'Text'
   | 'LabelMarker'
   | 'ElasticMarker'
-  | 'Image'
+  | 'ImageLayer'
 
 export type ToolType = OverlayType | 'Location'
 
@@ -363,7 +364,7 @@ export interface OverlayInstance {
   Text: AMap.Text
   LabelMarker: AMap.LabelMarker
   ElasticMarker: ElasticMarker
-  Image: AMap.ImageLayer
+  ImageLayer: AMap.ImageLayer
 }
 
 export interface OverlayOptions {
@@ -377,7 +378,7 @@ export interface OverlayOptions {
   Text: TextProps
   LabelMarker: LabelMarkerProps
   ElasticMarker: ElasticMarkerProps
-  Image: AMap.ImageLayerOptions
+  ImageLayer: AMap.ImageLayerOptions
 }
 
 export interface OverlayItem<T extends OverlayType> {
@@ -389,7 +390,7 @@ export interface OverlayItem<T extends OverlayType> {
   detailTitle?: string
   detailWidth?: string
   details: MaterialItem[]
-  status: boolean
+  status?: boolean
   createTime: string
   updateTime?: string
 }
@@ -421,10 +422,17 @@ export interface OverlayModule {
   description?: string
   drawHelp?: string[]
   editHelp?: string[]
-  handleDraw?: Fn<[boolean]>
-  afterDraw?: Fn<[ValueTypes<OverlayInstance>]>
-  handleEdit?: Fn<[boolean]>
-  cancelEdit?: Fn<[LayerItem<OverlayType>, number, OverlayItem<OverlayType>]>
+  handleDraw?: Fn<[ReturnType<typeof useMapStore>, boolean]>
+  afterDraw?: Fn<[ReturnType<typeof useMapStore>, ValueTypes<OverlayInstance>]>
+  handleEdit?: Fn<[ReturnType<typeof useMapStore>, boolean]>
+  cancelEdit?: Fn<
+    [
+      ReturnType<typeof useMapStore>,
+      LayerItem<OverlayType>,
+      number,
+      OverlayItem<OverlayType>,
+    ]
+  >
 }
 
 export interface MapMutativeState {

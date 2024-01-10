@@ -13,27 +13,14 @@ import type {
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
-const mapStore = useMapStore()
-const {
-  activeInstance,
-  activeOverlay,
-  editData,
-  mapData,
-  activeLayerIndex,
-  activeLayer,
-  mousetool,
-  polygonEditor,
-  map,
-} = storeToRefs(mapStore)
+function synchronization(mapStore: ReturnType<typeof useMapStore>) {
+  if (!(mapStore.activeInstance instanceof window.AMap.Polygon)) return
 
-function synchronization() {
-  if (!(activeInstance.value instanceof window.AMap.Polygon)) return
-
-  const path = activeInstance.value.getPath() as AMap.LngLat[]
+  const path = mapStore.activeInstance.getPath() as AMap.LngLat[]
   const newPath = path.map((item): AMap.Vector2 => [item.lng, item.lat])
 
-  if (!isEqual((editData.value!.props as PolygonProps).path, newPath)) {
-    ;(editData.value!.props as PolygonProps).path = newPath
+  if (!isEqual((mapStore.editData!.props as PolygonProps).path, newPath)) {
+    ;(mapStore.editData!.props as PolygonProps).path = newPath
   }
 }
 
@@ -52,54 +39,70 @@ export default {
     '单击白色控制点删除顶点',
     '拖动非控制点移动整体位置',
   ],
-  handleDraw: (open: boolean) => {
+  handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      mousetool.value?.polygon({})
+      mapStore.mousetool?.polygon({})
     } else {
-      mousetool.value?.close(false)
+      mapStore.mousetool?.close(false)
     }
   },
-  afterDraw: (obj: OverlayInstance['Polygon']) => {
+  afterDraw: (
+    mapStore: ReturnType<typeof useMapStore>,
+    obj: OverlayInstance['Polygon'],
+  ) => {
     const path = obj.getPath() as AMap.LngLat[]
     if (path.length < 3) {
       message.warn('请至少添加三个端点！')
-      map.value?.remove(obj)
+      mapStore.map?.remove(obj)
       return
     }
 
-    const newPolygon = overlayFactory('Polygon', activeLayer.value!, {
+    const newPolygon = overlayFactory('Polygon', mapStore.activeLayer!, {
       path: path.map((item): AMap.Vector2 => [item.lng, item.lat]),
     })
-    mapData.value[activeLayerIndex.value!].overlays.push(newPolygon)
-    map.value?.remove(obj)
+    mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newPolygon)
+    mapStore.map?.remove(obj)
   },
-  handleEdit: (open: boolean) => {
-    if (!(activeInstance.value instanceof window.AMap.Polygon)) return
+  handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
+    if (!(mapStore.activeInstance instanceof window.AMap.Polygon)) return
 
     if (open) {
-      polygonEditor.value?.setTarget(activeInstance.value)
-      polygonEditor.value?.open()
-      activeInstance.value.setOptions({ cursor: 'grab' })
-      ;(polygonEditor.value as any).on('addnode', synchronization)
-      ;(polygonEditor.value as any).on('removenode', synchronization)
-      ;(polygonEditor.value as any).on('adjust', synchronization)
-      ;(polygonEditor.value as any).on('move', synchronization)
+      mapStore.polygonEditor?.setTarget(mapStore.activeInstance)
+      mapStore.polygonEditor?.open()
+      mapStore.activeInstance.setOptions({ cursor: 'grab' })
+      ;(mapStore.polygonEditor as any).on(
+        'addnode',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.polygonEditor as any).on(
+        'removenode',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.polygonEditor as any).on(
+        'adjust',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.polygonEditor as any).on(
+        'move',
+        synchronization.bind(null, mapStore),
+      )
     } else {
-      ;(polygonEditor.value as any).clearEvents()
-      polygonEditor.value?.close()
-      activeInstance.value.setOptions({ cursor: 'pointer' })
+      ;(mapStore.polygonEditor as any).clearEvents()
+      mapStore.polygonEditor?.close()
+      mapStore.activeInstance.setOptions({ cursor: 'pointer' })
     }
   },
   cancelEdit: (
+    mapStore: ReturnType<typeof useMapStore>,
     layer: LayerItem<OverlayType>,
     index: number,
     overlay: OverlayItem<'Polygon'>,
   ) => {
     if (
-      (editData.value!.props as PolygonProps).path &&
+      (mapStore.editData!.props as PolygonProps).path &&
       !isEqual(
-        (editData.value!.props as PolygonProps).path,
-        (activeOverlay.value!.props as PolygonProps).path,
+        (mapStore.editData!.props as PolygonProps).path,
+        (mapStore.activeOverlay!.props as PolygonProps).path,
       )
     ) {
       ;(layer.overlays[index].props as PolygonProps).path = cloneDeep(

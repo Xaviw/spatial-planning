@@ -11,7 +11,7 @@ export default [
       data: {
         mapStyle: 'blue',
         scalebar: true,
-        scalebarPosition: [null, 5, null, 5],
+        scalebarPosition: [null, 5, null, 25],
         toolbar: true,
         toolbarPosition: [null, null, 5, 5],
         controlbar: true,

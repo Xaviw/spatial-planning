@@ -36,7 +36,7 @@ function createPolyline() {
 
   polyline.setExtData(polylineProps.id)
 
-  bindClickEvent(polyline)
+  bindClickEvent(polyline, toRef(polylineProps))
 
   hasRightMenu && bindRightClickEvent(polyline)
 

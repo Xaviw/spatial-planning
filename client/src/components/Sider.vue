@@ -3,7 +3,6 @@
     :class="[
       'relative',
       'w-100',
-      'overflow-auto',
       'transition-all',
       'z-1',
       !open && (position === 'left' ? 'ml--100' : 'mr--100'),
@@ -12,13 +11,15 @@
   >
     <Loading absolute :loading="loading" />
 
-    <component
-      v-for="item of data"
-      :key="item.id"
-      :is="components[item.type]"
-      v-bind="item.props"
-      class="mb-2"
-    />
+    <div class="h-full overflow-auto">
+      <component
+        v-for="item of data"
+        :key="item.id"
+        :is="components[item.type]"
+        v-bind="item.props"
+        class="mb-2"
+      />
+    </div>
 
     <div
       :class="[

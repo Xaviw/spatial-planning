@@ -34,7 +34,7 @@ function createBezierCurve() {
 
   bezierCurve.setExtData(bezierCurveProps.id)
 
-  bindClickEvent(bezierCurve)
+  bindClickEvent(bezierCurve, toRef(bezierCurveProps))
 
   hasRightMenu && bindRightClickEvent(bezierCurve)
 

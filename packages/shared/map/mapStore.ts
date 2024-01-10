@@ -1,7 +1,5 @@
 import { getMap } from '@sp/shared/apis'
-import { overlays } from '@sp/shared/map'
 import { useRequest } from 'alova'
-import { message } from 'ant-design-vue'
 import type {
   OverlayType,
   OverlayItem,
@@ -72,38 +70,7 @@ export const useMapStore = defineStore('map', () => {
     editData.value = undefined
   }
 
-  function toolManage(item?: ToolType) {
-    if (activeOverlay.value) {
-      message.warn('请先完成编辑再绘制新覆盖物！')
-      return
-    }
-
-    if (!item || activeTool.value === item) {
-      // 未传递参数，或item是已开启的工具，关闭
-      map.value?.setDefaultCursor('inherit')
-      overlays[activeTool.value!]?.handleDraw?.(false)
-      activeTool.value = undefined
-    } else {
-      if (!activeLayer.value) {
-        message.warn('请先新增图层！')
-        return
-      }
-
-      // 有已开启的工具时，关闭已开启的
-      if (activeTool.value) {
-        map.value?.setDefaultCursor('inherit')
-        overlays[activeTool.value!]?.handleDraw?.(false)
-        activeTool.value = undefined
-      }
-
-      // 开启当前选中的工具
-      map.value?.setDefaultCursor('crosshair')
-      activeTool.value = item
-      overlays[activeTool.value!]?.handleDraw?.(true)
-    }
-  }
-
-  return {
+  const result = {
     mapData,
     loading,
     getMapData,
@@ -130,7 +97,6 @@ export const useMapStore = defineStore('map', () => {
     activeLayer,
     polylineEditor,
     polygonEditor,
-    toolManage,
     bezierCurveEditor,
     rectangleEditor,
     circleEditor,
@@ -138,4 +104,6 @@ export const useMapStore = defineStore('map', () => {
     activeLayerIndex,
     labelsLayer,
   }
+
+  return result
 })

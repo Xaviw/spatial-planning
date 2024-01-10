@@ -1,10 +1,13 @@
 import { AMap } from '@amap/amap-jsapi-types'
+import { overlays, useMapStore } from '@sp/shared/map'
+import { message } from 'ant-design-vue'
 import { isNumber } from 'lodash-es'
 import type {
   LayerItem,
   OverlayItem,
   OverlayOptions,
   OverlayType,
+  ToolType,
 } from '#/business'
 import type { InjectionKey, Ref } from 'vue'
 
@@ -14,6 +17,40 @@ export const hasRightMenuKey: InjectionKey<boolean> = Symbol('hasRightMenu')
 
 export const labelsLayerKey: InjectionKey<Ref<AMap.LabelsLayer | undefined>> =
   Symbol('labelsLayer')
+
+export function toolManage(
+  mapStore: ReturnType<typeof useMapStore>,
+  item?: ToolType,
+) {
+  if (mapStore.activeOverlay) {
+    message.warn('请先完成编辑再绘制新覆盖物！')
+    return
+  }
+
+  if (!item || mapStore.activeTool === item) {
+    // 未传递参数，或item是已开启的工具，关闭
+    mapStore.map?.setDefaultCursor('inherit')
+    overlays[mapStore.activeTool!]?.handleDraw?.(mapStore, false)
+    mapStore.activeTool = undefined
+  } else {
+    if (!mapStore.activeLayer) {
+      message.warn('请先新增图层！')
+      return
+    }
+
+    // 有已开启的工具时，关闭已开启的
+    if (mapStore.activeTool) {
+      mapStore.map?.setDefaultCursor('inherit')
+      overlays[mapStore.activeTool!]?.handleDraw?.(mapStore, false)
+      mapStore.activeTool = undefined
+    }
+
+    // 开启当前选中的工具
+    mapStore.map?.setDefaultCursor('crosshair')
+    mapStore.activeTool = item
+    overlays[mapStore.activeTool!]?.handleDraw?.(mapStore, true)
+  }
+}
 
 /** 在地图数据中查找覆盖物，返回图层、覆盖物、覆盖物下标 */
 export function findOverlay(

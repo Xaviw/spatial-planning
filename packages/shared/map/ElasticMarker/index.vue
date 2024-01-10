@@ -64,7 +64,7 @@ function createElasticMarker() {
 
   elasticMarker.setExtData(elasticMarkerProps.id)
 
-  bindClickEvent(elasticMarker)
+  bindClickEvent(elasticMarker, toRef(elasticMarkerProps))
 
   hasRightMenu && bindRightClickEvent(elasticMarker)
 

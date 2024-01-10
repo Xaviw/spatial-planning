@@ -12,36 +12,31 @@ import type {
   OverlayModule,
 } from '#/business'
 
-const mapStore = useMapStore()
-const {
-  activeOverlay,
-  editData,
-  map,
-  mapData,
-  activeLayerIndex,
-  activeLayer,
-  activeInstance,
-} = storeToRefs(mapStore)
-
-function synchronization() {
-  const pos = (activeInstance.value as ElasticMarker).getPosition()!
+function synchronization(mapStore: ReturnType<typeof useMapStore>) {
+  const pos = (mapStore.activeInstance as ElasticMarker).getPosition()!
   const newPos: [number, number] = [pos.lng, pos.lat]
 
   if (
-    !isEqual((editData.value!.props as ElasticMarkerProps).position, newPos)
+    !isEqual((mapStore.editData!.props as ElasticMarkerProps).position, newPos)
   ) {
-    ;(editData.value!.props as ElasticMarkerProps).position = newPos
+    ;(mapStore.editData!.props as ElasticMarkerProps).position = newPos
   }
 }
 
-function add(e: MapEvent) {
-  const newElasticMarker = overlayFactory('ElasticMarker', activeLayer.value!, {
-    position: [e.lnglat.lng, e.lnglat.lat],
-    styles: [
-      { icon: { fitZoom: 12, scaleFactor: 1.2, maxScale: 10, minScale: 0.1 } },
-    ],
-  })
-  mapData.value[activeLayerIndex.value!].overlays.push(newElasticMarker)
+function add(mapStore: ReturnType<typeof useMapStore>, e: MapEvent) {
+  const newElasticMarker = overlayFactory(
+    'ElasticMarker',
+    mapStore.activeLayer!,
+    {
+      position: [e.lnglat.lng, e.lnglat.lat],
+      styles: [
+        {
+          icon: { fitZoom: 12, scaleFactor: 1.2, maxScale: 10, minScale: 0.1 },
+        },
+      ],
+    },
+  )
+  mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newElasticMarker)
 }
 
 export default {
@@ -55,34 +50,41 @@ export default {
   icon: 'i-mdi:map-marker-circle',
   drawHelp: ['在目标位置单击新增文本标注'],
   editHelp: ['拖动移动标记位置'],
-  handleDraw: (open: boolean) => {
+  handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      map.value?.on('click', add)
+      mapStore.map?.on('click', e => add(mapStore, e))
     } else {
-      map.value?.off('click', add)
+      mapStore.map?.off('click', e => add(mapStore, e))
     }
   },
-  handleEdit: (open: boolean) => {
+  handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      ;(activeInstance.value as ElasticMarker).setDraggable(true)
-      ;(activeInstance.value as ElasticMarker).setCursor('grab')
-      ;(activeInstance.value as ElasticMarker).on('dragend', synchronization)
+      ;(mapStore.activeInstance as ElasticMarker).setDraggable(true)
+      ;(mapStore.activeInstance as ElasticMarker).setCursor('grab')
+      ;(mapStore.activeInstance as ElasticMarker).on(
+        'dragend',
+        synchronization.bind(null, mapStore),
+      )
     } else {
-      ;(activeInstance.value as ElasticMarker).off('dragend', synchronization)
-      ;(activeInstance.value as ElasticMarker).setDraggable(false)
-      ;(activeInstance.value as ElasticMarker).setCursor('pointer')
+      ;(mapStore.activeInstance as ElasticMarker).off(
+        'dragend',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.activeInstance as ElasticMarker).setDraggable(false)
+      ;(mapStore.activeInstance as ElasticMarker).setCursor('pointer')
     }
   },
   cancelEdit: (
+    mapStore: ReturnType<typeof useMapStore>,
     layer: LayerItem<OverlayType>,
     index: number,
     overlay: OverlayItem<'ElasticMarker'>,
   ) => {
     if (
-      (editData.value!.props as ElasticMarkerProps).position &&
+      (mapStore.editData!.props as ElasticMarkerProps).position &&
       !isEqual(
-        (editData.value!.props as ElasticMarkerProps).position,
-        (activeOverlay.value!.props as ElasticMarkerProps).position,
+        (mapStore.editData!.props as ElasticMarkerProps).position,
+        (mapStore.activeOverlay!.props as ElasticMarkerProps).position,
       )
     ) {
       ;(layer.overlays[index].props as ElasticMarkerProps).position = cloneDeep(

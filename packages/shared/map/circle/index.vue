@@ -35,7 +35,7 @@ function createCircle() {
 
   circle.setExtData(circleProps.id)
 
-  bindClickEvent(circle)
+  bindClickEvent(circle, toRef(circleProps))
 
   hasRightMenu && bindRightClickEvent(circle)
 

@@ -19,17 +19,15 @@
         <Suspense>
           <Map class="flex-1" />
           <template #fallback>
-            <div class="flex flex-1 items-center justify-center text-black">
-              地图参数获取失败，请尝试刷新页面！
-            </div>
+            <div class="flex-1"></div>
           </template>
         </Suspense>
 
         <!-- 图例 -->
         <Layer
-          :open="layoutState.bottom"
-          @trigger="layoutState.bottom = !layoutState.bottom"
-          class="max-h-40 overflow-auto"
+          :open="layerOpen"
+          @trigger="layerOpen = !layerOpen"
+          class="max-h-40"
         />
       </div>
 
@@ -41,21 +39,15 @@
 
 <script setup lang="ts">
 import { Loading } from '@sp/shared/components'
-import Layer from '../components/Layer.vue'
-import Sider from '../components/Sider.vue'
+import { hasRightMenuKey, labelsLayerKey, mapKey } from '@sp/shared/map'
 import { useMainStore } from '../store/main'
+import type { AMap } from '@amap/amap-jsapi-types'
 
 const { menuLoading, mapLoading } = storeToRefs(useMainStore())
 
-const layoutState = reactive({
-  left: true,
-  right: true,
-  bottom: true,
-})
-</script>
+const layerOpen = ref(true)
 
-<style scoped>
-.arrow {
-  @apply py-2 absolute top-[50%] translate-y-[50%] flex items-center justify-center;
-}
-</style>
+provide(mapKey, ref<AMap.Map>())
+provide(labelsLayerKey, ref<AMap.LabelsLayer>())
+provide(hasRightMenuKey, false)
+</script>

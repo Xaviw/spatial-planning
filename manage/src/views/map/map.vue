@@ -16,7 +16,9 @@ import {
   labelsLayerKey,
 } from '@sp/shared/map'
 import { debounce } from 'lodash-es'
-import type { AMap } from '@amap/amap-jsapi-types'
+
+const injectMap = inject(mapKey)!
+const injectLabelsLayer = inject(labelsLayerKey)!
 
 const {
   mousetool,
@@ -30,12 +32,6 @@ const {
   map,
   labelsLayer,
 } = storeToRefs(useMapStore())
-
-const injectMap = ref<AMap.Map>()
-const injectLabelsLayer = ref<AMap.LabelsLayer>()
-
-provide(mapKey, map)
-provide(labelsLayerKey, labelsLayer)
 
 const container = ref<HTMLDivElement | null>(null)
 const zoom = ref<number>()

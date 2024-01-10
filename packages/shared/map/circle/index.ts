@@ -1,4 +1,4 @@
-import { overlayFactory, useMapStore } from '@sp/shared/map'
+import { overlayFactory, toolManage, useMapStore } from '@sp/shared/map'
 import { message } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
@@ -13,33 +13,20 @@ import type {
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
-const mapStore = useMapStore()
-const {
-  activeInstance,
-  activeOverlay,
-  editData,
-  mapData,
-  activeLayerIndex,
-  activeLayer,
-  mousetool,
-  circleEditor,
-  map,
-} = storeToRefs(mapStore)
+function synchronization(mapStore: ReturnType<typeof useMapStore>) {
+  if (!(mapStore.activeInstance instanceof window.AMap.Circle)) return
 
-function synchronization() {
-  if (!(activeInstance.value instanceof window.AMap.Circle)) return
-
-  const center = activeInstance.value.getCenter()
-  const radius = activeInstance.value.getRadius()
+  const center = mapStore.activeInstance.getCenter()
+  const radius = mapStore.activeInstance.getRadius()
 
   const newCenter: AMap.Vector2 = [center.lng, center.lat]
 
-  if (!isEqual((editData.value!.props as CircleProps).center, newCenter)) {
-    ;(editData.value!.props as CircleProps).center = newCenter
+  if (!isEqual((mapStore.editData!.props as CircleProps).center, newCenter)) {
+    ;(mapStore.editData!.props as CircleProps).center = newCenter
   }
 
-  if (!isEqual((editData.value!.props as CircleProps).radius, radius)) {
-    ;(editData.value!.props as CircleProps).radius = radius
+  if (!isEqual((mapStore.editData!.props as CircleProps).radius, radius)) {
+    ;(mapStore.editData!.props as CircleProps).radius = radius
   }
 }
 
@@ -53,55 +40,68 @@ export default {
   icon: 'i-mdi:circle-outline',
   drawHelp: ['从圆心位置点击并拖动，松开鼠标后完成绘制', '不能连续绘制'],
   editHelp: ['拖动边缘控制点调整尺寸', '拖动中心控制点移动位置'],
-  handleDraw: (open: boolean) => {
+  handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      mousetool.value?.circle({})
+      mapStore.mousetool?.circle({})
     } else {
-      mousetool.value?.close(false)
+      mapStore.mousetool?.close(false)
     }
   },
-  afterDraw: (obj: OverlayInstance['Circle']) => {
+  afterDraw: (
+    mapStore: ReturnType<typeof useMapStore>,
+    obj: OverlayInstance['Circle'],
+  ) => {
     const radius = obj.getRadius()
     if (radius === 0) {
       message.warn('请拖动扩展圆形面积！')
       return
     }
     const center = obj.getCenter()
-    const newCircle = overlayFactory('Circle', activeLayer.value!, {
+    const newCircle = overlayFactory('Circle', mapStore.activeLayer!, {
       center: [center.lng, center.lat],
       radius,
     })
-    mapData.value[activeLayerIndex.value!].overlays.push(newCircle)
-    map.value?.remove(obj)
-    mapStore.toolManage()
+    mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newCircle)
+    mapStore.map?.remove(obj)
+    toolManage(mapStore)
   },
-  handleEdit: (open: boolean) => {
-    if (!(activeInstance.value instanceof window.AMap.Circle)) return
+  handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
+    if (!(mapStore.activeInstance instanceof window.AMap.Circle)) return
 
     if (open) {
-      circleEditor.value?.setTarget(activeInstance.value)
-      circleEditor.value?.open()
-      ;(circleEditor.value as any).on('addnode', synchronization)
-      ;(circleEditor.value as any).on('adjust', synchronization)
-      ;(circleEditor.value as any).on('move', synchronization)
+      mapStore.circleEditor?.setTarget(mapStore.activeInstance)
+      mapStore.circleEditor?.open()
+      ;(mapStore.circleEditor as any).on(
+        'addnode',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.circleEditor as any).on(
+        'adjust',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.circleEditor as any).on(
+        'move',
+        synchronization.bind(null, mapStore),
+      )
     } else {
-      ;(circleEditor.value as any).clearEvents()
-      circleEditor.value?.close()
+      ;(mapStore.circleEditor as any).clearEvents()
+      mapStore.circleEditor?.close()
     }
   },
   cancelEdit: (
+    mapStore: ReturnType<typeof useMapStore>,
     layer: LayerItem<OverlayType>,
     index: number,
     overlay: OverlayItem<'Circle'>,
   ) => {
     if (
-      (editData.value!.props as CircleProps).center &&
-      (editData.value!.props as CircleProps).radius
+      (mapStore.editData!.props as CircleProps).center &&
+      (mapStore.editData!.props as CircleProps).radius
     ) {
       if (
         !isEqual(
-          (editData.value!.props as CircleProps).center,
-          (activeOverlay.value!.props as CircleProps).center,
+          (mapStore.editData!.props as CircleProps).center,
+          (mapStore.activeOverlay!.props as CircleProps).center,
         )
       ) {
         ;(layer.overlays[index].props as CircleProps).center = cloneDeep(
@@ -110,8 +110,8 @@ export default {
       }
       if (
         !isEqual(
-          (editData.value!.props as CircleProps).radius,
-          (activeOverlay.value!.props as CircleProps).radius,
+          (mapStore.editData!.props as CircleProps).radius,
+          (mapStore.activeOverlay!.props as CircleProps).radius,
         )
       ) {
         layer.overlays[index].props = {

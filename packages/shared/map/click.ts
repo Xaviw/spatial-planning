@@ -1,19 +1,18 @@
 import { ContentWrapper } from '@sp/shared/components'
 import { useModal } from '@sp/shared/hooks'
-import { findOverlay, useMapStore } from '@sp/shared/map'
 import { components } from '@sp/shared/materials'
 import { cloneDeep, merge } from 'lodash-es'
-import type { MapEvent, OverlayItem, OverlayType } from '#/business'
+import type { OverlayItem, OverlayType } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
+import type { Ref } from 'vue'
 
-const { mapData } = storeToRefs(useMapStore())
-
-export function bindClickEvent(overlay: AMap.Eventable) {
-  overlay.on('click', (e: MapEvent) => {
-    const id = (e.target as any).getExtData()
-    const { overlay } = findOverlay(mapData.value, id) || {}
-    if (overlay?.details.length) {
-      openDetail(overlay)
+export function bindClickEvent(
+  overlay: AMap.Eventable,
+  data: Ref<OverlayItem<OverlayType>>,
+) {
+  overlay.on('click', () => {
+    if (data?.value?.details.length) {
+      openDetail(data.value)
     }
   })
 }

@@ -11,34 +11,23 @@ import type {
   OverlayModule,
 } from '#/business'
 
-const mapStore = useMapStore()
-const {
-  activeInstance,
-  activeOverlay,
-  editData,
-  map,
-  mapData,
-  activeLayerIndex,
-  activeLayer,
-} = storeToRefs(mapStore)
+function synchronization(mapStore: ReturnType<typeof useMapStore>) {
+  if (!(mapStore.activeInstance instanceof window.AMap.Text)) return
 
-function synchronization() {
-  if (!(activeInstance.value instanceof window.AMap.Text)) return
-
-  const pos = activeInstance.value.getPosition()!
+  const pos = mapStore.activeInstance.getPosition()!
   const newPos: [number, number] = [pos.lng, pos.lat]
 
-  if (!isEqual((editData.value!.props as TextProps).position, newPos)) {
-    ;(editData.value!.props as TextProps).position = newPos
+  if (!isEqual((mapStore.editData!.props as TextProps).position, newPos)) {
+    ;(mapStore.editData!.props as TextProps).position = newPos
   }
 }
 
-function add(e: MapEvent) {
-  const newText = overlayFactory('Text', activeLayer.value!, {
+function add(mapStore: ReturnType<typeof useMapStore>, e: MapEvent) {
+  const newText = overlayFactory('Text', mapStore.activeLayer!, {
     position: [e.lnglat.lng, e.lnglat.lat],
     text: '新增文本',
   })
-  mapData.value[activeLayerIndex.value!].overlays.push(newText)
+  mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newText)
 }
 
 export default {
@@ -51,38 +40,42 @@ export default {
   icon: 'i-ph:text-t',
   drawHelp: ['在目标位置单击新增文本'],
   editHelp: ['拖动文本移动位置'],
-  handleDraw: (open: boolean) => {
+  handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      map.value?.setDefaultCursor('crosshair')
-      map.value?.on('click', add)
+      mapStore.map?.setDefaultCursor('crosshair')
+      mapStore.map?.on('click', e => add(mapStore, e))
     } else {
-      map.value?.setDefaultCursor('inherit')
-      map.value?.off('click', add)
+      mapStore.map?.setDefaultCursor('inherit')
+      mapStore.map?.off('click', e => add(mapStore, e))
     }
   },
-  handleEdit: (open: boolean) => {
-    if (!(activeInstance.value instanceof window.AMap.Text)) return
+  handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
+    if (!(mapStore.activeInstance instanceof window.AMap.Text)) return
 
     if (open) {
-      activeInstance.value.setDraggable(true)
-      activeInstance.value.setCursor('grab')
-      activeInstance.value.on('dragend', synchronization)
+      mapStore.activeInstance.setDraggable(true)
+      mapStore.activeInstance.setCursor('grab')
+      mapStore.activeInstance.on(
+        'dragend',
+        synchronization.bind(null, mapStore),
+      )
     } else {
-      activeInstance.value.clearEvents('dragend')
-      activeInstance.value.setDraggable(false)
-      activeInstance.value.setCursor('pointer')
+      mapStore.activeInstance.clearEvents('dragend')
+      mapStore.activeInstance.setDraggable(false)
+      mapStore.activeInstance.setCursor('pointer')
     }
   },
   cancelEdit: (
+    mapStore: ReturnType<typeof useMapStore>,
     layer: LayerItem<OverlayType>,
     index: number,
     overlay: OverlayItem<'Text'>,
   ) => {
     if (
-      (editData.value!.props as TextProps).position &&
+      (mapStore.editData!.props as TextProps).position &&
       !isEqual(
-        (editData.value!.props as TextProps).position,
-        (activeOverlay.value!.props as TextProps).position,
+        (mapStore.editData!.props as TextProps).position,
+        (mapStore.activeOverlay!.props as TextProps).position,
       )
     ) {
       ;(layer.overlays[index].props as TextProps).position = cloneDeep(

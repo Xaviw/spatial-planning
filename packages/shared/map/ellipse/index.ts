@@ -1,4 +1,4 @@
-import { overlayFactory, useMapStore } from '@sp/shared/map'
+import { overlayFactory, toolManage, useMapStore } from '@sp/shared/map'
 import { message } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
@@ -13,33 +13,20 @@ import type {
 } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
-const mapStore = useMapStore()
-const {
-  activeInstance,
-  activeOverlay,
-  editData,
-  mapData,
-  activeLayerIndex,
-  activeLayer,
-  mousetool,
-  ellipseEditor,
-  map,
-} = storeToRefs(mapStore)
+function synchronization(mapStore: ReturnType<typeof useMapStore>) {
+  if (!(mapStore.activeInstance instanceof window.AMap.Ellipse)) return
 
-function synchronization() {
-  if (!(activeInstance.value instanceof window.AMap.Ellipse)) return
-
-  const center = activeInstance.value.getCenter()
-  const radius = activeInstance.value.getRadius()
+  const center = mapStore.activeInstance.getCenter()
+  const radius = mapStore.activeInstance.getRadius()
 
   const newCenter: AMap.Vector2 = [center.lng, center.lat]
 
-  if (!isEqual((editData.value!.props as EllipseProps).center, newCenter)) {
-    ;(editData.value!.props as EllipseProps).center = newCenter
+  if (!isEqual((mapStore.editData!.props as EllipseProps).center, newCenter)) {
+    ;(mapStore.editData!.props as EllipseProps).center = newCenter
   }
 
-  if (!isEqual((editData.value!.props as EllipseProps).radius, radius)) {
-    ;(editData.value!.props as EllipseProps).radius = radius
+  if (!isEqual((mapStore.editData!.props as EllipseProps).radius, radius)) {
+    ;(mapStore.editData!.props as EllipseProps).radius = radius
   }
 }
 
@@ -57,55 +44,68 @@ export default {
     '不能连续绘制',
   ],
   editHelp: ['拖动边缘控制点调整尺寸', '拖动中心控制点移动位置'],
-  handleDraw: (open: boolean) => {
+  handleDraw: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (open) {
-      mousetool.value?.circle({})
+      mapStore.mousetool?.circle({})
     } else {
-      mousetool.value?.close(false)
+      mapStore.mousetool?.close(false)
     }
   },
-  afterDraw: (obj: OverlayInstance['Circle']) => {
+  afterDraw: (
+    mapStore: ReturnType<typeof useMapStore>,
+    obj: OverlayInstance['Circle'],
+  ) => {
     const radius = obj.getRadius()
     if (radius === 0) {
       message.warn('请拖动扩展椭圆形面积！')
       return
     }
     const center = obj.getCenter()
-    const newEllipse = overlayFactory('Ellipse', activeLayer.value!, {
+    const newEllipse = overlayFactory('Ellipse', mapStore.activeLayer!, {
       center: [center.lng, center.lat],
       radius: [radius, radius],
     })
-    mapData.value[activeLayerIndex.value!].overlays.push(newEllipse)
-    map.value?.remove(obj)
-    mapStore.toolManage()
+    mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newEllipse)
+    mapStore.map?.remove(obj)
+    toolManage(mapStore)
   },
-  handleEdit: (open: boolean) => {
-    if (!(activeInstance.value instanceof window.AMap.Ellipse)) return
+  handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
+    if (!(mapStore.activeInstance instanceof window.AMap.Ellipse)) return
 
     if (open) {
-      ellipseEditor.value?.setTarget(activeInstance.value)
-      ellipseEditor.value?.open()
-      ;(ellipseEditor.value as any).on('addnode', synchronization)
-      ;(ellipseEditor.value as any).on('adjust', synchronization)
-      ;(ellipseEditor.value as any).on('move', synchronization)
+      mapStore.ellipseEditor?.setTarget(mapStore.activeInstance)
+      mapStore.ellipseEditor?.open()
+      ;(mapStore.ellipseEditor as any).on(
+        'addnode',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.ellipseEditor as any).on(
+        'adjust',
+        synchronization.bind(null, mapStore),
+      )
+      ;(mapStore.ellipseEditor as any).on(
+        'move',
+        synchronization.bind(null, mapStore),
+      )
     } else {
-      ;(ellipseEditor.value as any).clearEvents()
-      ellipseEditor.value?.close()
+      ;(mapStore.ellipseEditor as any).clearEvents()
+      mapStore.ellipseEditor?.close()
     }
   },
   cancelEdit: (
+    mapStore: ReturnType<typeof useMapStore>,
     layer: LayerItem<OverlayType>,
     index: number,
     overlay: OverlayItem<'Ellipse'>,
   ) => {
     if (
-      (editData.value!.props as EllipseProps).center &&
-      (editData.value!.props as EllipseProps).radius
+      (mapStore.editData!.props as EllipseProps).center &&
+      (mapStore.editData!.props as EllipseProps).radius
     ) {
       if (
         !isEqual(
-          (editData.value!.props as EllipseProps).center,
-          (activeOverlay.value!.props as EllipseProps).center,
+          (mapStore.editData!.props as EllipseProps).center,
+          (mapStore.activeOverlay!.props as EllipseProps).center,
         )
       ) {
         ;(layer.overlays[index].props as EllipseProps).center = cloneDeep(
@@ -114,8 +114,8 @@ export default {
       }
       if (
         !isEqual(
-          (editData.value!.props as EllipseProps).radius,
-          (activeOverlay.value!.props as EllipseProps).radius,
+          (mapStore.editData!.props as EllipseProps).radius,
+          (mapStore.activeOverlay!.props as EllipseProps).radius,
         )
       ) {
         ;(layer.overlays[index].props as EllipseProps).radius = cloneDeep(
