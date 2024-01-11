@@ -16,6 +16,7 @@
   },
   "scripts": {
     "clean": "pnpm -r run clean && rimraf node_modules",
+    "dev:backend": "pnpm -F @sp/backend dev",
     "dev:client": "pnpm -F @sp/client dev",
     "dev:manage": "pnpm -F @sp/manage dev",
     "lint": "pnpm -r run lint",
