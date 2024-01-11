@@ -63,6 +63,7 @@ import { useMapStore } from '@sp/shared/map'
 import { getOperationsFromDiff, modal } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
 import { isEqual, omit } from 'lodash-es'
+import type { OverlayItem, OverlayType } from '#/business'
 
 const mapStore = useMapStore()
 
@@ -87,10 +88,11 @@ function onMenuChange(id: string) {
   })
 }
 
-const searchValue = ref<string>()
+const searchValue = ref('')
 
 async function onSearch() {
-  if (!searchValue.value) {
+  const name = searchValue.value.trim().toLowerCase()
+  if (!searchValue.value.trim()) {
     message.warn('请输入覆盖物名称！')
     return
   }
@@ -101,37 +103,52 @@ async function onSearch() {
     return
   }
 
+  const options = []
+
   for (let layer of mapData.value) {
     for (let overlay of layer.overlays) {
-      if (overlay.name.includes(searchValue.value)) {
-        const id = overlay.id
-        const instance = instances.find(
-          instance => instance?.getExtData?.() === id,
-        )
-
-        // 正在编辑，不做操作
-        if (activeOverlay.value && activeOverlay.value.id === id) {
-          return
-        }
-
-        // 有其他编辑中的覆盖物，且已有改动，提示
-        if (activeOverlay.value && !isEqual(activeOverlay.value, overlay)) {
-          await modal('confirm', {
-            title: '提示！',
-            content: '您有正在编辑的覆盖物还未保存，是否直接切换？',
-            okText: '切换',
-          })
-        }
-
-        activeOverlay.value = overlay
-        activeInstance.value = instance
-        map.value?.setFitView([instance])
+      const overlayName = overlay.name.trim().toLowerCase()
+      if (overlayName === name) {
+        searchHandler(instances, overlay)
         return
+      } else if (overlayName.includes(name)) {
+        options.push(overlay)
       }
     }
   }
 
+  if (options.length) {
+    searchHandler(instances, options.shift()!)
+    return
+  }
+
   message.warn('未找到对应覆盖物！')
+}
+
+async function searchHandler(
+  instances: any[],
+  overlay: OverlayItem<OverlayType>,
+) {
+  const id = overlay.id
+  const instance = instances.find(instance => instance?.getExtData?.() === id)
+
+  // 正在编辑，不做操作
+  if (activeOverlay.value && activeOverlay.value.id === id) {
+    return
+  }
+
+  // 有其他编辑中的覆盖物，且已有改动，提示
+  if (activeOverlay.value && !isEqual(activeOverlay.value, overlay)) {
+    await modal('confirm', {
+      title: '提示！',
+      content: '您有正在编辑的覆盖物还未保存，是否直接切换？',
+      okText: '切换',
+    })
+  }
+
+  activeOverlay.value = overlay
+  activeInstance.value = instance
+  map.value?.setFitView([instance])
 }
 
 function onSubmit() {

@@ -7,11 +7,10 @@
       'z-1',
       !open && (position === 'left' ? 'ml--100' : 'mr--100'),
     ]"
-    ref="siderRef"
   >
     <Loading absolute :loading="loading" />
 
-    <div class="h-full overflow-auto">
+    <div class="h-full overflow-auto" ref="siderRef">
       <component
         v-for="item of data"
         :key="item.id"
@@ -27,7 +26,7 @@
         'client-arrow',
         position === 'left' ? 'right-0' : 'left-0',
         position === 'left' ? 'translate-x-[100%]' : 'translate-x-[-100%]',
-        'rounded-r',
+        position === 'left' ? 'rounded-r' : 'rounded-l',
       ]"
       @click="open = !open"
     >

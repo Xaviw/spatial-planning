@@ -1,6 +1,11 @@
 <template>
   <div ref="container" class="relative select-none">
     <div class="absolute right-0 top-0 z-1 bg-white px-4 py-2">
+      <input
+        id="search"
+        placeholder="搜索地址"
+        class="border-1 border-gray-3 rounded border-solid outline-0"
+      />
       当前缩放等级：{{ zoom }}
     </div>
   </div>
@@ -41,6 +46,7 @@ loading.value = true
 const config = await getConfig().send()
 
 const plugins = [
+  'AMap.AutoComplete',
   'AMap.MouseTool',
   'AMap.PolylineEditor',
   'AMap.BezierCurveEditor',
@@ -121,6 +127,7 @@ useMap(
       )
     }
     watchZoom()
+    POISearch()
   },
 )
 
@@ -132,5 +139,15 @@ function watchZoom() {
       zoom.value = map.value?.getZoom()
     }, 500),
   )
+}
+
+function POISearch() {
+  const autoComplete = new (window.AMap as any).AutoComplete({
+    input: 'search',
+    datatype: 'poi',
+  })
+  autoComplete.on('select', (e: any) => {
+    map.value?.setZoomAndCenter(18, e.poi.location)
+  })
 }
 </script>
