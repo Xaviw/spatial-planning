@@ -1,7 +1,5 @@
-import { ResCode } from '../packages/shared/utils/enums'
-
 export interface Res<T> {
-  code: ResCode
+  code: 0 | 1
   data: T
   message: string
 }

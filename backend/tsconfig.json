@@ -1,11 +1,4 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist",
-    "paths": {
-      "#/*": ["../types/*"]
-    }
-  }
+  "extends": "../tsconfig.nest.json",
+  "include": ["src/**/*", "../types/*"]
 }

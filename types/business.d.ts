@@ -1,4 +1,3 @@
-import { useMapStore } from '@sp/shared/map'
 import type { AMap } from '@amap/amap-jsapi-types'
 import type { ComponentOptions } from 'vue'
 
@@ -422,16 +421,11 @@ export interface OverlayModule {
   description?: string
   drawHelp?: string[]
   editHelp?: string[]
-  handleDraw?: Fn<[ReturnType<typeof useMapStore>, boolean]>
-  afterDraw?: Fn<[ReturnType<typeof useMapStore>, ValueTypes<OverlayInstance>]>
-  handleEdit?: Fn<[ReturnType<typeof useMapStore>, boolean]>
+  handleDraw?: Fn<[any, boolean]>
+  afterDraw?: Fn<[any, ValueTypes<OverlayInstance>]>
+  handleEdit?: Fn<[any, boolean]>
   cancelEdit?: Fn<
-    [
-      ReturnType<typeof useMapStore>,
-      LayerItem<OverlayType>,
-      number,
-      OverlayItem<OverlayType>,
-    ]
+    [any, LayerItem<OverlayType>, number, OverlayItem<OverlayType>]
   >
 }
 

@@ -44,13 +44,12 @@
 </template>
 
 <script setup lang="ts">
-import { MediaEnum } from '@sp/shared/utils'
 import FilePreview from './FilePreview.vue'
 import type { FileListProps, FileListItem } from '#/materials'
 
 interface ResolvedFileItem extends FileListItem {
   icon?: string
-  type?: MediaEnum
+  type?: string
   extName: string
 }
 
@@ -68,22 +67,22 @@ const dataWithPreset = computed<ResolvedFileItem[]>(() => {
       /^.*\.(\w+)(\?.*)?$/.exec(item.src || '')?.[1]?.toLocaleLowerCase() ?? ''
     if (extName === 'pdf') {
       icon = 'i-mdi:file-pdf'
-      type = MediaEnum.PDF
+      type = 'pdf'
     } else if (extName === 'docx' || extName === 'doc') {
       icon = 'i-mdi:file-word'
-      type = MediaEnum.OFFICE
+      type = 'office'
     } else if (extName === 'xlsx' || extName === 'xls') {
       icon = 'i-mdi:file-excel'
-      type = MediaEnum.OFFICE
+      type = 'office'
     } else if (extName === 'pptx' || extName === 'ppt') {
       icon = 'i-mdi:file-powerpoint'
-      type = MediaEnum.OFFICE
+      type = 'office'
     } else if (['mp4', 'webm', 'ogv', 'mov', 'avi', 'mkv'].includes(extName)) {
       icon = 'i-material-symbols:video-file'
-      type = MediaEnum.VIDEO
+      type = 'video'
     } else if (['mp3', 'wav', 'ogg', 'aac', 'm4a'].includes(extName)) {
       icon = 'i-material-symbols:audio-file'
-      type = MediaEnum.AUDIO
+      type = 'audio'
     }
     return { ...item, icon, type, extName }
   })
@@ -92,7 +91,7 @@ const dataWithPreset = computed<ResolvedFileItem[]>(() => {
 const previewData = reactive({
   visible: false,
   src: '',
-  type: MediaEnum.AUDIO,
+  type: 'audio',
   extName: '',
 })
 

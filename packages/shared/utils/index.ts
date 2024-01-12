@@ -3,7 +3,6 @@ import { isEqual } from 'lodash-es'
 import type { OperationItem } from '#/business'
 import type { MaybeRef, ComputedRef } from 'vue'
 
-export * from './enums'
 export * from './request'
 
 export const color = [

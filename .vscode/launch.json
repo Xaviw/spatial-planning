@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "console": "integratedTerminal",
+      "name": "调试后端",
+      "request": "launch",
+      "runtimeArgs": ["run", "dev:backend"],
+      "runtimeExecutable": "npm",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    }
+  ],
+  "version": "0.0.1"
+}
