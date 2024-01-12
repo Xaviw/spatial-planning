@@ -24,7 +24,7 @@ const errorMessage: Record<number, string> = {
 const [notify] = notification.useNotification()
 
 export const request = createAlova({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_BASE || import.meta.env.VITE_API_PREFIX,
   statesHook: vueHook,
   requestAdapter: GlobalFetch(),
   responded: {

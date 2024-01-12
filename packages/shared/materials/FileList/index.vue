@@ -18,7 +18,7 @@
         :height="item.imgHeight"
         :width="item.imgWidth"
         :src="item.img"
-        fallback="/failed.png"
+        :fallback="getStaticFile('/failed.png')"
       >
         <template #previewMask>
           <i class="i-ant-design:eye-outlined" />
@@ -44,6 +44,7 @@
 </template>
 
 <script setup lang="ts">
+import { getStaticFile } from '@sp/shared/utils'
 import FilePreview from './FilePreview.vue'
 import type { FileListProps, FileListItem } from '#/materials'
 

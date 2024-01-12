@@ -3,8 +3,11 @@
 interface ImportMetaEnv {
   readonly VITE_TITLE: string
   readonly VITE_MOCK_ENABLE: boolean
+  readonly VITE_API_BASE: string
+  readonly VITE_API_PREFIX: string
   readonly VITE_AMAP_KEY: string
   readonly VITE_AMAP_SECURITY_KEY: string
+  readonly VITE_STATIC_PATH: string
 }
 
 interface ImportMeta {

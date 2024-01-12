@@ -1,6 +1,7 @@
 import { overlayFactory, toolManage, useMapStore } from '@sp/shared/map'
 import { message } from 'ant-design-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
+import { getStaticFile } from '../../utils'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -79,7 +80,7 @@ export default {
       return
     }
     const newImageLayer = overlayFactory('ImageLayer', mapStore.activeLayer!, {
-      url: '/imageLayer.png',
+      url: getStaticFile('/imageLayer.png'),
       bounds: [sw.lng, sw.lat, ne.lng, ne.lat],
     })
     mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newImageLayer)

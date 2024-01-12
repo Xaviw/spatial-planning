@@ -167,3 +167,7 @@ export function generateRandomDecimal(
   const multiplier = Math.pow(10, decimalPlaces)
   return Math.round(randomNum * multiplier) / multiplier
 }
+
+export function getStaticFile(path: string) {
+  return import.meta.env.VITE_STATIC_PATH + path
+}

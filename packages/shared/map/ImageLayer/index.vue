@@ -10,6 +10,7 @@ import {
 } from '@sp/shared/map'
 import { message } from 'ant-design-vue'
 import { omit } from 'lodash-es'
+import { getStaticFile } from '../../utils'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -26,7 +27,7 @@ image.onload = () => {
 }
 image.onerror = () => {
   message.error('图片加载失败，请检查链接是否正确！')
-  imageLayer.setImageUrl('/failed.png')
+  imageLayer.setImageUrl(getStaticFile('/failed.png'))
 }
 
 createImage()
@@ -42,7 +43,7 @@ function createImage() {
   image.src = imageLayerProps.props.url
   imageLayer = new window.AMap.ImageLayer({
     ...imageLayerProps.props,
-    url: '/loading.png',
+    url: getStaticFile('/loading.png'),
   })
 
   const [minLng, minLat, maxLng, maxLat] = imageLayerProps.props.bounds
@@ -96,7 +97,7 @@ watch(
   () => imageLayerProps.props.url,
   url => {
     image.src = url
-    imageLayer.setImageUrl('/loading.png')
+    imageLayer.setImageUrl(getStaticFile('/loading.png'))
   },
 )
 

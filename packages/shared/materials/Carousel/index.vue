@@ -9,13 +9,14 @@
         :src="item"
         class="w-full"
         :style="{ maxHeight: height + 'px' }"
-        fallback="/failed.png"
+        :fallback="getStaticFile('/failed.png')"
       />
     </div>
   </ACarousel>
 </template>
 
 <script setup lang="ts">
+import { getStaticFile } from '@sp/shared/utils'
 import type { CarouselProps } from '#/materials'
 
 const props = withDefaults(defineProps<CarouselProps>(), {
