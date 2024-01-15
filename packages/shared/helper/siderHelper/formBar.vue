@@ -40,7 +40,7 @@
           :filterTreeNode="onMenuFilter"
           placeholder="选择或搜索菜单进行筛选"
           v-model:searchValue="menuSearchValue"
-          v-model="selectedMenu"
+          v-model:value="selectedMenu"
           treeDefaultExpandAll
           showSearch
           :treeData="menuData"

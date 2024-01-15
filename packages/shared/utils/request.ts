@@ -1,4 +1,6 @@
+import { createAlovaMockAdapter } from '@alova/mock'
 import { bootSilentFactory } from '@alova/scene-vue'
+import mockGroups from '@sp/shared/mock'
 import { createAlova } from 'alova'
 import GlobalFetch from 'alova/GlobalFetch'
 import vueHook from 'alova/vue'
@@ -23,10 +25,22 @@ const errorMessage: Record<number, string> = {
 
 const [notify] = notification.useNotification()
 
+const requestAdapter = createAlovaMockAdapter(mockGroups, {
+  enable: import.meta.env.VITE_MOCK_ENABLE,
+  httpAdapter: GlobalFetch(),
+  delay: 1000,
+  mockRequestLogger: true,
+})
+
 export const request = createAlova({
-  baseURL: import.meta.env.VITE_API_BASE || import.meta.env.VITE_API_PREFIX,
+  baseURL:
+    (import.meta.env.VITE_API_BASE || '') +
+    (import.meta.env.VITE_API_PREFIX || ''),
   statesHook: vueHook,
-  requestAdapter: GlobalFetch(),
+  requestAdapter,
+  beforeRequest: _method => {
+    console.log(_method)
+  },
   responded: {
     async onSuccess(response, method) {
       let json: Res<any> | undefined

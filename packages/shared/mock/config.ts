@@ -1,12 +1,8 @@
-import type { MockMethod } from 'vite-plugin-mock'
+import { defineMock } from '@alova/mock'
 
-export default [
-  {
-    url: '/api/config',
-    method: 'get',
-    timeout: 1000,
-    statusCode: 200,
-    response: () => ({
+export default defineMock({
+  '/api/config': () => {
+    return {
       code: 1,
       data: {
         mapStyle: 'blue',
@@ -18,17 +14,13 @@ export default [
         controlbarPosition: [37, null, 5, null],
       },
       message: 'ok',
-    }),
+    }
   },
-  {
-    url: '/api/config',
-    method: 'post',
-    timeout: 1000,
-    statusCode: 200,
-    response: () => ({
+  '[POST]/api/config': () => {
+    return {
       code: 1,
       data: true,
       message: 'ok',
-    }),
+    }
   },
-] as MockMethod[]
+})

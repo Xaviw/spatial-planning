@@ -1,32 +1,24 @@
+import { defineMock } from '@alova/mock'
 import Mock from 'mockjs'
-import materialStrategies from './material'
+import materialStrategies from './materialStrategies'
 import type { GetSiderParams } from '@sp/shared/apis'
-import type { MockMethod } from 'vite-plugin-mock'
 
-export default [
-  {
-    url: '/api/sider',
-    method: 'get',
-    timeout: 1000,
-    statusCode: 200,
-    response: ({ query }) => ({
+export default defineMock({
+  '/api/sider': ({ query }) => {
+    return {
       code: 1,
       data: genList(8, 50, false, query as GetSiderParams),
       message: 'ok',
-    }),
+    }
   },
-  {
-    url: '/api/sider',
-    method: 'post',
-    timeout: 1000,
-    statusCode: 200,
-    response: () => ({
+  '[POST]/api/sider': () => {
+    return {
       code: 1,
       data: true,
       message: 'ok',
-    }),
+    }
   },
-] as MockMethod[]
+})
 
 function genList(
   min: number,
@@ -39,7 +31,12 @@ function genList(
   return Array.from({ length: Mock.Random.natural(min, max) }).map(() => {
     const material = strategies[Mock.Random.natural(0, strategies.length - 1)]()
     if (!isInModal && material.type === 'Title') {
-      ;(material.props as Recordable).modalData = genList(3, 18, true, params)
+      ;(material.props as Record<string, any>).modalData = genList(
+        3,
+        18,
+        true,
+        params,
+      )
     }
     return {
       ...material,

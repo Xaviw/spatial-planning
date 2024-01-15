@@ -5,7 +5,6 @@ import autoImport from 'unplugin-auto-import/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import components from 'unplugin-vue-components/vite'
 import { loadEnv, defineConfig } from 'vite'
-import { viteMockServe } from 'vite-plugin-mock'
 
 export default function (name) {
   return defineConfig(({ mode }) => {
@@ -30,11 +29,6 @@ export default function (name) {
           dts: `../types/auto-components-${name}.d.ts`,
         }),
         unoCSS(),
-        viteMockServe({
-          mockPath: '../mock',
-          localEnabled: env.DEV && env.VITE_MOCK_ENABLE,
-          prodEnabled: env.PROD && env.VITE_MOCK_ENABLE,
-        }),
       ],
     }
   })

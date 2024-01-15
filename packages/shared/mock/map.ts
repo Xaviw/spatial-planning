@@ -1,6 +1,7 @@
+import { defineMock } from '@alova/mock'
 import { generateRandomDecimal } from '@sp/shared/utils'
 import Mock from 'mockjs'
-import materialStrategies from './material'
+import materialStrategies from './materialStrategies'
 import type {
   LayerItem,
   MarkerProps,
@@ -9,34 +10,25 @@ import type {
   OverlayType,
   PolygonProps,
   PolylineProps,
-} from '../types/business'
+} from '#/business'
 import type { GetMapParams } from '@sp/shared/apis'
-import type { MockMethod } from 'vite-plugin-mock'
 
-export default [
-  {
-    url: '/api/map',
-    method: 'get',
-    timeout: 1000,
-    statusCode: 200,
-    response: ({ query }) => ({
+export default defineMock({
+  '/api/map': ({ query }) => {
+    return {
       code: 1,
       data: genList(2, 4, 1, 3, 3, 6, query as GetMapParams),
       message: 'ok',
-    }),
+    }
   },
-  {
-    url: '/api/sider',
-    method: 'post',
-    timeout: 1000,
-    statusCode: 200,
-    response: () => ({
+  '[POST]/api/map': () => {
+    return {
       code: 1,
       data: true,
       message: 'ok',
-    }),
+    }
   },
-] as MockMethod[]
+})
 
 function genList(
   lMin: number,
