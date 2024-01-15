@@ -146,7 +146,7 @@ function POISearch() {
     input: 'search',
     datatype: 'poi',
   })
-  autoComplete.on('select', (e: any) => {
+  autoComplete.on('select', e => {
     map.value?.setZoomAndCenter(18, e.poi.location)
   })
 }

@@ -4,7 +4,7 @@
     :model="item"
     :key="index"
     class="mb-2"
-    :ref="(el: any) => (refs[index] = el)"
+    :ref="el => (refs[index] = el)"
   >
     <div class="editor-block">
       <div class="mr-4 flex-1">

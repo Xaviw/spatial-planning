@@ -4,7 +4,7 @@
     :model="item"
     :key="index"
     class="mb-2"
-    :ref="(el: any) => (refs[index] = el)"
+    :ref="el => (refs[index] = el)"
   >
     <div class="editor-block">
       <div class="mr-4 flex-1">
@@ -57,7 +57,7 @@ const model = defineModel<LineChartItem[]>({ default: [] })
 
 const refs = ref<any[]>([])
 
-const dataValidator = (_rule: any, value: number[]) => {
+const dataValidator = (_rule, value: number[]) => {
   if (value?.some((item: number) => !item && item !== 0))
     return Promise.reject()
   return Promise.resolve()

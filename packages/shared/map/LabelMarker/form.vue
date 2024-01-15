@@ -242,20 +242,14 @@ import { Form } from 'ant-design-vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import type { LabelMarkerProps } from '#/business'
 
-function onIconUpdate(
-  key: keyof Required<LabelMarkerProps>['icon'],
-  value: any,
-) {
+function onIconUpdate(key: keyof Required<LabelMarkerProps>['icon'], value) {
   if (!formModel.value.icon) {
     formModel.value.icon = {} as LabelMarkerProps['icon']
   }
   formModel.value.icon![key] = value
 }
 
-function onTextUpdate(
-  key: keyof Required<LabelMarkerProps>['text'],
-  value: any,
-) {
+function onTextUpdate(key: keyof Required<LabelMarkerProps>['text'], value) {
   if (!formModel.value.text) {
     formModel.value.text = {} as LabelMarkerProps['text']
   }
@@ -264,7 +258,7 @@ function onTextUpdate(
 
 function onTextStyleUpdate(
   key: keyof Required<Required<LabelMarkerProps>['text']>['style'],
-  value: any,
+  value,
 ) {
   if (!formModel.value.text) {
     formModel.value.text = {} as LabelMarkerProps['text']

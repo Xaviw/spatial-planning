@@ -141,7 +141,7 @@ const positionOptions = [
 function onUpdate(
   styleKey: keyof ElasticMarkerStyle,
   propKey: keyof ElasticMarkerIcon | keyof ElasticMarkerLabel,
-  value: any,
+  value,
 ) {
   if (!formModel.value.styles) {
     formModel.value.styles = [{}]

@@ -27,7 +27,7 @@ const props = defineProps<{
   inModal: boolean
 }>()
 
-function materialsPull(to: any) {
+function materialsPull(to) {
   if ((to.el as HTMLDivElement).id === 'temp') return false
   return 'clone'
 }

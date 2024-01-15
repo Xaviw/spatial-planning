@@ -56,7 +56,7 @@ onBeforeUnmount(() => {
   editorRef.value?.destroy()
 })
 
-const handleCreated = (editor: any) => {
+const handleCreated = editor => {
   editorRef.value = editor
 }
 
