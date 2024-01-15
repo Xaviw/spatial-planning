@@ -38,9 +38,7 @@ export const request = createAlova({
     (import.meta.env.VITE_API_PREFIX || ''),
   statesHook: vueHook,
   requestAdapter,
-  beforeRequest: _method => {
-    console.log(_method)
-  },
+  beforeRequest: _method => {},
   responded: {
     async onSuccess(response, method) {
       let json: Res<any> | undefined
