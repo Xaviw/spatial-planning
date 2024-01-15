@@ -20,7 +20,8 @@
           name="src"
           :rules="{ required: true, message: '请上传文件！' }"
         >
-          <AInput v-model:value="item.src" />
+          <!-- <AInput v-model:value="item.src" /> -->
+          <Upload />
         </AFormItem>
         <AFormItem label="封面图片" help="默认显示文件类型对应图片" name="img">
           <AInput v-model:value="item.img" />
@@ -53,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { CssSizeInput } from '@sp/shared/components'
+import { CssSizeInput, Upload } from '@sp/shared/components'
 import type { FileListItem } from '#/materials'
 
 const model = defineModel<FileListItem[]>({ default: [] })
