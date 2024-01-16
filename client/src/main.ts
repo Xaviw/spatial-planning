@@ -9,6 +9,6 @@ const pinia = createPinia()
 
 createApp(App).use(pinia).use(router).mount('#app')
 
-setErrorHandler(() => {
-  console.log('client error')
+setErrorHandler((...args: any[]) => {
+  console.log('client error', ...args)
 })

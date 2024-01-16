@@ -14,14 +14,14 @@ import type {
 import type { GetMapParams } from '@sp/shared/apis'
 
 export default defineMock({
-  '/api/map': ({ query }) => {
+  '/map': ({ query }) => {
     return {
       code: 1,
       data: genList(2, 4, 1, 3, 3, 6, query as GetMapParams),
       message: 'ok',
     }
   },
-  '[POST]/api/map': () => {
+  '[POST]/map': () => {
     return {
       code: 1,
       data: true,

@@ -1,6 +1,8 @@
 import { Modal, type ModalFuncProps } from 'ant-design-vue'
 import { isEqual } from 'lodash-es'
+import Spark from 'spark-md5'
 import type { OperationItem } from '#/business'
+import type { FileItemType } from '#/materials'
 import type { MaybeRef, ComputedRef } from 'vue'
 
 export * from './request'
@@ -170,4 +172,48 @@ export function generateRandomDecimal(
 
 export function getStaticFile(path: string) {
   return import.meta.env.VITE_STATIC_PATH + path
+}
+
+export function calcFileHash(file: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader()
+    fileReader.readAsArrayBuffer(file)
+    fileReader.onload = e => {
+      try {
+        const buffer = e.target!.result as ArrayBuffer
+        const spark = new Spark.ArrayBuffer()
+        spark.append(buffer)
+        resolve(spark.end())
+      } catch (error) {
+        reject(error)
+      }
+    }
+    fileReader.onerror = reject
+  })
+}
+
+export function getFileIconAndType(src: string): {
+  icon: string
+  type: FileItemType
+} {
+  const extName = /^.*\.(\w+)(\?.*)?$/.exec(src)?.[1]?.toLocaleLowerCase() ?? ''
+  if (
+    ['apng', 'avif', 'gif', 'jpeg', 'jpg', 'png', 'svg', 'webp'].includes(
+      extName,
+    )
+  ) {
+    return { icon: '', type: 'image' }
+  } else if (extName === 'docx' || extName === 'doc') {
+    return { icon: 'i-mdi:file-word', type: 'office' }
+  } else if (extName === 'xlsx' || extName === 'xls') {
+    return { icon: 'i-mdi:file-excel', type: 'office' }
+  } else if (extName === 'pptx' || extName === 'ppt') {
+    return { icon: 'i-mdi:file-powerpoint', type: 'office' }
+  } else if (['mp4', 'webm', 'ogv', 'mov', 'avi', 'mkv'].includes(extName)) {
+    return { icon: 'i-material-symbols:video-file', type: 'video' }
+  } else if (['mp3', 'wav', 'ogg', 'aac', 'm4a'].includes(extName)) {
+    return { icon: 'i-material-symbols:audio-file', type: 'audio' }
+  } else {
+    return { icon: 'i-mdi:file', type: 'other' }
+  }
 }

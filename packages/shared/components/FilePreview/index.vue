@@ -1,9 +1,11 @@
 <template>
-  <Modal :modelValue="model" @update:modelValue="e => (model = e)">
+  <Modal v-model="model">
     <i
       class="i-svg-spinners:12-dots-scale-rotate absolute left-50% top-50% translate--50% text-4xl"
     />
 
+    <!-- 图片 -->
+    <img v-if="type === 'image'" :src="src" class="relative" />
     <!-- 视频 -->
     <video
       ref="videoRef"
@@ -23,17 +25,16 @@
       class="relative h-80vh w-80vw"
       frameborder="0"
     />
-    <!-- TODO: PDF -->
   </Modal>
 </template>
 
 <script setup lang="ts">
 import { Modal } from '@sp/shared/components'
+import type { FileItemType } from '#/materials'
 
 const props = defineProps<{
-  type: string
+  type: FileItemType
   src: string
-  extName: string
 }>()
 
 const model = defineModel<boolean>({ default: false })

@@ -26,13 +26,13 @@
       <CssSizeInput v-model="formModel.height" />
     </AFormItem>
     <AFormItem label="图片" v-bind="validateInfos.data">
-      <AUpload />
+      <Upload v-model="formModel.data" accept="image/*" multiple />
     </AFormItem>
   </AForm>
 </template>
 
 <script setup lang="ts">
-import { CssSizeInput } from '@sp/shared/components'
+import { CssSizeInput, Upload } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import type { CarouselProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'

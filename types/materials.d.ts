@@ -218,6 +218,7 @@ export interface FileListProps {
   gap?: string
   data: FileListItem[]
 }
+export type FileItemType = 'image' | 'audio' | 'video' | 'office' | 'other'
 
 export interface CarouselProps {
   /**

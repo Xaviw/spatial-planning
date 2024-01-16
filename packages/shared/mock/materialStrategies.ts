@@ -75,15 +75,11 @@ export default {
         data: [
           {
             title: '图片',
-            img: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+            src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
           },
           {
             title: '文档',
             src: 'https://static-1252421604.cos.ap-guangzhou.myqcloud.com/vdp.docx',
-          },
-          {
-            title: 'pdf',
-            src: 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/examples/learning/helloworld.pdf',
           },
           {
             title: '表格',

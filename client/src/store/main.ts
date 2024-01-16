@@ -4,7 +4,6 @@ import { Modal } from 'ant-design-vue'
 import { h } from 'vue'
 import type { MenuItem, HandledMenu } from '#/business'
 
-console.log('mainStore')
 export const useMainStore = defineStore('main', () => {
   // -------------------------加载菜单-------------------------
   const menuData = ref()

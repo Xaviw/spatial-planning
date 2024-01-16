@@ -21,8 +21,6 @@
     "dev:manage": "pnpm -F @sp/manage dev",
     "lint": "pnpm -r run lint",
     "lint-staged": "lint-staged",
-    "mock:client": "pnpm -F @sp/client mock",
-    "mock:manage": "pnpm -F @sp/manage mock",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -52,6 +50,8 @@
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "pinia": "^2.1.7",
+    "spark-md5": "^3.0.2",
+    "uuid": "^9.0.1",
     "vue": "^3.4.3",
     "vue-codemirror": "^6.1.1",
     "vue-draggable-plus": "^0.2.7",
@@ -68,6 +68,7 @@
     "@types/lodash-es": "^4.17.11",
     "@types/mockjs": "^1.0.10",
     "@types/node": "^20.8.4",
+    "@types/spark-md5": "^3.0.4",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "@unocss/eslint-config": "^0.56.5",

@@ -1,7 +1,7 @@
 <template>
   <AForm>
     <AFormItem label="图片链接" v-bind="validateInfos.url">
-      <AInput v-model:value="formModel.url" />
+      <Upload v-model="formModel.url" :maxCount="1" accept="image/*" />
     </AFormItem>
 
     <AFormItem label="图层透明度">
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { Vector } from '@sp/shared/components'
+import { Vector, Upload } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import { Rule } from 'ant-design-vue/es/form'
 import type { AMap } from '@amap/amap-jsapi-types'

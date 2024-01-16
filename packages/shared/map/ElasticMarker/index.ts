@@ -54,7 +54,7 @@ export default {
     if (open) {
       mapStore.map?.on('click', e => add(mapStore, e))
     } else {
-      mapStore.map?.off('click', e => add(mapStore, e))
+      mapStore.map?.clearEvents('click')
     }
   },
   handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
@@ -66,10 +66,7 @@ export default {
         synchronization.bind(null, mapStore),
       )
     } else {
-      ;(mapStore.activeInstance as ElasticMarker).off(
-        'dragend',
-        synchronization.bind(null, mapStore),
-      )
+      ;(mapStore.activeInstance as ElasticMarker).clearEvents('dragend')
       ;(mapStore.activeInstance as ElasticMarker).setDraggable(false)
       ;(mapStore.activeInstance as ElasticMarker).setCursor('pointer')
     }

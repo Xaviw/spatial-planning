@@ -5,7 +5,6 @@ export const icons = [
   'i-mdi:file-powerpoint',
   'i-mdi:file-excel',
   'i-mdi:file-word',
-  'i-mdi:file-pdf',
   'i-mdi:file',
 
   'i-ant-design:close-circle-filled',

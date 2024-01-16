@@ -35,7 +35,7 @@ export default {
     if (open) {
       mapStore.map?.on('click', e => add(mapStore, e))
     } else {
-      mapStore.map?.off('click', e => add(mapStore, e))
+      mapStore.map?.clearEvents('click')
     }
   },
   cancelEdit: (

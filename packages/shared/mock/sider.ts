@@ -4,14 +4,14 @@ import materialStrategies from './materialStrategies'
 import type { GetSiderParams } from '@sp/shared/apis'
 
 export default defineMock({
-  '/api/sider': ({ query }) => {
+  '/sider': ({ query }) => {
     return {
       code: 1,
       data: genList(8, 50, false, query as GetSiderParams),
       message: 'ok',
     }
   },
-  '[POST]/api/sider': () => {
+  '[POST]/sider': () => {
     return {
       code: 1,
       data: true,

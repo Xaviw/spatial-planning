@@ -16,6 +16,14 @@ export type Config = Partial<AMap.MapOptions> & {
   controlbarPosition?: (number | null)[]
 }
 
+// -----------------附件-----------------
+export interface Attachment {
+  id: string
+  type: string
+  url: string
+  createTime: string
+}
+
 // -----------------菜单-----------------
 export interface MenuItem {
   id: string

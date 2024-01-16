@@ -30,6 +30,7 @@ const requestAdapter = createAlovaMockAdapter(mockGroups, {
   httpAdapter: GlobalFetch(),
   delay: 1000,
   mockRequestLogger: true,
+  // matchMode:'methodurl'
 })
 
 export const request = createAlova({

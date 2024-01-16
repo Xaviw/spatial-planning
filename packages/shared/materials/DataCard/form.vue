@@ -7,7 +7,7 @@
       <AInput v-model:value="formModel.content" />
     </AFormItem>
     <AFormItem label="图片" v-bind="validateInfos.img">
-      <AInput v-model:value="formModel.img" />
+      <Upload v-model="formModel.img" :maxCount="1" accept="image/*" />
     </AFormItem>
     <AFormItem
       label="支持预览"
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { CssSizeInput } from '@sp/shared/components'
+import { CssSizeInput, Upload } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import type { DataCardProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'

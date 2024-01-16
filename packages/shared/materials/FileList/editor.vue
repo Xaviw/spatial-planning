@@ -20,11 +20,10 @@
           name="src"
           :rules="{ required: true, message: '请上传文件！' }"
         >
-          <!-- <AInput v-model:value="item.src" /> -->
-          <Upload />
+          <Upload v-model="item.src" :maxCount="1" />
         </AFormItem>
         <AFormItem label="封面图片" help="默认显示文件类型对应图片" name="img">
-          <AInput v-model:value="item.img" />
+          <Upload v-model="item.img" :maxCount="1" accept="image/*" />
         </AFormItem>
         <AFormItem
           label="图片宽度"

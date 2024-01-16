@@ -10,9 +10,11 @@
     </AFormItem>
 
     <AFormItem label="图标">
-      <AInput
-        :value="formModel.styles?.[0]?.icon?.img"
-        @update:value="onUpdate('icon', 'img', $event)"
+      <Upload
+        :modelValue="formModel.styles?.[0]?.icon?.img"
+        @update:modelValue="onUpdate('icon', 'img', $event)"
+        :maxCount="1"
+        accept="image/*"
       />
     </AFormItem>
 
@@ -117,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { Vector } from '@sp/shared/components'
+import { Vector, Upload } from '@sp/shared/components'
 import { anchorOptions } from '@sp/shared/map'
 import { Form } from 'ant-design-vue'
 import type {

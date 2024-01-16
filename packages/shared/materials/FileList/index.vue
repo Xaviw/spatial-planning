@@ -13,21 +13,23 @@
       v-bind="item"
       class="flex flex-col items-center"
     >
-      <AImage
-        v-if="item.img"
-        :height="item.imgHeight"
-        :width="item.imgWidth"
-        :src="item.img"
-        :fallback="getStaticFile('/failed.png')"
+      <div
+        v-if="item.img || item.type === 'image'"
+        @click="onPreview(item)"
+        class="cursor-pointer"
       >
-        <template #previewMask>
-          <i class="i-ant-design:eye-outlined" />
-        </template>
-      </AImage>
+        <AImage
+          :height="item.imgHeight"
+          :width="item.imgWidth"
+          :src="item.img || item.src"
+          :fallback="getStaticFile('/failed.png')"
+          :preview="false"
+        />
+      </div>
 
       <i
         v-else
-        :class="[item.icon, 'text-64px', 'cursor-pointer', 'text-gradient']"
+        :class="[item.icon, 'text-64px', 'cursor-pointer', 'text-blue-3']"
         @click="onPreview(item)"
       />
 
@@ -38,20 +40,18 @@
       v-model="previewData.visible"
       :src="previewData.src"
       :type="previewData.type"
-      :extName="previewData.extName"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { getStaticFile } from '@sp/shared/utils'
-import FilePreview from './FilePreview.vue'
-import type { FileListProps, FileListItem } from '#/materials'
+import { FilePreview } from '@sp/shared/components'
+import { getStaticFile, getFileIconAndType } from '@sp/shared/utils'
+import type { FileListProps, FileListItem, FileItemType } from '#/materials'
 
 interface ResolvedFileItem extends FileListItem {
   icon?: string
-  type?: string
-  extName: string
+  type?: FileItemType
 }
 
 const props = withDefaults(defineProps<FileListProps>(), {
@@ -62,38 +62,19 @@ const props = withDefaults(defineProps<FileListProps>(), {
 
 const dataWithPreset = computed<ResolvedFileItem[]>(() => {
   return props.data.map(item => {
-    let icon = 'i-mdi:file'
-    let type
-    const extName =
-      /^.*\.(\w+)(\?.*)?$/.exec(item.src || '')?.[1]?.toLocaleLowerCase() ?? ''
-    if (extName === 'pdf') {
-      icon = 'i-mdi:file-pdf'
-      type = 'pdf'
-    } else if (extName === 'docx' || extName === 'doc') {
-      icon = 'i-mdi:file-word'
-      type = 'office'
-    } else if (extName === 'xlsx' || extName === 'xls') {
-      icon = 'i-mdi:file-excel'
-      type = 'office'
-    } else if (extName === 'pptx' || extName === 'ppt') {
-      icon = 'i-mdi:file-powerpoint'
-      type = 'office'
-    } else if (['mp4', 'webm', 'ogv', 'mov', 'avi', 'mkv'].includes(extName)) {
-      icon = 'i-material-symbols:video-file'
-      type = 'video'
-    } else if (['mp3', 'wav', 'ogg', 'aac', 'm4a'].includes(extName)) {
-      icon = 'i-material-symbols:audio-file'
-      type = 'audio'
-    }
-    return { ...item, icon, type, extName }
+    const { icon, type } = getFileIconAndType(item.src || '') || {}
+    return { ...item, icon, type }
   })
 })
 
-const previewData = reactive({
+const previewData = reactive<{
+  visible: boolean
+  src: string
+  type: FileItemType
+}>({
   visible: false,
   src: '',
-  type: 'audio',
-  extName: '',
+  type: 'image',
 })
 
 function onPreview(item: ResolvedFileItem) {
@@ -103,7 +84,6 @@ function onPreview(item: ResolvedFileItem) {
   } else {
     previewData.src = item.src
     previewData.type = item.type
-    previewData.extName = item.extName
     previewData.visible = true
   }
 }
