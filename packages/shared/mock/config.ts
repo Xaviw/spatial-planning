@@ -5,6 +5,7 @@ export default defineMock({
     return {
       code: 1,
       data: {
+        viewMode: '3D',
         mapStyle: 'blue',
         scalebar: true,
         scalebarPosition: [null, 5, null, 25],

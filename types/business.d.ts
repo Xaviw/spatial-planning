@@ -127,10 +127,14 @@ export type MarkerProps = Pick<
   'title' | 'zIndex' | 'angle' | 'zooms' | 'position'
 > & {
   position?: AMap.Vector2
-  icon?: string | AMap.IconOpts
+  icon?: {
+    size?: AMap.Vector2
+    imageOffset?: AMap.Vector2
+    image: string
+    imageSize?: AMap.Vector2
+  }
   content?: string
   anchor?: Anchor
-  size?: AMap.Vector2
   offset?: AMap.Vector2
   label?: {
     content: string

@@ -1,7 +1,7 @@
 <template>
   <Modal v-model="model">
     <i
-      class="i-svg-spinners:12-dots-scale-rotate absolute left-50% top-50% translate--50% text-4xl"
+      class="i-svg-spinners:12-dots-scale-rotate absolute left-50% top-50% translate--50% text-4xl text-white"
     />
 
     <!-- 图片 -->

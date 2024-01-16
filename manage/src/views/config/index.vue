@@ -198,7 +198,6 @@
           <ARadioGroup
             :options="mapStyleOptions"
             v-model:value="formModel.mapStyle"
-            @change="onMapStyleChange"
           />
 
           <div ref="container" class="h-30 flex-1"></div>
@@ -423,10 +422,17 @@ const mapStyleOptions = [
 ]
 
 const container = ref<HTMLDivElement | null>(null)
-const { map } = useMap(container, {
-  mapOptions: { mapStyle: `amap://styles/${formModel.value.mapStyle}` },
-})
-function onMapStyleChange() {
-  map.value.setMapStyle(`amap://styles/${formModel.value.mapStyle}`)
-}
+const { map } = useMap(container)
+
+watch(
+  () => formModel.value.mapStyle,
+  style => {
+    if (map.value && style) {
+      map.value.setMapStyle(`amap://styles/${formModel.value.mapStyle}`)
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 </script>

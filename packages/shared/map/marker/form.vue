@@ -14,14 +14,18 @@
     </AFormItem>
 
     <AFormItem label="图标">
-      <template v-if="!formModel.icon || typeof formModel.icon === 'string'">
-        <AInput v-model:value="formModel.icon" />
-      </template>
+      <Upload
+        :modelValue="formModel.icon?.image"
+        @update:modelValue="onIconUpdate($event, 'image')"
+        :maxCount="1"
+        accept="image/*"
+      />
     </AFormItem>
 
-    <AFormItem label="图标尺寸" help="图标宽、高">
+    <AFormItem label="图标尺寸" help="根据所设置的大小拉伸或压缩图片">
       <Vector
-        v-model="formModel.size"
+        :modelValue="formModel.icon?.imageSize"
+        @update:modelValue="onIconUpdate($event, 'imageSize')"
         :num="2"
         :props="[
           { addonBefore: '宽', addonAfter: '像素', min: 0 },
@@ -32,7 +36,38 @@
       />
     </AFormItem>
 
-    <AFormItem label="图标偏移量" help="图标在横、竖轴上偏移的位置">
+    <AFormItem label="图标显示尺寸" help="截取图标尺寸中的一部分显示">
+      <Vector
+        :modelValue="formModel.icon?.size"
+        @update:modelValue="onIconUpdate($event, 'size')"
+        :num="2"
+        :props="[
+          { addonBefore: '宽', addonAfter: '像素', min: 0 },
+          { addonBefore: '高', addonAfter: '像素', min: 0 },
+        ]"
+        direction="vertical"
+        gap="8px"
+      />
+    </AFormItem>
+
+    <AFormItem
+      label="图标偏移量"
+      help="当指定大图时，可通过“图标显示尺寸”和“图标偏移量”配合，显示图标的指定范围"
+    >
+      <Vector
+        :modelValue="formModel.icon?.imageOffset"
+        @update:modelValue="onIconUpdate($event, 'imageOffset')"
+        :num="2"
+        :props="[
+          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
+        ]"
+        direction="vertical"
+        gap="8px"
+      />
+    </AFormItem>
+
+    <AFormItem label="位置偏移量" help="锚点对准经纬度后在横、竖轴上的偏移量">
       <Vector
         v-model="formModel.offset"
         :num="2"
@@ -113,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import { CodeInput, Vector } from '@sp/shared/components'
+import { CodeInput, Vector, Upload } from '@sp/shared/components'
 import { anchorOptions, directionOptions } from '@sp/shared/map'
 import { Form } from 'ant-design-vue'
 import type { MarkerProps } from '#/business'
@@ -123,6 +158,16 @@ function onLabelUpdate(value: any, key: 'content' | 'direction' | 'offset') {
     formModel.value.label = {} as MarkerProps['label']
   }
   formModel.value.label![key] = value
+}
+
+function onIconUpdate(
+  value: any,
+  key: 'size' | 'imageOffset' | 'image' | 'imageSize',
+) {
+  if (!formModel.value.icon) {
+    formModel.value.icon = {} as MarkerProps['icon']
+  }
+  formModel.value.icon![key] = value
 }
 
 const formModel = ref<MarkerProps>({})

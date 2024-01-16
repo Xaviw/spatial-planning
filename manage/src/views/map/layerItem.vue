@@ -50,8 +50,18 @@
       />
     </td>
     <td class="w-60px text-center">
+      <Upload
+        v-if="editData"
+        v-model="editData.legendImg"
+        :maxCount="1"
+        accept="image/*"
+        height="40px"
+        width="40px"
+        :showHelp="false"
+        padding="0"
+      />
       <AImage
-        v-if="layer.legendImg"
+        v-else-if="layer.legendImg"
         :src="layer.legendImg"
         :fallback="getStaticFile('/failed.png')"
         :width="40"
@@ -125,6 +135,7 @@
 </template>
 
 <script setup lang="ts">
+import { Upload } from '@sp/shared/components'
 import { useMapStore } from '@sp/shared/map'
 import { getStaticFile } from '@sp/shared/utils'
 import { cloneDeep, omit } from 'lodash-es'

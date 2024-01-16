@@ -13,6 +13,7 @@
     }"
     @preview="onPreview"
     @remove="onRemove"
+    :class="maxCount === 1 && 'single-upload'"
   >
     <slot>
       <div
@@ -21,10 +22,15 @@
           !disabled &&
           (!maxCount || fileList.length < maxCount)
         "
-        class="flex flex-col items-center justify-center overflow-hidden text-gray-500"
+        class="flex flex-col items-center justify-center text-gray-500"
       >
         <span class="mb-1 text-4xl">+</span>
-        <span class="text-xs">{{ help || '上传' }}</span>
+        <div
+          class="max-h-13 overflow-hidden break-all p-1 text-xs"
+          v-show="showHelp"
+        >
+          {{ help || '上传' }}
+        </div>
       </div>
 
       <AButton
@@ -73,8 +79,18 @@ const props = withDefaults(
     disabled?: boolean
     /** @default 'picture-card' */
     listType?: 'text' | 'picture' | 'picture-card'
+    height?: string
+    width?: string
+    showHelp?: boolean
+    padding?: string
   }>(),
-  { listType: 'picture-card' },
+  {
+    listType: 'picture-card',
+    showHelp: true,
+    padding: '6px',
+    width: '100px',
+    height: '100px',
+  },
 )
 
 const attrs = useAttrs()
@@ -229,3 +245,25 @@ function onRemove(file: UploadFile) {
   }
 }
 </script>
+
+<style scoped>
+:deep(.ant-upload-list-item-container),
+:deep(.ant-upload-select) {
+  width: v-bind(width) !important;
+  height: v-bind(height) !important;
+}
+
+.single-upload :deep(.ant-upload-list-item-container),
+.single-upload :deep(.ant-upload-select) {
+  margin: 0 !important;
+}
+
+:deep(.ant-upload-list-item) {
+  padding: v-bind(padding) !important;
+}
+
+:deep(.ant-upload-list-item::before) {
+  width: calc(100% - v-bind(padding) - v-bind(padding)) !important;
+  height: calc(100% - v-bind(padding) - v-bind(padding)) !important;
+}
+</style>
