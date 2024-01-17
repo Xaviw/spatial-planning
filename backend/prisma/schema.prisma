@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 系统配置
+model Config {
+  id    Int    @id @default(autoincrement())
+  key   String @unique @db.VarChar(50)
+  value Json
+}
+
+// 附件管理
+model Attachment {
+  id         Int            @id @default(autoincrement())
+  type       AttachmentType
+  url        String         @unique @db.VarChar(120)
+  createTime DateTime       @default(now())
+}
+
+enum AttachmentType {
+  image
+  audio
+  vedio
+  office
+  other
+}
+
+// 菜单
+model Menu {
+  id         Int       @id @default(autoincrement())
+  parentId   Int?
+  name       String    @db.VarChar(60)
+  sort       Int
+  status     Boolean   @default(true)
+  createTime DateTime  @default(now())
+  updateTime DateTime  @updatedAt
+  isDelete   Boolean   @default(false)
+  Sidebar    Sidebar[]
+  Layer      Layer[]
+
+  @@index([isDelete])
+}
+
+// 物料
+model Material {
+  id        Int          @id @default(autoincrement())
+  type      MaterialType
+  props     Json
+  isTitle   Boolean
+  sidebarId Int?
+  sidebar   Sidebar?     @relation(fields: [sidebarId], references: [id])
+  overlayId Int?
+  overlay   Overlay?     @relation(fields: [overlayId], references: [id])
+
+  @@index([isTitle, sidebarId, overlayId])
+}
+
+enum MaterialType {
+  BarChart
+  Carousel
+  Collapse
+  DataCard
+  Description
+  FileList
+  LineChart
+  PieChart
+  Progress
+  SubTitle
+  Table
+  Timeline
+  Title
+}
+
+// 侧边栏
+model Sidebar {
+  id         Int            @id @default(autoincrement())
+  menuId     Int
+  menu       Menu           @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  position   SidebarPositon
+  sort       Int
+  status     Boolean        @default(true)
+  createTime DateTime       @default(now())
+  updateTime DateTime       @updatedAt
+  isDelete   Boolean        @default(false)
+  Material   Material[]
+
+  @@index([position, menuId, sort, isDelete])
+}
+
+enum SidebarPositon {
+  left
+  right
+}
+
+// 图层
+model Layer {
+  id         Int       @id @default(autoincrement())
+  menuId     Int
+  menu       Menu      @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  asLegend   Boolean   @default(false)
+  name       String    @db.VarChar(60)
+  legendImg  String    @db.VarChar(120)
+  sort       Int
+  status     Boolean   @default(true)
+  createTime DateTime  @default(now())
+  updateTime DateTime  @updatedAt
+  isDelete   Boolean   @default(false)
+  Overlay    Overlay[]
+
+  @@index([menuId, sort, isDelete])
+}
+
+// 覆盖物
+model Overlay {
+  id          Int         @id @default(autoincrement())
+  layerId     Int
+  layer       Layer       @relation(fields: [layerId], references: [id], onDelete: Cascade)
+  type        OverlayType
+  name        String      @db.VarChar(60)
+  props       Json
+  detailTitle String      @db.VarChar(60)
+  detailWidth String      @db.VarChar(20)
+  status      Boolean     @default(true)
+  createTime  DateTime    @default(now())
+  updateTime  DateTime    @updatedAt
+  isDelete    Boolean     @default(false)
+  Material    Material[]
+
+  @@index([layerId, isDelete])
+}
+
+enum OverlayType {
+  Marker
+  Polyline
+  BezierCurve
+  Polygon
+  Rectangle
+  Circle
+  Ellipse
+  Text
+  LabelMarker
+  ElasticMarker
+  ImageLayer
+}
