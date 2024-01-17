@@ -21,7 +21,8 @@
     "dev:manage": "pnpm -F @sp/manage dev",
     "lint": "pnpm -r run lint",
     "lint-staged": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prisma:migrate": "pnpm -F @sp/backend migrate"
   },
   "lint-staged": {
     "*.{js,ts,tsx,vue}": [
