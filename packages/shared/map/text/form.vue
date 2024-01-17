@@ -5,14 +5,14 @@
     </AFormItem>
 
     <AFormItem label="内容">
-      <ATextarea allowClear autoSize v-model:value="formModel.text" />
+      <ATextarea autosize allowclear v-model:value="formModel.text" />
     </AFormItem>
 
     <AFormItem label="锚点位置" help="标记对齐坐标点的位置">
       <ASelect :options="anchorOptions" v-model:value="formModel.anchor" />
     </AFormItem>
 
-    <AFormItem label="图标偏移量" help="横、竖轴上偏移的位置">
+    <AFormItem label="文本偏移量" help="横、竖轴上偏移的位置">
       <Vector
         v-model="formModel.offset"
         :num="2"

@@ -46,7 +46,7 @@ export default {
       mapStore.map?.on('click', e => add(mapStore, e))
     } else {
       mapStore.map?.setDefaultCursor('inherit')
-      mapStore.map?.off('click', e => add(mapStore, e))
+      mapStore.map?.clearEvents('click')
     }
   },
   handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
