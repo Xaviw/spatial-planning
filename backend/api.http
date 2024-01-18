@@ -1,0 +1,38 @@
+### 需要安装 REST Client 插件才能使用，点击请求上方的 Send Request 发送
+### 获取菜单
+GET http://localhost:3000/menu?filter=false HTTP/1.1
+
+### 新增菜单
+POST http://localhost:3000/menu HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "一级菜单4"
+}
+
+### 修改菜单
+PUT http://localhost:3000/menu HTTP/1.1
+Content-Type: application/json
+
+{
+  "id":"5dadbd4f-ec67-4096-950a-48f71a9aeadf",
+  "name": "一级菜单33"
+}
+
+### 删除菜单
+DELETE  http://localhost:3000/menu HTTP/1.1
+Content-Type: application/json
+
+{
+  "id":"48ab32c7-99fa-499c-9e8a-0debc8dc9868"
+}
+
+### 移动菜单
+POST http://localhost:3000/menu/move HTTP/1.1
+Content-Type: application/json
+
+{
+  "id":"0eeeaf5d-5458-47e7-81bb-e47e27e3a5e4",
+  "currentIndex": 0,
+  "currentParentId": null
+}

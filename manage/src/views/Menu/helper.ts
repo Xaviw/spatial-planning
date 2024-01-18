@@ -17,15 +17,15 @@ export function move(
   treeData: MenuItem[],
   data: {
     oldIndex: number
-    oldParent?: string
+    oldParentId?: string
     currentIndex: number
-    currentParent?: string
+    currentParentId?: string
   },
 ) {
-  const { oldIndex, oldParent, currentIndex, currentParent } = data
+  const { oldIndex, oldParentId, currentIndex, currentParentId } = data
   let node: MenuItem | undefined
 
-  if (oldParent) {
+  if (oldParentId) {
     loop(
       treeData,
       'id',
@@ -34,7 +34,7 @@ export function move(
         node = item.children![oldIndex]
         item.children?.splice(oldIndex, 1)
       },
-      oldParent,
+      oldParentId,
     )
   } else {
     node = treeData[oldIndex]
@@ -45,7 +45,7 @@ export function move(
     throw new Error('未获取到拖拽节点！')
   }
 
-  if (currentParent) {
+  if (currentParentId) {
     loop(
       treeData,
       'id',
@@ -54,7 +54,7 @@ export function move(
         item.children = item.children || []
         item.children.splice(currentIndex, 0, node!)
       },
-      currentParent,
+      currentParentId,
     )
   } else {
     treeData.splice(currentIndex, 0, node)

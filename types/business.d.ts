@@ -45,6 +45,12 @@ export interface HandledMenu {
   children?: HandledMenu[]
 }
 
+export interface MenuMoveParams {
+  id: string
+  currentParentId?: string
+  currentIndex: number
+}
+
 // -----------------侧边栏-----------------
 export type SiderComponents =
   | 'BarChart'

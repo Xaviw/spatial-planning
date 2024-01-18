@@ -39,7 +39,13 @@ export const request = createAlova({
     (import.meta.env.VITE_API_PREFIX || ''),
   statesHook: vueHook,
   requestAdapter,
-  beforeRequest: _method => {},
+  timeout: 1000 * 60,
+  // 默认不使用缓存
+  localCache: null,
+  cacheLogger: false,
+  beforeRequest: method => {
+    method.config.headers['Content-Type'] = 'application/json;charset=UTF-8'
+  },
   responded: {
     async onSuccess(response, method) {
       let json: Res<any> | undefined
@@ -90,10 +96,6 @@ export const request = createAlova({
       }
     },
   },
-  timeout: 1000 * 60,
-  // 默认不使用缓存
-  localCache: null,
-  cacheLogger: false,
 })
 
 bootSilentFactory({

@@ -43,6 +43,12 @@
             </div>
           </template>
         </ATree>
+        
+        <AEmpty
+          v-else
+          description="请添加菜单"
+          class="h-full flex flex-col items-center justify-center"
+        />
       </div>
     </div>
 
@@ -52,6 +58,13 @@
           :disabled="!selectedKeys[0]"
           :labelCol="{ style: { width: '82px' } }"
         >
+          <AFormItem
+            label="父级菜单ID"
+            v-bind="validateInfos.parentId"
+            class="hidden"
+          >
+            <AInput :value="formData.parentId" />
+          </AFormItem>
           <AFormItem
             label="父级菜单"
             v-bind="validateInfos.parentName"
@@ -236,10 +249,21 @@ async function onRemove(id: string) {
 }
 
 function onDrop(e: AntTreeNodeDropEvent) {
+  /**
+   * 拖动到节点上时（dropToGap=true，作为子节点）：
+   * dropPosition=目标节点下标
+   *
+   * 跨层级拖动时：
+   * dropPosition=目标位置上一个元素（展开后的）的下标+1
+   *
+   * 同级拖动时：
+   * 向上拖动dropPosition=目标位置上一个元素（展开后的）的下标+1
+   * 向下拖动dropPosition=目标位置上一个元素（展开后的）的下标-1
+   */
   let oldIndex: number,
-    oldParent: string | undefined,
+    oldParentId: string | undefined,
     currentIndex: number,
-    currentParent: string | undefined
+    currentParentId: string | undefined
 
   loop(
     treeData.value,
@@ -247,34 +271,50 @@ function onDrop(e: AntTreeNodeDropEvent) {
     'children',
     (_item, index, _data, parent) => {
       oldIndex = index
-      oldParent = parent?.id
+      oldParentId = parent?.id
     },
     e.dragNode.key as string,
   )
 
   if (e.dropToGap) {
-    currentIndex = e.dropPosition
     loop(
       treeData.value,
       'id',
       'children',
       (_item, _index, _data, parent) => {
-        currentParent = parent?.id
+        currentParentId = parent?.id
       },
       e.node.key as string,
     )
+    if (e.dragNode.parentId === e.node.parentId) {
+      if (e.dropPosition < 0) {
+        currentIndex = 0
+      } else {
+        const oldIndex = e.dragNode.pos!.split('-').pop()!
+        const dropIndex = e.node.pos!.split('-').pop()!
+        if (dropIndex > oldIndex) {
+          currentIndex = e.dropPosition - 1
+        } else {
+          currentIndex = e.dropPosition
+        }
+      }
+    } else {
+      currentIndex = e.dropPosition
+    }
   } else {
     currentIndex = 0
-    currentParent = e.node.key as string
+    currentParentId = e.node.key as string
   }
 
   const param = {
     oldIndex: oldIndex!,
-    oldParent,
-    currentIndex: currentIndex!,
-    currentParent,
+    oldParentId,
+    currentIndex: currentIndex < 0 ? 0 : currentIndex,
+    currentParentId,
     id: e.dragNode.key,
   }
+
+  if (!currentParentId && oldIndex! === currentIndex) return
 
   sendMove(param)
 }

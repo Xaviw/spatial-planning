@@ -12,14 +12,14 @@ datasource db {
 
 // 系统配置
 model Config {
-  id    Int    @id @default(autoincrement())
+  id    String @id @default(uuid())
   key   String @unique @db.VarChar(50)
   value Json
 }
 
 // 附件管理
 model Attachment {
-  id         Int            @id @default(autoincrement())
+  id         String         @id @default(uuid())
   type       AttachmentType
   url        String         @unique @db.VarChar(120)
   createTime DateTime       @default(now())
@@ -35,8 +35,8 @@ enum AttachmentType {
 
 // 菜单
 model Menu {
-  id         Int       @id @default(autoincrement())
-  parentId   Int?
+  id         String    @id @default(uuid())
+  parentId   String?
   name       String    @db.VarChar(60)
   sort       Int
   status     Boolean   @default(true)
@@ -51,14 +51,14 @@ model Menu {
 
 // 物料
 model Material {
-  id        Int          @id @default(autoincrement())
+  id        String       @id @default(uuid())
   type      MaterialType
   props     Json
   isTitle   Boolean
-  sidebarId Int?
-  sidebar   Sidebar?     @relation(fields: [sidebarId], references: [id])
-  overlayId Int?
-  overlay   Overlay?     @relation(fields: [overlayId], references: [id])
+  sidebarId String?
+  sidebar   Sidebar?     @relation(fields: [sidebarId], references: [id], onDelete: Cascade)
+  overlayId String?
+  overlay   Overlay?     @relation(fields: [overlayId], references: [id], onDelete: Cascade)
 
   @@index([isTitle, sidebarId, overlayId])
 }
@@ -81,8 +81,8 @@ enum MaterialType {
 
 // 侧边栏
 model Sidebar {
-  id         Int            @id @default(autoincrement())
-  menuId     Int
+  id         String         @id @default(uuid())
+  menuId     String
   menu       Menu           @relation(fields: [menuId], references: [id], onDelete: Cascade)
   position   SidebarPositon
   sort       Int
@@ -102,8 +102,8 @@ enum SidebarPositon {
 
 // 图层
 model Layer {
-  id         Int       @id @default(autoincrement())
-  menuId     Int
+  id         String    @id @default(uuid())
+  menuId     String
   menu       Menu      @relation(fields: [menuId], references: [id], onDelete: Cascade)
   asLegend   Boolean   @default(false)
   name       String    @db.VarChar(60)
@@ -120,8 +120,8 @@ model Layer {
 
 // 覆盖物
 model Overlay {
-  id          Int         @id @default(autoincrement())
-  layerId     Int
+  id          String      @id @default(uuid())
+  layerId     String
   layer       Layer       @relation(fields: [layerId], references: [id], onDelete: Cascade)
   type        OverlayType
   name        String      @db.VarChar(60)

@@ -3,7 +3,7 @@ import Mock from 'mockjs'
 import type { MenuItem } from '#/business'
 
 export default defineMock({
-  '/menu': () => {
+  '-/menu': () => {
     const data: MenuItem[] = [
       {
         id: '1',
@@ -71,28 +71,28 @@ export default defineMock({
       message: 'ok',
     }
   },
-  '[POST]/menu': () => {
+  '-[POST]/menu': () => {
     return {
       code: 1,
       data: Mock.Random.id(),
       message: 'ok',
     }
   },
-  '[PUT]/menu': () => {
+  '-[PUT]/menu': () => {
     return {
       code: 1,
       data: true,
       message: 'ok',
     }
   },
-  '[DELETE]/menu': () => {
+  '-[DELETE]/menu': () => {
     return {
       code: 1,
       data: true,
       message: 'ok',
     }
   },
-  '[POST]/menu/move': () => {
+  '-[POST]/menu/move': () => {
     return {
       code: 1,
       data: true,

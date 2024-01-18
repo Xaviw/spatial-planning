@@ -1,6 +1,6 @@
 import 'alova/GlobalFetch'
 import { request } from '@sp/shared/utils'
-import type { MenuItem } from '#/business'
+import type { MenuItem, MenuMoveParams } from '#/business'
 import type { RequestMeta } from '#/request'
 
 export function getMenu(
@@ -25,11 +25,6 @@ export function removeMenu(id: string) {
   return request.Delete<boolean>('/menu', { id })
 }
 
-export function moveMenu(data: {
-  oldParentId?: string
-  oldIndex: number
-  currentParentId?: string
-  currentIndex: number
-}) {
+export function moveMenu(data: MenuMoveParams) {
   return request.Post<boolean>('/menu/move', data)
 }

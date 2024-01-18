@@ -45,10 +45,7 @@ export class AttachmentController {
   @Post()
   @UseInterceptors(FileInterceptor('file', { storage }))
   upload(@UploadedFile() file: Express.Multer.File) {
-    return {
-      code: 1,
-      data: `${URL_BASE}/${file.filename}`,
-    }
+    return `${URL_BASE}/${file.filename}`
   }
 
   @Get('merge')
@@ -77,9 +74,6 @@ export class AttachmentController {
       pos += fs.statSync(chunkPath).size
     })
 
-    return {
-      code: 1,
-      data: `${URL_BASE}/${fileName}`,
-    }
+    return `${URL_BASE}/${fileName}`
   }
 }

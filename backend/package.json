@@ -4,9 +4,12 @@
   "private": true,
   "description": "后端",
   "scripts": {
-    "build": "nest build",
-    "dev": "nest start --watch",
-    "migrate": "dotenv -e ../.env -c npx prisma migrate dev"
+    "build": "dotenv -e ../.env -c -- nest build",
+    "clean": "rimraf node_modules dist",
+    "dev": "dotenv -e ../.env -c -- nest start --watch",
+    "lint": "eslint --max-warnings 0 \"src/**/*.ts\" --fix && prettier --write .",
+    "migrate": "dotenv -e ../.env -c -- npx prisma migrate dev",
+    "migrate:reset": "dotenv -e ../.env -c -- npx prisma migrate reset"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
