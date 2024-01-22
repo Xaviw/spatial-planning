@@ -1,22 +1,23 @@
 import { Module, ValidationPipe } from '@nestjs/common'
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
+import { APP_PIPE } from '@nestjs/core'
+import { JwtModule } from '@nestjs/jwt'
 import { AttachmentModule } from './attachment/attachment.module'
+import { GlobalModule } from './global/global.module'
 import { MenuModule } from './menu/menu.module'
-import { PrismaModule } from './prisma/prisma.module'
-import { ResponseFilter } from './utils/response.filter'
-import { ResponseInterceptor } from './utils/response.interceptor'
+import { UserModule } from './user/user.module'
 
 @Module({
-  imports: [AttachmentModule, MenuModule, PrismaModule],
+  imports: [
+    GlobalModule,
+    AttachmentModule,
+    MenuModule,
+    UserModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+    }),
+  ],
   providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: ResponseFilter,
-    },
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({ whitelist: true }),

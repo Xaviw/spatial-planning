@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-export default createRouter({
+const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
@@ -9,9 +9,11 @@ export default createRouter({
     },
     {
       path: '/login',
+      name: 'login',
       component: () => import('../views/login.vue'),
       meta: {
         layout: 'custom',
+        noNeedLogin: true,
       },
     },
     {
@@ -43,6 +45,33 @@ export default createRouter({
     {
       path: '/:pathMatch(.*)*',
       component: () => import('../views/notFound.vue'),
+      name: 'notFound',
+      meta: {
+        layout: 'custom',
+        noNeedLogin: true,
+      },
     },
   ],
 })
+
+router.beforeEach((to, from) => {
+  // 根据token判断登录
+  const accessToken = localStorage.getItem('access_token')
+  // 未登录且前往需要登录的页面：重定向到登录页
+  if (!to.meta.noNeedLogin && !accessToken) {
+    return { name: 'login', replace: true }
+  }
+  if (accessToken && to.name === 'login') {
+    // 已登录前往登录页，且来自于登录页面或404页面：跳转首页
+    if (
+      typeof from.name === 'string' &&
+      ['login', 'notFound'].includes(from.name)
+    ) {
+      return { name: 'config', replace: true }
+    }
+    // 已登录前往登录页：取消跳转
+    return false
+  }
+})
+
+export default router

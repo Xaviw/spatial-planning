@@ -8,12 +8,12 @@
     "clean": "rimraf node_modules dist",
     "dev": "dotenv -e ../.env -c -- nest start --watch",
     "lint": "eslint --max-warnings 0 \"src/**/*.ts\" --fix && prettier --write .",
-    "migrate": "dotenv -e ../.env -c -- npx prisma migrate dev",
-    "migrate:reset": "dotenv -e ../.env -c -- npx prisma migrate reset"
+    "migrate": "dotenv -e ../.env -c -- npx prisma migrate dev"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "5.8.1",
     "class-transformer": "^0.5.1",

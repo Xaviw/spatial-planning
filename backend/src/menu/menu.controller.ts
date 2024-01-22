@@ -7,11 +7,14 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common'
+import { LoginGuard } from '../utils/login.guard'
 import { CreateMenuDto, MoveMenuDto, UpdateMenuDto } from './dto'
 import { MenuService } from './menu.service'
 
 @Controller('menu')
+@UseGuards(LoginGuard)
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 

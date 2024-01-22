@@ -1,7 +1,7 @@
 import { createAlovaMockAdapter } from '@alova/mock'
 import { bootSilentFactory } from '@alova/scene-vue'
 import mockGroups from '@sp/shared/mock'
-import { createAlova } from 'alova'
+import { createAlova, Method } from 'alova'
 import GlobalFetch from 'alova/GlobalFetch'
 import vueHook from 'alova/vue'
 import { message, notification, Modal } from 'ant-design-vue'
@@ -9,6 +9,7 @@ import type { Res } from '#/request'
 
 type ErrorHandler = (
   response: Response,
+  method: Method,
   result?: Res<any>,
 ) => void | Promise<void>
 
@@ -45,11 +46,26 @@ export const request = createAlova({
   cacheLogger: false,
   beforeRequest: method => {
     method.config.headers['Content-Type'] = 'application/json;charset=UTF-8'
+
+    const accessToken = localStorage.getItem('accessToken')
+    const refreshToken = localStorage.getItem('refreshToken')
+
+    if (accessToken && refreshToken) {
+      method.config.headers['access_token'] = accessToken
+      method.config.headers['refresh_token'] = refreshToken
+    }
   },
   responded: {
     async onSuccess(response, method) {
       let json: Res<any> | undefined
       let errMsg: string
+
+      const accessToken = response.headers['access_token']
+      const refreshToken = response.headers['refresh_token']
+      if (accessToken && refreshToken) {
+        localStorage.setItem('access_token', accessToken)
+        localStorage.setItem('refresh_token', refreshToken)
+      }
 
       try {
         json = await response.json()
@@ -81,7 +97,7 @@ export const request = createAlova({
           message.error(errMsg)
         }
 
-        await errorHandler(response, json)
+        await errorHandler(response, method, json)
 
         return Promise.reject(json)
       }
@@ -94,6 +110,7 @@ export const request = createAlova({
       } else if (error.message?.includes('Failed to fetch')) {
         message.error('请求失败，请检查您的网络！')
       }
+      throw error
     },
   },
 })
