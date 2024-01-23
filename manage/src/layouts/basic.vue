@@ -14,13 +14,13 @@
       <ADropdown>
         <div class="flex items-center">
           <i class="i-material-symbols:account-circle text-3xl" />
-          <span class="ml-2 text-lg">管理员</span>
+          <span class="ml-2 text-lg">{{ username }}</span>
         </div>
 
         <template #overlay>
           <AMenu>
-            <AMenuItem>账号设置</AMenuItem>
-            <AMenuItem>退出登录</AMenuItem>
+            <AMenuItem @click="$router.push('/update')">账号设置</AMenuItem>
+            <AMenuItem @click="onLogout">退出登录</AMenuItem>
           </AMenu>
         </template>
       </ADropdown>
@@ -44,13 +44,16 @@
 </template>
 
 <script setup lang="ts">
+import { modal } from '@sp/shared/utils'
 import menu from '../routes/menu'
+import { useUserStore } from '../stores/user'
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 
 const AppTitle = import.meta.env.VITE_TITLE
 const selectedKeys = ref<string[]>([])
 const route = useRoute()
 const router = useRouter()
+const { logout, username } = useUserStore()
 
 watchEffect(() => {
   selectedKeys.value = [route.name as string]
@@ -58,5 +61,12 @@ watchEffect(() => {
 
 function onMenuClick({ key }: MenuInfo) {
   router.push({ name: key as string })
+}
+
+async function onLogout() {
+  await modal('confirm', {
+    title: '是否确定退出登录？',
+  })
+  logout()
 }
 </script>

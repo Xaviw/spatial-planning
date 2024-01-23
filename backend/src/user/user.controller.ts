@@ -6,11 +6,12 @@ import {
   Put,
   UseGuards,
   Res,
+  HttpCode,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Response } from 'express'
 import { LoginGuard } from '../utils/login.guard'
-import { CreateUserDto, UpdateUserDto } from './dto'
+import { CreateUserDto, UpdateUserDto, LoginDto } from './dto'
 import { UserService } from './user.service'
 
 @Controller('user')
@@ -21,7 +22,6 @@ export class UserController {
   ) {}
 
   @Post()
-  @UseGuards(LoginGuard)
   register(@Body() user: CreateUserDto) {
     return this.userService.register(user)
   }
@@ -39,8 +39,9 @@ export class UserController {
   }
 
   @Post('login')
+  @HttpCode(200)
   async login(
-    @Body() user: CreateUserDto,
+    @Body() user: LoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
     const { id, name } = await this.userService.login(user)
@@ -55,7 +56,9 @@ export class UserController {
       { expiresIn: '7d' },
     )
 
-    response.setHeader('access_token', accessToken)
-    response.setHeader('refresh_token', refreshToken)
+    response.setHeader('access-token', accessToken)
+    response.setHeader('refresh-token', refreshToken)
+
+    return { name, id }
   }
 }

@@ -18,7 +18,7 @@ export const useMainStore = defineStore('main', () => {
   } = useRequest(getMenu(true), { initialData: [] })
 
   onMenuError(() => {
-    Modal.confirm({
+    const { destroy } = Modal.confirm({
       title: '菜单请求失败！',
       content: '是否尝试重新获取菜单？',
       centered: true,
@@ -36,7 +36,10 @@ export const useMainStore = defineStore('main', () => {
       cancelButtonProps: {
         ghost: true,
       },
-      onOk: sendMenu,
+      onOk: () => {
+        destroy()
+        sendMenu()
+      },
     })
   })
 

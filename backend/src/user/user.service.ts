@@ -23,11 +23,28 @@ export class UserService {
   }
 
   async update(user: UpdateUserDto) {
-    await this.checkName(user.name)
+    const info = await this.prisma.user.findUnique({ where: { id: user.id } })
 
-    user.password = md5(user.password)
+    if (!info) {
+      throw new HttpException('该用户不存在', 400)
+    }
 
-    await this.prisma.user.update({ where: { id: user.id }, data: user })
+    if (info.name !== user.name) {
+      await this.checkName(user.name)
+    }
+
+    const oldPassword = md5(user.oldPassword)
+
+    if (oldPassword !== info.password) {
+      throw new HttpException('旧密码错误！', 400)
+    }
+
+    const password = md5(user.password)
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { name: user.name, password },
+    })
   }
 
   async remove(id: string) {

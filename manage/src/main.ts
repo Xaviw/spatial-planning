@@ -11,11 +11,9 @@ const pinia = createPinia()
 createApp(App).use(router).use(pinia).mount('#app')
 
 setErrorHandler(response => {
-  const router = useRouter()
-
   if (response.status === 401) {
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
+    localStorage.removeItem('Access-Token')
+    localStorage.removeItem('Refresh-Token')
     router.replace({ name: 'login' })
   }
 })

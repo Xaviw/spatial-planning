@@ -31,13 +31,10 @@ const requestAdapter = createAlovaMockAdapter(mockGroups, {
   httpAdapter: GlobalFetch(),
   delay: 1000,
   mockRequestLogger: true,
-  // matchMode:'methodurl'
 })
 
 export const request = createAlova({
-  baseURL:
-    (import.meta.env.VITE_API_BASE || '') +
-    (import.meta.env.VITE_API_PREFIX || ''),
+  baseURL: import.meta.env.VITE_API_BASE,
   statesHook: vueHook,
   requestAdapter,
   timeout: 1000 * 60,
@@ -47,12 +44,12 @@ export const request = createAlova({
   beforeRequest: method => {
     method.config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 
-    const accessToken = localStorage.getItem('accessToken')
-    const refreshToken = localStorage.getItem('refreshToken')
+    const accessToken = localStorage.getItem('Access-Token')
+    const refreshToken = localStorage.getItem('Refresh-Token')
 
     if (accessToken && refreshToken) {
-      method.config.headers['access_token'] = accessToken
-      method.config.headers['refresh_token'] = refreshToken
+      method.config.headers['Access-Token'] = accessToken
+      method.config.headers['Refresh-Token'] = refreshToken
     }
   },
   responded: {
@@ -60,11 +57,11 @@ export const request = createAlova({
       let json: Res<any> | undefined
       let errMsg: string
 
-      const accessToken = response.headers['access_token']
-      const refreshToken = response.headers['refresh_token']
+      const accessToken = response.headers.get('Access-Token')
+      const refreshToken = response.headers.get('Refresh-Token')
       if (accessToken && refreshToken) {
-        localStorage.setItem('access_token', accessToken)
-        localStorage.setItem('refresh_token', refreshToken)
+        localStorage.setItem('Access-Token', accessToken)
+        localStorage.setItem('Refresh-Token', refreshToken)
       }
 
       try {

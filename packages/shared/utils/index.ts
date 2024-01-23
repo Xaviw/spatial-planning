@@ -171,7 +171,7 @@ export function generateRandomDecimal(
 }
 
 export function getStaticFile(path: string) {
-  return import.meta.env.VITE_STATIC_PATH + path
+  return import.meta.env.VITE_HOST + import.meta.env.VITE_STATIC_PATH + path
 }
 
 export function calcFileHash(file: Blob): Promise<string> {

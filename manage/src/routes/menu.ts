@@ -1,7 +1,7 @@
 export default [
   {
     label: '系统设置',
-    key: 'config',
+    key: 'home',
     icon: () => h('i', { class: 'i-ant-design:setting-outlined' }),
   },
   {

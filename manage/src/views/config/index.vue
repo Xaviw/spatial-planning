@@ -425,8 +425,8 @@ const container = ref<HTMLDivElement | null>(null)
 const { map } = useMap(container)
 
 watch(
-  () => formModel.value.mapStyle,
-  style => {
+  [() => formModel.value.mapStyle, map],
+  ([style]) => {
     if (map.value && style) {
       map.value.setMapStyle(`amap://styles/${formModel.value.mapStyle}`)
     }

@@ -4,10 +4,6 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: '/',
-      redirect: '/login',
-    },
-    {
       path: '/login',
       name: 'login',
       component: () => import('../views/login.vue'),
@@ -17,14 +13,27 @@ const router = createRouter({
       },
     },
     {
-      path: '/config',
-      name: 'config',
+      path: '/update',
+      component: () => import('../views/updateInfo.vue'),
+      meta: {
+        layout: 'basic',
+      },
+    },
+    {
+      path: '/',
+      name: 'home',
       component: () => import('../views/config/index.vue'),
+      meta: {
+        layout: 'basic',
+      },
     },
     {
       path: '/menu',
       name: 'menu',
       component: () => import('../views/menu/index.vue'),
+      meta: {
+        layout: 'basic',
+      },
     },
     {
       path: '/sider',
@@ -32,6 +41,7 @@ const router = createRouter({
       component: () => import('../views/sider/index.vue'),
       meta: {
         keepAlive: true,
+        layout: 'basic',
       },
     },
     {
@@ -40,6 +50,7 @@ const router = createRouter({
       component: () => import('../views/map/index.vue'),
       meta: {
         keepAlive: true,
+        layout: 'basic',
       },
     },
     {
@@ -56,7 +67,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   // 根据token判断登录
-  const accessToken = localStorage.getItem('access_token')
+  const accessToken = localStorage.getItem('Access-Token')
   // 未登录且前往需要登录的页面：重定向到登录页
   if (!to.meta.noNeedLogin && !accessToken) {
     return { name: 'login', replace: true }
@@ -67,7 +78,7 @@ router.beforeEach((to, from) => {
       typeof from.name === 'string' &&
       ['login', 'notFound'].includes(from.name)
     ) {
-      return { name: 'config', replace: true }
+      return { name: 'home', replace: true }
     }
     // 已登录前往登录页：取消跳转
     return false

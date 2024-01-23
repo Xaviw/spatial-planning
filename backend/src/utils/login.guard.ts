@@ -25,16 +25,16 @@ export class LoginGuard implements CanActivate {
     const request: Request = http.getRequest()
     const response: Response = http.getResponse()
 
-    const accessToken = request.header('access_token')
-    const refreshToken = request.header('refresh_token')
+    const accessToken = request.header('Access-Token')
+    const refreshToken = request.header('Refresh-Token')
 
     if (!accessToken || !refreshToken) {
       throw new UnauthorizedException('请先登录！')
     }
 
-    // 校验access_token
+    // 校验Access-Token
     return this.jwtService.verifyAsync(accessToken).catch(() => {
-      // access_token无效时校验refresh_token
+      // Access-Token无效时校验Refresh-Token
       return this.jwtService
         .verifyAsync(refreshToken)
         .then(async ({ id }) => {
@@ -55,8 +55,8 @@ export class LoginGuard implements CanActivate {
 
           const refreshToken = this.jwtService.sign({ id }, { expiresIn: '7d' })
 
-          response.setHeader('access_token', accessToken)
-          response.setHeader('refresh_token', refreshToken)
+          response.setHeader('access-token', accessToken)
+          response.setHeader('refresh-token', refreshToken)
 
           return true
         })

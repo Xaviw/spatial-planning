@@ -7,5 +7,5 @@ export function getConfig() {
 }
 
 export function setConfig(data: Config) {
-  return request.Post<boolean>('/config', data)
+  return request.Put('/config', data)
 }

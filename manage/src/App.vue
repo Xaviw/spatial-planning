@@ -7,7 +7,7 @@
         v-if="route.meta?.layout === 'custom'"
       />
 
-      <BasicLayout v-else>
+      <BasicLayout v-else-if="route.meta?.layout === 'basic'">
         <KeepAlive>
           <component
             :is="Component"

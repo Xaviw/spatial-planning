@@ -18,6 +18,15 @@ Content-Type: application/json
   "password": "123456"
 }
 
+### 注册
+POST http://localhost:3000/user HTTP/1.1
+Content-Type: application/json
+
+{
+  "name":"admin",
+  "password": "123456"
+}
+
 ### 获取菜单
 GET http://localhost:3000/menu?filter=false HTTP/1.1
 
