@@ -11,7 +11,7 @@ export default defineMock({
       message: 'ok',
     }
   },
-  '[POST]/sider': () => {
+  '-[POST]/sider': () => {
     return {
       code: 1,
       data: true,

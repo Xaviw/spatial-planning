@@ -6,27 +6,35 @@
       <Loading absolute :loading="loginLoading" />
 
       <div
-        class="relative box-border w-100 flex items-center justify-center overflow-hidden bg-blue-1 px-12 py-32"
+        class="relative box-border w-100 flex items-center justify-center overflow-hidden bg-blue-1"
       >
         <ManageIllustration class="absolute top--28 h-200 w-200" />
       </div>
       <div
-        class="box-border w-100 flex items-center justify-center px-12 py-32"
+        class="box-border w-100 flex items-center justify-center px-12 py-26"
       >
         <AForm
-          scrolltofirsterror
-          hiderequiredmark
+          scrollToFirstError
+          hideRequiredMark
           size="large"
-          :labelCol="{ style: { width: '56px' } }"
+          :labelCol="{ style: { width: '66px' } }"
           class="w-full"
         >
           <AFormItem class="mb-12">
             <div class="text-center text-3xl font-bold">{{ title }}</div>
           </AFormItem>
-          <AFormItem label="用户名" v-bind="validateInfos.name">
+          <AFormItem
+            label="用户名"
+            v-bind="validateInfos.name"
+            :help="isDev && '演示账号：admin'"
+          >
             <AInput v-model:value="formModel.name" placeholder="请输入用户名" />
           </AFormItem>
-          <AFormItem label="密码" v-bind="validateInfos.password">
+          <AFormItem
+            label="密码"
+            v-bind="validateInfos.password"
+            :help="isDev && '演示密码：123456'"
+          >
             <AInputPassword
               v-model:value="formModel.password"
               placeholder="请输入密码"
@@ -59,6 +67,7 @@ import { useUserStore } from '../stores/user'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const title = import.meta.env.VITE_TITLE
+const isDev = import.meta.env.DEV
 
 const { login, loginLoading } = useUserStore()
 

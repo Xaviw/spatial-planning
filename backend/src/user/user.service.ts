@@ -1,13 +1,7 @@
-import * as crypto from 'crypto'
 import { HttpException, Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from '../global/prisma.service'
+import { md5 } from '../utils'
 import { CreateUserDto, UpdateUserDto } from './dto'
-
-function md5(str: string) {
-  const hash = crypto.createHash('md5')
-  hash.update(str)
-  return hash.digest('hex')
-}
 
 @Injectable()
 export class UserService {

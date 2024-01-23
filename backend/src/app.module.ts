@@ -5,6 +5,7 @@ import { AttachmentModule } from './attachment/attachment.module'
 import { ConfigModule } from './config/config.module'
 import { GlobalModule } from './global/global.module'
 import { MenuModule } from './menu/menu.module'
+import { SiderModule } from './sider/sider.module'
 import { UserModule } from './user/user.module'
 
 @Module({
@@ -18,6 +19,7 @@ import { UserModule } from './user/user.module'
     AttachmentModule,
     MenuModule,
     ConfigModule,
+    SiderModule,
   ],
   providers: [
     {

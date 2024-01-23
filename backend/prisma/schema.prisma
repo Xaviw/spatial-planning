@@ -45,15 +45,15 @@ enum AttachmentType {
 
 // 菜单
 model Menu {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   parentId   String?
-  name       String    @db.VarChar(60)
+  name       String   @db.VarChar(60)
   sort       Int
-  status     Boolean   @default(true)
-  createTime DateTime  @default(now())
-  updateTime DateTime  @updatedAt
-  isDelete   Boolean   @default(false)
-  Sidebar    Sidebar[]
+  status     Boolean  @default(true)
+  createTime DateTime @default(now())
+  updateTime DateTime @updatedAt
+  isDelete   Boolean  @default(false)
+  Sider      Sider[]
   Layer      Layer[]
 
   @@index([isDelete])
@@ -65,12 +65,12 @@ model Material {
   type      MaterialType
   props     Json
   isTitle   Boolean
-  sidebarId String?
-  sidebar   Sidebar?     @relation(fields: [sidebarId], references: [id], onDelete: Cascade)
+  siderId   String?
+  sider     Sider?       @relation(fields: [siderId], references: [id], onDelete: Cascade)
   overlayId String?
   overlay   Overlay?     @relation(fields: [overlayId], references: [id], onDelete: Cascade)
 
-  @@index([isTitle, sidebarId, overlayId])
+  @@index([isTitle, siderId, overlayId])
 }
 
 enum MaterialType {
@@ -90,22 +90,22 @@ enum MaterialType {
 }
 
 // 侧边栏
-model Sidebar {
-  id         String         @id @default(uuid())
+model Sider {
+  id         String       @id @default(uuid())
   menuId     String
-  menu       Menu           @relation(fields: [menuId], references: [id], onDelete: Cascade)
-  position   SidebarPositon
+  menu       Menu         @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  position   SiderPositon
   sort       Int
-  status     Boolean        @default(true)
-  createTime DateTime       @default(now())
-  updateTime DateTime       @updatedAt
-  isDelete   Boolean        @default(false)
+  status     Boolean      @default(true)
+  createTime DateTime     @default(now())
+  updateTime DateTime     @updatedAt
+  isDelete   Boolean      @default(false)
   Material   Material[]
 
   @@index([position, menuId, sort, isDelete])
 }
 
-enum SidebarPositon {
+enum SiderPositon {
   left
   right
 }
