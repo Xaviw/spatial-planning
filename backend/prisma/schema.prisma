@@ -13,48 +13,46 @@ datasource db {
 // 用户
 model User {
   id         String   @id @default(uuid())
-  name       String   @db.VarChar(60)
-  password   String   @db.VarChar(50)
+  name       String   @unique @db.VarChar(12)
+  password   String   @db.Char(32)
   createTime DateTime @default(now())
   updateTime DateTime @updatedAt
   isDelete   Boolean  @default(false)
+
+  @@index([id, name, isDelete])
 }
 
 // 系统配置
 model Config {
   id    String @id @default(uuid())
-  key   String @unique @db.VarChar(50)
+  key   String @unique @db.VarChar(30)
   value Json
 }
 
-// 附件管理
+// 文件
 model Attachment {
-  id         String         @id @default(uuid())
-  type       AttachmentType
-  url        String         @unique @db.VarChar(120)
-  createTime DateTime       @default(now())
-}
+  id         String   @id @default(uuid())
+  name       String   @db.VarChar(100)
+  url        String   @unique @db.VarChar(100)
+  hash       String   @unique @db.Char(32)
+  createTime DateTime @default(now())
+  isDelete   Boolean  @default(false)
 
-enum AttachmentType {
-  image
-  audio
-  vedio
-  office
-  other
+  @@index([hash])
 }
 
 // 菜单
 model Menu {
   id         String   @id @default(uuid())
-  parentId   String?
+  parentId   String?  @db.Char(36)
   name       String   @db.VarChar(60)
   sort       Int
   status     Boolean  @default(true)
   createTime DateTime @default(now())
   updateTime DateTime @updatedAt
   isDelete   Boolean  @default(false)
-  Sider      Sider[]
-  Layer      Layer[]
+  siders     Sider[]
+  layers     Layer[]
 
   @@index([isDelete])
 }
@@ -65,10 +63,12 @@ model Material {
   type      MaterialType
   props     Json
   isTitle   Boolean
-  siderId   String?
+  siderId   String?      @db.Char(36)
   sider     Sider?       @relation(fields: [siderId], references: [id], onDelete: Cascade)
-  overlayId String?
+  overlayId String?      @db.Char(36)
   overlay   Overlay?     @relation(fields: [overlayId], references: [id], onDelete: Cascade)
+  sort      Int
+  isDelete  Boolean      @default(false)
 
   @@index([isTitle, siderId, overlayId])
 }
@@ -92,7 +92,7 @@ enum MaterialType {
 // 侧边栏
 model Sider {
   id         String       @id @default(uuid())
-  menuId     String
+  menuId     String       @db.Char(36)
   menu       Menu         @relation(fields: [menuId], references: [id], onDelete: Cascade)
   position   SiderPositon
   sort       Int
@@ -100,7 +100,7 @@ model Sider {
   createTime DateTime     @default(now())
   updateTime DateTime     @updatedAt
   isDelete   Boolean      @default(false)
-  Material   Material[]
+  materials  Material[]
 
   @@index([position, menuId, sort, isDelete])
 }
@@ -113,7 +113,7 @@ enum SiderPositon {
 // 图层
 model Layer {
   id         String    @id @default(uuid())
-  menuId     String
+  menuId     String    @db.Char(36)
   menu       Menu      @relation(fields: [menuId], references: [id], onDelete: Cascade)
   asLegend   Boolean   @default(false)
   name       String    @db.VarChar(60)
@@ -123,7 +123,7 @@ model Layer {
   createTime DateTime  @default(now())
   updateTime DateTime  @updatedAt
   isDelete   Boolean   @default(false)
-  Overlay    Overlay[]
+  overlays   Overlay[]
 
   @@index([menuId, sort, isDelete])
 }
@@ -131,7 +131,7 @@ model Layer {
 // 覆盖物
 model Overlay {
   id          String      @id @default(uuid())
-  layerId     String
+  layerId     String      @db.Char(36)
   layer       Layer       @relation(fields: [layerId], references: [id], onDelete: Cascade)
   type        OverlayType
   name        String      @db.VarChar(60)
@@ -142,7 +142,7 @@ model Overlay {
   createTime  DateTime    @default(now())
   updateTime  DateTime    @updatedAt
   isDelete    Boolean     @default(false)
-  Material    Material[]
+  materials   Material[]
 
   @@index([layerId, isDelete])
 }

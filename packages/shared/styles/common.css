@@ -16,6 +16,10 @@
   background-color: #21b1ff;
 }
 
+body {
+  overflow: hidden;
+}
+
 .amap-logo,
 .amap-copyright {
   display: none !important;

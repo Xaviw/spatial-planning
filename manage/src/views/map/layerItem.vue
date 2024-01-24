@@ -136,7 +136,7 @@
 
 <script setup lang="ts">
 import { Upload } from '@sp/shared/components'
-import { useMapStore } from '@sp/shared/map'
+import { useMapStore } from '@sp/shared/helpers/map'
 import { getStaticFile } from '@sp/shared/utils'
 import { cloneDeep, omit } from 'lodash-es'
 import type { LayerItem, OverlayType } from '#/business'

@@ -8,10 +8,12 @@ import {
   Get,
   Query,
   UseGuards,
+  Body,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import * as multer from 'multer'
 import { v4 } from 'uuid'
+import { PrismaService } from '../global/prisma.service'
 import { LoginGuard } from '../utils/login.guard'
 
 const STATIC_PATH = process.env.VITE_STATIC_PATH!
@@ -37,26 +39,42 @@ const storage = multer.diskStorage({
 
 @Controller('attachment')
 export class AttachmentController {
-  constructor() {}
+  constructor(private readonly prisma: PrismaService) {}
 
   @Get('check')
   @UseGuards(LoginGuard)
-  check(@Query('hash') _hash: string) {
-    return { code: 1, data: null }
+  check(@Query('hash') hash: string) {
+    return this.prisma.attachment
+      .findUnique({ where: { hash }, select: { url: true } })
+      .then(file => file?.url)
   }
 
   @Post()
   @UseGuards(LoginGuard)
   @UseInterceptors(FileInterceptor('file', { storage }))
-  upload(@UploadedFile() file: Express.Multer.File) {
-    return `${URL_BASE}/${file.filename}`
+  async upload(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: { name?: string; index?: number; hash?: string },
+  ) {
+    const url = `${URL_BASE}/${file.filename}`
+    if (!body.name && body.hash) {
+      await this.prisma.attachment.create({
+        data: { hash: body.hash, name: file.originalname, url },
+      })
+    }
+    return url
   }
 
   @Get('merge')
   @UseGuards(LoginGuard)
-  merge(@Query('name') name: string, @Query('extName') extName: string) {
+  async merge(
+    @Query('key') key: string,
+    @Query('name') name: string,
+    @Query('extName') extName: string,
+    @Query('hash') hash: string,
+  ) {
     // 读取分片并组合文件
-    const dir = path.join(process.cwd(), STATIC_PATH, name)
+    const dir = path.join(process.cwd(), STATIC_PATH, key)
     const chunks = fs.readdirSync(dir)
     let pos = 0,
       count = 0
@@ -79,6 +97,10 @@ export class AttachmentController {
       pos += fs.statSync(chunkPath).size
     })
 
-    return `${URL_BASE}/${fileName}`
+    const url = `${URL_BASE}/${fileName}`
+
+    await this.prisma.attachment.create({ data: { url, hash, name } })
+
+    return url
   }
 }

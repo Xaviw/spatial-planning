@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import { Loading } from '@sp/shared/components'
-import { ManageIllustration, WaveBottom, WaveTop } from '@sp/shared/svg'
+import { ManageIllustration, WaveBottom, WaveTop } from '@sp/shared/svgs'
 import { Form } from 'ant-design-vue'
 import { useUserStore } from '../stores/user'
 import type { Rule } from 'ant-design-vue/es/form'

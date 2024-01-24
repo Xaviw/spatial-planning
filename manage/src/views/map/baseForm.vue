@@ -54,9 +54,10 @@
 
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
-import { SiderModalEditor } from '@sp/shared/helper/siderHelper'
+import { useMapStore } from '@sp/shared/helpers/map'
+import { SiderModalEditor } from '@sp/shared/helpers/sider'
 import { useModal } from '@sp/shared/hooks'
-import { overlayOptions, useMapStore } from '@sp/shared/map'
+import { overlayOptions } from '@sp/shared/overlays'
 import { Form } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
 import type { MaterialItem, OverlayItem, OverlayType } from '#/business'

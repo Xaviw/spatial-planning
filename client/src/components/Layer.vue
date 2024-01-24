@@ -59,9 +59,9 @@
 </template>
 
 <script setup lang="ts">
-import { overlays } from '@sp/shared/map'
+import { overlays } from '@sp/shared/overlays'
 import { getStaticFile } from '@sp/shared/utils'
-import { useMainStore } from '../store/main'
+import { useMainStore } from '../stores/main'
 
 defineProps<{
   open: boolean

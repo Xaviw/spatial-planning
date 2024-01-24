@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMapStore } from '@sp/shared/map'
+import { useMapStore } from '@sp/shared/helpers/map'
 import { Empty } from 'ant-design-vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import LayerItemComponent from './layerItem.vue'
@@ -66,7 +66,7 @@ const model = defineModel<LayerItem<OverlayType>[]>({
   required: true,
 })
 
-const { activeId } = storeToRefs(useMapStore())
+const { activeLayer } = storeToRefs(useMapStore())
 
 function onRemove(id: string) {
   const index = model.value.findIndex(item => item.id === id)
@@ -88,8 +88,8 @@ function onAdd() {
     status: true,
     createTime: new Date().toLocaleString(),
   })
-  if (!activeId.value) {
-    activeId.value = id
+  if (!activeLayer.value) {
+    activeLayer.value = id
   }
 }
 </script>

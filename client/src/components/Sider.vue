@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { Loading } from '@sp/shared/components'
 import { components } from '@sp/shared/materials'
-import { useMainStore } from '../store/main'
+import { useMainStore } from '../stores/main'
 import type { SiderPosition } from '#/business'
 
 const props = defineProps<{

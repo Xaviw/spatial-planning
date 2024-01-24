@@ -142,8 +142,14 @@ export function getOperationsFromDiff<T extends Recordable>(
       if (sortKey && v.index !== oldValue.index) {
         operation.value[sortKey] = v.index
       }
-      if (!isEqual(v.data, oldValue!.data)) {
-        operation.value = { ...v.data, ...operation.value }
+      for (const valueKey in v.data) {
+        if (
+          Object.prototype.hasOwnProperty.call(v.data, valueKey) &&
+          valueKey !== key &&
+          !isEqual(v.data[valueKey], oldValue!.data[valueKey])
+        ) {
+          operation.value[valueKey] = v.data[valueKey]
+        }
       }
       if (Object.keys(operation.value).length) {
         operations.push(operation)

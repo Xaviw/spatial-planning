@@ -52,7 +52,19 @@ export interface MenuMoveParams {
 }
 
 // -----------------侧边栏-----------------
-export type SiderComponents =
+export type SiderPosition = 'left' | 'right'
+
+export interface SiderItem {
+  id: string
+  material: MaterialItem
+  status: boolean
+  position: SiderPosition
+  createTime: string
+  updateTime?: string
+}
+
+// -----------------标题组件、覆盖物详情-----------------
+export type MaterialType =
   | 'BarChart'
   | 'Carousel'
   | 'Collapse'
@@ -67,20 +79,11 @@ export type SiderComponents =
   | 'Timeline'
   | 'Title'
 
-export type SiderPosition = 'left' | 'right'
-
-export interface SiderItem {
+export interface MaterialItem {
   id: string
-  type: SiderComponents
+  type: MaterialType
   props: Recordable
-  status: boolean
-  position: SiderPosition
-  createTime: string
-  updateTime?: string
 }
-
-// -----------------标题组件、覆盖物详情-----------------
-export type MaterialItem = Pick<SiderItem, 'id' | 'type' | 'props'>
 
 // -----------------变动记录-----------------
 export type OperationType = 'add' | 'remove' | 'replace'

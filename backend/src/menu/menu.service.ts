@@ -76,7 +76,10 @@ export class MenuService {
   }
 
   async moveMenu(params: MoveMenuDto) {
-    const menu = await this.prisma.menu.findFirst({ where: { id: params.id } })
+    const menu = await this.prisma.menu.findFirst({
+      where: { id: params.id },
+      select: { parentId: true, sort: true },
+    })
     if (!menu) {
       throw new BadRequestException('当前菜单已被删除，请刷新页面！')
     }
@@ -116,7 +119,7 @@ export class MenuService {
     }
     // 修改目标数据parentId和sort
     await this.prisma.menu.update({
-      where: { id: menu.id },
+      where: { id: params.id },
       data: { parentId: params.currentParentId, sort: params.currentIndex },
     })
 

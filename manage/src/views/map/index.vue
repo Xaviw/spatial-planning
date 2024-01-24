@@ -37,11 +37,11 @@
 import { Loading } from '@sp/shared/components'
 import {
   useMapStore,
-  overlays,
   hasRightMenuKey,
   mapKey,
   labelsLayerKey,
-} from '@sp/shared/map'
+} from '@sp/shared/helpers/map'
+import { overlays } from '@sp/shared/overlays'
 import FormBar from './formBar.vue'
 import Header from './header.vue'
 import Layer from './layer.vue'

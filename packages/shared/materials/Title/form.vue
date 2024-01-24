@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
-import { SiderModalEditor } from '@sp/shared/helper/siderHelper'
+import { SiderModalEditor } from '@sp/shared/helpers/sider'
 import { useModal } from '@sp/shared/hooks'
 import { Form } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'

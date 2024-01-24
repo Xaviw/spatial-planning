@@ -154,6 +154,7 @@ async function customRequest(e: UploadRequestOption) {
   if (e.file.size < chunkSize) {
     const formData = new FormData()
     formData.set('file', e.file)
+    formData.set('hash', hash)
     upload(formData)
       .send()
       .then(res => {
@@ -187,7 +188,7 @@ async function customRequest(e: UploadRequestOption) {
   })
   Promise.all(events)
     .then(() => {
-      mergeUpload(key, extName)
+      mergeUpload(key, name, extName, hash)
         .send()
         .then(res => {
           e.onSuccess?.(res)

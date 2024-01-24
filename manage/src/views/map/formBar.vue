@@ -27,7 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import { overlays, useMapStore, findOverlay } from '@sp/shared/map'
+import { useMapStore, findOverlay } from '@sp/shared/helpers/map'
+import { overlays } from '@sp/shared/overlays'
 import { modal } from '@sp/shared/utils'
 import { cloneDeep, isEqual } from 'lodash-es'
 import BaseForm from './baseForm.vue'

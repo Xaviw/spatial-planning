@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { NotFound } from '@sp/shared/svg'
+import { NotFound } from '@sp/shared/svgs'
 
 const router = useRouter()
 

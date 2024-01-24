@@ -9,7 +9,9 @@ export class ConfigController {
   @Get()
   @UseGuards(LoginGuard)
   async getConfigs() {
-    const records = await this.prisma.config.findMany()
+    const records = await this.prisma.config.findMany({
+      select: { key: true, value: true },
+    })
 
     const configs: Recordable = {}
 
@@ -27,9 +29,9 @@ export class ConfigController {
 
     for (const key in body) {
       const handler = this.prisma.config
-        .findUnique({ where: { key } })
-        .then(exists => {
-          if (exists) {
+        .count({ where: { key } })
+        .then(count => {
+          if (count) {
             return this.prisma.config.update({
               where: { key },
               data: { value: body[key] },

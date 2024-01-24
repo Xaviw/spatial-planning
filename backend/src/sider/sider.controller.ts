@@ -1,15 +1,23 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
-import { SidebarService } from './sider.service'
+import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import { UpdateSiderDto } from './dto'
+import { SiderService } from './sider.service'
+import { SiderPosition } from '#/business'
 
 @Controller('sider')
-export class SidebarController {
-  constructor(private readonly siderService: SidebarService) {}
+export class SiderController {
+  constructor(private readonly siderService: SiderService) {}
 
   @Get()
-  getSidebar() {}
+  getSider(
+    @Query('menuId') menuId: string,
+    @Query('position') position: SiderPosition,
+    @Query('filter') filter: boolean,
+  ) {
+    return this.siderService.getList(menuId, position, filter)
+  }
 
   @Post()
-  setSidebar(@Body() body: any) {
+  setSider(@Body() body: UpdateSiderDto) {
     return this.siderService.update(body)
   }
 }

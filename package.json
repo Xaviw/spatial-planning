@@ -21,8 +21,8 @@
     "dev:manage": "pnpm -F @sp/manage dev",
     "lint": "pnpm -r run lint",
     "lint-staged": "lint-staged",
-    "prepare": "husky install",
-    "prisma:migrate": "pnpm -F @sp/backend migrate"
+    "migrate": "pnpm -F @sp/backend migrate",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{js,ts,tsx,vue}": [
@@ -44,7 +44,7 @@
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "alova": "^2.13.1",
-    "ant-design-vue": "^4.0.8",
+    "ant-design-vue": "^4.1.1",
     "codemirror": "^6.0.1",
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
@@ -97,8 +97,7 @@
   "pnpm": {
     "patchedDependencies": {
       "@wangeditor/editor-for-vue@5.1.12": "patches/@wangeditor__editor-for-vue@5.1.12.patch",
-      "@amap/amap-jsapi-types@0.0.13": "patches/@amap__amap-jsapi-types@0.0.13.patch",
-      "ant-design-vue@4.0.8": "patches/ant-design-vue@4.0.8.patch"
+      "@amap/amap-jsapi-types@0.0.13": "patches/@amap__amap-jsapi-types@0.0.13.patch"
     }
   }
 }

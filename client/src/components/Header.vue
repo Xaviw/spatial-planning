@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import { mapKey } from '@sp/shared/map'
-import { useMainStore } from '../store/main'
+import { mapKey } from '@sp/shared/helpers/map'
+import { useMainStore } from '../stores/main'
 
 const AppTitle = import.meta.env.VITE_TITLE
 
@@ -65,7 +65,7 @@ function onSearch() {
     return
   }
   // 记录模糊匹配的项
-  const options = []
+  const options: string[] = []
   for (let layer of mapData.value) {
     for (let overlay of layer.overlays) {
       const overlayName = overlay.name.toLowerCase()

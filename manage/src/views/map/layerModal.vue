@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { moveOverlayToOtherLayer, useMapStore } from '@sp/shared/map'
+import { moveOverlayToOtherLayer, useMapStore } from '@sp/shared/helpers/map'
 
 const mapStore = useMapStore()
 

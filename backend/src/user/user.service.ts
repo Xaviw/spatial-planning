@@ -17,7 +17,10 @@ export class UserService {
   }
 
   async update(user: UpdateUserDto) {
-    const info = await this.prisma.user.findUnique({ where: { id: user.id } })
+    const info = await this.prisma.user.findUnique({
+      where: { id: user.id },
+      select: { name: true, password: true },
+    })
 
     if (!info) {
       throw new HttpException('该用户不存在', 400)
@@ -46,7 +49,7 @@ export class UserService {
   }
 
   async checkName(name: string) {
-    const searchUser = await this.prisma.user.findFirst({
+    const searchUser = await this.prisma.user.count({
       where: { name: name },
     })
 
@@ -58,6 +61,7 @@ export class UserService {
   async login(user: CreateUserDto) {
     const findUser = await this.prisma.user.findFirst({
       where: { name: user.name },
+      select: { password: true, id: true, name: true },
     })
 
     if (!findUser || findUser.password !== md5(user.password)) {

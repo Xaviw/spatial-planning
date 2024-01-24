@@ -58,12 +58,17 @@
 
 <script setup lang="ts">
 import { setMap } from '@sp/shared/apis'
+import { useMapStore } from '@sp/shared/helpers/map'
 import { useMenuTree } from '@sp/shared/hooks'
-import { useMapStore } from '@sp/shared/map'
 import { getOperationsFromDiff, modal } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
 import { isEqual, omit } from 'lodash-es'
-import type { OverlayItem, OverlayType } from '#/business'
+import type {
+  LayerItem,
+  OverlayItem,
+  OverlayType,
+  MaterialItem,
+} from '#/business'
 
 const mapStore = useMapStore()
 
@@ -103,7 +108,7 @@ async function onSearch() {
     return
   }
 
-  const options = []
+  const options: OverlayItem<OverlayType>[] = []
 
   for (let layer of mapData.value) {
     for (let overlay of layer.overlays) {
@@ -154,14 +159,14 @@ async function searchHandler(
 function onSubmit() {
   loading.value = true
 
-  const sourceLayers = []
-  const currentLayers = []
+  const sourceLayers: Omit<LayerItem<OverlayType>, 'overlays'>[] = []
+  const currentLayers: Omit<LayerItem<OverlayType>, 'overlays'>[] = []
 
-  const sourceOverlays = []
-  const currentOverlays = []
+  const sourceOverlays: Omit<OverlayItem<OverlayType>, 'details'>[] = []
+  const currentOverlays: Omit<OverlayItem<OverlayType>, 'details'>[] = []
 
-  const sourceDetails = []
-  const currentDetails = []
+  const sourceDetails: MaterialItem[] = []
+  const currentDetails: MaterialItem[] = []
 
   for (let layer of sourceData.value) {
     for (let overlay of layer.overlays) {

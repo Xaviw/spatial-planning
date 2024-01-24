@@ -14,6 +14,13 @@ export function upload(data: FormData) {
   return request.Post<string>('/attachment', data, { shareRequest: false })
 }
 
-export function mergeUpload(name: string, extName: string) {
-  return request.Get<string>('/attachment/merge', { params: { name, extName } })
+export function mergeUpload(
+  key: string,
+  name: string,
+  extName: string,
+  hash: string,
+) {
+  return request.Get<string>('/attachment/merge', {
+    params: { key, name, extName, hash },
+  })
 }

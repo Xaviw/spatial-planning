@@ -1,6 +1,6 @@
 import { createAlovaMockAdapter } from '@alova/mock'
 import { bootSilentFactory } from '@alova/scene-vue'
-import mockGroups from '@sp/shared/mock'
+import mockGroups from '@sp/shared/mocks'
 import { createAlova, Method } from 'alova'
 import GlobalFetch from 'alova/GlobalFetch'
 import vueHook from 'alova/vue'

@@ -39,8 +39,8 @@
 
 <script setup lang="ts">
 import { Loading } from '@sp/shared/components'
-import { hasRightMenuKey, labelsLayerKey, mapKey } from '@sp/shared/map'
-import { useMainStore } from '../store/main'
+import { hasRightMenuKey, labelsLayerKey, mapKey } from '@sp/shared/helpers/map'
+import { useMainStore } from '../stores/main'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const { menuLoading, mapLoading } = storeToRefs(useMainStore())

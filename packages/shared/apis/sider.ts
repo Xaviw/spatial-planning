@@ -9,12 +9,9 @@ export interface GetSiderParams {
 }
 
 export function getSider(params: GetSiderParams) {
-  return request.Get<SiderItem[]>('/sider', {
-    params,
-    localCache: 100 * 60 * 5,
-  })
+  return request.Get<SiderItem[]>('/sider', { params })
 }
 
-export function setSider(data: OperationItem<SiderItem>[]) {
+export function setSider(data: OperationItem<Partial<SiderItem>>[]) {
   return request.Post<boolean>('/sider', data)
 }

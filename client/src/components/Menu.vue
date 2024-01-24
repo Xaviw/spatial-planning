@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMainStore } from '../store/main'
+import { useMainStore } from '../stores/main'
 import type { HandledMenu } from '#/business'
 import type { MenuProps } from 'ant-design-vue'
 

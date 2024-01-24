@@ -4,8 +4,8 @@
 
 <script setup lang="ts">
 import { getConfig } from '@sp/shared/apis'
+import { arrayToPosition, labelsLayerKey, mapKey } from '@sp/shared/helpers/map'
 import { useMap } from '@sp/shared/hooks'
-import { arrayToPosition, labelsLayerKey, mapKey } from '@sp/shared/map'
 
 const config = await getConfig().send()
 

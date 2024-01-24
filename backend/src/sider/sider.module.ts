@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { SidebarController } from './sider.controller'
-import { SidebarService } from './sider.service'
+import { SiderController } from './sider.controller'
+import { SiderService } from './sider.service'
 
 @Module({
-  controllers: [SidebarController],
-  providers: [SidebarService],
+  controllers: [SiderController],
+  providers: [SiderService],
 })
-export class SidebarModule {}
+export class SiderModule {}

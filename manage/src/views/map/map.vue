@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" class="relative select-none">
+  <div ref="container" class="relative h-full select-none">
     <div class="absolute right-0 top-0 z-1 bg-white px-4 py-2">
       <input
         id="search"
@@ -13,13 +13,13 @@
 
 <script setup lang="ts">
 import { getConfig } from '@sp/shared/apis'
-import { useMap } from '@sp/shared/hooks'
 import {
   useMapStore,
   arrayToPosition,
   mapKey,
   labelsLayerKey,
-} from '@sp/shared/map'
+} from '@sp/shared/helpers/map'
+import { useMap } from '@sp/shared/hooks'
 import { debounce } from 'lodash-es'
 
 const injectMap = inject(mapKey)!
