@@ -34,9 +34,4 @@ export class UpdateSiderDto {
   @ValidateNested({ each: true })
   @Type(() => UpdateOperationDto)
   siders: UpdateOperationDto[]
-
-  @IsArray({ message: '修改操作应该是一个对象数组！' })
-  @ValidateNested({ each: true })
-  @Type(() => UpdateOperationDto)
-  materials: UpdateOperationDto[]
 }

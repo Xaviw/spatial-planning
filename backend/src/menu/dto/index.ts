@@ -7,7 +7,7 @@ import {
   IsNotEmpty,
 } from 'class-validator'
 
-class BaseDto {
+export class UpdateMenuDto {
   @IsNotEmpty({ message: '请填写菜单名称！' })
   @IsString({ message: '菜单名称只能是字符串！' })
   @MaxLength(20, { message: '菜单名称需要小于20个字符！' })
@@ -18,23 +18,13 @@ class BaseDto {
   status: boolean
 }
 
-export class CreateMenuDto extends BaseDto {
+export class CreateMenuDto extends UpdateMenuDto {
   @IsString({ message: '父级菜单id只能是字符串！' })
   @IsOptional()
   parentId?: string | null
 }
 
-export class UpdateMenuDto extends BaseDto {
-  @IsNotEmpty({ message: '请传入id！' })
-  @IsString({ message: 'id只能是字符串！' })
-  id: string
-}
-
 export class MoveMenuDto {
-  @IsNotEmpty({ message: '请传入id！' })
-  @IsString({ message: 'id只能是字符串！' })
-  id: string
-
   @IsNotEmpty({ message: '请传入当前序号！' })
   @IsNumber({}, { message: '序号只能是数字！' })
   currentIndex: number

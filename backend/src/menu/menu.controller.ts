@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   ParseBoolPipe,
   Post,
   Put,
@@ -29,22 +30,22 @@ export class MenuController {
     return this.menuService.createMenu(menu)
   }
 
-  @Put()
+  @Put(':id')
   @UseGuards(LoginGuard)
-  updateMenu(@Body() menu: UpdateMenuDto) {
-    return this.menuService.updateMenu(menu)
+  updateMenu(@Param('id') id: string, @Body() menu: UpdateMenuDto) {
+    return this.menuService.updateMenu(id, menu)
   }
 
-  @Delete()
+  @Delete(':id')
   @UseGuards(LoginGuard)
-  removeMenu(@Body('id') id: string) {
+  removeMenu(@Param('id') id: string) {
     return this.menuService.removeMenu(id)
   }
 
-  @Post('move')
+  @Post('move/:id')
   @UseGuards(LoginGuard)
-  moveMenu(@Body() params: MoveMenuDto) {
+  moveMenu(@Param('id') id: string, @Body() params: MoveMenuDto) {
     if (!params.currentParentId) params.currentParentId = null
-    return this.menuService.moveMenu(params)
+    return this.menuService.moveMenu(id, params)
   }
 }

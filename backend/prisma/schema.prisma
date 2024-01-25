@@ -15,11 +15,12 @@ model User {
   id         String   @id @default(uuid())
   name       String   @unique @db.VarChar(12)
   password   String   @db.Char(32)
+  status     Boolean  @default(true)
+  isDelete   Boolean  @default(false)
   createTime DateTime @default(now())
   updateTime DateTime @updatedAt
-  isDelete   Boolean  @default(false)
 
-  @@index([id, name, isDelete])
+  @@index([id, name, status, isDelete])
 }
 
 // 系统配置
@@ -36,7 +37,6 @@ model Attachment {
   url        String   @unique @db.VarChar(100)
   hash       String   @unique @db.Char(32)
   createTime DateTime @default(now())
-  isDelete   Boolean  @default(false)
 
   @@index([hash])
 }
@@ -48,13 +48,13 @@ model Menu {
   name       String   @db.VarChar(60)
   sort       Int
   status     Boolean  @default(true)
+  isDelete   Boolean  @default(false)
   createTime DateTime @default(now())
   updateTime DateTime @updatedAt
-  isDelete   Boolean  @default(false)
   siders     Sider[]
   layers     Layer[]
 
-  @@index([isDelete])
+  @@index([status, isDelete, sort])
 }
 
 // 物料
@@ -62,15 +62,15 @@ model Material {
   id        String       @id @default(uuid())
   type      MaterialType
   props     Json
-  isTitle   Boolean
-  siderId   String?      @db.Char(36)
+  siderId   String?      @unique @db.Char(36)
   sider     Sider?       @relation(fields: [siderId], references: [id], onDelete: Cascade)
   overlayId String?      @db.Char(36)
   overlay   Overlay?     @relation(fields: [overlayId], references: [id], onDelete: Cascade)
   sort      Int
   isDelete  Boolean      @default(false)
+  status    Boolean      @default(true)
 
-  @@index([isTitle, siderId, overlayId])
+  @@index([siderId, overlayId, status, isDelete, sort])
 }
 
 enum MaterialType {
@@ -96,13 +96,13 @@ model Sider {
   menu       Menu         @relation(fields: [menuId], references: [id], onDelete: Cascade)
   position   SiderPositon
   sort       Int
+  isDelete   Boolean      @default(false)
   status     Boolean      @default(true)
   createTime DateTime     @default(now())
   updateTime DateTime     @updatedAt
-  isDelete   Boolean      @default(false)
-  materials  Material[]
+  material   Material?
 
-  @@index([position, menuId, sort, isDelete])
+  @@index([position, menuId, sort, isDelete, status])
 }
 
 enum SiderPositon {
@@ -120,31 +120,31 @@ model Layer {
   legendImg  String    @db.VarChar(120)
   sort       Int
   status     Boolean   @default(true)
+  isDelete   Boolean   @default(false)
   createTime DateTime  @default(now())
   updateTime DateTime  @updatedAt
-  isDelete   Boolean   @default(false)
   overlays   Overlay[]
 
-  @@index([menuId, sort, isDelete])
+  @@index([menuId, sort, isDelete, status])
 }
 
 // 覆盖物
 model Overlay {
-  id          String      @id @default(uuid())
-  layerId     String      @db.Char(36)
-  layer       Layer       @relation(fields: [layerId], references: [id], onDelete: Cascade)
-  type        OverlayType
-  name        String      @db.VarChar(60)
-  props       Json
-  detailTitle String      @db.VarChar(60)
-  detailWidth String      @db.VarChar(20)
-  status      Boolean     @default(true)
-  createTime  DateTime    @default(now())
-  updateTime  DateTime    @updatedAt
-  isDelete    Boolean     @default(false)
-  materials   Material[]
+  id         String      @id @default(uuid())
+  layerId    String      @db.Char(36)
+  layer      Layer       @relation(fields: [layerId], references: [id], onDelete: Cascade)
+  type       OverlayType
+  name       String      @db.VarChar(60)
+  props      Json
+  modalTitle String      @db.VarChar(60)
+  modalWidth String      @db.VarChar(20)
+  status     Boolean     @default(true)
+  isDelete   Boolean     @default(false)
+  createTime DateTime    @default(now())
+  updateTime DateTime    @updatedAt
+  materials  Material[]
 
-  @@index([layerId, isDelete])
+  @@index([layerId, isDelete, status])
 }
 
 enum OverlayType {

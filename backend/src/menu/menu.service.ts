@@ -1,4 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import { isNumber } from '@sp/shared/utils'
 import { PrismaService } from '../global/prisma.service'
 import { CreateMenuDto, MoveMenuDto, UpdateMenuDto } from './dto'
 import type { MenuItem } from '#/business'
@@ -52,8 +53,7 @@ export class MenuService {
       _max: { sort: true },
     })
 
-    const sort =
-      typeof maxSort._max.sort === 'number' ? maxSort._max.sort + 1 : 0
+    const sort = isNumber(maxSort._max.sort) ? maxSort._max.sort + 1 : 0
 
     const newMenu = await this.prisma.menu.create({
       data: { ...menu, sort },
@@ -62,8 +62,8 @@ export class MenuService {
     return newMenu.id
   }
 
-  async updateMenu(menu: UpdateMenuDto) {
-    await this.prisma.menu.update({ where: { id: menu.id }, data: menu })
+  async updateMenu(id: string, menu: UpdateMenuDto) {
+    await this.prisma.menu.update({ where: { id: id }, data: menu })
 
     return true
   }
@@ -75,9 +75,9 @@ export class MenuService {
     return true
   }
 
-  async moveMenu(params: MoveMenuDto) {
+  async moveMenu(id: string, params: MoveMenuDto) {
     const menu = await this.prisma.menu.findFirst({
-      where: { id: params.id },
+      where: { id: id },
       select: { parentId: true, sort: true },
     })
     if (!menu) {
@@ -119,7 +119,7 @@ export class MenuService {
     }
     // 修改目标数据parentId和sort
     await this.prisma.menu.update({
-      where: { id: params.id },
+      where: { id: id },
       data: { parentId: params.currentParentId, sort: params.currentIndex },
     })
 

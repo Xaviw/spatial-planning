@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { AttachmentModule } from './attachment/attachment.module'
 import { ConfigModule } from './config/config.module'
 import { GlobalModule } from './global/global.module'
+import { MapModule } from './map/map.module'
 import { MenuModule } from './menu/menu.module'
 import { SiderModule } from './sider/sider.module'
 import { UserModule } from './user/user.module'
@@ -20,6 +21,7 @@ import { UserModule } from './user/user.module'
     MenuModule,
     ConfigModule,
     SiderModule,
+    MapModule,
   ],
   providers: [
     {

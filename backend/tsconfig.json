@@ -1,4 +1,9 @@
 {
   "extends": "../tsconfig.nest.json",
-  "include": ["src/**/*", "../types/*"]
+  "include": [
+    "src/**/*",
+    "../types/global.d.ts",
+    "../types/business.d.ts",
+    "../types/materials.d.ts"
+  ]
 }

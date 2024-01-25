@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
+import { LoginGuard } from '../utils/login.guard'
 import { UpdateSiderDto } from './dto'
 import { SiderService } from './sider.service'
 import { SiderPosition } from '#/business'
@@ -17,7 +26,9 @@ export class SiderController {
   }
 
   @Post()
-  setSider(@Body() body: UpdateSiderDto) {
-    return this.siderService.update(body)
+  @HttpCode(200)
+  @UseGuards(LoginGuard)
+  async setSider(@Body() body: UpdateSiderDto['siders']) {
+    await this.siderService.update(body)
   }
 }
