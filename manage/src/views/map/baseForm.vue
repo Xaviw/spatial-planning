@@ -59,7 +59,6 @@ import { SiderModalEditor } from '@sp/shared/helpers/sider'
 import { useModal } from '@sp/shared/hooks'
 import { overlayOptions } from '@sp/shared/overlays'
 import { Form } from 'ant-design-vue'
-import { cloneDeep } from 'lodash-es'
 import type { MaterialItem, OverlayItem, OverlayType } from '#/business'
 import type { Rule } from 'ant-design-vue/es/form'
 
@@ -102,7 +101,7 @@ function openDetail() {
       id: formModel.value.id!,
       modalTitle:
         formModel.value.detailTitle || `${formModel.value.name}详情内容`,
-      modalData: cloneDeep(formModel.value.details!),
+      modalData: structuredClone(formModel.value.details!),
       modalWidth: formModel.value.detailWidth!,
       onConfirm: onDetailConfirm,
       onClose: close,

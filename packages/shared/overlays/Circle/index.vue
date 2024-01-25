@@ -8,7 +8,6 @@ import {
   bindClickEvent,
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
-import { omit } from 'lodash-es'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -72,7 +71,8 @@ watch(
 watch(
   () => circleProps.props,
   options => {
-    options && circle.setOptions(omit(options, 'center', 'radius'))
+    const { center, radius, ...option } = options
+    options && circle.setOptions(option)
   },
   { deep: true },
 )

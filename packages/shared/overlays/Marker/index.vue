@@ -8,7 +8,6 @@ import {
   bindClickEvent,
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
-import { isObject } from 'lodash-es'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -69,11 +68,7 @@ watch(
   () => markerProps.props.icon,
   icon => {
     if (icon) {
-      if (isObject(icon)) {
-        marker.setIcon(new window.AMap.Icon(icon))
-      } else {
-        marker.setIcon(icon)
-      }
+      marker.setIcon(new window.AMap.Icon(icon))
     }
   },
   { deep: true },

@@ -12,11 +12,11 @@
       <AInput v-model:value="formModel.updateTime" disabled />
     </AFormItem>
 
-    <AFormItem label="组件类型" v-bind="validateInfos.type">
+    <AFormItem label="组件类型" v-bind="validateInfos['material.type']">
       <ASelect
         disabled
         :options="componentTypes"
-        v-model:value="formModel.type"
+        v-model:value="formModel.material.type"
       />
     </AFormItem>
 
@@ -31,51 +31,30 @@
 </template>
 
 <script setup lang="ts">
+import { componentTypes } from '@sp/shared/helpers/sider'
 import { Form } from 'ant-design-vue'
-import { pick } from 'lodash-es'
-import { componentTypes } from './data'
 import type { SiderItem } from '#/business'
 import type { Rule } from 'ant-design-vue/es/form'
 
-const props = withDefaults(
-  defineProps<{
-    inModal?: boolean
-  }>(),
-  {
-    inModal: false,
-  },
-)
-
-const formModel = ref<Partial<Omit<SiderItem, 'props'>>>({
+const formModel = ref<SiderItem>({
   // type: undefined,
   // status: true,
-  // menuIds: [],
-})
+} as SiderItem)
 
-const baseRules = computed(() => {
-  const rules: Record<string, Rule[]> = {
-    type: [
-      {
-        required: true,
-        message: '请选择组件类型！',
-      },
-    ],
-    status: [
-      {
-        required: true,
-        message: '请选择组件状态！',
-      },
-    ],
-    menuIds: [
-      {
-        required: true,
-        message: '请选择组件关联菜单！',
-      },
-    ],
-  }
-  if (!props.inModal) return rules
-  return pick(rules, ['type', 'status'])
-})
+const baseRules: Record<string, Rule[]> = {
+  'material.type': [
+    {
+      required: true,
+      message: '请选择组件类型！',
+    },
+  ],
+  status: [
+    {
+      required: true,
+      message: '请选择组件状态！',
+    },
+  ],
+}
 
 const { validateInfos, resetFields, validate, clearValidate, initialModel } =
   Form.useForm(formModel, baseRules)

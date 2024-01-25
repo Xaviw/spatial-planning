@@ -1,6 +1,6 @@
 import { overlayFactory, toolManage, useMapStore } from '@sp/shared/helpers/map'
+import { isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -107,7 +107,7 @@ export default {
         (mapStore.activeOverlay!.props as RectangleProps).bounds,
       )
     ) {
-      ;(layer.overlays[index].props as RectangleProps).bounds = cloneDeep(
+      ;(layer.overlays[index].props as RectangleProps).bounds = structuredClone(
         (overlay.props as RectangleProps).bounds,
       )
     }

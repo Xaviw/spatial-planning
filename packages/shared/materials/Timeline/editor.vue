@@ -36,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+import { isFunction } from '@sp/shared/utils'
 import { ColorPicker } from 'vue3-colorpicker'
 import type { TimelineItem } from '#/materials'
 
@@ -55,7 +56,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (typeof instance?.validate === 'function') {
+      if (isFunction(instance?.validate)) {
         events.push(instance.validate())
       }
     }

@@ -46,6 +46,7 @@
 
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
+import { isFunction } from '@sp/shared/utils'
 import DataEditor from './dataEditor.vue'
 import type { BarChartItem } from '#/materials'
 
@@ -79,7 +80,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (typeof instance?.validate === 'function') {
+      if (isFunction(instance?.validate)) {
         events.push(instance.validate())
       }
     }

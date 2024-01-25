@@ -8,7 +8,6 @@ import {
   bindClickEvent,
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
-import { omit } from 'lodash-es'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -69,7 +68,8 @@ watch(
 watch(
   () => rectangleProps.props,
   options => {
-    options && rectangle.setOptions(omit(options, 'bounds'))
+    const { bounds, ...option } = options
+    options && rectangle.setOptions(option)
   },
   { deep: true },
 )

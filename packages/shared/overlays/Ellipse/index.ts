@@ -1,6 +1,6 @@
 import { overlayFactory, toolManage, useMapStore } from '@sp/shared/helpers/map'
+import { isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -108,7 +108,7 @@ export default {
           (mapStore.activeOverlay!.props as EllipseProps).center,
         )
       ) {
-        ;(layer.overlays[index].props as EllipseProps).center = cloneDeep(
+        ;(layer.overlays[index].props as EllipseProps).center = structuredClone(
           (overlay.props as EllipseProps).center,
         )
       }
@@ -118,7 +118,7 @@ export default {
           (mapStore.activeOverlay!.props as EllipseProps).radius,
         )
       ) {
-        ;(layer.overlays[index].props as EllipseProps).radius = cloneDeep(
+        ;(layer.overlays[index].props as EllipseProps).radius = structuredClone(
           (overlay.props as EllipseProps).radius,
         )
       }

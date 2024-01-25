@@ -1,8 +1,8 @@
 import { AMap } from '@amap/amap-jsapi-types'
 import { useMapStore } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
+import { isNumber, uuid } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { isNumber } from 'lodash-es'
 import type {
   LayerItem,
   OverlayItem,
@@ -99,13 +99,13 @@ export function overlayFactory<T extends OverlayType>(
   layerId: string,
   props: OverlayOptions[T],
 ): OverlayItem<T> {
-  const now = Date.now()
+  const key = uuid()
   return {
     createTime: new Date().toLocaleString(),
     details: [],
-    id: `add_${now}`,
+    id: `add_${key}`,
     layerId,
-    name: `新增覆盖物_${now}`,
+    name: `新增覆盖物_${key}`,
     props,
     status: true,
     type,

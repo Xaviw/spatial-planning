@@ -1,13 +1,10 @@
 import 'alova/GlobalFetch'
 import { request } from '@sp/shared/utils'
-import type { Attachment } from '#/business'
-
-export function getAttachment() {
-  return request.Get<Attachment[]>('/attachment')
-}
 
 export function checkHash(hash: string) {
-  return request.Get<string | null>('/attachment/check', { params: { hash } })
+  return request.Get<string | undefined>('/attachment/check', {
+    params: { hash },
+  })
 }
 
 export function upload(data: FormData) {

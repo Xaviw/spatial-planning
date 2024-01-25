@@ -54,6 +54,7 @@
 
 <script setup lang="ts">
 import { CssSizeInput, Upload } from '@sp/shared/components'
+import { isFunction } from '@sp/shared/utils'
 import type { FileListItem } from '#/materials'
 
 const model = defineModel<FileListItem[]>({ default: [] })
@@ -72,7 +73,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (typeof instance?.validate === 'function') {
+      if (isFunction(instance?.validate)) {
         events.push(instance.validate())
       }
     }

@@ -1,6 +1,6 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
+import { isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -105,7 +105,7 @@ export default {
         (mapStore.activeOverlay!.props as PolygonProps).path,
       )
     ) {
-      ;(layer.overlays[index].props as PolygonProps).path = cloneDeep(
+      ;(layer.overlays[index].props as PolygonProps).path = structuredClone(
         overlay.props.path,
       )
     }

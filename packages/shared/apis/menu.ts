@@ -1,7 +1,6 @@
 import 'alova/GlobalFetch'
 import { request } from '@sp/shared/utils'
 import type { MenuItem, MenuMoveParams } from '#/business'
-import type { RequestMeta } from '#/request'
 
 export function getMenu(
   /** 是否筛选掉禁用的菜单 */
@@ -17,14 +16,22 @@ export function addMenu(data: Pick<MenuItem, 'parentId' | 'name' | 'status'>) {
   return request.Post<string>('/menu', data)
 }
 
-export function setMenu(data: Pick<MenuItem, 'id' | 'name' | 'status'>) {
-  return request.Put<boolean>('/menu', data)
+export function setMenu({
+  id,
+  name,
+  status,
+}: Pick<MenuItem, 'id' | 'name' | 'status'>) {
+  return request.Put(`/menu/${id}`, { name, status })
 }
 
 export function removeMenu(id: string) {
-  return request.Delete<boolean>('/menu', { id })
+  return request.Delete(`/menu/${id}`)
 }
 
-export function moveMenu(data: MenuMoveParams) {
-  return request.Post<boolean>('/menu/move', data)
+export function moveMenu({
+  currentIndex,
+  id,
+  currentParentId,
+}: MenuMoveParams) {
+  return request.Post(`/menu/move/${id}`, { currentIndex, currentParentId })
 }

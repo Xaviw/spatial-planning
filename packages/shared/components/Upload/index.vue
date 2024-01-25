@@ -61,9 +61,13 @@
 <script setup lang="ts">
 import { upload, mergeUpload, checkHash } from '@sp/shared/apis'
 import { FilePreview } from '@sp/shared/components'
-import { calcFileHash, getFileIconAndType } from '@sp/shared/utils'
+import {
+  calcFileHash,
+  getFileIconAndType,
+  isString,
+  uuid,
+} from '@sp/shared/utils'
 import { Empty, message } from 'ant-design-vue'
-import { isString, uniqueId } from 'lodash-es'
 import type { FileItemType } from '#/materials'
 import type { FileType, UploadFile } from 'ant-design-vue/es/upload/interface'
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
@@ -106,7 +110,7 @@ watchEffect(() => {
   }
   const list = Array.isArray(model.value) ? model.value : [model.value]
   fileList.value = list.map(url => ({
-    uid: uniqueId(),
+    uid: uuid(),
     name: url.split('/')?.pop() ?? url,
     status: 'done',
     url,

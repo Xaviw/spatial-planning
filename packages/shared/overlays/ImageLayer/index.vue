@@ -9,7 +9,6 @@ import {
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
 import { message } from 'ant-design-vue'
-import { omit } from 'lodash-es'
 import { getStaticFile } from '../../utils'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
@@ -125,7 +124,8 @@ watch(
 watch(
   () => imageLayerProps.props,
   options => {
-    options && rectangle.setOptions(omit(options, 'bounds', 'url', 'opacity'))
+    const { bounds, url, opacity, ...option } = options
+    options && rectangle.setOptions(option)
   },
   { deep: true },
 )

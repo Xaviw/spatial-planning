@@ -1,7 +1,7 @@
 import { ContentWrapper } from '@sp/shared/components'
 import { useModal } from '@sp/shared/hooks'
 import { components } from '@sp/shared/materials'
-import { cloneDeep, merge } from 'lodash-es'
+import { merge } from '@sp/shared/utils'
 import type { OverlayItem, OverlayType } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 import type { Ref } from 'vue'
@@ -43,7 +43,7 @@ function openDetail(data: OverlayItem<OverlayType>) {
           data.details.map(comp =>
             h(
               components[comp.type],
-              merge(cloneDeep(comp.props), {
+              merge(structuredClone(comp.props), {
                 style: { marginBottom: '0.5rem' },
               }),
             ),

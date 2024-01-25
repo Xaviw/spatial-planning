@@ -1,7 +1,7 @@
 import { defineMock } from '@alova/mock'
 
 export default defineMock({
-  '-/config': () => {
+  '/config': () => {
     return {
       code: 1,
       data: {
@@ -17,7 +17,7 @@ export default defineMock({
       message: 'ok',
     }
   },
-  '-[PUT]/config': () => {
+  '[PUT]/config': () => {
     return {
       code: 1,
       data: true,

@@ -1,6 +1,6 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
+import { isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -114,7 +114,7 @@ export default {
         (mapStore.activeOverlay!.props as BezierCurveProps).path,
       )
     ) {
-      ;(layer.overlays[index].props as BezierCurveProps).path = cloneDeep(
+      ;(layer.overlays[index].props as BezierCurveProps).path = structuredClone(
         (overlay.props as BezierCurveProps).path,
       )
     }

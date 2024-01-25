@@ -60,9 +60,8 @@
 import { setMap } from '@sp/shared/apis'
 import { useMapStore } from '@sp/shared/helpers/map'
 import { useMenuTree } from '@sp/shared/hooks'
-import { getOperationsFromDiff, modal } from '@sp/shared/utils'
+import { getOperationsFromDiff, modal, isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { isEqual, omit } from 'lodash-es'
 import type {
   LayerItem,
   OverlayItem,
@@ -173,9 +172,11 @@ function onSubmit() {
       for (let detail of overlay.details) {
         sourceDetails.push(detail)
       }
-      sourceOverlays.push(omit(overlay, 'details'))
+      const { details, ...sourceOverlay } = overlay
+      sourceOverlays.push(sourceOverlay)
     }
-    sourceLayers.push(omit(layer, 'overlays'))
+    const { overlays, ...sourceLayer } = layer
+    sourceLayers.push(sourceLayer)
   }
 
   for (let layer of mapData.value) {
@@ -183,9 +184,11 @@ function onSubmit() {
       for (let detail of overlay.details) {
         currentDetails.push(detail)
       }
-      currentOverlays.push(omit(overlay, 'details'))
+      const { details, ...currentOverlay } = overlay
+      currentOverlays.push(currentOverlay)
     }
-    currentLayers.push(omit(layer, 'overlays'))
+    const { overlays, ...currentLayer } = layer
+    currentLayers.push(currentLayer)
   }
 
   const layers = getOperationsFromDiff(currentLayers, sourceLayers, 'sort')

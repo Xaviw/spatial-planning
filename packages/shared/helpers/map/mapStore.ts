@@ -6,7 +6,6 @@ import type {
   OverlayInstance,
   ToolType,
 } from '#/business'
-import type { Loca } from '#/loca'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 export const useMapStore = defineStore('map', () => {
@@ -38,7 +37,6 @@ export const useMapStore = defineStore('map', () => {
   })
 
   const map = ref<AMap.Map>()
-  const loca = ref<Loca.Container>()
   const labelsLayer = ref<AMap.LabelsLayer>()
   const mousetool = ref<AMap.MouseTool>()
   const polylineEditor = ref<AMap.PolylineEditor>()
@@ -75,7 +73,6 @@ export const useMapStore = defineStore('map', () => {
     loading,
     getMapData,
     map,
-    loca,
     activeOverlay,
     layers,
     canRedo,

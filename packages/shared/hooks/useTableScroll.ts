@@ -1,5 +1,5 @@
+import { isNumber } from '@sp/shared/utils'
 import { Table } from 'ant-design-vue'
-import { debounce } from 'lodash-es'
 import type { MaybeRef } from 'vue'
 
 export function useTableScroll(
@@ -11,19 +11,20 @@ export function useTableScroll(
   const getScrollY = async () => {
     await nextTick()
     const parent: HTMLDivElement = (instance as Ref<InstanceType<typeof Table>>)
-      .value.$parent.$el
+      ?.value?.$parent?.$el
+    if (!parent) return
     const parentRect = parent.getBoundingClientRect()
 
     const header = parent.querySelector('thead')
     const headerRect = header!.getBoundingClientRect()
 
     const height = parentRect.height - headerRect.height
-    if (typeof height === 'number') {
+    if (isNumber(height)) {
       scroll.y = height
     }
   }
 
-  const calcFunc = debounce(getScrollY, 1000)
+  const calcFunc = useDebounceFn(getScrollY, 1000)
 
   onMounted(() => {
     instance = isRef(instance) ? instance : ref(instance)

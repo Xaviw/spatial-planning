@@ -52,6 +52,7 @@
 
 <script setup lang="ts">
 import { useMapStore } from '@sp/shared/helpers/map'
+import { uuid } from '@sp/shared/utils'
 import { Empty } from 'ant-design-vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import LayerItemComponent from './layerItem.vue'
@@ -79,7 +80,7 @@ function onSave(data: Omit<LayerItem<OverlayType>, 'overlays'>) {
 }
 
 function onAdd() {
-  const id = `add_${Date.now()}`
+  const id = `add_${uuid()}`
   model.value.push({
     id,
     asLegend: false,

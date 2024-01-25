@@ -1,5 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from 'lodash-es'
+import { isEqual } from '@sp/shared/utils'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -77,7 +77,7 @@ export default {
         (mapStore.activeOverlay!.props as MarkerProps).position,
       )
     ) {
-      ;(layer.overlays[index].props as MarkerProps).position = cloneDeep(
+      ;(layer.overlays[index].props as MarkerProps).position = structuredClone(
         overlay.props.position,
       )
     }

@@ -16,14 +16,6 @@ export type Config = Partial<AMap.MapOptions> & {
   controlbarPosition?: (number | null)[]
 }
 
-// -----------------附件-----------------
-export interface Attachment {
-  id: string
-  type: string
-  url: string
-  createTime: string
-}
-
 // -----------------菜单-----------------
 export interface MenuItem {
   id: string
@@ -56,12 +48,20 @@ export type SiderPosition = 'left' | 'right'
 
 export interface SiderItem {
   id: string
+  menuId: string
+  sort: number
   material: MaterialItem
   status: boolean
   position: SiderPosition
   createTime: string
   updateTime?: string
 }
+
+export type SetSiderParams = OperationItem<
+  Omit<SiderItem, 'material', 'createTime', 'updateTime'> & {
+    material: Omit<MaterialItem, 'overlayId'>
+  }
+>[]
 
 // -----------------标题组件、覆盖物详情-----------------
 export type MaterialType =
@@ -81,8 +81,12 @@ export type MaterialType =
 
 export interface MaterialItem {
   id: string
+  siderId?: string
+  overlayId?: string
+  sort: number
   type: MaterialType
   props: Recordable
+  status: boolean
 }
 
 // -----------------变动记录-----------------
@@ -95,27 +99,6 @@ export interface OperationItem<T extends Recordable> {
 }
 
 // -----------------地图-----------------
-export type Anchor =
-  | 'top-left'
-  | 'top-center'
-  | 'top-right'
-  | 'middle-left'
-  | 'center'
-  | 'middle-right'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'bottom-right'
-
-export interface MapEvent {
-  lnglat: AMap.LngLat
-  originEvent: Event
-  pixel: AMap.Pixel
-  pos: AMap.Vector2
-  target: ValueTypes<OverlayInstance> & { _map: AMap.Map }
-  type: string
-  vectorIndex: number
-}
-
 export type OverlayType =
   | 'Marker'
   | 'Polyline'
@@ -130,6 +113,117 @@ export type OverlayType =
   | 'ImageLayer'
 
 export type ToolType = OverlayType | 'Location'
+
+export interface OverlayItem<T extends OverlayType = OverlayType> {
+  id: string
+  layerId: string
+  type: T
+  name: string
+  props: OverlayOptions[T]
+  modalTitle?: string
+  modalWidth?: string
+  materials: MaterialItem[]
+  status?: boolean
+  createTime: string
+  updateTime?: string
+}
+
+export type OverlayProps<T extends OverlayType = OverlayType> =
+  OverlayItem<T> & {
+    visible: boolean
+  }
+
+export interface OverlayInstance {
+  Marker: AMap.Marker
+  Polyline: AMap.Polyline
+  BezierCurve: AMap.BezierCurve
+  Polygon: AMap.Polygon
+  Rectangle: AMap.Rectangle
+  Circle: AMap.Circle
+  Ellipse: AMap.Ellipse
+  Text: AMap.Text
+  LabelMarker: AMap.LabelMarker
+  ElasticMarker: ElasticMarker
+  ImageLayer: AMap.ImageLayer
+}
+
+export interface OverlayOptions {
+  Marker: MarkerProps
+  Polyline: PolylineProps
+  BezierCurve: BezierCurveProps
+  Polygon: PolygonProps
+  Rectangle: RectangleProps
+  Circle: CircleProps
+  Ellipse: EllipseProps
+  Text: TextProps
+  LabelMarker: LabelMarkerProps
+  ElasticMarker: ElasticMarkerProps
+  ImageLayer: AMap.ImageLayerOptions
+}
+
+export interface LayerItem<T extends OverlayType = OverlayType> {
+  id: string
+  menuId: string
+  name: string
+  asLegend: boolean
+  legendImg?: string
+  overlays: OverlayItem<T>[]
+  status: boolean
+  sort: number
+  createTime: string
+  updateTime?: string
+}
+
+export interface OverlayModule {
+  type: ToolType
+  sort: number
+  defaultZIndex?: number
+  toolItemStyle?: string
+  overlay?: ComponentOptions
+  form?: ComponentOptions
+  name: string
+  icon: string
+  description?: string
+  drawHelp?: string[]
+  editHelp?: string[]
+  handleDraw?: Fn<[any, boolean]>
+  afterDraw?: Fn<[any, ValueTypes<OverlayInstance>]>
+  handleEdit?: Fn<[any, boolean]>
+  cancelEdit?: Fn<
+    [any, LayerItem<OverlayType>, number, OverlayItem<OverlayType>]
+  >
+}
+
+export interface SetMapParams {
+  layers: OperationItem<
+    Omit<LayerItem, 'overlays', 'createTime', 'updateTime'>
+  >[]
+  overlays: OperationItem<
+    Omit<OverlayItem, 'materials', 'createTime', 'updateTime'>
+  >[]
+  materials: OperationItem<MaterialItem>[]
+}
+
+export interface MapEvent {
+  lnglat: AMap.LngLat
+  originEvent: Event
+  pixel: AMap.Pixel
+  pos: AMap.Vector2
+  target: ValueTypes<OverlayInstance> & { _map: AMap.Map }
+  type: string
+  vectorIndex: number
+}
+
+export type Anchor =
+  | 'top-left'
+  | 'top-center'
+  | 'top-right'
+  | 'middle-left'
+  | 'center'
+  | 'middle-right'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'bottom-right'
 
 export type MarkerProps = Pick<
   AMap.MarkerOptions,
@@ -371,87 +465,4 @@ export interface ElasticMarker extends AMap.Eventable {
   off: Fn<[string, Fn]>
   clearEvents: Fn<[string]>
   getPosition: Fn<any[], AMap.LngLat>
-}
-
-export interface OverlayInstance {
-  Marker: AMap.Marker
-  Polyline: AMap.Polyline
-  BezierCurve: AMap.BezierCurve
-  Polygon: AMap.Polygon
-  Rectangle: AMap.Rectangle
-  Circle: AMap.Circle
-  Ellipse: AMap.Ellipse
-  Text: AMap.Text
-  LabelMarker: AMap.LabelMarker
-  ElasticMarker: ElasticMarker
-  ImageLayer: AMap.ImageLayer
-}
-
-export interface OverlayOptions {
-  Marker: MarkerProps
-  Polyline: PolylineProps
-  BezierCurve: BezierCurveProps
-  Polygon: PolygonProps
-  Rectangle: RectangleProps
-  Circle: CircleProps
-  Ellipse: EllipseProps
-  Text: TextProps
-  LabelMarker: LabelMarkerProps
-  ElasticMarker: ElasticMarkerProps
-  ImageLayer: AMap.ImageLayerOptions
-}
-
-export interface OverlayItem<T extends OverlayType> {
-  id: string
-  layerId: string
-  type: T
-  name: string
-  props: OverlayOptions[T]
-  detailTitle?: string
-  detailWidth?: string
-  details: MaterialItem[]
-  status?: boolean
-  createTime: string
-  updateTime?: string
-}
-
-export type OverlayProps<T extends OverlayType> = OverlayItem<T> & {
-  visible: boolean
-}
-
-export interface LayerItem<T extends OverlayType> {
-  id: string
-  name: string
-  asLegend: boolean
-  legendImg?: string
-  overlays: OverlayItem<T>[]
-  status: boolean
-  createTime: string
-  updateTime?: string
-}
-
-export interface OverlayModule {
-  type: ToolType
-  sort: number
-  defaultZIndex?: number
-  toolItemStyle?: string
-  overlay?: ComponentOptions
-  form?: ComponentOptions
-  name: string
-  icon: string
-  description?: string
-  drawHelp?: string[]
-  editHelp?: string[]
-  handleDraw?: Fn<[any, boolean]>
-  afterDraw?: Fn<[any, ValueTypes<OverlayInstance>]>
-  handleEdit?: Fn<[any, boolean]>
-  cancelEdit?: Fn<
-    [any, LayerItem<OverlayType>, number, OverlayItem<OverlayType>]
-  >
-}
-
-export interface MapMutativeState {
-  layers: Omit<LayerItem<OverlayType>, 'overlays'>[]
-  overlays: Omit<OverlayItem<OverlayType>, 'details'>[]
-  details: MaterialItem[]
 }

@@ -9,17 +9,6 @@ export type SortableEvent = Parameters<
 
 export interface TitleProps {
   title: string
-  /**
-   * 详情弹窗宽度
-   * @default 25rem
-   */
-  modalWidth?: string
-  /**
-   * 弹窗标题，默认`${title}详情`
-   */
-  modalTitle?: string
-  /** 弹窗内容，提供后组件右侧会显示详情按钮 */
-  modalData?: MaterialItem[]
 }
 
 export interface SubTitleProps {

@@ -9,24 +9,22 @@
       <template v-if="enableContextMenu">
         <div
           v-for="(comp, index) of model"
-          :key="comp.id"
+          :key="comp.id || index"
           :class="['mb-2', selectedId === comp.id && 'sider-selected']"
         >
           <ADropdown :trigger="['contextmenu']">
             <div>
               <component
-                :is="components[comp.type]"
+                :is="components[comp.material.type]"
                 :key="comp.id"
-                v-bind="comp.props"
+                v-bind="comp.material.props"
               />
             </div>
 
             <template #overlay>
               <AMenu>
-                <AMenuItem key="edit" @click="onEdit(comp, index)">
-                  编辑
-                </AMenuItem>
-                <AMenuItem key="remove" @click="onRemove(comp, index)">
+                <AMenuItem key="edit" @click="onEdit(comp)">编辑</AMenuItem>
+                <AMenuItem key="remove" @click="onRemove(index, comp)">
                   删除
                 </AMenuItem>
               </AMenu>
@@ -37,11 +35,11 @@
 
       <template v-else>
         <component
-          v-for="comp of model"
-          :key="comp.id"
+          v-for="(comp, index) of model"
+          :key="comp.id || index"
           :class="['mb-2', selectedId === comp.id && 'sider-selected']"
-          :is="components[comp.type]"
-          v-bind="comp.props"
+          :is="components[comp.material.type]"
+          v-bind="comp.material.props"
         />
       </template>
     </TransitionGroup>
@@ -56,12 +54,10 @@
   </VueDraggable>
 </template>
 
-<script setup lang="ts" generic="T extends MaterialItem">
+<script setup lang="ts" generic="T extends SiderItem">
 import { components } from '@sp/shared/materials'
-import { toRawValue } from '@sp/shared/utils'
-import { cloneDeep } from 'lodash-es'
 import { VueDraggable } from 'vue-draggable-plus'
-import type { MaterialItem, SiderPosition } from '#/business'
+import type { SiderItem } from '#/business'
 
 withDefaults(
   defineProps<{
@@ -76,20 +72,18 @@ withDefaults(
 )
 
 const emits = defineEmits<{
-  (e: 'edit', item: T, index: number): void
-  (e: 'remove', position: SiderPosition, index: number, item: T): void
+  (e: 'edit', item: T): void
+  (e: 'remove', index: number, item: T): void
 }>()
 
 const model = defineModel<T[]>({ default: [], required: true })
 
-const attrs = useAttrs()
-
-function onEdit(item: T, index: number) {
-  emits('edit', cloneDeep(toRawValue(item)), index)
+function onEdit(item: T) {
+  emits('edit', item)
 }
 
-function onRemove(item: T, index: number) {
-  emits('remove', attrs.id as SiderPosition, index, cloneDeep(toRawValue(item)))
+function onRemove(index: number, item: T) {
+  emits('remove', index, item)
 }
 </script>
 

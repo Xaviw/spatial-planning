@@ -5,7 +5,6 @@ import { createAlova, Method } from 'alova'
 import GlobalFetch from 'alova/GlobalFetch'
 import vueHook from 'alova/vue'
 import { message, notification, Modal } from 'ant-design-vue'
-import type { Res } from '#/request'
 
 type ErrorHandler = (
   response: Response,

@@ -1,4 +1,4 @@
-import type { SiderItem, MaterialType } from '#/business'
+import type { MaterialType, MaterialItem, SiderItem } from '#/business'
 
 export const componentTypes: { label: string; value: MaterialType }[] = [
   { label: '大标题', value: 'Title' },
@@ -17,43 +17,34 @@ export const componentTypes: { label: string; value: MaterialType }[] = [
 ]
 
 const materialsMap: {
-  [K in MaterialType]: Omit<SiderItem, 'position' | 'createTime' | 'updateTime'>
+  [K in MaterialType]: Omit<MaterialItem, 'id'>
 } = {
   Title: {
-    id: '',
     type: 'Title',
     props: {
       title: '大标题',
     },
-    status: true,
   },
   SubTitle: {
-    id: '',
     type: 'SubTitle',
     props: { title: '小标题' },
-    status: true,
   },
   DataCard: {
-    id: '',
     type: 'DataCard',
     props: {
       title: '数据卡片',
       content: 999,
       img: 'http://dummyimage.com/300x300',
     },
-    status: true,
   },
   Collapse: {
-    id: '',
     type: 'Collapse',
     props: {
       title: '折叠面板',
       content: '<p>自定义富文本</p>',
     },
-    status: true,
   },
   Description: {
-    id: '',
     type: 'Description',
     props: {
       column: 1,
@@ -62,10 +53,8 @@ const materialsMap: {
         { label: 'B', value: '自定义内容' },
       ],
     },
-    status: true,
   },
   Progress: {
-    id: '',
     type: 'Progress',
     props: {
       data: [
@@ -73,10 +62,8 @@ const materialsMap: {
         { name: '自定义名称', value: 50 },
       ],
     },
-    status: true,
   },
   Table: {
-    id: '',
     type: 'Table',
     props: {
       data: [
@@ -84,10 +71,8 @@ const materialsMap: {
         [1, 2, 3, 4],
       ],
     },
-    status: true,
   },
   FileList: {
-    id: '',
     type: 'FileList',
     props: {
       data: [
@@ -98,10 +83,8 @@ const materialsMap: {
         },
       ],
     },
-    status: true,
   },
   Carousel: {
-    id: '',
     type: 'Carousel',
     props: {
       data: [
@@ -109,10 +92,8 @@ const materialsMap: {
         'http://dummyimage.com/300x300?text=Carousel2',
       ],
     },
-    status: true,
   },
   PieChart: {
-    id: '',
     type: 'PieChart',
     props: {
       data: [
@@ -121,34 +102,33 @@ const materialsMap: {
         { name: 'B', value: 25 },
       ],
     },
-    status: true,
   },
   BarChart: {
-    id: '',
     type: 'BarChart',
     props: {
       xAxis: ['柱状图', 'A', 'B'],
       series: [{ data: [9, 8, 7] }],
     },
-    status: true,
   },
   LineChart: {
-    id: '',
     type: 'LineChart',
     props: {
       xAxis: ['折线图', 'A', 'B'],
       series: [{ data: [9, 8, 7] }],
     },
-    status: true,
   },
   Timeline: {
-    id: '',
     type: 'Timeline',
     props: {
       data: [{ content: '时间轴' }, { content: '自定义内容' }],
     },
-    status: true,
   },
 }
 
-export const materials = Object.values(materialsMap)
+export const materials = Object.values(materialsMap).map(
+  item =>
+    ({
+      material: item,
+      status: true,
+    }) as unknown as SiderItem,
+)

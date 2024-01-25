@@ -1,6 +1,6 @@
 import { overlayFactory, toolManage, useMapStore } from '@sp/shared/helpers/map'
+import { isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { cloneDeep, isEqual } from 'lodash-es'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -104,7 +104,7 @@ export default {
           (mapStore.activeOverlay!.props as CircleProps).center,
         )
       ) {
-        ;(layer.overlays[index].props as CircleProps).center = cloneDeep(
+        ;(layer.overlays[index].props as CircleProps).center = structuredClone(
           (overlay.props as CircleProps).center,
         )
       }

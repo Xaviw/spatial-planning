@@ -29,8 +29,7 @@
 <script setup lang="ts">
 import { useMapStore, findOverlay } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
-import { modal } from '@sp/shared/utils'
-import { cloneDeep, isEqual } from 'lodash-es'
+import { modal, isEqual } from '@sp/shared/utils'
 import BaseForm from './baseForm.vue'
 
 const baseFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
@@ -47,7 +46,7 @@ watch(activeOverlay, async overlay => {
       // 开启覆盖物编辑
       overlays[overlay.type].handleEdit?.(mapStore, true)
       // 开启表单编辑
-      editData.value = cloneDeep(overlay)
+      editData.value = structuredClone(overlay)
       baseFormEl.value.formModel = editData.value
       overlayFormEl.value.formModel = editData.value.props
     }

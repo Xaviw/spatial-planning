@@ -20,7 +20,6 @@ import {
   labelsLayerKey,
 } from '@sp/shared/helpers/map'
 import { useMap } from '@sp/shared/hooks'
-import { debounce } from 'lodash-es'
 
 const injectMap = inject(mapKey)!
 const injectLabelsLayer = inject(labelsLayerKey)!
@@ -77,7 +76,7 @@ useMap(
       plugins,
     },
   },
-  (_map, _loca) => {
+  _map => {
     loading.value = false
     map.value = _map
     injectMap.value = _map
@@ -135,7 +134,7 @@ function watchZoom() {
   zoom.value = map.value?.getZoom()
   map.value?.on(
     'zoomchange',
-    debounce(() => {
+    useDebounceFn(() => {
       zoom.value = map.value?.getZoom()
     }, 500),
   )

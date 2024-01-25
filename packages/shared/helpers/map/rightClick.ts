@@ -1,8 +1,7 @@
 import { findOverlay, toolManage, useMapStore } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
-import { modal } from '@sp/shared/utils'
+import { modal, isEqual, uuid } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { isEqual } from 'lodash-es'
 import type { MapEvent } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -52,7 +51,7 @@ export function bindRightClickEvent(overlay: AMap.Eventable) {
         const { layer, overlay } =
           findOverlay(mapData.value, activeId.value!) || {}
         if (layer && overlay) {
-          layer.overlays.push({ ...overlay, id: `add_${Date.now()}` })
+          layer.overlays.push({ ...overlay, id: `add_${uuid()}` })
           message.success('已复制，复制的覆盖物与原覆盖物重叠，请编辑！')
         }
         contextMenu.close()

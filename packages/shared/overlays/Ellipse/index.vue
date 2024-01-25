@@ -8,7 +8,6 @@ import {
   bindClickEvent,
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
-import { omit } from 'lodash-es'
 import type { OverlayProps } from '#/business'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -72,7 +71,8 @@ watch(
 watch(
   () => ellipseProps.props,
   options => {
-    options && ellipse.setOptions(omit(options, 'center', 'radius'))
+    const { center, radius, ...option } = options
+    options && ellipse.setOptions(option)
   },
   { deep: true },
 )

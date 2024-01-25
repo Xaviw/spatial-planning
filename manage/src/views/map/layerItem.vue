@@ -138,7 +138,6 @@
 import { Upload } from '@sp/shared/components'
 import { useMapStore } from '@sp/shared/helpers/map'
 import { getStaticFile } from '@sp/shared/utils'
-import { cloneDeep, omit } from 'lodash-es'
 import type { LayerItem, OverlayType } from '#/business'
 
 const props = defineProps<{
@@ -157,7 +156,8 @@ const visible = ref(true)
 const editData = ref<Omit<LayerItem<OverlayType>, 'overlays'>>()
 
 function edit() {
-  editData.value = cloneDeep(omit(props.layer, 'overlays'))
+  const { overlays, ...layer } = props.layer
+  editData.value = structuredClone(layer)
 }
 
 function cancel() {

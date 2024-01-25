@@ -26,61 +26,13 @@
     <span class="title flex-1 break-all text-xl font-bold">
       {{ title }}
     </span>
-
-    <div
-      class="title-btn mr-8 cursor-pointer border border-[#2e79b5] rounded-4px border-solid bg-[025493] p-3px"
-      v-if="modalData?.length"
-    >
-      <i class="i-ph:list-bold text-xl text-[#19ECFF]" @click="onOpenDetail" />
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ContentWrapper } from '@sp/shared/components'
-import { useModal } from '@sp/shared/hooks'
-import { components } from '@sp/shared/materials'
-import { cloneDeep, merge } from 'lodash-es'
 import type { TitleProps } from '#/materials'
 
-const props = withDefaults(defineProps<TitleProps>(), {
-  modalWidth: '25rem',
-})
-
-const { open, close } = useModal('TitleDetail')
-
-function onOpenDetail() {
-  open(
-    h(
-      ContentWrapper,
-      {
-        title: props.modalTitle || `${props.title}详情`,
-        onClose: close,
-        style: { width: props.modalWidth },
-      },
-      () =>
-        h(
-          'div',
-          {
-            style: {
-              maxHeight: '80vh',
-              overflow: 'auto',
-              backgroundColor: '#001231',
-              color: '#fff',
-            },
-          },
-          props.modalData!.map(comp =>
-            h(
-              components[comp.type],
-              merge(cloneDeep(comp.props), {
-                style: { marginBottom: '0.5rem' },
-              }),
-            ),
-          ),
-        ),
-    ),
-  )
-}
+defineProps<TitleProps>()
 </script>
 
 <style scoped>

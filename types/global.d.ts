@@ -45,3 +45,20 @@ type ComponentExposed<T> = T extends new () => infer E
     ) => any
   ? NonNullable<E>
   : NonNullable<unknown>
+
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I,
+) => void
+  ? I
+  : never
+
+interface Res<T> {
+  code: 0 | 1
+  data: T
+  message: string
+}
+
+interface RequestMeta {
+  isReturnNativeResponse?: boolean
+  errorMessageMode?: 'message' | 'modal' | 'notify' | 'none'
+}
