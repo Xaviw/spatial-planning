@@ -15,7 +15,7 @@
           <ADropdown :trigger="['contextmenu']">
             <div>
               <component
-                :is="components[comp.material.type]"
+                :is="materials[comp.material.type]"
                 :key="comp.id"
                 v-bind="comp.material.props"
               />
@@ -38,7 +38,7 @@
           v-for="(comp, index) of model"
           :key="comp.id || index"
           :class="['mb-2', selectedId === comp.id && 'sider-selected']"
-          :is="components[comp.material.type]"
+          :is="materials[comp.material.type]"
           v-bind="comp.material.props"
         />
       </template>
@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends SiderItem">
-import { components } from '@sp/shared/materials'
+import { materials } from '@sp/shared/materials'
 import { VueDraggable } from 'vue-draggable-plus'
 import type { SiderItem } from '#/business'
 

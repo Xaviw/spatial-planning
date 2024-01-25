@@ -1,13 +1,13 @@
-<!-- <template>
+<template>
   <div class="flex flex-col">
-    <template v-if="activeOverlay">
+    <template v-if="selectedItem">
       <div class="flex-1 overflow-x-hidden overflow-y-auto">
         <BaseForm ref="baseFormEl" />
 
         <component
-          :is="components[activeOverlay.type].form"
-          :key="activeOverlay.id"
-          ref="overlayFormEl"
+          :is="materials[selectedItem.material.type].form"
+          :key="selectedItem.id"
+          ref="materialFormEl"
         />
       </div>
 
@@ -28,16 +28,27 @@
 
 <script setup lang="ts">
 import { useSiderStore } from '@sp/shared/helpers/sider'
-import { components } from '@sp/shared/materials'
+import { materials } from '@sp/shared/materials'
 import BaseForm from './baseForm.vue'
 
 const baseFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
-const overlayFormEl = ref<any | null>(null)
+const materialFormEl = ref<any | null>(null)
+
+watchEffect(() => {
+  if (baseFormEl.value && materialFormEl.value) {
+    bf.value = baseFormEl.value
+    mf.value = materialFormEl.value
+  }
+})
 
 const siderStore = useSiderStore()
-const {} = storeToRefs(siderStore)
+const {
+  selectedItem,
+  baseFormEl: bf,
+  materialFormEl: mf,
+} = storeToRefs(siderStore)
 
 function onConfirm() {}
 
 function onCancel() {}
-</script> -->
+</script>

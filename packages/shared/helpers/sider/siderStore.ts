@@ -18,6 +18,17 @@ export const useSiderStore = defineStore('sider', () => {
     deep: true,
   })
 
+  const baseFormEl = ref<any>(null)
+  const materialFormEl = ref<any>(null)
+
+  function getFormModel() {
+    if (!baseFormEl.value || !materialFormEl.value) return
+    return structuredClone({
+      ...baseFormEl.value.formModel,
+      material: materialFormEl.value.formModel,
+    })
+  }
+
   function getList(menuId: string) {
     loading.value = true
 
@@ -47,8 +58,8 @@ export const useSiderStore = defineStore('sider', () => {
   async function edit(item: SiderItem) {
     if (selectedItem.value) {
       if (item.id === selectedItem.value.id) return
-      const data = await formBarEl.value!.getData()
-      if (!isEqual(data, selectedItem)) {
+      const data = getFormModel()
+      if (data && !isEqual(data, selectedItem.value)) {
         await modal('confirm', {
           title: '提示！',
           content: '您有正在编辑的组件还未保存，是否直接切换？',
@@ -60,6 +71,7 @@ export const useSiderStore = defineStore('sider', () => {
   }
 
   return {
+    getFormModel,
     list,
     getList,
     loading,
@@ -72,5 +84,7 @@ export const useSiderStore = defineStore('sider', () => {
     selectedItem,
     selectedMenu,
     edit,
+    baseFormEl,
+    materialFormEl,
   }
 })

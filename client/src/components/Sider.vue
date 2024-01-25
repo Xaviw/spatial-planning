@@ -14,7 +14,7 @@
       <component
         v-for="item of data"
         :key="item.id"
-        :is="components[item.material.type]"
+        :is="materials[item.material.type]"
         v-bind="item.material.props"
         class="mb-2"
       />
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { Loading } from '@sp/shared/components'
-import { components } from '@sp/shared/materials'
+import { materials } from '@sp/shared/materials'
 import { useMainStore } from '../stores/main'
 import type { SiderPosition } from '#/business'
 
