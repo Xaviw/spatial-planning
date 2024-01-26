@@ -1,8 +1,8 @@
 import { ContentWrapper } from '@sp/shared/components'
 import { useModal } from '@sp/shared/hooks'
 import { materials } from '@sp/shared/materials'
-import { merge } from '@sp/shared/utils'
-import type { OverlayItem, OverlayType } from '#/business'
+import { cloneDeep, merge } from '@sp/shared/utils'
+import type { OverlayItem, OverlayType } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 import type { Ref } from 'vue'
 
@@ -11,7 +11,7 @@ export function bindClickEvent(
   data: Ref<OverlayItem<OverlayType>>,
 ) {
   overlay.on('click', () => {
-    if (data?.value?.details.length) {
+    if (data?.value?.materials.length) {
       openDetail(data.value)
     }
   })
@@ -25,9 +25,9 @@ function openDetail(data: OverlayItem<OverlayType>) {
     h(
       ContentWrapper,
       {
-        title: data.detailTitle || `${data.name}详情`,
+        title: data.modalTitle || `${data.name}详情`,
         onClose: close,
-        style: { width: data.detailWidth || '25rem' },
+        style: { width: data.modalWidth || '25rem' },
       },
       () =>
         h(
@@ -40,10 +40,10 @@ function openDetail(data: OverlayItem<OverlayType>) {
               color: '#fff',
             },
           },
-          data.details.map(comp =>
+          data.materials.map(comp =>
             h(
               materials[comp.type],
-              merge(structuredClone(comp.props), {
+              merge(cloneDeep(comp.props), {
                 style: { marginBottom: '0.5rem' },
               }),
             ),

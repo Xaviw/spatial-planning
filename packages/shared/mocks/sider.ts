@@ -1,17 +1,17 @@
 import { defineMock } from '@alova/mock'
 import Mock from 'mockjs'
 import materialStrategies from './materialStrategies'
-import type { GetSiderParams } from '@sp/shared/apis'
+import type { GetSiderParams } from '#/business'
 
 export default defineMock({
-  '-/sider': ({ query }) => {
+  '/sider': ({ query }) => {
     return {
       code: 1,
       data: genList(8, 50, query as GetSiderParams),
       message: 'ok',
     }
   },
-  '-[POST]/sider': () => {
+  '[POST]/sider': () => {
     return {
       code: 1,
       data: true,
@@ -28,11 +28,12 @@ function genList(min: number, max: number, params: GetSiderParams) {
     return {
       ...material,
       id: Mock.Random.id(),
+      materialId: Mock.Random.id(),
       status:
         (params.filter as unknown as string) === 'true'
           ? undefined
           : Mock.Random.boolean(),
-      position: params.position,
+      // position: params.position,
       createTime: new Date().toLocaleString(),
       updateTime: new Date().toLocaleString(),
     }

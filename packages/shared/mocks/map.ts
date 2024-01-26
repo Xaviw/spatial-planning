@@ -2,22 +2,21 @@ import { defineMock } from '@alova/mock'
 import { generateRandomDecimal } from '@sp/shared/utils'
 import Mock from 'mockjs'
 import materialStrategies from './materialStrategies'
+import type { MaterialItem } from '#/materials'
 import type {
   LayerItem,
   MarkerProps,
-  MaterialItem,
   OverlayItem,
   OverlayType,
   PolygonProps,
   PolylineProps,
-} from '#/business'
-import type { GetMapParams } from '@sp/shared/apis'
+} from '#/overlays'
 
 export default defineMock({
   '/map': ({ query }) => {
     return {
       code: 1,
-      data: genList(2, 4, 1, 3, 3, 6, query as GetMapParams),
+      data: genList(2, 4, 1, 3, 3, 6, query),
       message: 'ok',
     }
   },
@@ -37,7 +36,7 @@ function genList(
   oMax: number,
   dMin: number,
   dMax: number,
-  params: GetMapParams,
+  params,
 ) {
   if (!['11', '121', '122', '13'].includes(params.menuId)) return []
   const keys = Object.keys(generationFunctions)
@@ -70,9 +69,9 @@ function genList(
             createTime: new Date().toLocaleString(),
             updateTime: new Date().toLocaleString(),
             props: functions[randomIndex](params),
-            detailTitle: Mock.Random.ctitle(),
-            detailWidth: Mock.Random.natural(25, 80) + 'rem',
-            details: genDetails(dMin, dMax),
+            modalTitle: Mock.Random.ctitle(),
+            modalWidth: Mock.Random.natural(25, 80) + 'rem',
+            materials: genMaterials(dMin, dMax),
           } as OverlayItem<OverlayType>
         },
       ),
@@ -80,18 +79,22 @@ function genList(
   })
 }
 
-function genDetails(min: number, max: number) {
+function genMaterials(min: number, max: number) {
   const strategies = Object.values(materialStrategies)
   return Array.from({ length: Mock.Random.natural(min, max) }).map(() => {
     return {
       ...strategies[Mock.Random.natural(0, strategies.length - 1)](),
       id: Mock.Random.id(),
+      sort: 1,
+      status: true,
+      createTime: new Date().toLocaleString(),
+      updateTime: new Date().toLocaleString(),
     } as MaterialItem
   })
 }
 
 const generationFunctions = {
-  Marker(_params: GetMapParams): MarkerProps {
+  Marker(_params): MarkerProps {
     return {
       position: [
         generateRandomDecimal(103.95, 104.2, 6),

@@ -242,7 +242,7 @@ import { Vector, Upload } from '@sp/shared/components'
 import { anchorOptions, directionOptions } from '@sp/shared/helpers/map'
 import { Form } from 'ant-design-vue'
 import { ColorPicker } from 'vue3-colorpicker'
-import type { LabelMarkerProps } from '#/business'
+import type { LabelMarkerProps } from '#/overlays'
 
 function onIconUpdate(key: keyof Required<LabelMarkerProps>['icon'], value) {
   if (!formModel.value.icon) {

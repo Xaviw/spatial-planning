@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
-import { isNumber } from '@sp/shared/utils'
 import { PrismaService } from '../global/prisma.service'
+import { isNumber } from '../utils'
 import { CreateMenuDto, MoveMenuDto, UpdateMenuDto } from './dto'
 import type { MenuItem } from '#/business'
 

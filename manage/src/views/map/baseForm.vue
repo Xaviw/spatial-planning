@@ -38,16 +38,16 @@
 
     <AFormItem label="详情弹窗内容" help="添加内容后，单击覆盖物可以打开弹窗">
       <AButton @click="openDetail">
-        {{ `点击设置（当前包含详情${formModel.details?.length || 0}条）` }}
+        {{ `点击设置（当前包含详情${formModel.materials?.length || 0}条）` }}
       </AButton>
     </AFormItem>
 
     <AFormItem label="详情弹窗标题" help="默认“标题名+详情弹窗”">
-      <AInput v-model:value="formModel.detailTitle" />
+      <AInput v-model:value="formModel.modalTitle" />
     </AFormItem>
 
     <AFormItem label="详情弹窗宽度" help="默认“25rem”">
-      <CssSizeInput v-model="formModel.detailWidth" />
+      <CssSizeInput v-model="formModel.modalWidth" />
     </AFormItem>
   </AForm>
 </template>
@@ -55,11 +55,12 @@
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
 import { useMapStore } from '@sp/shared/helpers/map'
-import { SiderModalEditor } from '@sp/shared/helpers/sider'
 import { useModal } from '@sp/shared/hooks'
 import { overlayOptions } from '@sp/shared/overlays'
 import { Form } from 'ant-design-vue'
-import type { MaterialItem, OverlayItem, OverlayType } from '#/business'
+import MaterialEditorModal from './materialEditorModal.vue'
+import type { MaterialItem } from '#/materials'
+import type { OverlayItem, OverlayType } from '#/overlays'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const { layers } = storeToRefs(useMapStore())
@@ -97,12 +98,12 @@ const { open, close } = useModal('OverlayDetailEditor', {
 
 function openDetail() {
   open(
-    h(SiderModalEditor, {
+    h(MaterialEditorModal, {
       id: formModel.value.id!,
       modalTitle:
-        formModel.value.detailTitle || `${formModel.value.name}详情内容`,
-      modalData: structuredClone(formModel.value.details!),
-      modalWidth: formModel.value.detailWidth!,
+        formModel.value.modalTitle || `${formModel.value.name}详情内容`,
+      materials: formModel.value.materials!,
+      modalWidth: formModel.value.modalWidth!,
       onConfirm: onDetailConfirm,
       onClose: close,
     }),
@@ -110,7 +111,7 @@ function openDetail() {
 }
 
 function onDetailConfirm(list: MaterialItem[]) {
-  formModel.value.details = list
+  formModel.value.materials = list
 }
 
 defineExpose({

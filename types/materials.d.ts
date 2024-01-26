@@ -1,7 +1,56 @@
 import { CSSProperties } from 'vue'
-import type { MaterialItem } from './request'
 import type { PieSeriesOption } from 'echarts/charts'
 import type { UseDraggableOptions } from 'vue-draggable-plus'
+
+export type MaterialLike<T extends MaterialType = MaterialType> = Pick<
+  MaterialItem<T>,
+  'type' | 'props'
+> & {
+  id?: string
+}
+
+export type MaterialType =
+  | 'BarChart'
+  | 'Carousel'
+  | 'Collapse'
+  | 'DataCard'
+  | 'Description'
+  | 'FileList'
+  | 'LineChart'
+  | 'PieChart'
+  | 'Progress'
+  | 'SubTitle'
+  | 'Table'
+  | 'Timeline'
+  | 'Title'
+
+export interface MaterialItem<T extends MaterialType = MaterialType> {
+  id: string
+  siderId?: string
+  overlayId?: string
+  sort: number
+  type: MaterialType
+  props: MaterialProps[T]
+  status: boolean
+  createTime: string
+  updateTime?: string
+}
+
+export interface MaterialProps {
+  Title: TitleProps
+  SubTitle: SubTitleProps
+  DataCard: DataCardProps
+  Collapse: CollapseProps
+  Description: DescriptionProps
+  Progress: ProgressProps
+  Table: TableProps
+  FileList: FileListProps
+  Carousel: CarouselProps
+  PieChart: PieChartProps
+  BarChart: BarChartProps
+  LineChart: LineChartProps
+  Timeline: TimelineProps
+}
 
 export type SortableEvent = Parameters<
   NonNullable<Pick<UseDraggableOptions<any>, 'onAdd'>['onAdd']>

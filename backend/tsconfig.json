@@ -4,6 +4,7 @@
     "src/**/*",
     "../types/global.d.ts",
     "../types/business.d.ts",
-    "../types/materials.d.ts"
+    "../types/materials.d.ts",
+    "../types/overlays.d.ts"
   ]
 }

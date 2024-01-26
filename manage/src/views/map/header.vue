@@ -62,12 +62,8 @@ import { useMapStore } from '@sp/shared/helpers/map'
 import { useMenuTree } from '@sp/shared/hooks'
 import { getOperationsFromDiff, modal, isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import type {
-  LayerItem,
-  OverlayItem,
-  OverlayType,
-  MaterialItem,
-} from '#/business'
+import type { MaterialItem } from '#/materials'
+import type { LayerItem, OverlayItem, OverlayType } from '#/overlays'
 
 const mapStore = useMapStore()
 

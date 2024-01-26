@@ -151,7 +151,7 @@
 import { CodeInput, Vector, Upload } from '@sp/shared/components'
 import { anchorOptions, directionOptions } from '@sp/shared/helpers/map'
 import { Form } from 'ant-design-vue'
-import type { MarkerProps } from '#/business'
+import type { MarkerProps } from '#/overlays'
 
 function onLabelUpdate(value: any, key: 'content' | 'direction' | 'offset') {
   if (!formModel.value.label) {

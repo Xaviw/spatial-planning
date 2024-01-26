@@ -1,6 +1,6 @@
 import 'alova/GlobalFetch'
 import { request } from '@sp/shared/utils'
-import type { LayerItem, SetMapParams } from '#/business'
+import type { LayerItem, SetMapParams } from '#/overlays'
 
 export function getMap(menuId: string, filter: boolean) {
   const method = request.Get<LayerItem[]>('/map', {

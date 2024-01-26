@@ -1,15 +1,16 @@
 import { AMap } from '@amap/amap-jsapi-types'
 import { useMapStore } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
-import { isNumber, uuid } from '@sp/shared/utils'
+import { isNumber } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
+import { v4 as uuid } from 'uuid'
 import type {
   LayerItem,
   OverlayItem,
   OverlayOptions,
   OverlayType,
   ToolType,
-} from '#/business'
+} from '#/overlays'
 import type { InjectionKey, Ref } from 'vue'
 
 export const mapKey: InjectionKey<Ref<AMap.Map | undefined>> = Symbol('map')

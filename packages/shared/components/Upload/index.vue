@@ -61,13 +61,9 @@
 <script setup lang="ts">
 import { upload, mergeUpload, checkHash } from '@sp/shared/apis'
 import { FilePreview } from '@sp/shared/components'
-import {
-  calcFileHash,
-  getFileIconAndType,
-  isString,
-  uuid,
-} from '@sp/shared/utils'
+import { calcFileHash, getFileIconAndType, isString } from '@sp/shared/utils'
 import { Empty, message } from 'ant-design-vue'
+import { v4 as uuid } from 'uuid'
 import type { FileItemType } from '#/materials'
 import type { FileType, UploadFile } from 'ant-design-vue/es/upload/interface'
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'

@@ -1,5 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { isEqual } from '@sp/shared/utils'
+import { cloneDeep, isEqual } from '@sp/shared/utils'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -9,7 +9,7 @@ import type {
   OverlayType,
   MapEvent,
   OverlayModule,
-} from '#/business'
+} from '#/overlays'
 
 function synchronization(mapStore: ReturnType<typeof useMapStore>) {
   if (!(mapStore.activeInstance instanceof window.AMap.Text)) return
@@ -78,7 +78,7 @@ export default {
         (mapStore.activeOverlay!.props as TextProps).position,
       )
     ) {
-      ;(layer.overlays[index].props as TextProps).position = structuredClone(
+      ;(layer.overlays[index].props as TextProps).position = cloneDeep(
         overlay.props.position,
       )
     }

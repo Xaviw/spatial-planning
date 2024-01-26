@@ -1,5 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { isEqual } from '@sp/shared/utils'
+import { cloneDeep, isEqual } from '@sp/shared/utils'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -9,7 +9,7 @@ import type {
   OverlayItem,
   OverlayModule,
   OverlayType,
-} from '#/business'
+} from '#/overlays'
 
 export default {
   type: 'Marker',
@@ -77,7 +77,7 @@ export default {
         (mapStore.activeOverlay!.props as MarkerProps).position,
       )
     ) {
-      ;(layer.overlays[index].props as MarkerProps).position = structuredClone(
+      ;(layer.overlays[index].props as MarkerProps).position = cloneDeep(
         overlay.props.position,
       )
     }

@@ -1,5 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { isEqual } from '@sp/shared/utils'
+import { cloneDeep, isEqual } from '@sp/shared/utils'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -9,7 +9,7 @@ import type {
   OverlayType,
   MapEvent,
   OverlayModule,
-} from '#/business'
+} from '#/overlays'
 
 function add(mapStore: ReturnType<typeof useMapStore>, e: MapEvent) {
   const newLabelMarker = overlayFactory('LabelMarker', mapStore.activeLayer!, {
@@ -51,8 +51,9 @@ export default {
         (mapStore.activeOverlay!.props as LabelMarkerProps).position,
       )
     ) {
-      ;(layer.overlays[index].props as LabelMarkerProps).position =
-        structuredClone(overlay.props.position)
+      ;(layer.overlays[index].props as LabelMarkerProps).position = cloneDeep(
+        overlay.props.position,
+      )
     }
   },
 } as OverlayModule

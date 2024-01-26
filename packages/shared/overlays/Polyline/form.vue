@@ -101,7 +101,7 @@
 import { Vector } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import { ColorPicker } from 'vue3-colorpicker'
-import type { PolylineProps } from '#/business'
+import type { PolylineProps } from '#/overlays'
 
 const strokeStyleOptions = [
   { label: '实线', value: 'solid' },

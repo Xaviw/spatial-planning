@@ -5,7 +5,7 @@ import type {
   OverlayItem,
   OverlayInstance,
   ToolType,
-} from '#/business'
+} from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 export const useMapStore = defineStore('map', () => {

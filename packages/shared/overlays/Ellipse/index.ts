@@ -1,5 +1,5 @@
 import { overlayFactory, toolManage, useMapStore } from '@sp/shared/helpers/map'
-import { isEqual } from '@sp/shared/utils'
+import { cloneDeep, isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
 import Form from './form.vue'
 import Overlay from './index.vue'
@@ -10,7 +10,7 @@ import type {
   OverlayInstance,
   OverlayType,
   OverlayModule,
-} from '#/business'
+} from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 function synchronization(mapStore: ReturnType<typeof useMapStore>) {
@@ -108,7 +108,7 @@ export default {
           (mapStore.activeOverlay!.props as EllipseProps).center,
         )
       ) {
-        ;(layer.overlays[index].props as EllipseProps).center = structuredClone(
+        ;(layer.overlays[index].props as EllipseProps).center = cloneDeep(
           (overlay.props as EllipseProps).center,
         )
       }
@@ -118,7 +118,7 @@ export default {
           (mapStore.activeOverlay!.props as EllipseProps).radius,
         )
       ) {
-        ;(layer.overlays[index].props as EllipseProps).radius = structuredClone(
+        ;(layer.overlays[index].props as EllipseProps).radius = cloneDeep(
           (overlay.props as EllipseProps).radius,
         )
       }

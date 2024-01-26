@@ -12,11 +12,11 @@
       <AInput v-model:value="formModel.updateTime" disabled />
     </AFormItem>
 
-    <AFormItem label="组件类型" v-bind="validateInfos['material.type']">
+    <AFormItem label="组件类型" v-bind="validateInfos.type">
       <ASelect
         disabled
-        :options="componentTypes"
-        v-model:value="formModel.material.type"
+        :options="materialTypes"
+        v-model:value="formModel.type"
       />
     </AFormItem>
 
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { componentTypes } from '@sp/shared/helpers/sider'
+import { materialTypes } from '@sp/shared/helpers/material'
 import { Form } from 'ant-design-vue'
 import type { SiderItem } from '#/business'
 import type { Rule } from 'ant-design-vue/es/form'
@@ -42,7 +42,7 @@ const formModel = ref<SiderItem>({
 } as SiderItem)
 
 const baseRules: Record<string, Rule[]> = {
-  'material.type': [
+  type: [
     {
       required: true,
       message: '请选择组件类型！',

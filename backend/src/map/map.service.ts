@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { pick } from '@sp/shared/utils'
 import { PrismaService } from '../global/prisma.service'
+import { pick } from '../utils'
 import { UpdateMapDto } from './dto'
 
 @Injectable()
@@ -34,8 +34,8 @@ export class MapService {
             type: true,
             name: true,
             props: true,
-            detailTitle: true,
-            detailWidth: true,
+            modalTitle: true,
+            modalWidth: true,
             status: !filter,
             createTime: !filter,
             updateTime: !filter,
@@ -90,8 +90,8 @@ export class MapService {
         'type',
         'name',
         'props',
-        'detailTitle',
-        'detailWidth',
+        'modalTitle',
+        'modalWidth',
         'status',
       ])
 

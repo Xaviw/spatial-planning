@@ -6,8 +6,6 @@ export default {
       type: 'Title',
       props: {
         title: Mock.Random.ctitle(),
-        modalTitle: Mock.Random.ctitle(),
-        modalWidth: Mock.Random.natural(25, 80) + 'rem',
       },
     }
   },

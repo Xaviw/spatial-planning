@@ -1,8 +1,9 @@
 import { findOverlay, toolManage, useMapStore } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
-import { modal, isEqual, uuid } from '@sp/shared/utils'
+import { modal, isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import type { MapEvent } from '#/business'
+import { v4 as uuid } from 'uuid'
+import type { MapEvent } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 let contextMenu: AMap.ContextMenu

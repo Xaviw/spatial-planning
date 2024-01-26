@@ -8,7 +8,7 @@ import {
   bindClickEvent,
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
-import type { OverlayProps } from '#/business'
+import type { OverlayProps } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const rectangleProps = defineProps<OverlayProps<'Rectangle'>>()

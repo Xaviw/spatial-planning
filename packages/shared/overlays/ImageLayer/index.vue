@@ -10,7 +10,7 @@ import {
 } from '@sp/shared/helpers/map'
 import { message } from 'ant-design-vue'
 import { getStaticFile } from '../../utils'
-import type { OverlayProps } from '#/business'
+import type { OverlayProps } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 
 const imageLayerProps = defineProps<OverlayProps<'ImageLayer'>>()

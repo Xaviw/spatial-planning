@@ -14,8 +14,8 @@
       <component
         v-for="item of data"
         :key="item.id"
-        :is="materials[item.material.type]"
-        v-bind="item.material.props"
+        :is="materials[item.type]"
+        v-bind="item.props"
         class="mb-2"
       />
     </div>

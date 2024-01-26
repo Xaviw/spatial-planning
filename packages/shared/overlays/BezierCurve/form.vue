@@ -101,7 +101,7 @@
 import { Vector } from '@sp/shared/components'
 import { Form } from 'ant-design-vue'
 import { ColorPicker } from 'vue3-colorpicker'
-import type { BezierCurveProps } from '#/business'
+import type { BezierCurveProps } from '#/overlays'
 
 const strokeStyleOptions = [
   { label: '实线', value: 'solid' },

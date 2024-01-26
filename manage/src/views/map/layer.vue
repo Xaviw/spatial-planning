@@ -52,11 +52,11 @@
 
 <script setup lang="ts">
 import { useMapStore } from '@sp/shared/helpers/map'
-import { uuid } from '@sp/shared/utils'
 import { Empty } from 'ant-design-vue'
+import { v4 as uuid } from 'uuid'
 import { VueDraggable } from 'vue-draggable-plus'
 import LayerItemComponent from './layerItem.vue'
-import type { LayerItem, OverlayType } from '#/business'
+import type { LayerItem, OverlayType } from '#/overlays'
 
 defineProps<{
   disabled?: boolean

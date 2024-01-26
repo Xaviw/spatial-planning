@@ -127,7 +127,7 @@ import type {
   ElasticMarkerStyle,
   ElasticMarkerIcon,
   ElasticMarkerLabel,
-} from '#/business'
+} from '#/overlays'
 
 const positionOptions = [
   { label: '左下角', value: 'BL' },

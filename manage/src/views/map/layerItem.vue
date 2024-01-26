@@ -137,8 +137,8 @@
 <script setup lang="ts">
 import { Upload } from '@sp/shared/components'
 import { useMapStore } from '@sp/shared/helpers/map'
-import { getStaticFile } from '@sp/shared/utils'
-import type { LayerItem, OverlayType } from '#/business'
+import { cloneDeep, getStaticFile } from '@sp/shared/utils'
+import type { LayerItem, OverlayType } from '#/overlays'
 
 const props = defineProps<{
   layer: LayerItem<OverlayType>
@@ -157,7 +157,7 @@ const editData = ref<Omit<LayerItem<OverlayType>, 'overlays'>>()
 
 function edit() {
   const { overlays, ...layer } = props.layer
-  editData.value = structuredClone(layer)
+  editData.value = cloneDeep(layer)
 }
 
 function cancel() {

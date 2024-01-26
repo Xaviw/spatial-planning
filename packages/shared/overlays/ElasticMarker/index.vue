@@ -12,7 +12,7 @@ import type {
   ElasticMarker,
   OverlayProps,
   ElasticMarkerProps,
-} from '#/business'
+} from '#/overlays'
 
 const elasticMarkerProps = defineProps<OverlayProps<'ElasticMarker'>>()
 

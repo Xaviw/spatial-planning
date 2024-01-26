@@ -75,7 +75,7 @@
 import { Vector, CodeInput } from '@sp/shared/components'
 import { anchorOptions } from '@sp/shared/helpers/map'
 import { Form } from 'ant-design-vue'
-import type { TextProps } from '#/business'
+import type { TextProps } from '#/overlays'
 
 const formModel = ref<TextProps>({})
 

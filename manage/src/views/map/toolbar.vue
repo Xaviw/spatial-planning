@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { useMapStore, toolManage } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
-import type { MapEvent } from '#/business'
+import type { MapEvent } from '#/overlays'
 
 const mapStore = useMapStore()
 

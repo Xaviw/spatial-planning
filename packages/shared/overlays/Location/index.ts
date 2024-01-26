@@ -1,6 +1,6 @@
 import { useMapStore } from '@sp/shared/helpers/map'
 import { message } from 'ant-design-vue'
-import type { MapEvent, OverlayModule } from '#/business'
+import type { MapEvent, OverlayModule } from '#/overlays'
 
 const { copy } = useClipboard({ legacy: true })
 

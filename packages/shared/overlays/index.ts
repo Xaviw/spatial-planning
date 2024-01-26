@@ -1,4 +1,4 @@
-import type { OverlayModule } from '#/business'
+import type { OverlayModule } from '#/overlays'
 
 const modules: Record<string, OverlayModule> = import.meta.glob(
   './**/index.ts',

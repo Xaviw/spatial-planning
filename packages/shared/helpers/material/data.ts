@@ -1,6 +1,6 @@
-import type { MaterialType, MaterialItem, SiderItem } from '#/business'
+import type { MaterialType, MaterialLike } from '#/materials'
 
-export const componentTypes: { label: string; value: MaterialType }[] = [
+export const materialTypes: { label: string; value: MaterialType }[] = [
   { label: '大标题', value: 'Title' },
   { label: '小标题', value: 'SubTitle' },
   { label: '数据卡片', value: 'DataCard' },
@@ -17,7 +17,7 @@ export const componentTypes: { label: string; value: MaterialType }[] = [
 ]
 
 const materialsMap: {
-  [K in MaterialType]: Omit<MaterialItem, 'id'>
+  [K in MaterialType]: MaterialLike<K>
 } = {
   Title: {
     type: 'Title',
@@ -68,7 +68,7 @@ const materialsMap: {
     props: {
       data: [
         ['表格', 'A', 'B', 'C'],
-        [1, 2, 3, 4],
+        ['1', '2', '3', '4'],
       ],
     },
   },
@@ -125,10 +125,4 @@ const materialsMap: {
   },
 }
 
-export const materials = Object.values(materialsMap).map(
-  item =>
-    ({
-      material: item,
-      status: true,
-    }) as unknown as SiderItem,
-)
+export const materials = Object.values(materialsMap)
