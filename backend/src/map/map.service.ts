@@ -71,7 +71,7 @@ export class MapService {
 
       const data: any = pick(
         ['asLegend', 'name', 'legendImg', 'sort', 'status', 'menuId'],
-        operation.value,
+        operation.value || {},
       )
 
       if (operation.op === 'add') {
@@ -116,7 +116,7 @@ export class MapService {
           'modalWidth',
           'status',
         ],
-        operation.value,
+        operation.value || {},
       )
 
       if (operation.op === 'add') {
@@ -157,7 +157,7 @@ export class MapService {
 
       const data: any = pick(
         ['type', 'props', 'isTitle', 'sort'],
-        operation.value,
+        operation.value || {},
       )
 
       if (operation.op === 'add') {

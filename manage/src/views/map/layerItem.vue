@@ -138,6 +138,7 @@
 import { Upload } from '@sp/shared/components'
 import { useMapStore } from '@sp/shared/helpers/map'
 import { getStaticFile } from '@sp/shared/utils'
+import { message } from 'ant-design-vue'
 import { clone } from 'ramda'
 import type { LayerItem, OverlayType } from '#/overlays'
 
@@ -166,6 +167,10 @@ function cancel() {
 }
 
 function save() {
+  if (editData.value?.asLegend && !editData.value.legendImg) {
+    message.warn('作为图例时需要上传图例图片！')
+    return
+  }
   emits('save', editData.value!)
   editData.value = undefined
 }

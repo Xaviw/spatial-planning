@@ -59,6 +59,7 @@
 </template>
 
 <script setup lang="ts">
+import { mapKey } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
 import { getStaticFile } from '@sp/shared/utils'
 import { useMainStore } from '../stores/main'
@@ -69,6 +70,8 @@ defineProps<{
 
 defineEmits<{ (e: 'trigger'): void }>()
 
+const map = inject(mapKey)
+
 const { mapData } = storeToRefs(useMainStore())
 
 const layerWrap = ref<HTMLDivElement | null>(null)
@@ -76,6 +79,11 @@ const layerWrap = ref<HTMLDivElement | null>(null)
 const { height } = useElementSize(layerWrap)
 
 const layerMap = ref<Recordable>({})
+
+// 切换菜单后后调整缩放
+onUpdated(() => {
+  map?.value?.setFitView()
+})
 
 watchEffect(() => {
   mapData.value.forEach(layer => {

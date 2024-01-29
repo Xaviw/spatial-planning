@@ -18,14 +18,11 @@ const hasRightMenu = inject(hasRightMenuKey)
 
 let bezierCurve: AMap.BezierCurve
 
-createBezierCurve()
-
 watch(
   () => map?.value,
   _map => {
     if (_map) {
       createBezierCurve()
-      map!.value!.setFitView()
     }
   },
   {

@@ -50,10 +50,12 @@ export interface LayerItem<T extends OverlayType = OverlayType> {
   updateTime?: string
 }
 
-export type OverlayProps<T extends OverlayType = OverlayType> =
-  OverlayItem<T> & {
-    visible: boolean
-  }
+export type OverlayProps<T extends OverlayType = OverlayType> = Omit<
+  OverlayItem<T>,
+  'status' | 'createTime' | 'updateTime'
+> & {
+  visible: boolean
+}
 
 export interface OverlayInstance {
   Marker: AMap.Marker

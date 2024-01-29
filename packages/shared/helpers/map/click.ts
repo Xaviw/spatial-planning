@@ -8,7 +8,12 @@ import type { Ref } from 'vue'
 
 export function bindClickEvent(
   overlay: AMap.Eventable,
-  data: Ref<OverlayItem<OverlayType>>,
+  data: Ref<
+    Pick<
+      OverlayItem<OverlayType>,
+      'modalTitle' | 'modalWidth' | 'name' | 'materials'
+    >
+  >,
 ) {
   overlay.on('click', () => {
     if (data?.value?.materials.length) {
@@ -20,7 +25,12 @@ export function bindClickEvent(
 const { open, close } = useModal('OverlayDetail')
 
 /** 覆盖物详情弹窗 */
-function openDetail(data: OverlayItem<OverlayType>) {
+function openDetail(
+  data: Pick<
+    OverlayItem<OverlayType>,
+    'modalTitle' | 'modalWidth' | 'name' | 'materials'
+  >,
+) {
   open(
     h(
       ContentWrapper,

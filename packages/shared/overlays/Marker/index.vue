@@ -23,7 +23,6 @@ watch(
   _map => {
     if (_map) {
       createMarker()
-      map!.value!.setFitView()
     }
   },
   {

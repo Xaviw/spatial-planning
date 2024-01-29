@@ -1,5 +1,5 @@
 <template>
-  <div ref="container"></div>
+  <div ref="container" class="text-black"></div>
 </template>
 
 <script setup lang="ts">
@@ -38,6 +38,11 @@ useMap(
   },
   _map => {
     map.value = _map
+    // 初次加载因为地图渲染会有延迟导致layer组件updated时覆盖物可能还未渲染，所以这这里使用nextTick fitView
+    // 后续切换菜单在layer updated事件中fitView
+    nextTick(() => {
+      _map.setFitView()
+    })
 
     labelsLayer.value = new window.AMap.LabelsLayer({
       allowCollision: true,

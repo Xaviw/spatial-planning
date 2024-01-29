@@ -23,7 +23,6 @@ watch(
   _map => {
     if (_map) {
       createRectangle()
-      map!.value!.setFitView()
     }
   },
   {

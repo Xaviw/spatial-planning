@@ -61,11 +61,17 @@ export default {
       return
     }
 
-    const newPolyline = overlayFactory('BezierCurve', mapStore.activeLayer!, {
-      path: path.map((item): AMap.Vector2 => [item.lng, item.lat]),
-    })
-    mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newPolyline)
+    const newBezierCurve = overlayFactory(
+      'BezierCurve',
+      mapStore.activeLayer!,
+      {
+        path: path.map((item): AMap.Vector2 => [item.lng, item.lat]),
+      },
+    )
+    mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newBezierCurve)
+    console.log('mapStore.map: ', mapStore.map, obj)
     mapStore.map?.remove(obj)
+    obj.destroy?.()
   },
   handleEdit: (mapStore: ReturnType<typeof useMapStore>, open: boolean) => {
     if (!(mapStore.activeInstance instanceof window.AMap.BezierCurve)) return

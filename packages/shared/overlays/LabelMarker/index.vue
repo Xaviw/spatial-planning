@@ -25,7 +25,6 @@ watch(
   _map => {
     if (_map) {
       createLabelMarker()
-      map!.value!.setFitView()
     }
   },
   {

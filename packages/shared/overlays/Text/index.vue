@@ -23,7 +23,6 @@ watch(
   _map => {
     if (_map) {
       createText()
-      map!.value!.setFitView()
     }
   },
   {

@@ -34,7 +34,6 @@ watch(
   _map => {
     if (_map) {
       createImage()
-      map!.value!.setFitView()
     }
   },
   {

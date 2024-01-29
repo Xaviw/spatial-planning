@@ -67,7 +67,12 @@ const model = defineModel<LayerItem<OverlayType>[]>({
   required: true,
 })
 
-const { activeLayer, selectedMenu } = storeToRefs(useMapStore())
+const { activeLayer, selectedMenu, map } = storeToRefs(useMapStore())
+
+// 因为地图加载完成后才能加载数据，所以直接在updated中fitView即可
+onUpdated(() => {
+  map.value?.setFitView()
+})
 
 function onRemove(id: string) {
   const index = model.value.findIndex(item => item.id === id)

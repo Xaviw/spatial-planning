@@ -23,7 +23,6 @@ watch(
   _map => {
     if (_map) {
       createCircle()
-      map!.value!.setFitView()
     }
   },
   {

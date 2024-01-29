@@ -26,7 +26,6 @@ watch(
   _map => {
     if (_map) {
       createElasticMarker()
-      map!.value!.setFitView()
     }
   },
   {
