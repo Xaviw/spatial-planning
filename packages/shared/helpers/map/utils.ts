@@ -1,8 +1,8 @@
-import { AMap } from '@amap/amap-jsapi-types'
 import { useMapStore } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
-import { isNumber } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
+import dayjs from 'dayjs'
+import { is } from 'ramda'
 import { v4 as uuid } from 'uuid'
 import type {
   LayerItem,
@@ -11,6 +11,7 @@ import type {
   OverlayType,
   ToolType,
 } from '#/overlays'
+import type { AMap } from '@amap/amap-jsapi-types'
 import type { InjectionKey, Ref } from 'vue'
 
 export const mapKey: InjectionKey<Ref<AMap.Map | undefined>> = Symbol('map')
@@ -100,13 +101,12 @@ export function overlayFactory<T extends OverlayType>(
   layerId: string,
   props: OverlayOptions[T],
 ): OverlayItem<T> {
-  const key = uuid()
   return {
     createTime: new Date().toLocaleString(),
-    details: [],
-    id: `add_${key}`,
+    materials: [],
+    id: `add_${uuid()}`,
     layerId,
-    name: `新增覆盖物_${key}`,
+    name: `新增覆盖物-${dayjs().format('YYMMDDHHmmss')}`,
     props,
     status: true,
     type,
@@ -135,9 +135,9 @@ export const directionOptions = [
 
 export function arrayToPosition(arr: any[]) {
   const result: Recordable = {}
-  if (isNumber(arr[0])) result.top = arr[0] + 'px'
-  if (isNumber(arr[1])) result.left = arr[1] + 'px'
-  if (isNumber(arr[2])) result.right = arr[2] + 'px'
-  if (isNumber(arr[3])) result.bottom = arr[3] + 'px'
+  if (is(Number, arr[0])) result.top = arr[0] + 'px'
+  if (is(Number, arr[1])) result.left = arr[1] + 'px'
+  if (is(Number, arr[2])) result.right = arr[2] + 'px'
+  if (is(Number, arr[3])) result.bottom = arr[3] + 'px'
   return result
 }

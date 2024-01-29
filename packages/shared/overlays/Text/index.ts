@@ -1,5 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from '@sp/shared/utils'
+import { clone, equals } from 'ramda'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -17,7 +17,7 @@ function synchronization(mapStore: ReturnType<typeof useMapStore>) {
   const pos = mapStore.activeInstance.getPosition()!
   const newPos: [number, number] = [pos.lng, pos.lat]
 
-  if (!isEqual((mapStore.editData!.props as TextProps).position, newPos)) {
+  if (!equals((mapStore.editData!.props as TextProps).position, newPos)) {
     ;(mapStore.editData!.props as TextProps).position = newPos
   }
 }
@@ -73,12 +73,12 @@ export default {
   ) => {
     if (
       (mapStore.editData!.props as TextProps).position &&
-      !isEqual(
+      !equals(
         (mapStore.editData!.props as TextProps).position,
         (mapStore.activeOverlay!.props as TextProps).position,
       )
     ) {
-      ;(layer.overlays[index].props as TextProps).position = cloneDeep(
+      ;(layer.overlays[index].props as TextProps).position = clone(
         overlay.props.position,
       )
     }

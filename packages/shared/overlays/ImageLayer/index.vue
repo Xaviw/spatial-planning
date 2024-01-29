@@ -8,8 +8,8 @@ import {
   bindClickEvent,
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
+import { getStaticFile } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { getStaticFile } from '../../utils'
 import type { OverlayProps } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -29,9 +29,18 @@ image.onerror = () => {
   imageLayer.setImageUrl(getStaticFile('/failed.png'))
 }
 
-createImage()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createImage()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   map?.value?.removeLayer(imageLayer)

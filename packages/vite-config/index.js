@@ -8,7 +8,6 @@ import { loadEnv, defineConfig } from 'vite'
 
 export default function (name) {
   return defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '../')
     return {
       publicDir: '../public',
       envDir: '../',

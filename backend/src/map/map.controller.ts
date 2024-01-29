@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  ParseBoolPipe,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
 import { LoginGuard } from '../utils/login.guard'
 import { UpdateMapDto } from './dto'
 import { MapService } from './map.service'
@@ -8,7 +16,10 @@ export class MapController {
   constructor(private readonly mapService: MapService) {}
 
   @Get()
-  getList(@Query('menuId') menuId: string, @Query('filter') filter: boolean) {
+  getList(
+    @Query('menuId') menuId: string,
+    @Query('filter', new ParseBoolPipe()) filter: boolean,
+  ) {
     return this.mapService.getList(menuId, filter)
   }
 

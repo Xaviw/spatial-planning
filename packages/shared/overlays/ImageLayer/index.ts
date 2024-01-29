@@ -1,7 +1,7 @@
 import { overlayFactory, toolManage, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from '@sp/shared/utils'
+import { getStaticFile } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
-import { getStaticFile } from '../../utils'
+import { clone, equals } from 'ramda'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -33,7 +33,7 @@ function synchronization(
   imageLayer.setBounds(bounds!)
 
   if (
-    !isEqual(
+    !equals(
       (mapStore.editData!.props as AMap.ImageLayerOptions).bounds,
       newBounds,
     )
@@ -134,12 +134,12 @@ export default {
   ) => {
     if (
       (mapStore.editData!.props as RectangleProps).bounds &&
-      !isEqual(
+      !equals(
         (mapStore.editData!.props as RectangleProps).bounds,
         (mapStore.activeOverlay!.props as RectangleProps).bounds,
       )
     ) {
-      ;(layer.overlays[index].props as RectangleProps).bounds = cloneDeep(
+      ;(layer.overlays[index].props as RectangleProps).bounds = clone(
         (overlay.props as RectangleProps).bounds,
       )
     }

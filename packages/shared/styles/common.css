@@ -16,6 +16,12 @@
   background-color: #21b1ff;
 }
 
+.w-e-modal {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+}
+
 body {
   overflow: hidden;
 }

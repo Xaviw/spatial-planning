@@ -29,7 +29,8 @@
 <script setup lang="ts">
 import { useMapStore, findOverlay } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
-import { modal, isEqual, cloneDeep } from '@sp/shared/utils'
+import { modal } from '@sp/shared/utils'
+import { equals, clone } from 'ramda'
 import BaseForm from './baseForm.vue'
 
 const baseFormEl = ref<InstanceType<typeof BaseForm> | null>(null)
@@ -46,7 +47,7 @@ watch(activeOverlay, async overlay => {
       // 开启覆盖物编辑
       overlays[overlay.type].handleEdit?.(mapStore, true)
       // 开启表单编辑
-      editData.value = cloneDeep(overlay)
+      editData.value = clone(overlay)
       baseFormEl.value.formModel = editData.value
       overlayFormEl.value.formModel = editData.value.props
     }
@@ -59,7 +60,7 @@ async function onConfirm() {
 
   // 同步修改的值
   const newData = editData.value!
-  if (!isEqual(newData, activeOverlay.value)) {
+  if (!equals(newData, activeOverlay.value)) {
     const { layer, index } =
       findOverlay(mapData.value, activeOverlay.value!.id) || {}
     if (newData.layerId === activeOverlay.value!.layerId && layer) {
@@ -78,7 +79,7 @@ async function onConfirm() {
 }
 
 async function onCancel() {
-  if (!isEqual(editData.value!, activeOverlay.value)) {
+  if (!equals(editData.value!, activeOverlay.value)) {
     await modal('confirm', {
       title: '警告!',
       content: '您的修改将不会保留，是否确定？',

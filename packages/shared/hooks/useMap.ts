@@ -1,5 +1,5 @@
 import AMapLoader from '@amap/amap-jsapi-loader'
-import { isString } from '@sp/shared/utils'
+import { is } from 'ramda'
 import type { AMap } from '@amap/amap-jsapi-types'
 import type { MaybeRef, Ref } from 'vue'
 
@@ -26,7 +26,7 @@ export function useMap(
       ...loaderOptions,
     })
 
-    const containerElement = isString(container)
+    const containerElement = is(String, container)
       ? (document.querySelector(container) as HTMLDivElement)
       : unref(container)
 

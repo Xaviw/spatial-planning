@@ -28,7 +28,6 @@ export interface MaterialItem<T extends MaterialType = MaterialType> {
   id: string
   siderId?: string
   overlayId?: string
-  sort: number
   type: MaterialType
   props: MaterialProps[T]
   status: boolean

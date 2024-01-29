@@ -41,7 +41,7 @@ const formModel = ref<SiderItem>({
   // status: true,
 } as SiderItem)
 
-const baseRules: Record<string, Rule[]> = {
+const baseRules = ref<Record<string, Rule[]>>({
   type: [
     {
       required: true,
@@ -54,7 +54,7 @@ const baseRules: Record<string, Rule[]> = {
       message: '请选择组件状态！',
     },
   ],
-}
+})
 
 const { validateInfos, resetFields, validate, clearValidate, initialModel } =
   Form.useForm(formModel, baseRules)

@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import { is } from 'ramda'
 import { PrismaService } from '../global/prisma.service'
-import { isNumber } from '../utils'
 import { CreateMenuDto, MoveMenuDto, UpdateMenuDto } from './dto'
 import type { MenuItem } from '#/business'
 
@@ -13,7 +13,6 @@ export class MenuService {
     const menus = (await this.prisma.menu.findMany({
       where: {
         status: filter || undefined,
-        isDelete: false,
       },
       select: {
         id: true,
@@ -53,7 +52,7 @@ export class MenuService {
       _max: { sort: true },
     })
 
-    const sort = isNumber(maxSort._max.sort) ? maxSort._max.sort + 1 : 0
+    const sort = is(Number, maxSort._max.sort) ? maxSort._max.sort + 1 : 0
 
     const newMenu = await this.prisma.menu.create({
       data: { ...menu, sort },
@@ -70,7 +69,7 @@ export class MenuService {
 
   async removeMenu(id: string) {
     // 逻辑删除
-    await this.prisma.menu.update({ where: { id }, data: { isDelete: true } })
+    await this.prisma.menu.delete({ where: { id } })
 
     return true
   }

@@ -1,6 +1,6 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
+import { clone, equals } from 'ramda'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -18,7 +18,7 @@ function synchronization(mapStore: ReturnType<typeof useMapStore>) {
 
   const path = mapStore.activeInstance.getPath() as AMap.Vector[]
 
-  if (!isEqual((mapStore.editData!.props as BezierCurveProps).path, path)) {
+  if (!equals((mapStore.editData!.props as BezierCurveProps).path, path)) {
     ;(mapStore.editData!.props as BezierCurveProps).path = path
   }
 }
@@ -109,12 +109,12 @@ export default {
   ) => {
     if (
       (mapStore.editData!.props as BezierCurveProps).path &&
-      !isEqual(
+      !equals(
         (mapStore.editData!.props as BezierCurveProps).path,
         (mapStore.activeOverlay!.props as BezierCurveProps).path,
       )
     ) {
-      ;(layer.overlays[index].props as BezierCurveProps).path = cloneDeep(
+      ;(layer.overlays[index].props as BezierCurveProps).path = clone(
         (overlay.props as BezierCurveProps).path,
       )
     }

@@ -17,9 +17,19 @@
             重做
           </AButton>
         </div>
-        <AButton type="primary" :disabled="!canUndo" @click="$emit('submit')">
-          提交
-        </AButton>
+        <div>
+          <AButton
+            :disabled="disabled"
+            @click="$emit('refresh')"
+            class="mr-2"
+            v-if="showRefresh"
+          >
+            刷新
+          </AButton>
+          <AButton type="primary" :disabled="!canUndo" @click="$emit('submit')">
+            提交
+          </AButton>
+        </div>
       </div>
 
       <slot name="alert" />
@@ -81,7 +91,7 @@
 import { BaseForm } from '@sp/shared/helpers/material'
 import { useMenuTree } from '@sp/shared/hooks'
 import { materialForms } from '@sp/shared/materials'
-import { cloneDeep } from '@sp/shared/utils'
+import { clone } from 'ramda'
 import type { FormEl } from '#/business'
 import type { MaterialLike } from '#/materials'
 
@@ -89,12 +99,15 @@ const props = defineProps<{
   canRedo: boolean
   canUndo: boolean
   showMenu?: boolean
+  showRefresh?: boolean
+  disabled?: boolean
   selectedItem?: T
 }>()
 
 const emits = defineEmits<{
   (e: 'redo'): void
   (e: 'undo'): void
+  (e: 'refresh'): void
   (e: 'submit'): void
   (e: 'menuChange', id: string): void
   (e: 'confirm', value: T): void
@@ -120,8 +133,8 @@ watch(
         if (!baseFormEl.value || !materialFormEl.value) {
           throw new Error('为获取到实例')
         }
-        baseFormEl.value.formModel = cloneDeep(item)
-        materialFormEl.value.formModel = cloneDeep(item.props)
+        baseFormEl.value.formModel = clone(item)
+        materialFormEl.value.formModel = clone(item.props)
       })
     }
   },

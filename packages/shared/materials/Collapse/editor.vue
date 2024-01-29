@@ -17,11 +17,14 @@
 </template>
 
 <script lang="ts" setup>
+import { customUpload } from '@sp/shared/utils'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { message } from 'ant-design-vue'
 import '@wangeditor/editor/dist/css/style.css'
 import type { IToolbarConfig, IEditorConfig } from '@wangeditor/editor'
 import type { AlertType } from 'ant-design-vue/es/alert'
+
+type InsertFnType = (url: string, alt?: string, href?: string) => void
 
 const model = defineModel<string>()
 
@@ -48,6 +51,16 @@ const editorConfig: Partial<IEditorConfig> = {
         message.info(info)
         break
     }
+  },
+  MENU_CONF: {
+    uploadImage: {
+      server: '',
+      maxFileSize: Infinity,
+      async customUpload(file: File, insertFn: InsertFnType) {
+        const url = await customUpload(file)
+        insertFn(url)
+      },
+    },
   },
 }
 

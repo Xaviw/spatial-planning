@@ -18,9 +18,18 @@ const hasRightMenu = inject(hasRightMenuKey)
 
 let ellipse: AMap.Ellipse
 
-createEllipse()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createEllipse()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   map?.value?.remove(ellipse)

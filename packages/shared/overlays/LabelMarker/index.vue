@@ -20,9 +20,18 @@ const labelsLayer = inject(labelsLayerKey)
 
 let labelMarker: AMap.LabelMarker
 
-createLabelMarker()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createLabelMarker()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   ;(labelsLayer?.value as any)?.remove(labelMarker)

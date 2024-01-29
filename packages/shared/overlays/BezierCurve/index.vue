@@ -20,7 +20,18 @@ let bezierCurve: AMap.BezierCurve
 
 createBezierCurve()
 
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createBezierCurve()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   map?.value?.remove(bezierCurve)

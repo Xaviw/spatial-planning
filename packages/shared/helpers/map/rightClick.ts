@@ -1,7 +1,8 @@
 import { findOverlay, toolManage, useMapStore } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
-import { modal, isEqual } from '@sp/shared/utils'
+import { modal } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
+import { equals } from 'ramda'
 import { v4 as uuid } from 'uuid'
 import type { MapEvent } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
@@ -33,7 +34,7 @@ export function bindRightClickEvent(overlay: AMap.Eventable) {
             return
           }
           // 有其他编辑中的覆盖物，且已有改动，提示
-          if (activeOverlay.value && !isEqual(activeOverlay.value, overlay)) {
+          if (activeOverlay.value && !equals(activeOverlay.value, overlay)) {
             await modal('confirm', {
               title: '提示！',
               content: '您有正在编辑的覆盖物还未保存，是否直接切换？',

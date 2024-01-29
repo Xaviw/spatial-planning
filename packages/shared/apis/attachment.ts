@@ -8,7 +8,9 @@ export function checkHash(hash: string) {
 }
 
 export function upload(data: FormData) {
-  return request.Post<string>('/attachment', data, { shareRequest: false })
+  return request.Post<string>('/attachment', data, {
+    shareRequest: false,
+  })
 }
 
 export function mergeUpload(

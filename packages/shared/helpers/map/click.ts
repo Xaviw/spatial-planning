@@ -1,7 +1,7 @@
 import { ContentWrapper } from '@sp/shared/components'
 import { useModal } from '@sp/shared/hooks'
 import { materials } from '@sp/shared/materials'
-import { cloneDeep, merge } from '@sp/shared/utils'
+import { clone, mergeDeepRight } from 'ramda'
 import type { OverlayItem, OverlayType } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 import type { Ref } from 'vue'
@@ -43,7 +43,7 @@ function openDetail(data: OverlayItem<OverlayType>) {
           data.materials.map(comp =>
             h(
               materials[comp.type],
-              merge(cloneDeep(comp.props), {
+              mergeDeepRight(clone(comp.props), {
                 style: { marginBottom: '0.5rem' },
               }),
             ),

@@ -21,9 +21,18 @@ const hasRightMenu = inject(hasRightMenuKey)
 
 let elasticMarker: ElasticMarker
 
-createElasticMarker()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createElasticMarker()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   map?.value?.remove(elasticMarker as any)

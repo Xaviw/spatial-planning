@@ -46,7 +46,6 @@ export interface LayerItem<T extends OverlayType = OverlayType> {
   legendImg?: string
   overlays: OverlayItem<T>[]
   status: boolean
-  sort: number
   createTime: string
   updateTime?: string
 }

@@ -15,9 +15,14 @@
           重做
         </AButton>
       </div>
-      <AButton type="primary" :disabled="!canUndo" @click="onSubmit">
-        提交
-      </AButton>
+      <div>
+        <AButton :disabled="!selectedMenu" @click="onRefresh" class="mr-2">
+          刷新
+        </AButton>
+        <AButton type="primary" :disabled="!canUndo" @click="onSubmit">
+          提交
+        </AButton>
+      </div>
     </div>
 
     <AAlert showIcon>
@@ -60,8 +65,9 @@
 import { setMap } from '@sp/shared/apis'
 import { useMapStore } from '@sp/shared/helpers/map'
 import { useMenuTree } from '@sp/shared/hooks'
-import { getOperationsFromDiff, modal, isEqual } from '@sp/shared/utils'
+import { getOperationsFromDiff, modal } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
+import { equals } from 'ramda'
 import type { MaterialItem } from '#/materials'
 import type { LayerItem, OverlayItem, OverlayType } from '#/overlays'
 
@@ -86,6 +92,16 @@ function onMenuChange(id: string) {
   mapStore.getMapData(id).then(() => {
     nextTick(mapStore.clear)
   })
+}
+
+async function onRefresh() {
+  if (canUndo.value) {
+    await modal('confirm', {
+      title: '警告',
+      content: '刷新后您的操作不会保存，是否确定刷新？',
+    })
+  }
+  onMenuChange(selectedMenu.value!)
 }
 
 const searchValue = ref('')
@@ -138,7 +154,7 @@ async function searchHandler(
   }
 
   // 有其他编辑中的覆盖物，且已有改动，提示
-  if (activeOverlay.value && !isEqual(activeOverlay.value, overlay)) {
+  if (activeOverlay.value && !equals(activeOverlay.value, overlay)) {
     await modal('confirm', {
       title: '提示！',
       content: '您有正在编辑的覆盖物还未保存，是否直接切换？',
@@ -157,18 +173,18 @@ function onSubmit() {
   const sourceLayers: Omit<LayerItem<OverlayType>, 'overlays'>[] = []
   const currentLayers: Omit<LayerItem<OverlayType>, 'overlays'>[] = []
 
-  const sourceOverlays: Omit<OverlayItem<OverlayType>, 'details'>[] = []
-  const currentOverlays: Omit<OverlayItem<OverlayType>, 'details'>[] = []
+  const sourceOverlays: Omit<OverlayItem<OverlayType>, 'materials'>[] = []
+  const currentOverlays: Omit<OverlayItem<OverlayType>, 'materials'>[] = []
 
-  const sourceDetails: MaterialItem[] = []
-  const currentDetails: MaterialItem[] = []
+  const sourceMaterials: MaterialItem[] = []
+  const currentMaterials: MaterialItem[] = []
 
   for (let layer of sourceData.value) {
     for (let overlay of layer.overlays) {
-      for (let detail of overlay.details) {
-        sourceDetails.push(detail)
+      for (let material of overlay.materials) {
+        sourceMaterials.push({ ...material, overlayId: overlay.id })
       }
-      const { details, ...sourceOverlay } = overlay
+      const { materials, ...sourceOverlay } = overlay
       sourceOverlays.push(sourceOverlay)
     }
     const { overlays, ...sourceLayer } = layer
@@ -177,10 +193,10 @@ function onSubmit() {
 
   for (let layer of mapData.value) {
     for (let overlay of layer.overlays) {
-      for (let detail of overlay.details) {
-        currentDetails.push(detail)
+      for (let material of overlay.materials) {
+        currentMaterials.push({ ...material, overlayId: overlay.id })
       }
-      const { details, ...currentOverlay } = overlay
+      const { materials, ...currentOverlay } = overlay
       currentOverlays.push(currentOverlay)
     }
     const { overlays, ...currentLayer } = layer
@@ -189,9 +205,13 @@ function onSubmit() {
 
   const layers = getOperationsFromDiff(currentLayers, sourceLayers, 'sort')
   const overlays = getOperationsFromDiff(currentOverlays, sourceOverlays)
-  const details = getOperationsFromDiff(currentDetails, sourceDetails, 'sort')
+  const materials = getOperationsFromDiff(
+    currentMaterials,
+    sourceMaterials,
+    'sort',
+  )
 
-  setMap({ layers, overlays, details })
+  setMap({ layers, overlays, materials })
     .send()
     .then(() => {
       message.success('提交成功！')

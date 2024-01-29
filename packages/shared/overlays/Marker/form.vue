@@ -36,7 +36,7 @@
       />
     </AFormItem>
 
-    <AFormItem label="图标显示尺寸" help="截取图标尺寸中的一部分显示">
+    <AFormItem label="图标显示尺寸" help="截取图标的一部分显示，以左上角为起点">
       <Vector
         :modelValue="formModel.icon?.size"
         @update:modelValue="onIconUpdate($event, 'size')"
@@ -52,7 +52,7 @@
 
     <AFormItem
       label="图标偏移量"
-      help="当指定大图时，可通过“图标显示尺寸”和“图标偏移量”配合，显示图标的指定范围"
+      help="以左上角为起点，偏移一段距离开始展示；当指定大图时，可通过“图标显示尺寸”和“图标偏移量”配合，显示图标的指定范围"
     >
       <Vector
         :modelValue="formModel.icon?.imageOffset"

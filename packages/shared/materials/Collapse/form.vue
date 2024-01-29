@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import { isFunction } from '@sp/shared/utils'
 import { Form } from 'ant-design-vue'
+import { is } from 'ramda'
 import Editor from './editor.vue'
 import type { CollapseProps } from '#/materials'
 import type { Rule } from 'ant-design-vue/es/form'
@@ -46,7 +46,7 @@ const rules = ref<Record<string, Rule[]>>({
       required: true,
       message: '请填写内容！',
       validator(_rule, value) {
-        if (isFunction(editorRef.value?.validate)) {
+        if (is(Function, editorRef.value?.validate)) {
           return editorRef.value.validate()
         }
         return value === '<p><br></p>' ? Promise.reject() : Promise.resolve()

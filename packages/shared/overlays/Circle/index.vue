@@ -18,9 +18,18 @@ const hasRightMenu = inject(hasRightMenuKey)
 
 let circle: AMap.Circle
 
-createCircle()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createCircle()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   map?.value?.remove(circle)

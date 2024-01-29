@@ -18,9 +18,18 @@ const hasRightMenu = inject(hasRightMenuKey)
 
 let polygon: AMap.Polygon
 
-createPolygon()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createPolygon()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   map?.value?.remove(polygon)

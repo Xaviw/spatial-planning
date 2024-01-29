@@ -5,7 +5,7 @@
     </AFormItem>
 
     <AFormItem label="内容">
-      <ATextarea autosize allowclear v-model:value="formModel.text" />
+      <ATextarea autoSize allowclear v-model:value="formModel.text" />
     </AFormItem>
 
     <AFormItem label="锚点位置" help="标记对齐坐标点的位置">

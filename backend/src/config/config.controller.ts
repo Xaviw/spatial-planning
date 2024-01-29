@@ -7,7 +7,6 @@ export class ConfigController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get()
-  @UseGuards(LoginGuard)
   async getConfigs() {
     const records = await this.prisma.config.findMany({
       select: { key: true, value: true },

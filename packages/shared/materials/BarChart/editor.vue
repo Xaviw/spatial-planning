@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { CssSizeInput } from '@sp/shared/components'
-import { isFunction } from '@sp/shared/utils'
+import { is } from 'ramda'
 import DataEditor from './dataEditor.vue'
 import type { BarChartItem } from '#/materials'
 
@@ -69,7 +69,7 @@ const dataValidator = (_rule, value: number[]) => {
 }
 
 function onAdd() {
-  model.value.push({} as BarChartItem)
+  model.value.push({ data: [] } as BarChartItem)
 }
 
 function onRemove(index: number) {
@@ -80,7 +80,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (isFunction(instance?.validate)) {
+      if (is(Function, instance?.validate)) {
         events.push(instance.validate())
       }
     }

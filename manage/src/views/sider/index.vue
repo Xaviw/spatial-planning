@@ -22,7 +22,7 @@
       enableContextMenu
       :selectedId="selectedItem?.id"
       @edit="onEdit"
-      @remove="onRemove('left', $event)"
+      @remove="onRemove('right', $event)"
     >
       <template #title>
         <i class="i-ant-design:pic-right-outlined mr-2" />
@@ -35,13 +35,16 @@
     <FormBar
       ref="formEl"
       class="flex-1"
+      showMenu
+      showRefresh
       :canRedo="canRedo"
       :canUndo="canUndo"
+      :disabled="!selectedMenu"
+      :selectedItem="selectedItem"
       @undo="undo"
       @redo="redo"
-      showMenu
       @menuChange="getList"
-      :selectedItem="selectedItem"
+      @refresh="onRefresh"
       @confirm="onConfirm"
       @cancel="onCancel"
       @submit="onSubmit"
@@ -63,8 +66,9 @@
 import { getSider, setSider } from '@sp/shared/apis'
 import { Loading } from '@sp/shared/components'
 import { SiderBar, FormBar, MaterialBar } from '@sp/shared/helpers/material'
-import { isEqual, modal, getOperationsFromDiff } from '@sp/shared/utils'
+import { modal, getOperationsFromDiff } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
+import { equals } from 'ramda'
 import type { SiderPosition, SiderItem } from '#/business'
 
 const list = ref<{ left: SiderItem[]; right: SiderItem[] }>({
@@ -111,6 +115,16 @@ function getList(menuId: string) {
 
 const formEl = ref<ComponentExposed<typeof FormBar<SiderItem>> | null>(null)
 
+async function onRefresh() {
+  if (canUndo.value) {
+    await modal('confirm', {
+      title: '警告',
+      content: '刷新后您的操作不会保存，是否确定刷新？',
+    })
+  }
+  getList(selectedMenu.value!)
+}
+
 async function onEdit(item: SiderItem) {
   if (selectedItem.value && formEl.value) {
     const formModel = formEl.value.formModel()
@@ -119,7 +133,7 @@ async function onEdit(item: SiderItem) {
     // 存在未保存的编辑，警告
     if (
       selectedItem.value.status !== formModel.status ||
-      !isEqual(selectedItem.value.props, formModel.props)
+      !equals(selectedItem.value.props, formModel.props)
     ) {
       await modal('confirm', {
         title: '警告',
@@ -133,6 +147,7 @@ async function onEdit(item: SiderItem) {
 }
 
 function onRemove(position: SiderPosition, index: number) {
+  console.log('position: ', position, index)
   // 删除正在编辑的组件先取消编辑
   if (selectedItem.value?.id === list.value[position][index].id) {
     selectedItem.value = undefined
@@ -143,7 +158,7 @@ function onRemove(position: SiderPosition, index: number) {
 function onConfirm(e: SiderItem) {
   if (!selectedItem.value) return
   // 对象判断是否更改再赋值，未变更时可以不生成操作记录
-  if (!isEqual(selectedItem.value.props, e.props)) {
+  if (!equals(selectedItem.value.props, e.props)) {
     selectedItem.value.props = e.props
   }
   // 简单值如果相同直接赋值不会触发变更
@@ -155,7 +170,7 @@ async function onCancel(e: SiderItem) {
   if (!selectedItem.value) return
   if (
     selectedItem.value.status !== e.status ||
-    !isEqual(selectedItem.value.props, e.props)
+    !equals(selectedItem.value.props, e.props)
   ) {
     await modal('confirm', {
       title: '警告',
@@ -190,6 +205,12 @@ function onSubmit() {
     ],
     'sort',
   )
+
+  if (!diffs.length) {
+    message.success('没有任何修改，正在刷新数据！')
+    getList(selectedMenu.value!)
+    return
+  }
 
   loading.value = true
   setSider(diffs)

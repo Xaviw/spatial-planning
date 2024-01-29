@@ -1,4 +1,4 @@
-import { isString } from '@sp/shared/utils'
+import { is } from 'ramda'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
@@ -75,7 +75,7 @@ router.beforeEach((to, from) => {
   }
   if (accessToken && to.name === 'login') {
     // 已登录前往登录页，且来自于登录页面或404页面：跳转首页
-    if (isString(from.name) && ['login', 'notFound'].includes(from.name)) {
+    if (is(String, from.name) && ['login', 'notFound'].includes(from.name)) {
       return { name: 'home', replace: true }
     }
     // 已登录前往登录页：取消跳转

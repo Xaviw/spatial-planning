@@ -18,9 +18,18 @@ const hasRightMenu = inject(hasRightMenuKey)
 
 let text: AMap.Text
 
-createText()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createText()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   map?.value?.remove(text)

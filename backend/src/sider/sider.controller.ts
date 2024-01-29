@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  ParseBoolPipe,
   Post,
   Query,
   UseGuards,
@@ -20,7 +21,7 @@ export class SiderController {
   getSider(
     @Query('menuId') menuId: string,
     @Query('position') position: SiderPosition,
-    @Query('filter') filter: boolean,
+    @Query('filter', new ParseBoolPipe()) filter: boolean,
   ) {
     return this.siderService.getList(menuId, position, filter)
   }

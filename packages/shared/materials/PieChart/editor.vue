@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { isFunction } from '@sp/shared/utils'
+import { is } from 'ramda'
 import type { ProgressItem } from '#/materials'
 
 const model = defineModel<ProgressItem[]>({ default: [] })
@@ -59,7 +59,7 @@ defineExpose({
   validate() {
     const events: Promise<any>[] = []
     for (const instance of refs.value) {
-      if (isFunction(instance?.validate)) {
+      if (is(Function, instance?.validate)) {
         events.push(instance.validate())
       }
     }

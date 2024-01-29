@@ -25,11 +25,12 @@ export default {
       props: {
         title: Mock.Random.ctitle(),
         content: Mock.Random.natural(1, 999),
-        img: Mock.Random.image(
-          `${Mock.Random.natural(300, 400)}x${Mock.Random.natural(200, 300)}`,
-          Mock.Random.color(),
-          Mock.Random.color(),
-        ),
+        img:
+          Mock.Random.image(
+            `${Mock.Random.natural(300, 400)}x${Mock.Random.natural(200, 300)}`,
+            Mock.Random.color(),
+            Mock.Random.color(),
+          ) + '.png',
       },
     }
   },
@@ -73,7 +74,7 @@ export default {
         data: [
           {
             title: '图片',
-            src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+            src: 'http://dummyimage.com/300x300.png',
           },
           {
             title: '文档',
@@ -108,12 +109,16 @@ export default {
     return {
       type: 'Carousel',
       props: {
-        data: Array.from({ length: Mock.Random.natural(3, 5) }).map(() =>
-          Mock.Random.image(
-            `${Mock.Random.natural(300, 400)}x${Mock.Random.natural(200, 300)}`,
-            Mock.Random.color(),
-            Mock.Random.color(),
-          ),
+        data: Array.from({ length: Mock.Random.natural(3, 5) }).map(
+          () =>
+            Mock.Random.image(
+              `${Mock.Random.natural(300, 400)}x${Mock.Random.natural(
+                200,
+                300,
+              )}`,
+              Mock.Random.color(),
+              Mock.Random.color(),
+            ) + '.png',
         ),
       },
     }

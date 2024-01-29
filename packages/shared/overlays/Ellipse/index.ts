@@ -1,6 +1,6 @@
 import { overlayFactory, toolManage, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
+import { clone, equals } from 'ramda'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -21,11 +21,11 @@ function synchronization(mapStore: ReturnType<typeof useMapStore>) {
 
   const newCenter: AMap.Vector2 = [center.lng, center.lat]
 
-  if (!isEqual((mapStore.editData!.props as EllipseProps).center, newCenter)) {
+  if (!equals((mapStore.editData!.props as EllipseProps).center, newCenter)) {
     ;(mapStore.editData!.props as EllipseProps).center = newCenter
   }
 
-  if (!isEqual((mapStore.editData!.props as EllipseProps).radius, radius)) {
+  if (!equals((mapStore.editData!.props as EllipseProps).radius, radius)) {
     ;(mapStore.editData!.props as EllipseProps).radius = radius
   }
 }
@@ -103,22 +103,22 @@ export default {
       (mapStore.editData!.props as EllipseProps).radius
     ) {
       if (
-        !isEqual(
+        !equals(
           (mapStore.editData!.props as EllipseProps).center,
           (mapStore.activeOverlay!.props as EllipseProps).center,
         )
       ) {
-        ;(layer.overlays[index].props as EllipseProps).center = cloneDeep(
+        ;(layer.overlays[index].props as EllipseProps).center = clone(
           (overlay.props as EllipseProps).center,
         )
       }
       if (
-        !isEqual(
+        !equals(
           (mapStore.editData!.props as EllipseProps).radius,
           (mapStore.activeOverlay!.props as EllipseProps).radius,
         )
       ) {
-        ;(layer.overlays[index].props as EllipseProps).radius = cloneDeep(
+        ;(layer.overlays[index].props as EllipseProps).radius = clone(
           (overlay.props as EllipseProps).radius,
         )
       }

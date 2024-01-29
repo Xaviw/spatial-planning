@@ -137,7 +137,8 @@
 <script setup lang="ts">
 import { Upload } from '@sp/shared/components'
 import { useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, getStaticFile } from '@sp/shared/utils'
+import { getStaticFile } from '@sp/shared/utils'
+import { clone } from 'ramda'
 import type { LayerItem, OverlayType } from '#/overlays'
 
 const props = defineProps<{
@@ -157,7 +158,7 @@ const editData = ref<Omit<LayerItem<OverlayType>, 'overlays'>>()
 
 function edit() {
   const { overlays, ...layer } = props.layer
-  editData.value = cloneDeep(layer)
+  editData.value = clone(layer)
 }
 
 function cancel() {

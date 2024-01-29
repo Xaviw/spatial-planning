@@ -1,6 +1,6 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
+import { clone, equals } from 'ramda'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -19,7 +19,7 @@ function synchronization(mapStore: ReturnType<typeof useMapStore>) {
   const path = mapStore.activeInstance.getPath() as AMap.LngLat[]
   const newPath = path.map((item): AMap.Vector2 => [item.lng, item.lat])
 
-  if (!isEqual((mapStore.editData!.props as PolylineProps).path, newPath)) {
+  if (!equals((mapStore.editData!.props as PolylineProps).path, newPath)) {
     ;(mapStore.editData!.props as PolylineProps).path = newPath
   }
 }
@@ -100,12 +100,12 @@ export default {
   ) => {
     if (
       (mapStore.editData!.props as PolylineProps).path &&
-      !isEqual(
+      !equals(
         (mapStore.editData!.props as PolylineProps).path,
         (mapStore.activeOverlay!.props as PolylineProps).path,
       )
     ) {
-      ;(layer.overlays[index].props as PolylineProps).path = cloneDeep(
+      ;(layer.overlays[index].props as PolylineProps).path = clone(
         overlay.props.path,
       )
     }

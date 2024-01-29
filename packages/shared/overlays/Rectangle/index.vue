@@ -18,9 +18,18 @@ const hasRightMenu = inject(hasRightMenuKey)
 
 let rectangle: AMap.Rectangle
 
-createRectangle()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createRectangle()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   map?.value?.remove(rectangle)

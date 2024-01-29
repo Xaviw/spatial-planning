@@ -1,5 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from '@sp/shared/utils'
+import { clone, equals } from 'ramda'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -53,7 +53,7 @@ export default {
         const newPos: [number, number] = [pos.lng, pos.lat]
 
         if (
-          !isEqual((mapStore.editData!.props as MarkerProps).position, newPos)
+          !equals((mapStore.editData!.props as MarkerProps).position, newPos)
         ) {
           ;(mapStore.editData!.props as MarkerProps).position = newPos
         }
@@ -72,12 +72,12 @@ export default {
   ) => {
     if (
       (mapStore.editData!.props as MarkerProps).position &&
-      !isEqual(
+      !equals(
         (mapStore.editData!.props as MarkerProps).position,
         (mapStore.activeOverlay!.props as MarkerProps).position,
       )
     ) {
-      ;(layer.overlays[index].props as MarkerProps).position = cloneDeep(
+      ;(layer.overlays[index].props as MarkerProps).position = clone(
         overlay.props.position,
       )
     }

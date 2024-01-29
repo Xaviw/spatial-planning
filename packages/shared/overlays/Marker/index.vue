@@ -18,9 +18,18 @@ const hasRightMenu = inject(hasRightMenuKey)
 
 let marker: AMap.Marker
 
-createMarker()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createMarker()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   map?.value?.remove(marker)
@@ -127,6 +136,7 @@ watch(
 watch(
   () => markerProps.props.zooms,
   () => {
+    console.log('------------')
     map?.value?.remove(marker)
     createMarker()
   },

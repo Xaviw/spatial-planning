@@ -4,12 +4,11 @@ CREATE TABLE `User` (
     `name` VARCHAR(12) NOT NULL,
     `password` CHAR(32) NOT NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
-    `isDelete` BOOLEAN NOT NULL DEFAULT false,
     `createTime` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateTime` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `User_name_key`(`name`),
-    INDEX `User_id_name_status_isDelete_idx`(`id`, `name`, `status`, `isDelete`),
+    INDEX `User_id_name_status_idx`(`id`, `name`, `status`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -44,11 +43,10 @@ CREATE TABLE `Menu` (
     `name` VARCHAR(60) NOT NULL,
     `sort` INTEGER NOT NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
-    `isDelete` BOOLEAN NOT NULL DEFAULT false,
     `createTime` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateTime` DATETIME(3) NOT NULL,
 
-    INDEX `Menu_status_isDelete_sort_idx`(`status`, `isDelete`, `sort`),
+    INDEX `Menu_status_sort_idx`(`status`, `sort`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -60,11 +58,12 @@ CREATE TABLE `Material` (
     `siderId` CHAR(36) NULL,
     `overlayId` CHAR(36) NULL,
     `sort` INTEGER NOT NULL,
-    `isDelete` BOOLEAN NOT NULL DEFAULT false,
     `status` BOOLEAN NOT NULL DEFAULT true,
+    `createTime` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateTime` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Material_siderId_key`(`siderId`),
-    INDEX `Material_siderId_overlayId_status_isDelete_sort_idx`(`siderId`, `overlayId`, `status`, `isDelete`, `sort`),
+    INDEX `Material_siderId_overlayId_status_sort_idx`(`siderId`, `overlayId`, `status`, `sort`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -74,12 +73,11 @@ CREATE TABLE `Sider` (
     `menuId` CHAR(36) NOT NULL,
     `position` ENUM('left', 'right') NOT NULL,
     `sort` INTEGER NOT NULL,
-    `isDelete` BOOLEAN NOT NULL DEFAULT false,
     `status` BOOLEAN NOT NULL DEFAULT true,
     `createTime` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateTime` DATETIME(3) NOT NULL,
 
-    INDEX `Sider_position_menuId_sort_isDelete_status_idx`(`position`, `menuId`, `sort`, `isDelete`, `status`),
+    INDEX `Sider_position_menuId_sort_status_idx`(`position`, `menuId`, `sort`, `status`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -89,14 +87,13 @@ CREATE TABLE `Layer` (
     `menuId` CHAR(36) NOT NULL,
     `asLegend` BOOLEAN NOT NULL DEFAULT false,
     `name` VARCHAR(60) NOT NULL,
-    `legendImg` VARCHAR(120) NOT NULL,
+    `legendImg` VARCHAR(120) NULL,
     `sort` INTEGER NOT NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
-    `isDelete` BOOLEAN NOT NULL DEFAULT false,
     `createTime` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateTime` DATETIME(3) NOT NULL,
 
-    INDEX `Layer_menuId_sort_isDelete_status_idx`(`menuId`, `sort`, `isDelete`, `status`),
+    INDEX `Layer_menuId_sort_status_idx`(`menuId`, `sort`, `status`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -107,14 +104,13 @@ CREATE TABLE `Overlay` (
     `type` ENUM('Marker', 'Polyline', 'BezierCurve', 'Polygon', 'Rectangle', 'Circle', 'Ellipse', 'Text', 'LabelMarker', 'ElasticMarker', 'ImageLayer') NOT NULL,
     `name` VARCHAR(60) NOT NULL,
     `props` JSON NOT NULL,
-    `modalTitle` VARCHAR(60) NOT NULL,
-    `modalWidth` VARCHAR(20) NOT NULL,
+    `modalTitle` VARCHAR(60) NULL,
+    `modalWidth` VARCHAR(20) NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
-    `isDelete` BOOLEAN NOT NULL DEFAULT false,
     `createTime` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateTime` DATETIME(3) NOT NULL,
 
-    INDEX `Overlay_layerId_isDelete_status_idx`(`layerId`, `isDelete`, `status`),
+    INDEX `Overlay_layerId_status_idx`(`layerId`, `status`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

@@ -59,10 +59,10 @@
 </template>
 
 <script setup lang="ts">
-import { upload, mergeUpload, checkHash } from '@sp/shared/apis'
 import { FilePreview } from '@sp/shared/components'
-import { calcFileHash, getFileIconAndType, isString } from '@sp/shared/utils'
+import { getFileIconAndType, customUpload } from '@sp/shared/utils'
 import { Empty, message } from 'ant-design-vue'
+import { is } from 'ramda'
 import { v4 as uuid } from 'uuid'
 import type { FileItemType } from '#/materials'
 import type { FileType, UploadFile } from 'ant-design-vue/es/upload/interface'
@@ -136,71 +136,14 @@ const previewData = reactive<{
 })
 
 async function customRequest(e: UploadRequestOption) {
-  if (isString(e.file)) return
+  if (is(String, e.file)) return
 
-  // 校验文件是否已上传过
-  const hash = await calcFileHash(e.file)
-  const checkResult = await checkHash(hash).send()
-  if (checkResult) {
-    e.onSuccess?.(checkResult)
-    updateModel(checkResult)
-    return
-  }
-
-  // 5MB分片
-  const chunkSize = 1024 * 1024 * 5
-
-  // 小尺寸直接上传
-  if (e.file.size < chunkSize) {
-    const formData = new FormData()
-    formData.set('file', e.file)
-    formData.set('hash', hash)
-    upload(formData)
-      .send()
-      .then(res => {
-        e.onSuccess?.(res)
-        updateModel(res)
-      })
-      .catch(err => {
-        e.onError?.(err)
-      })
-    return
-  }
-
-  // 大文件分片上传
-  const chunks: Blob[] = []
-  const events: Promise<any>[] = []
-  let pos = 0
-  while (pos < e.file.size) {
-    chunks.push(e.file.slice(pos, pos + chunkSize))
-    pos += chunkSize
-  }
-  let [_, name, extName] = /^(.+)\.(.+)$/.exec(e.file.name) || []
-  name = name.replace(/\s/g, '').replace(/\./g, '_')
-  extName = extName.replace(/\s/g, '')
-  const key = name + '_' + Date.now()
-  chunks.map((chunk, index) => {
-    const formData = new FormData()
-    formData.set('name', key)
-    formData.set('index', index + '')
-    formData.set('file', chunk)
-    events.push(upload(formData).send())
-  })
-  Promise.all(events)
-    .then(() => {
-      mergeUpload(key, name, extName, hash)
-        .send()
-        .then(res => {
-          e.onSuccess?.(res)
-          updateModel(res)
-        })
-        .catch(err => {
-          e.onError?.(err)
-        })
+  customUpload(e.file)
+    .then(url => {
+      updateModel(url)
+      e.onSuccess?.(url)
     })
-    .catch(err => {
-      e.onError?.(err)
-    })
+    .catch(err => e.onError?.(err))
 }
 
 const help = computed(() => {
@@ -236,7 +179,7 @@ function onPreview(file: UploadFile) {
 }
 
 function onRemove(file: UploadFile) {
-  if (isString(model.value)) {
+  if (is(String, model.value)) {
     model.value = undefined
     return
   }

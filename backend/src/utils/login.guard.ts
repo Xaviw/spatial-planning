@@ -33,36 +33,54 @@ export class LoginGuard implements CanActivate {
     }
 
     // 校验Access-Token
-    return this.jwtService.verifyAsync(accessToken).catch(() => {
-      // Access-Token无效时校验Refresh-Token
-      return this.jwtService
-        .verifyAsync(refreshToken)
-        .then(async ({ id }) => {
-          // 获取用户信息
-          const user = await this.prismaService.user.findFirst({
-            where: { id },
-          })
-
-          if (!user) {
-            throw new UnauthorizedException('登录已失效，请重新登录！')
-          }
-
-          // 刷新token
-          const accessToken = this.jwtService.sign(
-            { id, name: user.name },
-            { expiresIn: '1h' },
-          )
-
-          const refreshToken = this.jwtService.sign({ id }, { expiresIn: '7d' })
-
-          response.setHeader('access-token', accessToken)
-          response.setHeader('refresh-token', refreshToken)
-
-          return true
+    return this.jwtService
+      .verifyAsync(accessToken)
+      .then(async ({ id }) => {
+        console.log('id: ', id)
+        // 获取用户信息
+        const user = await this.prismaService.user.findFirst({
+          where: { id },
         })
-        .catch(() => {
+
+        if (!user) {
           throw new UnauthorizedException('登录已失效，请重新登录！')
-        })
-    })
+        }
+
+        return true
+      })
+      .catch(() => {
+        // Access-Token无效时校验Refresh-Token
+        return this.jwtService
+          .verifyAsync(refreshToken)
+          .then(async ({ id }) => {
+            // 获取用户信息
+            const user = await this.prismaService.user.findFirst({
+              where: { id },
+            })
+
+            if (!user) {
+              throw new UnauthorizedException('登录已失效，请重新登录！')
+            }
+
+            // 刷新token
+            const accessToken = this.jwtService.sign(
+              { id, name: user.name },
+              { expiresIn: '1h' },
+            )
+
+            const refreshToken = this.jwtService.sign(
+              { id },
+              { expiresIn: '7d' },
+            )
+
+            response.setHeader('access-token', accessToken)
+            response.setHeader('refresh-token', refreshToken)
+
+            return true
+          })
+          .catch(() => {
+            throw new UnauthorizedException('登录已失效，请重新登录！')
+          })
+      })
   }
 }

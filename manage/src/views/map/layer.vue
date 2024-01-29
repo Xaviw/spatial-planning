@@ -67,7 +67,7 @@ const model = defineModel<LayerItem<OverlayType>[]>({
   required: true,
 })
 
-const { activeLayer } = storeToRefs(useMapStore())
+const { activeLayer, selectedMenu } = storeToRefs(useMapStore())
 
 function onRemove(id: string) {
   const index = model.value.findIndex(item => item.id === id)
@@ -88,6 +88,7 @@ function onAdd() {
     overlays: [],
     status: true,
     createTime: new Date().toLocaleString(),
+    menuId: selectedMenu.value!,
   })
   if (!activeLayer.value) {
     activeLayer.value = id

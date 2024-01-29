@@ -3,9 +3,9 @@
     <AFormItemRest>
       <component
         :is="type === 'string' ? Input : InputNumber"
-        v-for="(_item, index) of xAxis || data"
+        v-for="(_item, index) of xAxis || model"
         :key="index"
-        v-model:value="data[index]"
+        v-model:value="model[index]"
         class="mb-2 max-w-80"
       >
         <template #addonBefore v-if="type === 'string'">
@@ -14,7 +14,7 @@
 
         <template #addonAfter v-if="type === 'string'">
           <i
-            v-if="index === data.length - 1"
+            v-if="index === model.length - 1"
             @click="onAdd"
             class="i-ant-design:plus-outlined cursor-pointer"
           />
@@ -44,21 +44,11 @@ const emits = defineEmits<{
 
 const model = defineModel<(string | number)[]>({ default: [] })
 
-const data = ref<(string | number)[]>([])
-
-watchEffect(() => {
-  if (model.value.length) {
-    data.value = model.value
-  }
-})
-
 function onAdd() {
-  data.value.push(props.type === 'string' ? '' : 0)
-  emits('add')
+  model.value.push(props.type === 'string' ? '' : 0)
 }
 
 function onRemove(index: number) {
-  data.value.splice(index, 1)
-  emits('remove', index)
+  model.value.splice(index, 1)
 }
 </script>

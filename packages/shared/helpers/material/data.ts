@@ -34,7 +34,7 @@ const materialsMap: {
     props: {
       title: '数据卡片',
       content: 999,
-      img: 'http://dummyimage.com/300x300',
+      img: 'http://dummyimage.com/300x300.png',
     },
   },
   Collapse: {
@@ -78,8 +78,8 @@ const materialsMap: {
       data: [
         {
           title: '文件列表',
-          img: 'http://dummyimage.com/300x300',
-          src: 'http://dummyimage.com/300x300',
+          img: 'http://dummyimage.com/300x300.png',
+          src: 'http://dummyimage.com/300x300.png',
         },
       ],
     },
@@ -88,8 +88,8 @@ const materialsMap: {
     type: 'Carousel',
     props: {
       data: [
-        'http://dummyimage.com/300x300?text=Carousel1',
-        'http://dummyimage.com/300x300?text=Carousel2',
+        'http://dummyimage.com/300x300.png?text=Carousel1',
+        'http://dummyimage.com/300x300.png?text=Carousel2',
       ],
     },
   },

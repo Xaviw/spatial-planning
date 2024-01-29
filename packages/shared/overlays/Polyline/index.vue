@@ -18,9 +18,18 @@ const hasRightMenu = inject(hasRightMenuKey)
 
 let polyline: AMap.Polyline
 
-createPolyline()
-
-map?.value?.setFitView()
+watch(
+  () => map?.value,
+  _map => {
+    if (_map) {
+      createPolyline()
+      map!.value!.setFitView()
+    }
+  },
+  {
+    immediate: true,
+  },
+)
 
 onUnmounted(() => {
   // 如果调用 destroy 方法，切换数据后地图报错

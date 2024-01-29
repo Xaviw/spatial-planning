@@ -1,5 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from '@sp/shared/utils'
+import { clone, equals } from 'ramda'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -10,6 +10,7 @@ import type {
   MapEvent,
   OverlayModule,
 } from '#/overlays'
+import type { AMap } from '@amap/amap-jsapi-types'
 
 function add(mapStore: ReturnType<typeof useMapStore>, e: MapEvent) {
   const newLabelMarker = overlayFactory('LabelMarker', mapStore.activeLayer!, {
@@ -46,14 +47,13 @@ export default {
   ) => {
     if (
       (mapStore.editData!.props as LabelMarkerProps).position &&
-      !isEqual(
+      !equals(
         (mapStore.editData!.props as LabelMarkerProps).position,
         (mapStore.activeOverlay!.props as LabelMarkerProps).position,
       )
     ) {
-      ;(layer.overlays[index].props as LabelMarkerProps).position = cloneDeep(
-        overlay.props.position,
-      )
+      ;(layer.overlays[index].props as LabelMarkerProps).position =
+        clone<AMap.Vector2>(overlay.props.position)
     }
   },
 } as OverlayModule

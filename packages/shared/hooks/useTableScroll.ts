@@ -1,5 +1,5 @@
-import { isNumber } from '@sp/shared/utils'
 import { Table } from 'ant-design-vue'
+import { is } from 'ramda'
 import type { MaybeRef } from 'vue'
 
 export function useTableScroll(
@@ -19,7 +19,7 @@ export function useTableScroll(
     const headerRect = header!.getBoundingClientRect()
 
     const height = parentRect.height - headerRect.height
-    if (isNumber(height)) {
+    if (is(Number, height)) {
       scroll.y = height
     }
   }

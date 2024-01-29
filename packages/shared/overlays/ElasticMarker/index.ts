@@ -1,5 +1,5 @@
 import { overlayFactory, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from '@sp/shared/utils'
+import { clone, equals } from 'ramda'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -11,13 +11,14 @@ import type {
   ElasticMarkerProps,
   OverlayModule,
 } from '#/overlays'
+import type { AMap } from '@amap/amap-jsapi-types'
 
 function synchronization(mapStore: ReturnType<typeof useMapStore>) {
   const pos = (mapStore.activeInstance as ElasticMarker).getPosition()!
   const newPos: [number, number] = [pos.lng, pos.lat]
 
   if (
-    !isEqual((mapStore.editData!.props as ElasticMarkerProps).position, newPos)
+    !equals((mapStore.editData!.props as ElasticMarkerProps).position, newPos)
   ) {
     ;(mapStore.editData!.props as ElasticMarkerProps).position = newPos
   }
@@ -79,14 +80,13 @@ export default {
   ) => {
     if (
       (mapStore.editData!.props as ElasticMarkerProps).position &&
-      !isEqual(
+      !equals(
         (mapStore.editData!.props as ElasticMarkerProps).position,
         (mapStore.activeOverlay!.props as ElasticMarkerProps).position,
       )
     ) {
-      ;(layer.overlays[index].props as ElasticMarkerProps).position = cloneDeep(
-        overlay.props.position,
-      )
+      ;(layer.overlays[index].props as ElasticMarkerProps).position =
+        clone<AMap.Vector2>(overlay.props.position)
     }
   },
 } as OverlayModule

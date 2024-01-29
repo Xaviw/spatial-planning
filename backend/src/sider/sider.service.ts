@@ -11,7 +11,6 @@ export class SiderService {
   async getList(menuId: string, position: SiderPosition, filter: boolean) {
     const list = await this.prisma.sider.findMany({
       where: {
-        isDelete: false,
         // 后台（filter=false）不筛选status
         status: filter || undefined,
         menuId,
@@ -52,7 +51,8 @@ export class SiderService {
     const handlers: Promise<any>[] = []
 
     for (const operation of operations) {
-      const { menuId, position, sort, status, type, props } = operation.value
+      const { menuId, position, sort, status, type, props } =
+        operation.value || {}
 
       let handler: Promise<any>
 
@@ -67,9 +67,8 @@ export class SiderService {
           },
         })
       } else if (operation.op === 'remove') {
-        handler = this.prisma.sider.update({
+        handler = this.prisma.sider.delete({
           where: { id: operation.id },
-          data: { isDelete: true, material: { update: { isDelete: true } } },
         })
       } else {
         handler = this.prisma.sider.update({

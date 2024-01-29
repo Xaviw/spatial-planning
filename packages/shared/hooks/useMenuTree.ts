@@ -1,6 +1,7 @@
 import { getMenu } from '@sp/shared/apis'
-import { cloneDeep, loop } from '@sp/shared/utils'
+import { loop } from '@sp/shared/utils'
 import { useRequest } from 'alova'
+import { clone } from 'ramda'
 import { ref } from 'vue'
 import type { MenuItem } from '#/business'
 
@@ -16,7 +17,7 @@ export function useMenuTree(disableParent: boolean = true) {
   )
 
   const transformData = computed(() => {
-    const data = cloneDeep(menuData.value) as (MenuItem & {
+    const data = clone(menuData.value) as (MenuItem & {
       disabled?: boolean
     })[]
     loop(data, 'id', 'children', item => {

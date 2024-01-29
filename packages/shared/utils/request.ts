@@ -26,7 +26,7 @@ const errorMessage: Record<number, string> = {
 const [notify] = notification.useNotification()
 
 const requestAdapter = createAlovaMockAdapter(mockGroups, {
-  enable: import.meta.env.VITE_MOCK_ENABLE,
+  enable: import.meta.env.VITE_MOCK_ENABLE === 'true',
   httpAdapter: GlobalFetch(),
   delay: 1000,
   mockRequestLogger: true,
@@ -41,8 +41,6 @@ export const request = createAlova({
   localCache: null,
   cacheLogger: false,
   beforeRequest: method => {
-    method.config.headers['Content-Type'] = 'application/json;charset=UTF-8'
-
     const accessToken = localStorage.getItem('Access-Token')
     const refreshToken = localStorage.getItem('Refresh-Token')
 

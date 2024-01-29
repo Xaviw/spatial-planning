@@ -35,7 +35,8 @@
 <script setup lang="ts">
 import { ContentWrapper } from '@sp/shared/components'
 import { MaterialBar, SiderBar, FormBar } from '@sp/shared/helpers/material'
-import { cloneDeep, isEqual, modal } from '@sp/shared/utils'
+import { modal } from '@sp/shared/utils'
+import { clone, equals } from 'ramda'
 import type { MaterialItem } from '#/materials'
 
 const props = withDefaults(
@@ -71,7 +72,7 @@ watch(
   () => props.id,
   id => {
     if (id) {
-      list.value = cloneDeep(props.materials)
+      list.value = clone(props.materials)
       nextTick(clear)
     }
   },
@@ -88,7 +89,7 @@ async function onEdit(item: MaterialItem) {
     // 有编辑操作，警告
     if (
       data.status !== selectedItem.value.status ||
-      !isEqual(data.props, selectedItem.value.props)
+      !equals(data.props, selectedItem.value.props)
     ) {
       await modal('confirm', {
         title: '提示！',
@@ -111,7 +112,7 @@ function onRemove(index: number) {
 function onConfirm(e: MaterialItem) {
   if (!selectedItem.value) return
   // 对象判断是否更改再赋值，未变更时可以不生成操作记录
-  if (!isEqual(selectedItem.value.props, e.props)) {
+  if (!equals(selectedItem.value.props, e.props)) {
     selectedItem.value.props = e.props
   }
   // 简单值如果相同直接赋值不会触发变更
@@ -123,7 +124,7 @@ async function onCancel(e: MaterialItem) {
   if (!selectedItem.value) return
   if (
     selectedItem.value.status !== e.status ||
-    !isEqual(selectedItem.value.props, e.props)
+    !equals(selectedItem.value.props, e.props)
   ) {
     await modal('confirm', {
       title: '警告',
@@ -144,7 +145,7 @@ function onSubmit() {
 async function onClose() {
   if (selectedItem.value) {
     const data = formBarEl.value?.formModel
-    if (!isEqual(data, selectedItem)) {
+    if (!equals<any>(data, selectedItem.value)) {
       await modal('confirm', {
         title: '提示！',
         content: '您当前的编辑还未确定，关闭弹窗后不会保存，是否确定关闭？',

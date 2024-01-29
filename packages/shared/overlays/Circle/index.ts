@@ -1,6 +1,6 @@
 import { overlayFactory, toolManage, useMapStore } from '@sp/shared/helpers/map'
-import { cloneDeep, isEqual } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
+import { clone, equals } from 'ramda'
 import Form from './form.vue'
 import Overlay from './index.vue'
 import type {
@@ -21,11 +21,11 @@ function synchronization(mapStore: ReturnType<typeof useMapStore>) {
 
   const newCenter: AMap.Vector2 = [center.lng, center.lat]
 
-  if (!isEqual((mapStore.editData!.props as CircleProps).center, newCenter)) {
+  if (!equals((mapStore.editData!.props as CircleProps).center, newCenter)) {
     ;(mapStore.editData!.props as CircleProps).center = newCenter
   }
 
-  if (!isEqual((mapStore.editData!.props as CircleProps).radius, radius)) {
+  if (!equals((mapStore.editData!.props as CircleProps).radius, radius)) {
     ;(mapStore.editData!.props as CircleProps).radius = radius
   }
 }
@@ -99,17 +99,17 @@ export default {
       (mapStore.editData!.props as CircleProps).radius
     ) {
       if (
-        !isEqual(
+        !equals(
           (mapStore.editData!.props as CircleProps).center,
           (mapStore.activeOverlay!.props as CircleProps).center,
         )
       ) {
-        ;(layer.overlays[index].props as CircleProps).center = cloneDeep(
+        ;(layer.overlays[index].props as CircleProps).center = clone(
           (overlay.props as CircleProps).center,
         )
       }
       if (
-        !isEqual(
+        !equals(
           (mapStore.editData!.props as CircleProps).radius,
           (mapStore.activeOverlay!.props as CircleProps).radius,
         )

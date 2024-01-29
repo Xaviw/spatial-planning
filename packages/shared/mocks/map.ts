@@ -47,7 +47,7 @@ function genList(
       id: layerId,
       name: Mock.Random.cword(),
       asLegend: Mock.Random.boolean(),
-      legendImg: Mock.Random.image('60x60', Mock.Random.color()),
+      legendImg: Mock.Random.image('60x60', Mock.Random.color()) + '.png',
       status:
         (params.filter as unknown as string) === 'true'
           ? undefined
@@ -85,7 +85,6 @@ function genMaterials(min: number, max: number) {
     return {
       ...strategies[Mock.Random.natural(0, strategies.length - 1)](),
       id: Mock.Random.id(),
-      sort: 1,
       status: true,
       createTime: new Date().toLocaleString(),
       updateTime: new Date().toLocaleString(),
