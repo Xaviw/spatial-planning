@@ -63,7 +63,7 @@
       <AImage
         v-else-if="layer.legendImg"
         :src="layer.legendImg"
-        :fallback="getStaticFile('/failed.png')"
+        :fallback="failed_img"
         :width="40"
         :height="40"
       />
@@ -137,7 +137,7 @@
 <script setup lang="ts">
 import { Upload } from '@sp/shared/components'
 import { useMapStore } from '@sp/shared/helpers/map'
-import { getStaticFile } from '@sp/shared/utils'
+import { failed_img } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
 import { clone } from 'ramda'
 import type { LayerItem, OverlayType } from '#/overlays'

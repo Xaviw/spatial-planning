@@ -28,6 +28,7 @@
     <AAlert showIcon>
       <template #message>
         <div>右击覆盖物进行操作</div>
+        <div>覆盖物图片显示时机取决于网络状况</div>
       </template>
     </AAlert>
 
@@ -76,7 +77,7 @@ const mapStore = useMapStore()
 const {
   canRedo,
   canUndo,
-  selectedMenu,
+  selectedMenu: selectedMenuCopy,
   loading,
   sourceData,
   mapData,
@@ -85,14 +86,24 @@ const {
   activeInstance,
 } = storeToRefs(mapStore)
 
-const { menuData, menuSearchValue, onMenuDropdown, onMenuFilter } =
-  useMenuTree()
+const {
+  menuData,
+  menuSearchValue,
+  onMenuDropdown,
+  onMenuFilter,
+  sendMenu,
+  selectedMenu,
+} = useMenuTree()
 
 function onMenuChange(id: string) {
   mapStore.getMapData(id).then(() => {
     nextTick(mapStore.clear)
   })
 }
+
+watch(selectedMenu, value => {
+  selectedMenuCopy.value = value
+})
 
 async function onRefresh() {
   if (canUndo.value) {
@@ -101,7 +112,15 @@ async function onRefresh() {
       content: '刷新后您的操作不会保存，是否确定刷新？',
     })
   }
-  onMenuChange(selectedMenu.value!)
+  await sendMenu()
+  mapStore.cancelEdit()
+  nextTick(() => {
+    if (selectedMenu.value) {
+      onMenuChange(selectedMenu.value)
+    } else {
+      mapData.value = []
+    }
+  })
 }
 
 const searchValue = ref('')

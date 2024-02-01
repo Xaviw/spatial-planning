@@ -9,6 +9,8 @@ import {
   bindRightClickEvent,
   labelsLayerKey,
 } from '@sp/shared/helpers/map'
+import { failed_img, loading_img } from '@sp/shared/utils'
+import { message } from 'ant-design-vue'
 import type { OverlayProps } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -19,6 +21,14 @@ const hasRightMenu = inject(hasRightMenuKey)
 const labelsLayer = inject(labelsLayerKey)
 
 let labelMarker: AMap.LabelMarker
+const image = new Image()
+image.onload = () => {
+  setIcon(image.src)
+}
+image.onerror = () => {
+  message.error('图片加载失败，请检查链接是否正确！')
+  setIcon(failed_img)
+}
 
 watch(
   () => map?.value,
@@ -39,7 +49,10 @@ onUnmounted(() => {
 function createLabelMarker() {
   labelMarker = new window.AMap.LabelMarker({
     ...labelMarkerProps.props,
+    icon: undefined,
   })
+
+  setIcon()
 
   labelMarker.setExtData(labelMarkerProps.id)
 
@@ -49,6 +62,20 @@ function createLabelMarker() {
 
   if (map?.value) {
     ;(labelsLayer?.value as any)?.add(labelMarker)
+  }
+}
+
+function setIcon(url?: string) {
+  const icon = labelMarkerProps.props.icon
+  const img = icon?.image
+  if (img) {
+    labelMarker.setIcon({
+      ...icon,
+      image: url || loading_img,
+    })
+    if (!url) image.src = img
+  } else {
+    labelMarker.setIcon(icon!)
   }
 }
 
@@ -107,8 +134,8 @@ watch(
 
 watch(
   () => labelMarkerProps.props.icon,
-  icon => {
-    labelMarker.setIcon(icon!)
+  () => {
+    setIcon()
   },
   { deep: true },
 )

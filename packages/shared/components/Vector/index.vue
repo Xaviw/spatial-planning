@@ -49,6 +49,7 @@
 
 <script setup lang="ts">
 import { message } from 'ant-design-vue'
+import { is } from 'ramda'
 
 const props = withDefaults(
   defineProps<{
@@ -74,7 +75,7 @@ const props = withDefaults(
 )
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', val: (number | null)[]): void
+  (e: 'update:modelValue', val: (number | null)[] | undefined): void
 }>()
 
 function itemClass(index: number) {
@@ -86,9 +87,18 @@ function itemClass(index: number) {
 }
 
 function onUpdate(value: number, index: number) {
-  const copy = [...props.modelValue]
-  copy[index] = value
-  emits('update:modelValue', copy)
+  const arr = [...props.modelValue]
+  if (props.num && arr.length < props.num) {
+    for (let i = arr.length; i < props.num; i++) {
+      arr.push(null)
+    }
+  }
+  arr[index] = value
+  if (arr.every(item => !is(Number, item))) {
+    emits('update:modelValue', undefined)
+  } else {
+    emits('update:modelValue', arr)
+  }
 }
 
 function decrement(index: number) {

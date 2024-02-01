@@ -9,12 +9,31 @@ export function useMenuTree(disableParent: boolean = true) {
   const menuSearchValue = ref<string>()
   const selectedMenu = ref<string>()
 
-  const { data: menuData, send: sendMenu } = useRequest(
-    () => getMenu(true, 'message'),
-    {
-      initialData: [],
-    },
-  )
+  const {
+    data: menuData,
+    send: sendMenu,
+    onSuccess,
+  } = useRequest(() => getMenu(true, 'message'), {
+    initialData: [],
+  })
+
+  onSuccess(({ data }) => {
+    if (!selectedMenu.value) return
+    // 刷新时若已选择的菜单被删除，清除已选择
+    let flag = true
+    loop(
+      data,
+      'id',
+      'children',
+      () => {
+        flag = false
+      },
+      selectedMenu.value,
+    )
+    if (flag) {
+      selectedMenu.value = undefined
+    }
+  })
 
   const transformData = computed(() => {
     const data = clone(menuData.value) as (MenuItem & {
@@ -45,5 +64,6 @@ export function useMenuTree(disableParent: boolean = true) {
     menuData: disableParent ? transformData : menuData,
     onMenuDropdown,
     onMenuFilter,
+    sendMenu,
   }
 }

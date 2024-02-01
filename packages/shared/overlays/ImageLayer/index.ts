@@ -1,5 +1,5 @@
 import { overlayFactory, toolManage, useMapStore } from '@sp/shared/helpers/map'
-import { getStaticFile } from '@sp/shared/utils'
+import { placeholder_img } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
 import { clone, equals } from 'ramda'
 import Form from './form.vue'
@@ -80,7 +80,7 @@ export default {
       return
     }
     const newImageLayer = overlayFactory('ImageLayer', mapStore.activeLayer!, {
-      url: getStaticFile('/imageLayer.png'),
+      url: placeholder_img,
       bounds: [sw.lng, sw.lat, ne.lng, ne.lat],
     })
     mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newImageLayer)

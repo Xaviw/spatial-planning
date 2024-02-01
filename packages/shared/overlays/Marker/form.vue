@@ -22,7 +22,11 @@
       />
     </AFormItem>
 
-    <AFormItem label="图标尺寸" help="根据所设置的大小拉伸或压缩图片">
+    <AFormItem
+      label="图标尺寸"
+      help="根据所设置的大小拉伸或压缩图片"
+      v-bind="validateInfos['icon.imageSize']"
+    >
       <Vector
         :modelValue="formModel.icon?.imageSize"
         @update:modelValue="onIconUpdate($event, 'imageSize')"
@@ -36,7 +40,11 @@
       />
     </AFormItem>
 
-    <AFormItem label="图标显示尺寸" help="截取图标的一部分显示，以左上角为起点">
+    <AFormItem
+      label="图标显示尺寸"
+      help="从左上角开始截取图标的一部分显示"
+      v-bind="validateInfos['icon.size']"
+    >
       <Vector
         :modelValue="formModel.icon?.size"
         @update:modelValue="onIconUpdate($event, 'size')"
@@ -52,28 +60,33 @@
 
     <AFormItem
       label="图标偏移量"
-      help="以左上角为起点，偏移一段距离开始展示；当指定大图时，可通过“图标显示尺寸”和“图标偏移量”配合，显示图标的指定范围"
+      help="在显示尺寸中以左上角为起点偏移图片，可通过“图标显示尺寸”和“图标偏移量”配合，显示图标的指定范围"
+      v-bind="validateInfos['icon.imageOffset']"
     >
       <Vector
         :modelValue="formModel.icon?.imageOffset"
         @update:modelValue="onIconUpdate($event, 'imageOffset')"
         :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
-          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素' },
+          { addonBefore: '竖轴', addonAfter: '像素' },
         ]"
         direction="vertical"
         gap="8px"
       />
     </AFormItem>
 
-    <AFormItem label="位置偏移量" help="锚点对准经纬度后在横、竖轴上的偏移量">
+    <AFormItem
+      label="位置偏移量"
+      help="锚点对准经纬度后在横、竖轴上的偏移量"
+      v-bind="validateInfos.offset"
+    >
       <Vector
         v-model="formModel.offset"
         :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
-          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素' },
+          { addonBefore: '竖轴', addonAfter: '像素' },
         ]"
         direction="vertical"
         gap="8px"
@@ -87,7 +100,7 @@
     <AFormItem label="旋转角度">
       <AInputNumber
         v-model:value="formModel.angle"
-        :min="0"
+        :min="-360"
         :max="360"
         addonAfter="度"
       />
@@ -108,14 +121,18 @@
       />
     </AFormItem>
 
-    <AFormItem label="标注偏移量" help="以标注方位基准点进行偏移">
+    <AFormItem
+      label="标注偏移量"
+      help="以标注方位基准点进行偏移"
+      v-bind="validateInfos['label.offset']"
+    >
       <Vector
         :modelValue="formModel.label?.offset"
         @update:value="onLabelUpdate($event, 'offset')"
         :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
-          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素' },
+          { addonBefore: '竖轴', addonAfter: '像素' },
         ]"
         direction="vertical"
         gap="8px"
@@ -126,6 +143,7 @@
       label="显示范围"
       help="仅在缩放等级范围内显示"
       extra="可在地图右上角查看缩放等级"
+      v-bind="validateInfos.zooms"
     >
       <Vector
         v-model="formModel.zooms"
@@ -150,8 +168,10 @@
 <script setup lang="ts">
 import { CodeInput, Vector, Upload } from '@sp/shared/components'
 import { anchorOptions, directionOptions } from '@sp/shared/helpers/map'
+import { vectorValidator } from '@sp/shared/utils'
 import { Form } from 'ant-design-vue'
 import type { MarkerProps } from '#/overlays'
+import type { Rule } from 'ant-design-vue/es/form'
 
 function onLabelUpdate(value: any, key: 'content' | 'direction' | 'offset') {
   if (!formModel.value.label) {
@@ -172,8 +192,17 @@ function onIconUpdate(
 
 const formModel = ref<MarkerProps>({})
 
-const { resetFields, clearValidate, validate, initialModel } =
-  Form.useForm(formModel)
+const rules = ref<Record<string, Rule[]>>({
+  'icon.imageSize': [{ validator: vectorValidator }],
+  'icon.size': [{ validator: vectorValidator }],
+  'icon.imageOffset': [{ validator: vectorValidator }],
+  offset: [{ validator: vectorValidator }],
+  'label.offset': [{ validator: vectorValidator }],
+  'icon.zooms': [{ validator: vectorValidator }],
+})
+
+const { resetFields, clearValidate, validate, initialModel, validateInfos } =
+  Form.useForm(formModel, rules)
 
 defineExpose({
   formModel,

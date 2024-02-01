@@ -32,6 +32,7 @@
       label="虚线间隙"
       help="仅在线条样式为虚线时生效"
       extra="生成的线条会反复使用传入的值，表现为 [实线,虚线,实线,虚线]。例如 [10,2,10] 表示10个像素的实线和2个像素的空白 + 10个像素的实线和10个像素的空白 （如此反复）"
+      v-bind="validateInfos.strokeDasharray"
     >
       <Vector
         v-model="formModel.strokeDasharray"
@@ -76,6 +77,7 @@
       label="显示范围"
       help="仅在缩放等级范围内显示"
       extra="可在地图右上角查看缩放等级"
+      v-bind="validateInfos.zooms"
     >
       <Vector
         v-model="formModel.zooms"
@@ -99,9 +101,11 @@
 
 <script setup lang="ts">
 import { Vector } from '@sp/shared/components'
+import { vectorValidator } from '@sp/shared/utils'
 import { Form } from 'ant-design-vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import type { BezierCurveProps } from '#/overlays'
+import type { Rule } from 'ant-design-vue/es/form'
 
 const strokeStyleOptions = [
   { label: '实线', value: 'solid' },
@@ -122,8 +126,13 @@ const lineCapOptions = [
 
 const formModel = ref<BezierCurveProps>({})
 
-const { resetFields, clearValidate, validate, initialModel } =
-  Form.useForm(formModel)
+const rules = ref<Record<string, Rule[]>>({
+  strokeDasharray: [{ validator: vectorValidator }],
+  zooms: [{ validator: vectorValidator }],
+})
+
+const { resetFields, clearValidate, validate, initialModel, validateInfos } =
+  Form.useForm(formModel, rules)
 
 defineExpose({
   formModel,

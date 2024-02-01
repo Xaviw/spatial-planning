@@ -11,7 +11,7 @@
           :height="imgHeight"
           :preview="imgPreview"
           :src="img"
-          :fallback="getStaticFile('/failed.png')"
+          :fallback="failed_img"
         >
           <template #previewMask>
             <i class="i-ant-design:eye-outlined" />
@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { getStaticFile } from '@sp/shared/utils'
+import { failed_img } from '@sp/shared/utils'
 import type { DataCardProps } from '#/materials'
 
 withDefaults(defineProps<DataCardProps>(), {

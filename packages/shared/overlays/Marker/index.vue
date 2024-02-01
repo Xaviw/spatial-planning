@@ -8,6 +8,9 @@ import {
   bindClickEvent,
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
+import { failed_img, loading_img, default_marker_img } from '@sp/shared/utils'
+import { message } from 'ant-design-vue'
+import { isEmpty } from 'ramda'
 import type { OverlayProps } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
 
@@ -15,6 +18,14 @@ const markerProps = defineProps<OverlayProps<'Marker'>>()
 
 const map = inject(mapKey)
 const hasRightMenu = inject(hasRightMenuKey)
+const image = new Image()
+image.onload = () => {
+  setIcon(image.src)
+}
+image.onerror = () => {
+  message.error('图片加载失败，请检查链接是否正确！')
+  setIcon(failed_img)
+}
 
 let marker: AMap.Marker
 
@@ -37,11 +48,10 @@ onUnmounted(() => {
 function createMarker() {
   marker = new window.AMap.Marker({
     ...markerProps.props,
-    icon:
-      markerProps.props.icon && typeof markerProps.props.icon === 'object'
-        ? new window.AMap.Icon(markerProps.props.icon)
-        : markerProps.props.icon,
+    icon: undefined,
   })
+
+  setIcon()
 
   marker.setExtData(markerProps.id)
 
@@ -52,6 +62,26 @@ function createMarker() {
   if (map?.value) {
     map?.value?.add(marker)
   }
+}
+
+function setIcon(url?: string) {
+  // 设置图片再清除时不会显示默认图标，所以采用模拟默认图片并在每次修改重新设置的方案
+  const iconProps = markerProps.props.icon
+  const img = iconProps?.image || default_marker_img
+  const size = iconProps?.size && !isEmpty(iconProps.size) && iconProps.size
+  const imageSize =
+    iconProps?.imageSize && !isEmpty(iconProps.imageSize) && iconProps.imageSize
+
+  const options: AMap.IconOpts = {
+    ...iconProps,
+    image: url || loading_img,
+    size: size || imageSize || [19, 32],
+    imageSize: imageSize || size || [19, 32],
+  }
+  const icon = new window.AMap.Icon(options)
+
+  marker.setIcon(icon)
+  if (!url) image.src = img
 }
 
 watch(
@@ -74,10 +104,8 @@ watch(
 
 watch(
   () => markerProps.props.icon,
-  icon => {
-    if (icon) {
-      marker.setIcon(new window.AMap.Icon(icon))
-    }
+  () => {
+    setIcon()
   },
   { deep: true },
 )
@@ -135,7 +163,6 @@ watch(
 watch(
   () => markerProps.props.zooms,
   () => {
-    console.log('------------')
     map?.value?.remove(marker)
     createMarker()
   },

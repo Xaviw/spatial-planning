@@ -8,7 +8,7 @@ import {
   bindClickEvent,
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
-import { getStaticFile } from '@sp/shared/utils'
+import { failed_img, loading_img } from '@sp/shared/utils'
 import { message } from 'ant-design-vue'
 import type { OverlayProps } from '#/overlays'
 import type { AMap } from '@amap/amap-jsapi-types'
@@ -26,7 +26,7 @@ image.onload = () => {
 }
 image.onerror = () => {
   message.error('图片加载失败，请检查链接是否正确！')
-  imageLayer.setImageUrl(getStaticFile('/failed.png'))
+  imageLayer.setImageUrl(failed_img)
 }
 
 watch(
@@ -42,6 +42,8 @@ watch(
 )
 
 onUnmounted(() => {
+  // HACK: 测试时removeLayer调用后图层仍然显示，用hide模拟销毁
+  imageLayer.hide()
   map?.value?.removeLayer(imageLayer)
   map?.value?.remove(rectangle)
 })
@@ -50,7 +52,7 @@ function createImage() {
   image.src = imageLayerProps.props.url
   imageLayer = new window.AMap.ImageLayer({
     ...imageLayerProps.props,
-    url: getStaticFile('/loading.png'),
+    url: loading_img,
   })
 
   const [minLng, minLat, maxLng, maxLat] = imageLayerProps.props.bounds
@@ -104,7 +106,7 @@ watch(
   () => imageLayerProps.props.url,
   url => {
     image.src = url
-    imageLayer.setImageUrl(getStaticFile('/loading.png'))
+    imageLayer.setImageUrl(loading_img)
   },
 )
 

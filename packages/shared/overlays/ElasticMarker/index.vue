@@ -8,6 +8,8 @@ import {
   bindClickEvent,
   bindRightClickEvent,
 } from '@sp/shared/helpers/map'
+import { failed_img, loading_img } from '@sp/shared/utils'
+import { message } from 'ant-design-vue'
 import type {
   ElasticMarker,
   OverlayProps,
@@ -20,6 +22,15 @@ const map = inject(mapKey)
 const hasRightMenu = inject(hasRightMenuKey)
 
 let elasticMarker: ElasticMarker
+
+const image = new Image()
+image.onload = () => {
+  setStyle(image.src)
+}
+image.onerror = () => {
+  message.error('图片加载失败，请检查链接是否正确！')
+  setStyle(failed_img)
+}
 
 watch(
   () => map?.value,
@@ -68,7 +79,10 @@ function createElasticMarker() {
       25: 0,
       26: 0,
     },
+    styles: undefined,
   } as ElasticMarkerProps)
+
+  setStyle()
 
   elasticMarker.setExtData(elasticMarkerProps.id)
 
@@ -78,6 +92,26 @@ function createElasticMarker() {
 
   if (map?.value) {
     map?.value?.add(elasticMarker as any)
+  }
+}
+
+function setStyle(url?: string) {
+  const styles = elasticMarkerProps.props.styles?.[0]
+  const icon = styles?.icon
+  const img = icon?.img
+  if (img) {
+    elasticMarker.setStyle([
+      {
+        ...styles,
+        icon: {
+          ...icon,
+          img: url || loading_img,
+        },
+      },
+    ])
+    if (!url) image.src = img
+  } else {
+    elasticMarker.setStyle(elasticMarkerProps.props.styles!)
   }
 }
 
@@ -115,8 +149,8 @@ watch(
 
 watch(
   () => elasticMarkerProps.props.styles,
-  styles => {
-    elasticMarker.setStyle(styles!)
+  () => {
+    setStyle()
   },
   { deep: true },
 )

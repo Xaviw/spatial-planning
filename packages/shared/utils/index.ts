@@ -1,12 +1,13 @@
 import { checkHash, upload, mergeUpload } from '@sp/shared/apis'
 import { Modal, type ModalFuncProps } from 'ant-design-vue'
-import { equals } from 'ramda'
+import { equals, is } from 'ramda'
 import Spark from 'spark-md5'
 import type { OperationItem } from '#/business'
 import type { FileItemType } from '#/materials'
 import type { MaybeRef, ComputedRef } from 'vue'
 
 export * from './request'
+export * from './base64Img'
 
 export function generateRandomDecimal(
   min: number,
@@ -71,12 +72,12 @@ export function loop<T extends Recordable>(
   primaryKey: string,
   childrenKey: string,
   callback: (item: T, index: number, data: T[], parent?: T) => void,
-  searchKey?: string,
+  searchValue?: string,
   parent?: T,
 ) {
   data.forEach((item, index) => {
-    if (searchKey) {
-      if (item[primaryKey] === searchKey) {
+    if (searchValue) {
+      if (item[primaryKey] === searchValue) {
         return callback(item, index, data, parent)
       }
       if (item[childrenKey]?.length) {
@@ -85,7 +86,7 @@ export function loop<T extends Recordable>(
           primaryKey,
           childrenKey,
           callback,
-          searchKey,
+          searchValue,
           item,
         )
       }
@@ -96,7 +97,7 @@ export function loop<T extends Recordable>(
           primaryKey,
           childrenKey,
           callback,
-          searchKey,
+          searchValue,
           item,
         )
       }
@@ -174,10 +175,6 @@ export function getOperationsFromDiff<T extends Recordable>(
   }
 
   return operations
-}
-
-export function getStaticFile(path: string) {
-  return import.meta.env.VITE_HOST + import.meta.env.VITE_STATIC_PATH + path
 }
 
 export function getFileIconAndType(src: string): {
@@ -264,4 +261,15 @@ export async function customUpload(file: Blob): Promise<string> {
   return Promise.all(events).then(() => {
     return mergeUpload(key, name, extName, hash).send()
   })
+}
+
+export function vectorValidator(_rule, value: (number | null)[] | undefined) {
+  if (!value) return Promise.resolve()
+  const isAllNumber = value.every(item => is(Number, item))
+  const isAllNil = value.every(item => !is(Number, item))
+  if (isAllNumber || isAllNil) {
+    return Promise.resolve()
+  } else {
+    return Promise.reject('请将数组补充完整！')
+  }
 }

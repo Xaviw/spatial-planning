@@ -22,7 +22,7 @@
           :height="item.imgHeight"
           :width="item.imgWidth"
           :src="item.img || item.src"
-          :fallback="getStaticFile('/failed.png')"
+          :fallback="failed_img"
           :preview="false"
         />
       </div>
@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { FilePreview } from '@sp/shared/components'
-import { getStaticFile, getFileIconAndType } from '@sp/shared/utils'
+import { failed_img, getFileIconAndType } from '@sp/shared/utils'
 import type { FileListProps, FileListItem, FileItemType } from '#/materials'
 
 interface ResolvedFileItem extends FileListItem {

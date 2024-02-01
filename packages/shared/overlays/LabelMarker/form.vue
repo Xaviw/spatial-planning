@@ -4,7 +4,7 @@
       <AInput v-model:value="formModel.name" />
     </AFormItem>
 
-    <AFormItem label="经纬度">
+    <AFormItem label="经纬度" v-bind="validateInfos.position">
       <Vector
         v-model="formModel.position"
         :num="2"
@@ -39,7 +39,7 @@
       />
     </AFormItem>
 
-    <AFormItem label="图标大小">
+    <AFormItem label="显示尺寸" v-bind="validateInfos['icon.size']">
       <Vector
         :modelValue="formModel.icon?.size"
         :num="2"
@@ -53,35 +53,25 @@
       />
     </AFormItem>
 
-    <AFormItem label="图标偏移量">
+    <AFormItem label="图标偏移量" v-bind="validateInfos['icon.offset']">
       <Vector
         :modelValue="formModel.icon?.offset"
         @update:modelValue="onIconUpdate('offset', $event)"
         :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
-          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素' },
+          { addonBefore: '竖轴', addonAfter: '像素' },
         ]"
         direction="vertical"
         gap="8px"
       />
     </AFormItem>
 
-    <AFormItem label="图标裁剪起点">
-      <Vector
-        :modelValue="formModel.icon?.clipOrigin"
-        @update:modelValue="onIconUpdate('clipOrigin', $event)"
-        :num="2"
-        :props="[
-          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
-          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
-        ]"
-        direction="vertical"
-        gap="8px"
-      />
-    </AFormItem>
-
-    <AFormItem label="图标裁剪大小">
+    <AFormItem
+      label="图标裁剪大小"
+      help="相对于图标原尺寸裁剪，决定了图标显示哪部分"
+      v-bind="validateInfos['icon.clipSize']"
+    >
       <Vector
         :modelValue="formModel.icon?.clipSize"
         @update:modelValue="onIconUpdate('clipSize', $event)"
@@ -89,6 +79,20 @@
         :props="[
           { addonBefore: '宽', addonAfter: '像素', min: 0 },
           { addonBefore: '高', addonAfter: '像素', min: 0 },
+        ]"
+        direction="vertical"
+        gap="8px"
+      />
+    </AFormItem>
+
+    <AFormItem label="图标裁剪起点" v-bind="validateInfos['icon.clipOrigin']">
+      <Vector
+        :modelValue="formModel.icon?.clipOrigin"
+        @update:modelValue="onIconUpdate('clipOrigin', $event)"
+        :num="2"
+        :props="[
+          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
         ]"
         direction="vertical"
         gap="8px"
@@ -118,21 +122,25 @@
       />
     </AFormItem>
 
-    <AFormItem label="文本偏移量">
+    <AFormItem label="文本偏移量" v-bind="validateInfos['text.offset']">
       <Vector
         :modelValue="formModel.text?.offset"
         @update:modelValue="onTextUpdate('offset', $event)"
         :num="2"
         :props="[
-          { addonBefore: '横轴', addonAfter: '像素', min: 0 },
-          { addonBefore: '竖轴', addonAfter: '像素', min: 0 },
+          { addonBefore: '横轴', addonAfter: '像素' },
+          { addonBefore: '竖轴', addonAfter: '像素' },
         ]"
         direction="vertical"
         gap="8px"
       />
     </AFormItem>
 
-    <AFormItem label="文本显示范围" help="单独设置文本的缩放等级显示范围">
+    <AFormItem
+      label="文本显示范围"
+      help="单独设置文本的缩放等级显示范围"
+      v-bind="validateInfos['text.zooms']"
+    >
       <Vector
         :modelValue="formModel.text?.zooms"
         @update:modelValue="onTextUpdate('zooms', $event)"
@@ -167,7 +175,7 @@
       />
     </AFormItem>
 
-    <AFormItem label="文本外边距">
+    <AFormItem label="文本外边距" v-bind="validateInfos['text.style.padding']">
       <Vector
         :modelValue="formModel.text?.style?.padding"
         @update:modelValue="onTextStyleUpdate('padding', $event)"
@@ -216,6 +224,7 @@
       label="显示范围"
       help="仅在缩放等级范围内显示"
       extra="可在地图右上角查看缩放等级"
+      v-bind="validateInfos.zooms"
     >
       <Vector
         v-model="formModel.zooms"
@@ -240,15 +249,17 @@
 <script setup lang="ts">
 import { Vector, Upload } from '@sp/shared/components'
 import { anchorOptions, directionOptions } from '@sp/shared/helpers/map'
+import { vectorValidator } from '@sp/shared/utils'
 import { Form } from 'ant-design-vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import type { LabelMarkerProps } from '#/overlays'
+import type { Rule } from 'ant-design-vue/es/form'
 
 function onIconUpdate(key: keyof Required<LabelMarkerProps>['icon'], value) {
   if (!formModel.value.icon) {
     formModel.value.icon = {} as LabelMarkerProps['icon']
   }
-  formModel.value.icon![key] = value
+  ;(formModel.value.icon![key] as any) = value
 }
 
 function onTextUpdate(key: keyof Required<LabelMarkerProps>['text'], value) {
@@ -274,8 +285,20 @@ function onTextStyleUpdate(
 
 const formModel = ref<LabelMarkerProps>({} as LabelMarkerProps)
 
-const { resetFields, clearValidate, validate, initialModel } =
-  Form.useForm(formModel)
+const rules = ref<Record<string, Rule[]>>({
+  position: [{ validator: vectorValidator }],
+  zooms: [{ validator: vectorValidator }],
+  'icon.size': [{ validator: vectorValidator }],
+  'icon.offset': [{ validator: vectorValidator }],
+  'icon.clipSize': [{ validator: vectorValidator }],
+  'icon.clipOrigin': [{ validator: vectorValidator }],
+  'text.zooms': [{ validator: vectorValidator }],
+  'text.offset': [{ validator: vectorValidator }],
+  'text.style.padding': [{ validator: vectorValidator }],
+})
+
+const { resetFields, clearValidate, validate, initialModel, validateInfos } =
+  Form.useForm(formModel, rules)
 
 defineExpose({
   formModel,

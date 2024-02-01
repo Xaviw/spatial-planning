@@ -41,7 +41,7 @@
       >
         <AImage
           :src="layer.legendImg"
-          :fallback="getStaticFile('/failed.png')"
+          :fallback="failed_img"
           height="2rem"
           :preview="false"
         />
@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { mapKey } from '@sp/shared/helpers/map'
 import { overlays } from '@sp/shared/overlays'
-import { getStaticFile } from '@sp/shared/utils'
+import { failed_img } from '@sp/shared/utils'
 import { useMainStore } from '../stores/main'
 
 defineProps<{

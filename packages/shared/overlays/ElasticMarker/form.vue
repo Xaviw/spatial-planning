@@ -1,6 +1,6 @@
 <template>
   <AForm>
-    <AFormItem label="偏移量">
+    <AFormItem label="偏移量" v-bind="validateInfos.offset">
       <Vector
         v-model="formModel.offset"
         :num="2"
@@ -18,7 +18,7 @@
       />
     </AFormItem>
 
-    <AFormItem label="图标尺寸">
+    <AFormItem label="图标尺寸" v-bind="validateInfos['styles[0].icon.size']">
       <Vector
         :modelValue="formModel.styles?.[0]?.icon?.size"
         @update:modelValue="onUpdate('icon', 'size', $event)"
@@ -89,7 +89,10 @@
       />
     </AFormItem>
 
-    <AFormItem label="文本偏移量">
+    <AFormItem
+      label="文本偏移量"
+      v-bind="validateInfos['styles[0].label.offset']"
+    >
       <Vector
         :modelValue="formModel.styles?.[0]?.label?.offset"
         :num="2"
@@ -121,7 +124,9 @@
 <script setup lang="ts">
 import { Vector, Upload } from '@sp/shared/components'
 import { anchorOptions } from '@sp/shared/helpers/map'
+import { vectorValidator } from '@sp/shared/utils'
 import { Form } from 'ant-design-vue'
+import { Rule } from 'ant-design-vue/es/form'
 import type {
   ElasticMarkerProps,
   ElasticMarkerStyle,
@@ -156,8 +161,14 @@ function onUpdate(
 
 const formModel = ref<ElasticMarkerProps>({} as ElasticMarkerProps)
 
-const { resetFields, clearValidate, validate, initialModel } =
-  Form.useForm(formModel)
+const rules = ref<Record<string, Rule[]>>({
+  offset: [{ validator: vectorValidator }],
+  'styles[0].icon.size': [{ validator: vectorValidator }],
+  'styles[0].label.offset': [{ validator: vectorValidator }],
+})
+
+const { resetFields, clearValidate, validate, initialModel, validateInfos } =
+  Form.useForm(formModel, rules)
 
 defineExpose({
   formModel,

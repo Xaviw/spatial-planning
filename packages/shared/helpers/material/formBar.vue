@@ -20,7 +20,7 @@
         <div>
           <AButton
             :disabled="disabled"
-            @click="$emit('refresh')"
+            @click="onRefresh"
             class="mr-2"
             v-if="showRefresh"
           >
@@ -46,7 +46,6 @@
           showSearch
           :treeData="menuData"
           @dropdownVisibleChange="onMenuDropdown"
-          @change="$emit('menuChange', $event)"
           class="flex-1"
         />
       </div>
@@ -109,7 +108,7 @@ const emits = defineEmits<{
   (e: 'undo'): void
   (e: 'refresh'): void
   (e: 'submit'): void
-  (e: 'menuChange', id: string): void
+  (e: 'menuChange', id?: string): void
   (e: 'confirm', value: T): void
   (e: 'cancel', value: T): void
 }>()
@@ -120,7 +119,12 @@ const {
   onMenuDropdown,
   onMenuFilter,
   selectedMenu,
+  sendMenu,
 } = useMenuTree()
+
+watch(selectedMenu, menuId => {
+  emits('menuChange', menuId)
+})
 
 const baseFormEl = ref<FormEl | null>(null)
 const materialFormEl = ref<FormEl | null>(null)
@@ -131,7 +135,7 @@ watch(
     if (item) {
       nextTick(() => {
         if (!baseFormEl.value || !materialFormEl.value) {
-          throw new Error('为获取到实例')
+          throw new Error('未获取到实例')
         }
         baseFormEl.value.formModel = clone(item)
         materialFormEl.value.formModel = clone(item.props)
@@ -149,12 +153,17 @@ async function onConfirm() {
 
 function getFormModel() {
   if (!baseFormEl.value || !materialFormEl.value) {
-    throw new Error('为获取到实例')
+    throw new Error('未获取到实例')
   }
   return {
     ...baseFormEl.value.formModel,
     props: materialFormEl.value.formModel,
   } as T
+}
+
+function onRefresh() {
+  sendMenu()
+  emits('refresh')
 }
 
 defineExpose({

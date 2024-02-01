@@ -86,7 +86,13 @@ const selectedItem = ref<SiderItem>()
 
 const selectedMenu = ref<string>()
 
-function getList(menuId: string) {
+function getList(menuId?: string) {
+  if (!menuId) {
+    list.value.left = []
+    list.value.right = []
+    nextTick(clear)
+    return
+  }
   selectedMenu.value = menuId
   loading.value = true
 
@@ -122,7 +128,7 @@ async function onRefresh() {
       content: '刷新后您的操作不会保存，是否确定刷新？',
     })
   }
-  getList(selectedMenu.value!)
+  getList(selectedMenu.value)
 }
 
 async function onEdit(item: SiderItem) {

@@ -17,6 +17,7 @@
       label="显示范围"
       help="仅在缩放等级范围内显示"
       extra="可在地图右上角查看缩放等级"
+      v-bind="validateInfos.zooms"
     >
       <Vector
         v-model="formModel.zooms"
@@ -40,6 +41,7 @@
 
 <script setup lang="ts">
 import { Vector, Upload } from '@sp/shared/components'
+import { vectorValidator } from '@sp/shared/utils'
 import { Form } from 'ant-design-vue'
 import { Rule } from 'ant-design-vue/es/form'
 import type { AMap } from '@amap/amap-jsapi-types'
@@ -48,6 +50,7 @@ const formModel = ref<AMap.ImageLayerOptions>({} as AMap.ImageLayerOptions)
 
 const rules = ref<Record<string, Rule[]>>({
   url: [{ required: true, message: '请上传图片！' }],
+  zooms: [{ validator: vectorValidator }],
 })
 
 const { resetFields, clearValidate, validate, initialModel, validateInfos } =

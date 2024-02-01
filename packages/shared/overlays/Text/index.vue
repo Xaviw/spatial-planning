@@ -37,6 +37,7 @@ onUnmounted(() => {
 function createText() {
   text = new window.AMap.Text({
     ...textProps.props,
+    style: textProps.props?.style && JSON.parse(textProps.props?.style),
   })
 
   text.setExtData(textProps.id)
@@ -108,10 +109,10 @@ watch(
   style => {
     try {
       style = JSON.parse(style)
+      text.setStyle(style)
     } catch (error) {
       console.log('error: ', error)
     }
-    text.setStyle(style || undefined)
   },
 )
 
