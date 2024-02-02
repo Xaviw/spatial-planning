@@ -5,3 +5,13 @@ export function md5(str: string) {
   hash.update(str)
   return hash.digest('hex')
 }
+
+export function formatDateField<
+  T extends { createTime: Date; updateTime?: Date },
+>(list: T[]): Array<T & { createTime: string; updateTime?: string }> {
+  return list.map(item => ({
+    ...item,
+    createTime: item.createTime.toLocaleString(),
+    updateTime: item.updateTime?.toLocaleString(),
+  }))
+}

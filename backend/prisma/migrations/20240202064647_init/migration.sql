@@ -17,6 +17,8 @@ CREATE TABLE `Config` (
     `id` VARCHAR(191) NOT NULL,
     `key` VARCHAR(30) NOT NULL,
     `value` JSON NOT NULL,
+    `createTime` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updateTime` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Config_key_key`(`key`),
     PRIMARY KEY (`id`)

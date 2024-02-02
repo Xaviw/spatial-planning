@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { is } from 'ramda'
 import { PrismaService } from '../global/prisma.service'
+import { formatDateField } from '../utils'
 import { CreateMenuDto, MoveMenuDto, UpdateMenuDto } from './dto'
 import type { MenuItem } from '#/business'
 
@@ -10,7 +11,7 @@ export class MenuService {
   private prisma!: PrismaService
 
   async getMenu(filter: boolean) {
-    const menus = (await this.prisma.menu.findMany({
+    const menus = await this.prisma.menu.findMany({
       where: {
         status: filter || undefined,
       },
@@ -24,13 +25,17 @@ export class MenuService {
         updateTime: !filter,
       },
       orderBy: { sort: 'asc' },
-    })) as unknown as MenuItem[]
+    })
 
-    const maps = new Map(menus.map(item => [item.id, item]))
+    const transformedMenus = (filter
+      ? menus
+      : formatDateField(menus)) as unknown as MenuItem[]
+
+    const maps = new Map(transformedMenus.map(item => [item.id, item]))
 
     const result: MenuItem[] = []
 
-    for (const menu of menus) {
+    for (const menu of transformedMenus) {
       if (menu.parentId) {
         const target = maps.get(menu.parentId)
         if (target) {

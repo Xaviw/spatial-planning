@@ -54,9 +54,3 @@ async function seed() {
 }
 
 seed()
-  .then(() => {
-    console.log('Prisma 初始化数据成功')
-  })
-  .catch(error => {
-    console.error('Prisma 初始化数据出错：', error)
-  })

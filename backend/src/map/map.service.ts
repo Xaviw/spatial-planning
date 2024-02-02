@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { pick } from 'ramda'
 import { PrismaService } from '../global/prisma.service'
+import { formatDateField } from '../utils'
 import { UpdateMapDto } from './dto'
 
 @Injectable()
@@ -8,9 +9,9 @@ export class MapService {
   @Inject(PrismaService)
   private readonly prisma: PrismaService
 
-  getList(menuId: string, filter: boolean) {
+  async getList(menuId: string, filter: boolean) {
     // 获取图层、覆盖物、物料
-    return this.prisma.layer.findMany({
+    const list = await this.prisma.layer.findMany({
       where: {
         status: filter || undefined,
         menuId,
@@ -55,6 +56,20 @@ export class MapService {
         },
       },
     })
+
+    return filter
+      ? list
+      : formatDateField(
+          list.map(layer => ({
+            ...layer,
+            overlays: formatDateField(
+              layer.overlays.map(overlay => ({
+                ...overlay,
+                materials: formatDateField(overlay.materials),
+              })),
+            ),
+          })),
+        )
   }
 
   async setList(operations: UpdateMapDto) {

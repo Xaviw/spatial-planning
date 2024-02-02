@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from '../global/prisma.service'
+import { formatDateField } from '../utils'
 import { UpdateSiderDto } from './dto'
 import type { SiderItem, SiderPosition } from '#/business'
 
@@ -35,7 +36,7 @@ export class SiderService {
     })
 
     // 铺平数据
-    return list.map(
+    return formatDateField(list).map(
       item =>
         ({
           ...item,

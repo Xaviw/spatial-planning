@@ -24,9 +24,11 @@ model User {
 
 // 系统配置
 model Config {
-  id    String @id @default(uuid())
-  key   String @unique @db.VarChar(30)
-  value Json
+  id         String   @id @default(uuid())
+  key        String   @unique @db.VarChar(30)
+  value      Json
+  createTime DateTime @default(now())
+  updateTime DateTime @updatedAt
 }
 
 // 文件
