@@ -13,7 +13,7 @@
 
       <div class="flex">
         <AAlert
-          v-if="isMock"
+          v-if="enableMock"
           closable
           showIcon
           message="当前为mock环境，仅作演示！"
@@ -60,7 +60,7 @@ import { useUserStore } from '../stores/user'
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 
 const AppTitle = import.meta.env.VITE_TITLE
-const isMock = import.meta.env.VITE_MOCK_ENABLE
+const enableMock = import.meta.env.VITE_MOCK_ENABLE
 const selectedKeys = ref<string[]>([])
 const route = useRoute()
 const router = useRouter()
