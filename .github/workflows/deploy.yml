@@ -39,6 +39,8 @@ jobs:
           cache: pnpm
       - name: 安装依赖
         run: pnpm install
+      - name: Create dist directory
+      run: mkdir -p dist
       - name: 添加高德地图key环境变量
         env:
           VITE_AMAP_KEY: ${{ secrets.VITE_AMAP_KEY }}
