@@ -1,3 +1,4 @@
+import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import unoCSS from 'unocss/vite'
@@ -8,10 +9,10 @@ import { defineConfig, loadEnv } from 'vite'
 
 export default function (name) {
   return defineConfig(({ mode }) => {
-    const base = loadEnv(mode, 'VITE_BASE')
+    const { VITE_BASE_URL } = loadEnv(mode, path.join(process.cwd(), '../'))
 
     return {
-      base,
+      base: VITE_BASE_URL,
       envDir: '../',
       plugins: [
         addFavicon(),

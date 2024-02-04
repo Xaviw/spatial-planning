@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitAny": false,
