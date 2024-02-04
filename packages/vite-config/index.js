@@ -12,7 +12,7 @@ export default function (name) {
     const { VITE_BASE_URL } = loadEnv(mode, path.join(process.cwd(), '../'))
 
     return {
-      base: VITE_BASE_URL,
+      base: VITE_BASE_URL && `${VITE_BASE_URL}${name}/`,
       envDir: '../',
       plugins: [
         addFavicon(),
