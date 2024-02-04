@@ -40,9 +40,9 @@ jobs:
       - name: 安装依赖
         run: pnpm install
       - name: 打包 client
-        run: pnpm build:client
+        run: pnpm build:mock-client
       - name: 打包 manage
-        run: pnpm build:manage
+        run: pnpm build:mock-manage
       - name: 准备部署
         uses: actions/configure-pages@v3
       - name: 上传
