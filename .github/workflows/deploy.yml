@@ -44,7 +44,10 @@ jobs:
           VITE_AMAP_KEY: ${{ secrets.VITE_AMAP_KEY }}
           VITE_AMAP_SECURITY_KEY: ${{ secrets.VITE_AMAP_SECURITY_KEY }}
         run: |
-          echo "VITE_AMAP_KEY=$VITE_AMAP_KEY\nVITE_AMAP_SECURITY_KEY=$VITE_AMAP_SECURITY_KEY" >> .env.local
+          echo "VITE_AMAP_KEY=${VITE_AMAP_KEY}" >> .env.local
+          echo "VITE_AMAP_SECURITY_KEY=${VITE_AMAP_SECURITY_KEY}" >> .env.local
+          echo "VITE_AMAP_SECURITY_KEY=${VITE_AMAP_SECURITY_KEY}" >> dist/.env.local
+          echo "VITE_AMAP_SECURITY_KEY=${VITE_AMAP_SECURITY_KEY}" >> dist/.env.local
       - name: 打包 client
         run: pnpm build:mock-client
       - name: 打包 manage
