@@ -7,7 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AAlert: (typeof import('ant-design-vue/es'))['Alert']
     AButton: (typeof import('ant-design-vue/es'))['Button']
     ACarousel: (typeof import('ant-design-vue/es'))['Carousel']
     ACollapse: (typeof import('ant-design-vue/es'))['Collapse']
@@ -15,7 +14,6 @@ declare module 'vue' {
     AConfigProvider: (typeof import('ant-design-vue/es'))['ConfigProvider']
     ADescriptions: (typeof import('ant-design-vue/es'))['Descriptions']
     ADescriptionsItem: (typeof import('ant-design-vue/es'))['DescriptionsItem']
-    ADropdown: (typeof import('ant-design-vue/es'))['Dropdown']
     AEmpty: (typeof import('ant-design-vue/es'))['Empty']
     AForm: (typeof import('ant-design-vue/es'))['Form']
     AFormItem: (typeof import('ant-design-vue/es'))['FormItem']
@@ -25,7 +23,6 @@ declare module 'vue' {
     AInputGroup: (typeof import('ant-design-vue/es'))['InputGroup']
     AInputNumber: (typeof import('ant-design-vue/es'))['InputNumber']
     AMenu: (typeof import('ant-design-vue/es'))['Menu']
-    AMenuItem: (typeof import('ant-design-vue/es'))['MenuItem']
     AModal: (typeof import('ant-design-vue/es'))['Modal']
     AProgress: (typeof import('ant-design-vue/es'))['Progress']
     ARadio: (typeof import('ant-design-vue/es'))['Radio']
@@ -39,11 +36,9 @@ declare module 'vue' {
     ATimeline: (typeof import('ant-design-vue/es'))['Timeline']
     ATimelineItem: (typeof import('ant-design-vue/es'))['TimelineItem']
     ATooltip: (typeof import('ant-design-vue/es'))['Tooltip']
-    ATreeSelect: (typeof import('ant-design-vue/es'))['TreeSelect']
     AUpload: (typeof import('ant-design-vue/es'))['Upload']
     Header: (typeof import('./../client/src/components/Header.vue'))['default']
     Layer: (typeof import('./../client/src/components/Layer.vue'))['default']
-    Left: (typeof import('./../client/src/components/Left.vue'))['default']
     Map: (typeof import('./../client/src/components/Map.vue'))['default']
     Menu: (typeof import('./../client/src/components/Menu.vue'))['default']
     RouterLink: (typeof import('vue-router'))['RouterLink']

@@ -59,11 +59,11 @@
 </template>
 
 <script setup lang="ts">
-import { FilePreview } from '@sp/shared/components'
 import { getFileIconAndType, customUpload } from '@sp/shared/utils'
 import { Empty, message } from 'ant-design-vue'
 import { is } from 'ramda'
 import { v4 as uuid } from 'uuid'
+import FilePreview from '../FilePreview/index.vue'
 import type { FileItemType } from '#/materials'
 import type { FileType, UploadFile } from 'ant-design-vue/es/upload/interface'
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'

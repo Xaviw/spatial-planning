@@ -16,8 +16,8 @@ import { v4 } from 'uuid'
 import { PrismaService } from '../global/prisma.service'
 import { LoginGuard } from '../utils/login.guard'
 
-const STATIC_PATH = process.env.VITE_STATIC_PATH!
-const URL_BASE = process.env.VITE_HOST + STATIC_PATH
+const STATIC_PATH = process.env.STATIC_PATH!
+const URL_BASE = process.env.HOST + STATIC_PATH
 
 const storage = multer.diskStorage({
   destination(req, _file, cb) {

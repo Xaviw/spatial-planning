@@ -26,14 +26,14 @@
           <AFormItem
             label="用户名"
             v-bind="validateInfos.name"
-            :help="isDev && '演示账号：admin'"
+            :help="notProd && '演示账号：admin'"
           >
             <AInput v-model:value="formModel.name" placeholder="请输入用户名" />
           </AFormItem>
           <AFormItem
             label="密码"
             v-bind="validateInfos.password"
-            :help="isDev && '演示密码：123456'"
+            :help="notProd && '演示密码：123456'"
           >
             <AInputPassword
               v-model:value="formModel.password"
@@ -67,7 +67,7 @@ import { useUserStore } from '../stores/user'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const title = import.meta.env.VITE_TITLE
-const isDev = import.meta.env.DEV
+const notProd = !import.meta.env.PROD
 
 const { login, loginLoading } = useUserStore()
 

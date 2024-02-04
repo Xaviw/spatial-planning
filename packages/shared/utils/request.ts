@@ -30,6 +30,16 @@ const requestAdapter = createAlovaMockAdapter(mockGroups, {
   httpAdapter: GlobalFetch(),
   delay: 1000,
   mockRequestLogger: true,
+  onMockResponse(response) {
+    return {
+      response: new Response(JSON.stringify(response.body), {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.responseHeaders,
+      }),
+      headers: new Headers(),
+    }
+  },
 })
 
 export const request = createAlova({

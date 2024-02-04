@@ -6,8 +6,6 @@ interface ImportMetaEnv {
   readonly VITE_API_BASE: string
   readonly VITE_AMAP_KEY: string
   readonly VITE_AMAP_SECURITY_KEY: string
-  readonly VITE_STATIC_PATH: string
-  readonly VITE_HOST: string
 }
 
 interface ImportMeta {

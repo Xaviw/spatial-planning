@@ -4,11 +4,14 @@ import unoCSS from 'unocss/vite'
 import autoImport from 'unplugin-auto-import/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import components from 'unplugin-vue-components/vite'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 
 export default function (name) {
-  return defineConfig(() => {
+  return defineConfig(({ mode }) => {
+    const base = loadEnv(mode, 'VITE_BASE')
+
     return {
+      base,
       envDir: '../',
       plugins: [
         addFavicon(),
@@ -29,6 +32,14 @@ export default function (name) {
         }),
         unoCSS(),
       ],
+      server: {
+        host: true,
+        open: true,
+      },
+      build: {
+        outDir: `../dist/${name}`,
+        emptyOutDir: true,
+      },
     }
   })
 }

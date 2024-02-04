@@ -11,19 +11,29 @@
         <span class="ml-4 tracking-widest">{{ AppTitle }}后台</span>
       </div>
 
-      <ADropdown>
-        <div class="flex items-center">
-          <i class="i-material-symbols:account-circle text-3xl" />
-          <span class="ml-2 text-lg">{{ username }}</span>
-        </div>
+      <div class="flex">
+        <AAlert
+          v-if="isMock"
+          closable
+          showIcon
+          message="当前为mock环境，仅作演示！"
+          class="mr-8"
+        />
 
-        <template #overlay>
-          <AMenu>
-            <AMenuItem @click="$router.push('/update')">账号设置</AMenuItem>
-            <AMenuItem @click="onLogout">退出登录</AMenuItem>
-          </AMenu>
-        </template>
-      </ADropdown>
+        <ADropdown>
+          <div class="flex items-center">
+            <i class="i-material-symbols:account-circle text-3xl" />
+            <span class="ml-2 text-lg">{{ username }}</span>
+          </div>
+
+          <template #overlay>
+            <AMenu>
+              <AMenuItem @click="$router.push('/update')">账号设置</AMenuItem>
+              <AMenuItem @click="onLogout">退出登录</AMenuItem>
+            </AMenu>
+          </template>
+        </ADropdown>
+      </div>
     </ALayoutHeader>
     <ALayout>
       <ALayoutSider collapsible class="shadow-xl">
@@ -50,6 +60,7 @@ import { useUserStore } from '../stores/user'
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 
 const AppTitle = import.meta.env.VITE_TITLE
+const isMock = import.meta.env.VITE_MOCK_ENABLE
 const selectedKeys = ref<string[]>([])
 const route = useRoute()
 const router = useRouter()
