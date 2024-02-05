@@ -78,7 +78,6 @@ const materialsMap: {
       data: [
         {
           title: '文件列表',
-          img: 'http://dummyimage.com/300x300.png',
           src: 'http://dummyimage.com/300x300.png',
         },
       ],

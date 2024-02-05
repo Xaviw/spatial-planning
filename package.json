@@ -15,12 +15,17 @@
     ]
   },
   "scripts": {
+    "build:backend": "pnpm -F @sp/backend build",
+    "build:client": "pnpm -F @sp/client build",
+    "build:manage": "pnpm -F @sp/manage build",
     "build:mock-client": "pnpm -F @sp/client build:mock",
     "build:mock-manage": "pnpm -F @sp/manage build:mock",
     "clean": "pnpm -r run clean && rimraf node_modules",
     "dev:backend": "pnpm -F @sp/backend dev",
     "dev:client": "pnpm -F @sp/client dev",
     "dev:manage": "pnpm -F @sp/manage dev",
+    "dev:mock-backend": "pnpm -F @sp/backend dev:mock",
+    "dev:mock-client": "pnpm -F @sp/client dev:mock",
     "lint": "pnpm -r run lint",
     "lint-staged": "lint-staged",
     "migrate": "pnpm -F @sp/backend migrate",

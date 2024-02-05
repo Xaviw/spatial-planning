@@ -16,8 +16,7 @@ import { v4 } from 'uuid'
 import { PrismaService } from '../global/prisma.service'
 import { LoginGuard } from '../utils/login.guard'
 
-const STATIC_PATH = process.env.STATIC_PATH!
-const URL_BASE = process.env.HOST + STATIC_PATH
+const STATIC_PATH = '/static'
 
 const storage = multer.diskStorage({
   destination(req, _file, cb) {
@@ -56,7 +55,7 @@ export class AttachmentController {
     @UploadedFile() file: Express.Multer.File,
     @Body() body: { name?: string; index?: number; hash?: string },
   ) {
-    const url = `${URL_BASE}/${file.filename}`
+    const url = `${STATIC_PATH}/${file.filename}`
     if (!body.name && body.hash) {
       await this.prisma.attachment.create({
         data: { hash: body.hash, name: file.originalname, url },
@@ -97,7 +96,7 @@ export class AttachmentController {
       pos += fs.statSync(chunkPath).size
     })
 
-    const url = `${URL_BASE}/${fileName}`
+    const url = `${STATIC_PATH}/${fileName}`
 
     await this.prisma.attachment.create({ data: { url, hash, name } })
 

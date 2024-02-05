@@ -28,7 +28,7 @@ const [notify] = notification.useNotification()
 const requestAdapter = createAlovaMockAdapter(mockGroups, {
   enable: import.meta.env.VITE_MOCK_ENABLE === 'true',
   httpAdapter: GlobalFetch(),
-  delay: 10,
+  delay: 1000,
   mockRequestLogger: true,
   onMockResponse(response) {
     return {
@@ -43,7 +43,7 @@ const requestAdapter = createAlovaMockAdapter(mockGroups, {
 })
 
 export const request = createAlova({
-  baseURL: import.meta.env.VITE_API_BASE,
+  baseURL: import.meta.env.VITE_API_PREFIX,
   statesHook: vueHook,
   requestAdapter,
   timeout: 1000 * 60,
@@ -103,7 +103,7 @@ export const request = createAlova({
 
         await errorHandler(response, method, json)
 
-        return Promise.reject(json)
+        throw new Error(errMsg)
       }
 
       return method.meta?.isReturnNativeResponse ? response : json.data

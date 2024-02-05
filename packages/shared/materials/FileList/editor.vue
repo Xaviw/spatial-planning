@@ -19,6 +19,7 @@
           label="文件链接"
           name="src"
           :rules="{ required: true, message: '请上传文件！' }"
+          help="支持图片、音频、视频、Office文件的在线预览"
         >
           <Upload v-model="item.src" :maxCount="1" />
         </AFormItem>

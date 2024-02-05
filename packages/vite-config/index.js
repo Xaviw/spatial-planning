@@ -7,12 +7,16 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import components from 'unplugin-vue-components/vite'
 import { defineConfig, loadEnv } from 'vite'
 
+// 修改配置后需要重启应用
 export default function (name) {
   return defineConfig(({ mode }) => {
-    const { VITE_BASE_URL } = loadEnv(mode, path.join(process.cwd(), '../'))
+    const { VITE_BASE_URL = '' } = loadEnv(
+      mode,
+      path.join(process.cwd(), '../'),
+    )
 
     return {
-      base: VITE_BASE_URL && `${VITE_BASE_URL}${name}/`,
+      base: `${VITE_BASE_URL}/${name}/`,
       envDir: '../',
       plugins: [
         addFavicon(),
@@ -35,6 +39,17 @@ export default function (name) {
       ],
       server: {
         host: true,
+        proxy: {
+          '/static': {
+            target: 'http://localhost:3000',
+            changeOrigin: true,
+          },
+          '/api': {
+            target: 'http://localhost:3000',
+            changeOrigin: true,
+            rewrite: path => path.replace(/^\/api/, ''),
+          },
+        },
       },
       build: {
         outDir: `../dist/${name}`,

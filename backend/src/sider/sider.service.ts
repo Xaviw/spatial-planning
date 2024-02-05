@@ -37,7 +37,7 @@ export class SiderService {
 
     // 铺平数据
     return formatDateField(list).map(
-      item =>
+      (item: any) =>
         ({
           ...item,
           material: undefined,

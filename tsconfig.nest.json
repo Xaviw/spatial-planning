@@ -5,7 +5,7 @@
     "experimentalDecorators": true,
     "module": "commonjs",
     "sourceMap": true,
-    "outDir": "./backend/dist",
+    "outDir": "./dist/backend",
     "strictPropertyInitialization": false
   }
 }

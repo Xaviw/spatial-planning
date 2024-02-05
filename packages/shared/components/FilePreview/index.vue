@@ -9,22 +9,29 @@
     <!-- 视频 -->
     <video
       ref="videoRef"
-      v-if="type === 'video'"
+      v-else-if="type === 'video'"
       controls
       :src="src"
       class="relative"
     />
     <!-- 音频 -->
-    <audio ref="audioRef" v-if="type === 'audio'" controls :src="src" />
+    <audio ref="audioRef" v-else-if="type === 'audio'" controls :src="src" />
     <!-- OFFICE -->
     <iframe
       ref="iframeRef"
-      v-if="type === 'office'"
+      v-else-if="type === 'office'"
       v-show="!loading"
       :src="`https://view.officeapps.live.com/op/embed.aspx?src=${src}`"
       class="relative h-80vh w-80vw"
       frameborder="0"
     />
+    <div v-else class="relative rounded bg-white px-16 py-8 text-xl">
+      该文件不支持预览，
+      <ATypographyLink :href="src" target="_black" class="text-xl">
+        点击下载
+      </ATypographyLink>
+      ！
+    </div>
   </Modal>
 </template>
 

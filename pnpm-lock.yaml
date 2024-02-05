@@ -200,12 +200,18 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.1
+      ramda:
+        specifier: ^0.29.1
+        version: 0.29.1
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
       '@nestjs/cli':
         specifier: ^10.0.0

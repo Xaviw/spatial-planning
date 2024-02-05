@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  nest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - mysql-container
+
+  mysql-container:
+    image: mysql:latest
+    volumes:
+      - D:\spatial-planning\mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    networks:
+      - common-network
+
+networks:
+  common-network:
+    driver: bridge
