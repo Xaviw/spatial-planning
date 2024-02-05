@@ -153,7 +153,6 @@ async function onEdit(item: SiderItem) {
 }
 
 function onRemove(position: SiderPosition, index: number) {
-  console.log('position: ', position, index)
   // 删除正在编辑的组件先取消编辑
   if (selectedItem.value?.id === list.value[position][index].id) {
     selectedItem.value = undefined

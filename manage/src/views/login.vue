@@ -3,7 +3,7 @@
     <WaveTop class="absolute left-0 right-0 top-0" />
 
     <div class="box relative z-1 flex overflow-hidden rounded-2xl">
-      <Loading absolute :loading="loginLoading" />
+      <Loading absolute :loading="userStore.loginLoading" />
 
       <div
         class="relative box-border w-100 flex items-center justify-center overflow-hidden bg-blue-1"
@@ -26,14 +26,14 @@
           <AFormItem
             label="用户名"
             v-bind="validateInfos.name"
-            :help="enableMock && '演示账号：admin'"
+            :help="!isProd && '演示账号：admin'"
           >
             <AInput v-model:value="formModel.name" placeholder="请输入用户名" />
           </AFormItem>
           <AFormItem
             label="密码"
             v-bind="validateInfos.password"
-            :help="enableMock && '演示密码：123456'"
+            :help="!isProd && '演示密码：123456'"
           >
             <AInputPassword
               v-model:value="formModel.password"
@@ -67,9 +67,9 @@ import { useUserStore } from '../stores/user'
 import type { Rule } from 'ant-design-vue/es/form'
 
 const title = import.meta.env.VITE_TITLE
-const enableMock = !import.meta.env.VITE_MOCK_ENABLE
+const isProd = import.meta.env.PROD
 
-const { login, loginLoading } = useUserStore()
+const userStore = useUserStore()
 
 const formModel = ref({
   name: '',
@@ -90,7 +90,7 @@ const { validateInfos, validate } = Form.useForm(formModel, rules)
 
 async function onLogin() {
   await validate()
-  login(formModel.value)
+  userStore.login(formModel.value)
 }
 </script>
 

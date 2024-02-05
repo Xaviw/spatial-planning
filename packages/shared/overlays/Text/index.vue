@@ -110,9 +110,8 @@ watch(
     try {
       style = JSON.parse(style)
       text.setStyle(style)
-    } catch (error) {
-      console.log('error: ', error)
-    }
+      // eslint-disable-next-line no-empty
+    } catch {}
   },
 )
 

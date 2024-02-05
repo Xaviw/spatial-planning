@@ -45,7 +45,9 @@ import { Form } from 'ant-design-vue'
 import { useUserStore } from '../stores/user'
 import type { Rule } from 'ant-design-vue/es/form'
 
-const { update, updateLoading, username, id } = useUserStore()
+const userStore = useUserStore()
+const { updateLoading, username, id } = storeToRefs(userStore)
+const { update } = userStore
 
 const formModel = ref({
   id,

@@ -4,6 +4,8 @@
 
 ## 技术栈：
 
+语言：typescript
+
 前端：vue@3.4 + vite + unocss + ant-design-vue
 
 后端：nest + mysql

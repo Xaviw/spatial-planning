@@ -2,7 +2,18 @@ import { defineMock } from '@alova/mock'
 import mockjs from 'mockjs'
 
 export default defineMock({
-  '[POST]/user/login': () => {
+  '[POST]/user/login': ({ data: { name, password } }) => {
+    if (name !== 'admin' || password !== '123456') {
+      return {
+        status: 400,
+        statusText: 'OK',
+        body: {
+          code: 0,
+          message: '用户名或密码错误！',
+        },
+      }
+    }
+
     return {
       status: 200,
       statusText: 'OK',

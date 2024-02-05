@@ -35,7 +35,6 @@ export default function (name) {
       ],
       server: {
         host: true,
-        open: true,
       },
       build: {
         outDir: `../dist/${name}`,

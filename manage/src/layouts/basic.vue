@@ -23,7 +23,7 @@
         <ADropdown>
           <div class="flex items-center">
             <i class="i-material-symbols:account-circle text-3xl" />
-            <span class="ml-2 text-lg">{{ username }}</span>
+            <span class="ml-2 text-lg">{{ userStore.username }}</span>
           </div>
 
           <template #overlay>
@@ -60,11 +60,11 @@ import { useUserStore } from '../stores/user'
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 
 const AppTitle = import.meta.env.VITE_TITLE
-const enableMock = import.meta.env.VITE_MOCK_ENABLE
+const enableMock = import.meta.env.VITE_MOCK_ENABLE === 'true'
 const selectedKeys = ref<string[]>([])
 const route = useRoute()
 const router = useRouter()
-const { logout, username } = useUserStore()
+const userStore = useUserStore()
 
 watchEffect(() => {
   selectedKeys.value = [route.name as string]
@@ -78,6 +78,6 @@ async function onLogout() {
   await modal('confirm', {
     title: '是否确定退出登录？',
   })
-  logout()
+  userStore.logout()
 }
 </script>

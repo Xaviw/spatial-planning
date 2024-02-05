@@ -36,7 +36,6 @@ export class LoginGuard implements CanActivate {
     return this.jwtService
       .verifyAsync(accessToken)
       .then(async ({ id }) => {
-        console.log('id: ', id)
         // 获取用户信息
         const user = await this.prismaService.user.findFirst({
           where: { id },

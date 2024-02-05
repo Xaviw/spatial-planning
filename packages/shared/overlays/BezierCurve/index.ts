@@ -69,7 +69,6 @@ export default {
       },
     )
     mapStore.mapData[mapStore.activeLayerIndex!].overlays.push(newBezierCurve)
-    console.log('mapStore.map: ', mapStore.map, obj)
     mapStore.map?.remove(obj)
     obj.destroy?.()
   },

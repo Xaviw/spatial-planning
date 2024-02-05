@@ -28,7 +28,7 @@ const [notify] = notification.useNotification()
 const requestAdapter = createAlovaMockAdapter(mockGroups, {
   enable: import.meta.env.VITE_MOCK_ENABLE === 'true',
   httpAdapter: GlobalFetch(),
-  delay: 1000,
+  delay: 10,
   mockRequestLogger: true,
   onMockResponse(response) {
     return {
