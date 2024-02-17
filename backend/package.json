@@ -4,9 +4,9 @@
   "private": true,
   "description": "后端",
   "scripts": {
-    "build": "dotenv -e ../.env -c -- nest build",
+    "build": "dotenv -e ../.env -c -e ../.env.production -c -- nest build",
     "clean": "rimraf node_modules dist",
-    "dev": "dotenv -e ../.env -c -e../.env.development -c -- nest start --watch",
+    "dev": "dotenv -e ../.env -c -e ../.env.development -c -- nest start --watch",
     "lint": "eslint --max-warnings 0 \"src/**/*.ts\" --fix && prettier --write .",
     "migrate": "dotenv -e ../.env -c -- npx prisma migrate dev"
   },
