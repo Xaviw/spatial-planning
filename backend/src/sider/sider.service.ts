@@ -2,14 +2,13 @@ import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from '../global/prisma.service'
 import { formatDateField } from '../utils'
 import { UpdateSiderDto } from './dto'
-import type { SiderItem, SiderPosition } from '#/business'
 
 @Injectable()
 export class SiderService {
   @Inject(PrismaService)
   private readonly prisma: PrismaService
 
-  async getList(menuId: string, position: SiderPosition, filter: boolean) {
+  async getList(menuId: string, position, filter: boolean) {
     const list = await this.prisma.sider.findMany({
       where: {
         // 后台（filter=false）不筛选status
@@ -36,16 +35,13 @@ export class SiderService {
     })
 
     // 铺平数据
-    return formatDateField(list).map(
-      (item: any) =>
-        ({
-          ...item,
-          material: undefined,
-          materialId: item.material?.id,
-          type: item.material?.type,
-          props: item.material?.props,
-        }) as unknown as SiderItem,
-    )
+    return formatDateField(list).map((item: any) => ({
+      ...item,
+      material: undefined,
+      materialId: item.material?.id,
+      type: item.material?.type,
+      props: item.material?.props,
+    }))
   }
 
   async update(operations: UpdateSiderDto['siders']) {

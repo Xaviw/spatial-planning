@@ -1,10 +1,11 @@
-*.md
-node_modules/
 .git/
 .github/
 .husky/
 .vscode/
 dist/
+node_modules/
+.commitlintrc.cjs
+.dockerignore
 .editorconfig
 .eslintignore
 .eslintrc-auto-import.json
@@ -16,3 +17,4 @@ dist/
 docker-compose.yml
 Dockerfile
 LICENSE
+*.md

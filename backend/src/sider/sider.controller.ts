@@ -11,7 +11,6 @@ import {
 import { LoginGuard } from '../utils/login.guard'
 import { UpdateSiderDto } from './dto'
 import { SiderService } from './sider.service'
-import { SiderPosition } from '#/business'
 
 @Controller('sider')
 export class SiderController {
@@ -20,7 +19,7 @@ export class SiderController {
   @Get()
   getSider(
     @Query('menuId') menuId: string,
-    @Query('position') position: SiderPosition,
+    @Query('position') position,
     @Query('filter', new ParseBoolPipe()) filter: boolean,
   ) {
     return this.siderService.getList(menuId, position, filter)

@@ -3,7 +3,6 @@ import { is } from 'ramda'
 import { PrismaService } from '../global/prisma.service'
 import { formatDateField } from '../utils'
 import { CreateMenuDto, MoveMenuDto, UpdateMenuDto } from './dto'
-import type { MenuItem } from '#/business'
 
 @Injectable()
 export class MenuService {
@@ -29,11 +28,11 @@ export class MenuService {
 
     const transformedMenus = (filter
       ? menus
-      : formatDateField(menus)) as unknown as MenuItem[]
+      : formatDateField(menus)) as unknown as any[]
 
     const maps = new Map(transformedMenus.map(item => [item.id, item]))
 
-    const result: MenuItem[] = []
+    const result: any[] = []
 
     for (const menu of transformedMenus) {
       if (menu.parentId) {

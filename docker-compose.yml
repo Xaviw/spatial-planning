@@ -9,20 +9,12 @@ services:
       - mysql-container
     ports:
       - '80:80'
-    networks:
-      - sp-network
 
   mysql-container:
     image: mysql:latest
     ports:
       - '3306:3306'
     volumes:
-      - D:/spatial-planning/mysql:/var/lib/mysql
+      - D:\spatial-planning\mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: 123456
-    networks:
-      - sp-network
-
-networks:
-  sp-network:
-    driver: bridge

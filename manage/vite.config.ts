@@ -1,4 +1,4 @@
 import config from '@sp/vite-config'
-import { UserConfig } from 'vite'
+import type { UserConfig } from 'vite'
 
 export default config('manage') as UserConfig

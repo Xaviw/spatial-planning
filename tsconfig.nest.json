@@ -4,8 +4,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "module": "commonjs",
-    "sourceMap": true,
-    "outDir": "./dist/backend",
+    "outDir": "./backend/dist",
     "strictPropertyInitialization": false
   }
 }

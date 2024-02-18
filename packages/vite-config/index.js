@@ -51,10 +51,6 @@ export default function (name) {
           },
         },
       },
-      build: {
-        outDir: `../dist/${name}`,
-        emptyOutDir: true,
-      },
     }
   })
 }

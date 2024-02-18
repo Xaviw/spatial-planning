@@ -36,6 +36,7 @@ declare module 'vue' {
     ATimeline: (typeof import('ant-design-vue/es'))['Timeline']
     ATimelineItem: (typeof import('ant-design-vue/es'))['TimelineItem']
     ATooltip: (typeof import('ant-design-vue/es'))['Tooltip']
+    ATypographyLink: (typeof import('ant-design-vue/es'))['TypographyLink']
     AUpload: (typeof import('ant-design-vue/es'))['Upload']
     Header: (typeof import('./../client/src/components/Header.vue'))['default']
     Layer: (typeof import('./../client/src/components/Layer.vue'))['default']
