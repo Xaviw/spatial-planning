@@ -56,12 +56,12 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           name: client
-          path: client/dist
+          path: ./client/dist
       - name: 上传manage
         uses: actions/upload-pages-artifact@v2
         with:
           name: manage
-          path: manage/dist
+          path: ./manage/dist
       - name: 部署
         id: deployment
         uses: actions/deploy-pages@v2
