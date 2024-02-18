@@ -50,18 +50,17 @@ jobs:
         run: pnpm build:mock-client
       - name: 打包 manage
         run: pnpm build:mock-manage
+      - name: 合并 dist
+        run: |
+          mkdir dist
+          cp client/dist dist/client
+          cp manage/dist dist/manage
       - name: 准备部署
         uses: actions/configure-pages@v3
-      - name: 上传client
+      - name: 上传
         uses: actions/upload-pages-artifact@v2
         with:
-          name: client
-          path: ./client/dist
-      - name: 上传manage
-        uses: actions/upload-pages-artifact@v2
-        with:
-          name: manage
-          path: ./manage/dist
+          path: dist
       - name: 部署
         id: deployment
         uses: actions/deploy-pages@v2
