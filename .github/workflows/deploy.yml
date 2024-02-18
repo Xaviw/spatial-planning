@@ -30,13 +30,13 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
-      - name: 安装 pnpm
-        uses: pnpm/action-setup@v2
       - name: 安装 node
         uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: pnpm
+      - name: 启用pnpm
+        run: corepack enable
       - name: 安装依赖
         run: pnpm install
       - name: 添加高德地图key环境变量
@@ -52,10 +52,16 @@ jobs:
         run: pnpm build:mock-manage
       - name: 准备部署
         uses: actions/configure-pages@v3
-      - name: 上传
+      - name: 上传client
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './dist'
+          name: client
+          path: client/dist
+      - name: 上传manage
+        uses: actions/upload-pages-artifact@v2
+        with:
+          name: manage
+          path: manage/dist
       - name: 部署
         id: deployment
         uses: actions/deploy-pages@v2
