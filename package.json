@@ -15,26 +15,30 @@
     ]
   },
   "scripts": {
-    "bootstrap": "(pnpm install) & (cd backend && pnpm install)",
-    "build:backend": "cd backend && pnpm build",
+    "build:backend": "pnpm -F @sp/backend build",
     "build:client": "pnpm -F @sp/client build",
     "build:manage": "pnpm -F @sp/manage build",
     "build:mock-client": "pnpm -F @sp/client build:mock",
     "build:mock-manage": "pnpm -F @sp/manage build:mock",
-    "clean": "(pnpm -r run clean) && (cd backend && pnpm clean) && rimraf node_modules",
-    "dev:backend": "cd backend && pnpm dev",
+    "clean": "pnpm -r run clean && rimraf node_modules",
+    "deploy:dev": "pnpm -F @sp/backend deploy:dev",
+    "deploy:prod": "pnpm -F @sp/backend deploy:prod",
+    "dev:backend": "pnpm -F @sp/backend dev",
     "dev:client": "pnpm -F @sp/client dev",
     "dev:manage": "pnpm -F @sp/manage dev",
-    "generate": "cd backend && pnpm generate",
+    "generate": "pnpm -F @sp/backend generate",
     "lint": "pnpm -r run lint",
     "lint-staged": "lint-staged",
-    "migrate:dev": "cd backend && pnpm migrate:dev",
-    "migrate:prod": "cd backend && pnpm migrate:prod",
+    "migrate:dev": "pnpm -F @sp/backend migrate:dev",
+    "migrate:prod": "pnpm -F @sp/backend migrate:prod",
     "mock:client": "pnpm -F @sp/client mock",
     "mock:manage": "pnpm -F @sp/manage mock",
     "prepare": "husky install",
     "preview:client": "pnpm -F @sp/client preview",
-    "preview:manage": "pnpm -F @sp/manage preview"
+    "preview:manage": "pnpm -F @sp/manage preview",
+    "reset:dev": "pnpm -F @sp/backend reset:dev",
+    "reset:prod": "pnpm -F @sp/backend reset:prod",
+    "start-backend:prod": "pnpm -F @sp/backend start:prod"
   },
   "lint-staged": {
     "*.{js,ts,tsx,vue}": [

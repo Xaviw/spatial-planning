@@ -12,7 +12,7 @@ export class ConfigController {
       select: { key: true, value: true },
     })
 
-    const configs: Recordable = {}
+    const configs: Record<string, any> = {}
 
     for (const record of records) {
       configs[record.key] = record.value
@@ -23,7 +23,7 @@ export class ConfigController {
 
   @Put()
   @UseGuards(LoginGuard)
-  async setConfigs(@Body() body: Recordable) {
+  async setConfigs(@Body() body: Record<string, any>) {
     const handlers: Promise<any>[] = []
 
     for (const key in body) {

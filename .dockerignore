@@ -2,8 +2,8 @@
 .github/
 .husky/
 .vscode/
-dist/
-node_modules/
+**/dist
+**/node_modules
 .commitlintrc.cjs
 .dockerignore
 .editorconfig

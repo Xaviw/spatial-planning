@@ -6,11 +6,15 @@
   "scripts": {
     "build": "dotenv -e ../.env -c -e ../.env.production -c -- nest build",
     "clean": "rimraf node_modules dist",
+    "deploy:dev": "dotenv -e ../.env -c -e ../.env.development -c -- prisma migrate deploy",
+    "deploy:prod": "dotenv -e ../.env -c -e ../.env.production -c -- prisma migrate deploy",
     "dev": "dotenv -e ../.env -c -e ../.env.development -c -- nest start --watch",
     "generate": "prisma generate",
     "lint": "eslint --max-warnings 0 \"src/**/*.ts\" --fix && prettier --write .",
     "migrate:dev": "dotenv -e ../.env -c -e ../.env.development -c -- prisma migrate dev",
     "migrate:prod": "dotenv -e ../.env -c -e ../.env.production -c -- prisma migrate dev",
+    "reset:dev": "dotenv -e ../.env -c -e ../.env.development -c -- prisma migrate reset",
+    "reset:prod": "dotenv -e ../.env -c -e ../.env.production -c -- prisma migrate reset",
     "start:prod": "dotenv -e ../.env -c -e ../.env.production -c -- node dist/main"
   },
   "dependencies": {
@@ -21,13 +25,10 @@
     "@prisma/client": "5.9.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
-    "dotenv-cli": "^7.3.0",
     "multer": "1.4.5-lts.1",
     "prisma": "^5.9.1",
-    "ramda": "^0.29.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1",
-    "uuid": "^9.0.1"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -37,6 +38,7 @@
     "@types/express": "^4.17.17",
     "@types/multer": "^1.4.11",
     "@types/node": "^20.3.1",
+    "dotenv-cli": "^7.3.0",
     "source-map-support": "^0.5.21",
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",

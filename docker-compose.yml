@@ -1,17 +1,60 @@
+# version: '3.8'
+# services:
+#   frontend:
+#     build:
+#       context: .
+#       dockerfile: frontend.Dockerfile
+#     container_name: frontend
+#     restart: 'always'
+#     ports:
+#       - '80:80'
+#     depends_on:
+#       - backend
+#     networks:
+#       - sp-network
+
+#   backend:
+#     build:
+#       context: .
+#       dockerfile: backend.Dockerfile
+#     container_name: backend
+#     restart: 'always'
+#     depends_on:
+#       - database
+#     networks:
+#       - sp-network
+
+#   database:
+#     image: mysql:latest
+#     container_name: database
+#     ports:
+#       - '3306:3306'
+#     volumes:
+#       - D:\spatial-planning\mysql:/var/lib/mysql
+#     environment:
+#       MYSQL_ROOT_PASSWORD: 123456
+#     networks:
+#       - sp-network
+
+# networks:
+#   sp-network:
+#     driver: bridge
 version: '3.8'
 services:
-  nest-app:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: app
     restart: 'always'
-    depends_on:
-      - mysql-container
     ports:
       - '80:80'
+    depends_on:
+      - database
 
-  mysql-container:
+  database:
     image: mysql:latest
+    container_name: database
     ports:
       - '3306:3306'
     volumes:

@@ -56,7 +56,10 @@ export class MenuService {
       _max: { sort: true },
     })
 
-    const sort = is(Number, maxSort._max.sort) ? maxSort._max.sort + 1 : 0
+    const sort =
+      is(Number, maxSort._max.sort) && maxSort._max.sort
+        ? maxSort._max.sort + 1
+        : 0
 
     const newMenu = await this.prisma.menu.create({
       data: { ...menu, sort },

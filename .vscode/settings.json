@@ -57,8 +57,11 @@
     ".env": ".env.*",
     "package.json": "pnpm-lock.yaml,pnpm-workspace.yaml,LICENSE,.gitattributes,.gitignore",
     ".eslintrc.cjs": ".eslintignore,.prettierignore,.commitlintrc.*,.prettierrc.*,.eslintrc-auto-import.json,.editorconfig",
-    "dockerfile": ".dockerignore,docker-compose.yml,nginx.conf",
+    "docker-compose.yml": "*Dockerfile,.dockerignore,,nginx.conf",
     "tsconfig.base.json": "tsconfig.nest.json,tsconfig.vue.json",
     "uno.config.ts": "unocss-icon.ts"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
   }
 }

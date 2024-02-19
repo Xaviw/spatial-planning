@@ -76,7 +76,7 @@ export class MapService {
     // 存储sql事件
     const handlers: Promise<any>[] = []
     // 存储前端id和创建后id的映射
-    const idMap: Recordable = {}
+    const idMap: Record<string, any> = {}
 
     // 图层处理
     // 新增的图层需要将id关联到覆盖物数据

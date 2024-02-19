@@ -26,7 +26,7 @@ export class UpdateOperationDto {
 
   @IsOptional()
   @IsObject()
-  value: Recordable
+  value: Record<string, any>
 }
 
 export class UpdateSiderDto {
