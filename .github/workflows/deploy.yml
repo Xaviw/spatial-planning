@@ -53,8 +53,8 @@ jobs:
       - name: 合并 dist
         run: |
           mkdir dist
-          cp client/dist dist/client
-          cp manage/dist dist/manage
+          cp -r client/dist dist/client
+          cp -r manage/dist dist/manage
       - name: 准备部署
         uses: actions/configure-pages@v3
       - name: 上传
