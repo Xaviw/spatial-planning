@@ -39,7 +39,7 @@
     />
 
     <!-- 其他 -->
-    <div v-else class="relative rounded bg-white px-16 py-8 text-xl">
+    <div v-else class="relative rounded bg-white px-16 py-8 text-xl text-black">
       该文件不支持预览，
       <ATypographyLink :href="src" target="_black" class="text-xl">
         点击下载

@@ -73,20 +73,8 @@ export default {
       props: {
         data: [
           {
-            title: '图片',
-            src: 'http://dummyimage.com/300x300.png',
-          },
-          {
-            title: '文档',
+            title: 'office',
             src: 'newteach.pbworks.com/f/ele+newsletter.docx',
-          },
-          {
-            title: '表格',
-            src: 'https://github.com/Xaviw/spatial-planning/blob/main/example_files/example.xlsx',
-          },
-          {
-            title: 'ppt',
-            src: 'http://video.ch9.ms/build/2011/slides/TOOL-532T_Sutter.pptx',
           },
           {
             title: '视频',
@@ -98,7 +86,7 @@ export default {
           },
           {
             title: '其他',
-            src: 'https://github.com/Xaviw/spatial-planning/blob/main/example_files/example.txt',
+            src: 'https://github.com/Xaviw/spatial-planning/archive/refs/heads/main.zip',
           },
         ],
       },
