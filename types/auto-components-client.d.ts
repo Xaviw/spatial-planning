@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AAlert: (typeof import('ant-design-vue/es'))['Alert']
     AButton: (typeof import('ant-design-vue/es'))['Button']
     ACarousel: (typeof import('ant-design-vue/es'))['Carousel']
     ACollapse: (typeof import('ant-design-vue/es'))['Collapse']

@@ -13,6 +13,14 @@
     </div>
 
     <div class="flex items-center">
+      <AAlert
+        v-if="enableMock"
+        closable
+        showIcon
+        message="当前为mock环境，仅作演示！"
+        class="mr-8"
+      />
+
       <div class="search-box">
         <input
           class="search-input"
@@ -38,6 +46,7 @@ import { mapKey } from '@sp/shared/helpers/map'
 import { useMainStore } from '../stores/main'
 
 const AppTitle = import.meta.env.VITE_TITLE
+const enableMock = import.meta.env.VITE_MOCK_ENABLE === 'true'
 
 const currentTime = ref<string>()
 const currentDate = ref<string>()

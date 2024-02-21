@@ -78,15 +78,15 @@ export default {
           },
           {
             title: '文档',
-            src: 'https://static-1252421604.cos.ap-guangzhou.myqcloud.com/vdp.docx',
+            src: 'newteach.pbworks.com/f/ele+newsletter.docx',
           },
           {
             title: '表格',
-            src: '3.xlsx',
+            src: 'https://github.com/Xaviw/spatial-planning/blob/main/example_files/example.xlsx',
           },
           {
             title: 'ppt',
-            src: 'https://static-1252421604.cos.ap-guangzhou.myqcloud.com/vdp.pptx',
+            src: 'http://video.ch9.ms/build/2011/slides/TOOL-532T_Sutter.pptx',
           },
           {
             title: '视频',
@@ -98,7 +98,7 @@ export default {
           },
           {
             title: '其他',
-            src: '7.x',
+            src: 'https://github.com/Xaviw/spatial-planning/blob/main/example_files/example.txt',
           },
         ],
       },

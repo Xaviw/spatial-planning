@@ -28,6 +28,9 @@
         Message: {
           colorText: '#000',
         },
+        Alert: {
+          colorText: '#000',
+        },
       },
     }"
   >

@@ -4,8 +4,18 @@
       class="i-svg-spinners:12-dots-scale-rotate absolute left-50% top-50% translate--50% text-4xl text-white"
     />
 
+    <ATooltip title="下载源文件">
+      <div
+        class="fixed right-4 top-4 cursor-pointer border border-white rounded-50% border-solid bg-white bg-opacity-30 p-2 text-white"
+        @click="download"
+      >
+        <i class="i-material-symbols:download text-3xl" />
+      </div>
+    </ATooltip>
+
     <!-- 图片 -->
     <img v-if="type === 'image'" :src="src" class="relative" />
+
     <!-- 视频 -->
     <video
       ref="videoRef"
@@ -14,8 +24,10 @@
       :src="src"
       class="relative"
     />
+
     <!-- 音频 -->
     <audio ref="audioRef" v-else-if="type === 'audio'" controls :src="src" />
+
     <!-- OFFICE -->
     <iframe
       ref="iframeRef"
@@ -25,6 +37,8 @@
       class="relative h-80vh w-80vw"
       frameborder="0"
     />
+
+    <!-- 其他 -->
     <div v-else class="relative rounded bg-white px-16 py-8 text-xl">
       该文件不支持预览，
       <ATypographyLink :href="src" target="_black" class="text-xl">
@@ -82,4 +96,8 @@ watch(iframeRef, () => {
     }
   }
 })
+
+function download() {
+  window.open(props.src)
+}
 </script>
