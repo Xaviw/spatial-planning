@@ -1,5 +1,5 @@
 # 基础阶段
-FROM node:hydrogen-alpine3.19 as base-stage
+FROM node:20-alpine as base-stage
 # 安装pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -22,7 +22,6 @@ COPY packages/vite-config/package.json ./packages/vite-config/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --ignore-scripts --frozen-lockfile
 # 复制其他源文件
 COPY . .
-RUN ls
 # 打包
 RUN pnpm build:client
 RUN pnpm build:manage
@@ -33,6 +32,8 @@ FROM nginx:stable-alpine
 COPY --from=build-stage /app/client/dist/ /usr/share/nginx/html/client/
 COPY --from=build-stage /app/manage/dist/ /usr/share/nginx/html/manage/
 COPY --from=build-stage /app/nginx.conf /etc/nginx/conf.d/default.conf
+VOLUME [ "/usr/share/nginx/html" ]
+VOLUME [ "/etc/nginx/conf.d" ]
 # 暴露端口
 EXPOSE 80
 # 启动服务

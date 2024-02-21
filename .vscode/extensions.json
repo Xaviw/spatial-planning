@@ -5,6 +5,7 @@
     "dbaeumer.vscode-eslint",
     "antfu.iconify",
     "esbenp.prettier-vscode",
-    "antfu.unocss"
+    "antfu.unocss",
+    "Prisma.prisma"
   ]
 }

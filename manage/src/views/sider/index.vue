@@ -186,6 +186,13 @@ async function onCancel(e: SiderItem) {
 }
 
 function onSubmit() {
+  if (selectedItem.value) {
+    modal('warning', {
+      title: '提示',
+      content: '您有组件正在编辑中，请先保存或取消编辑！',
+    })
+    return
+  }
   // 获取初始数据
   const sourceData = history.value[history.value.length - 1]?.snapshot
 

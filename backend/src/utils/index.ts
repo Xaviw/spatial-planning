@@ -11,7 +11,7 @@ export function formatDateField<
 >(list: T[]): Array<T & { createTime: string; updateTime?: string }> {
   return list.map(item => ({
     ...item,
-    createTime: item.createTime.toLocaleString(),
+    createTime: item.createTime?.toLocaleString(),
     updateTime: item.updateTime?.toLocaleString(),
   }))
 }

@@ -2,7 +2,7 @@
   "name": "@sp/vite-config",
   "version": "1.0.0",
   "private": true,
-  "description": "vite-config配置库",
+  "description": "vite配置",
   "type": "module",
   "main": "/index.js",
   "types": "/index.d.ts",

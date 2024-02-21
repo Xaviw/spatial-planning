@@ -57,7 +57,7 @@ export class MenuService {
     })
 
     const sort =
-      is(Number, maxSort._max.sort) && maxSort._max.sort
+      is(Number, maxSort._max.sort) && maxSort._max.sort !== null
         ? maxSort._max.sort + 1
         : 0
 
@@ -75,8 +75,8 @@ export class MenuService {
   }
 
   async removeMenu(id: string) {
-    // 逻辑删除
     await this.prisma.menu.delete({ where: { id } })
+    await this.prisma.menu.deleteMany({ where: { parentId: id } })
 
     return true
   }

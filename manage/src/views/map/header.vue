@@ -187,6 +187,13 @@ async function searchHandler(
 }
 
 function onSubmit() {
+  if (activeOverlay.value) {
+    modal('warning', {
+      title: '提示',
+      content: '您有覆盖物正在编辑中，请先保存或取消编辑！',
+    })
+    return
+  }
   loading.value = true
 
   const sourceLayers: Omit<LayerItem<OverlayType>, 'overlays'>[] = []

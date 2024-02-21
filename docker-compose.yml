@@ -1,60 +1,31 @@
-# version: '3.8'
-# services:
-#   frontend:
-#     build:
-#       context: .
-#       dockerfile: frontend.Dockerfile
-#     container_name: frontend
-#     restart: 'always'
-#     ports:
-#       - '80:80'
-#     depends_on:
-#       - backend
-#     networks:
-#       - sp-network
-
-#   backend:
-#     build:
-#       context: .
-#       dockerfile: backend.Dockerfile
-#     container_name: backend
-#     restart: 'always'
-#     depends_on:
-#       - database
-#     networks:
-#       - sp-network
-
-#   database:
-#     image: mysql:latest
-#     container_name: database
-#     ports:
-#       - '3306:3306'
-#     volumes:
-#       - D:\spatial-planning\mysql:/var/lib/mysql
-#     environment:
-#       MYSQL_ROOT_PASSWORD: 123456
-#     networks:
-#       - sp-network
-
-# networks:
-#   sp-network:
-#     driver: bridge
 version: '3.8'
 services:
-  app:
+  frontend:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: app
+      dockerfile: frontend.Dockerfile
+    container_name: frontend
     restart: 'always'
     ports:
       - '80:80'
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    container_name: backend
+    restart: 'always'
+    ports:
+      - '3000:3000'
     depends_on:
       - database
 
   database:
     image: mysql:latest
     container_name: database
+    restart: 'always'
     ports:
       - '3306:3306'
     volumes:

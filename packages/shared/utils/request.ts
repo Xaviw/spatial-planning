@@ -101,7 +101,9 @@ export const request = createAlova({
           message.error(errMsg)
         }
 
-        await errorHandler(response, method, json)
+        if (typeof errorHandler === 'function') {
+          await errorHandler(response, method, json)
+        }
 
         throw new Error(errMsg)
       }

@@ -5,7 +5,6 @@
   "description": "空间规划系统",
   "license": "MIT",
   "author": "xavi",
-  "main": "index.js",
   "workspaces": {
     "packages": [
       "packages/*",
@@ -21,16 +20,15 @@
     "build:mock-client": "pnpm -F @sp/client build:mock",
     "build:mock-manage": "pnpm -F @sp/manage build:mock",
     "clean": "pnpm -r run clean && rimraf node_modules",
-    "deploy:dev": "pnpm -F @sp/backend deploy:dev",
-    "deploy:prod": "pnpm -F @sp/backend deploy:prod",
+    "deploy": "pnpm -F @sp/backend deploy",
+    "deploy&seed&start": "pnpm -F @sp/backend deploy&seed&start",
     "dev:backend": "pnpm -F @sp/backend dev",
     "dev:client": "pnpm -F @sp/client dev",
     "dev:manage": "pnpm -F @sp/manage dev",
     "generate": "pnpm -F @sp/backend generate",
     "lint": "pnpm -r run lint",
     "lint-staged": "lint-staged",
-    "migrate:dev": "pnpm -F @sp/backend migrate:dev",
-    "migrate:prod": "pnpm -F @sp/backend migrate:prod",
+    "migrate": "pnpm -F @sp/backend migrate",
     "mock:client": "pnpm -F @sp/client mock",
     "mock:manage": "pnpm -F @sp/manage mock",
     "prepare": "husky install",
@@ -38,7 +36,9 @@
     "preview:manage": "pnpm -F @sp/manage preview",
     "reset:dev": "pnpm -F @sp/backend reset:dev",
     "reset:prod": "pnpm -F @sp/backend reset:prod",
-    "start-backend:prod": "pnpm -F @sp/backend start:prod"
+    "seed:dev": "pnpm -F @sp/backend seed:dev",
+    "seed:prod": "pnpm -F @sp/backend seed:prod",
+    "start:prod": "pnpm -F @sp/backend start:prod"
   },
   "lint-staged": {
     "*.{js,ts,tsx,vue}": [

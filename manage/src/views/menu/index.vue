@@ -14,7 +14,7 @@
           </template>
         </AAlert>
 
-        <AButton type="primary" @click="onAdd()">新增根节点</AButton>
+        <AButton type="primary" @click="onAdd()">新增根菜单</AButton>
       </div>
 
       <div class="flex-1 overflow-auto">
@@ -35,7 +35,7 @@
             <div class="tree-item flex items-center">
               <span class="flex-1 leading-32px">{{ item.name }}</span>
               <AButton type="link" class="ml-2" @click.stop="onAdd(item.id)">
-                新增
+                新增子菜单
               </AButton>
               <AButton type="link" danger @click.stop="onRemove(item.id)">
                 删除
