@@ -9,16 +9,6 @@ import type { MaybeRef, ComputedRef } from 'vue'
 export * from './request'
 export * from './base64Img'
 
-export function generateRandomDecimal(
-  min: number,
-  max: number,
-  decimalPlaces: number,
-): number {
-  const randomNum = Math.random() * (max - min) + min
-  const multiplier = Math.pow(10, decimalPlaces)
-  return Math.round(randomNum * multiplier) / multiplier
-}
-
 export const color = [
   '#05f8d6',
   '#0082fc',
