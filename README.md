@@ -4,8 +4,8 @@
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
   <img src="./readme_images/client.png" alt="前台示例" />
-  <img src="./readme_images/sider-manage.png" alt="侧边栏管理示例" />
   <img src="./readme_images/map-manage.png" alt="地图管理示例" />
+  <img src="./readme_images/sider-manage.png" alt="侧边栏管理示例" />
 </div>
 
 **管理后台功能：**
@@ -136,6 +136,8 @@ pnpm dev:manage
 
 ### 手动部署
 
+**默认账号密码：`admin` - `123456`**
+
 ```sh
 # 前端前台打包
 pnpm build:client
@@ -147,18 +149,20 @@ pnpm build:manage
 pnpm build:backend
 
 # 后端启动，会自动应用数据库迁移、数据库为空时填充基础数据、启动服务
-# 默认账号密码：admin - 123456
-# nest 默认部署方式仍然需要安装生产依赖，可以删除根 package.json中 的 dependencies 后执行 pnpm install --prod
-# 部署时需要保留的文件包括：
-#   backend/dist
-#   backend/prisma
-#   backend/node_modules
-#   backend/package.json
-#   package.json
-#   node_modules
-#   .env
-#   .env.local
-#   .env.production
-#   .env.production.local
 pnpm deploy&seed&start
 ```
+
+nest 默认部署方式仍然需要安装生产依赖，可以删除根 package.json中 的 dependencies 后执行 pnpm install --prod
+
+部署时需要保留的文件包括：
+
+- backend/dist
+- backend/prisma
+- backend/node_modules
+- backend/package.json
+- package.json
+- node_modules
+- .env
+- .env.local
+- .env.production
+- .env.production.local
