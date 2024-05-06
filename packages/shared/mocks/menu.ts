@@ -1,5 +1,5 @@
 import { defineMock } from '@alova/mock'
-import Mock from 'mockjs'
+import { Random } from 'mockjs'
 import type { MenuItem } from '#/business'
 
 export default defineMock({
@@ -11,14 +11,14 @@ export default defineMock({
         name: '工作组',
         status: true,
         sort: 1,
-        createTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
-        updateTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
+        createTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
+        updateTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
         children: [
           {
             id: '11',
             parentId: '1',
-            createTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
-            updateTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
+            createTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
+            updateTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
             name: '工作组1',
             status: true,
             sort: 1,
@@ -26,8 +26,8 @@ export default defineMock({
           {
             id: '12',
             parentId: '1',
-            createTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
-            updateTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
+            createTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
+            updateTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
             name: '工作组2',
             status: true,
             sort: 2,
@@ -35,8 +35,8 @@ export default defineMock({
               {
                 id: '121',
                 parentId: '12',
-                createTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
-                updateTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
+                createTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
+                updateTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
                 name: '工作组2-1',
                 status: true,
                 sort: 1,
@@ -44,8 +44,8 @@ export default defineMock({
               {
                 id: '122',
                 parentId: '12',
-                createTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
-                updateTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
+                createTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
+                updateTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
                 name: '工作组2-2',
                 status: true,
                 sort: 2,
@@ -55,8 +55,8 @@ export default defineMock({
           {
             id: '13',
             parentId: '1',
-            createTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
-            updateTime: Mock.Random.datetime('yyyy/MM/dd HH:mm:ss'),
+            createTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
+            updateTime: Random.datetime('yyyy/MM/dd HH:mm:ss'),
             name: '工作组3',
             status: true,
             sort: 3,
@@ -74,7 +74,7 @@ export default defineMock({
   '[POST]/menu': () => {
     return {
       code: 1,
-      data: Mock.Random.id(),
+      data: Random.id(),
       message: 'ok',
     }
   },

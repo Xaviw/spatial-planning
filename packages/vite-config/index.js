@@ -1,13 +1,14 @@
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import { visualizer } from 'rollup-plugin-visualizer'
 import unoCSS from 'unocss/vite'
 import autoImport from 'unplugin-auto-import/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import components from 'unplugin-vue-components/vite'
 import { defineConfig, loadEnv } from 'vite'
+import viteCompression from 'vite-plugin-compression'
 
-// 修改配置后需要重启应用
 export default function (name) {
   return defineConfig(({ mode }) => {
     const { VITE_BASE_URL = '' } = loadEnv(
@@ -36,7 +37,24 @@ export default function (name) {
           dts: `../types/auto-components-${name}.d.ts`,
         }),
         unoCSS(),
+        viteCompression(),
+        visualizer({
+          open: true,
+        }),
       ],
+      build: {
+        target: 'esnext',
+        rollupOptions: {
+          output: {
+            manualChunks: {
+              vue: ['vue', 'vue-router', 'pinia'],
+            },
+          },
+        },
+      },
+      json: {
+        stringify: true,
+      },
       server: {
         host: true,
         proxy: {

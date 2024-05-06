@@ -1,6 +1,6 @@
 import { defineMock } from '@alova/mock'
 import { AMap } from '@amap/amap-jsapi-types'
-import Mock from 'mockjs'
+import { Random } from 'mockjs'
 import materialStrategies from './materialStrategies'
 import type { MaterialItem } from '#/materials'
 import type {
@@ -48,50 +48,48 @@ function genList(
   if (!['11', '121', '122', '13'].includes(params.menuId)) return []
   const keys = Object.keys(generationFunctions)
   const functions = Object.values(generationFunctions)
-  return Array.from({ length: Mock.Random.natural(lMin, lMax) }).map(() => {
-    const layerId = Mock.Random.id()
+  return Array.from({ length: Random.natural(lMin, lMax) }).map(() => {
+    const layerId = Random.id()
     return {
       id: layerId,
-      name: Mock.Random.cword(),
+      name: Random.cword(),
       asLegend: true,
-      legendImg: Mock.Random.image('40x40', Mock.Random.color()) + '.png',
+      legendImg: Random.image('40x40', Random.color()) + '.png',
       status:
         (params.filter as unknown as string) === 'true'
           ? undefined
-          : Mock.Random.boolean(),
+          : Random.boolean(),
       createTime: new Date().toLocaleString(),
       updateTime: new Date().toLocaleString(),
-      overlays: Array.from({ length: Mock.Random.natural(oMin, oMax) }).map(
-        () => {
-          const randomIndex = Mock.Random.natural(0, functions.length - 1)
-          return {
-            id: Mock.Random.id(),
-            layerId,
-            type: keys[randomIndex],
-            name: Mock.Random.cword(),
-            status:
-              (params.filter as unknown as string) === 'true'
-                ? undefined
-                : Mock.Random.boolean(),
-            createTime: new Date().toLocaleString(),
-            updateTime: new Date().toLocaleString(),
-            props: functions[randomIndex](),
-            modalTitle: Mock.Random.ctitle(),
-            modalWidth: Mock.Random.natural(25, 80) + 'rem',
-            materials: genMaterials(dMin, dMax),
-          } as OverlayItem<OverlayType>
-        },
-      ),
+      overlays: Array.from({ length: Random.natural(oMin, oMax) }).map(() => {
+        const randomIndex = Random.natural(0, functions.length - 1)
+        return {
+          id: Random.id(),
+          layerId,
+          type: keys[randomIndex],
+          name: Random.cword(),
+          status:
+            (params.filter as unknown as string) === 'true'
+              ? undefined
+              : Random.boolean(),
+          createTime: new Date().toLocaleString(),
+          updateTime: new Date().toLocaleString(),
+          props: functions[randomIndex](),
+          modalTitle: Random.ctitle(),
+          modalWidth: Random.natural(25, 80) + 'rem',
+          materials: genMaterials(dMin, dMax),
+        } as OverlayItem<OverlayType>
+      }),
     } as LayerItem<OverlayType>
   })
 }
 
 function genMaterials(min: number, max: number) {
   const strategies = Object.values(materialStrategies)
-  return Array.from({ length: Mock.Random.natural(min, max) }).map(() => {
+  return Array.from({ length: Random.natural(min, max) }).map(() => {
     return {
-      ...strategies[Mock.Random.natural(0, strategies.length - 1)](),
-      id: Mock.Random.id(),
+      ...strategies[Random.natural(0, strategies.length - 1)](),
+      id: Random.id(),
       status: true,
       createTime: new Date().toLocaleString(),
       updateTime: new Date().toLocaleString(),
@@ -111,9 +109,9 @@ const generationFunctions = {
       position: generatePoints()[0],
       text: '文本',
       title: '文本',
-      angle: Mock.Random.float(0, 360),
+      angle: Random.float(0, 360),
       style: JSON.stringify({
-        color: Mock.Random.color(),
+        color: Random.color(),
         background: 'transparent',
         border: 'none',
       }),
@@ -122,16 +120,16 @@ const generationFunctions = {
   LabelMarker(): LabelMarkerProps {
     return {
       position: generatePoints()[0],
-      opacity: Mock.Random.float(0.1, 1),
+      opacity: Random.float(0.1, 1),
       icon: {
-        image: Mock.Random.dataImage('40x40', '文本标记'),
+        image: Random.dataImage('40x40', '文本标记'),
         size: [40, 40],
       },
       text: {
         content: '文本标记',
         direction: 'bottom',
         style: {
-          fillColor: Mock.Random.color(),
+          fillColor: Random.color(),
         },
       },
     }
@@ -142,7 +140,7 @@ const generationFunctions = {
       styles: [
         {
           icon: {
-            img: Mock.Random.dataImage('40x40', '灵活点标记'),
+            img: Random.dataImage('40x40', '灵活点标记'),
             fitZoom: 12,
             scaleFactor: 2,
             maxScale: 3,
@@ -155,30 +153,30 @@ const generationFunctions = {
   Polygon(): PolygonProps {
     return {
       path: generatePoints(4, 500),
-      strokeColor: Mock.Random.color(),
-      strokeOpacity: Mock.Random.float(0.1, 1),
-      strokeWeight: Mock.Random.integer(2, 10),
-      fillColor: Mock.Random.color(),
-      fillOpacity: Mock.Random.float(0.1, 1),
-      extrusionHeight: Mock.Random.integer(0, 100),
-      wallColor: Mock.Random.color(),
-      roofColor: Mock.Random.color(),
-      strokeStyle: Mock.Random.boolean() ? 'solid' : 'dashed',
+      strokeColor: Random.color(),
+      strokeOpacity: Random.float(0.1, 1),
+      strokeWeight: Random.integer(2, 10),
+      fillColor: Random.color(),
+      fillOpacity: Random.float(0.1, 1),
+      extrusionHeight: Random.integer(0, 100),
+      wallColor: Random.color(),
+      roofColor: Random.color(),
+      strokeStyle: Random.boolean() ? 'solid' : 'dashed',
     }
   },
   Polyline(): PolylineProps {
     return {
       path: generatePoints(8, 1000),
-      strokeColor: Mock.Random.color(),
-      strokeOpacity: Mock.Random.float(0.1, 1),
-      strokeWeight: Mock.Random.integer(2, 10),
-      isOutline: Mock.Random.boolean(),
-      outlineColor: Mock.Random.color(),
-      strokeStyle: Mock.Random.boolean() ? 'solid' : 'dashed',
-      lineJoin: (['miter', 'round', 'bevel'] as any)[Mock.Random.integer(0, 2)],
-      lineCap: (['butt', 'round', 'square'] as any)[Mock.Random.integer(0, 2)],
-      geodesic: Mock.Random.boolean(),
-      showDir: Mock.Random.boolean(),
+      strokeColor: Random.color(),
+      strokeOpacity: Random.float(0.1, 1),
+      strokeWeight: Random.integer(2, 10),
+      isOutline: Random.boolean(),
+      outlineColor: Random.color(),
+      strokeStyle: Random.boolean() ? 'solid' : 'dashed',
+      lineJoin: (['miter', 'round', 'bevel'] as any)[Random.integer(0, 2)],
+      lineCap: (['butt', 'round', 'square'] as any)[Random.integer(0, 2)],
+      geodesic: Random.boolean(),
+      showDir: Random.boolean(),
     }
   },
   BezierCurve(): BezierCurveProps {
@@ -195,70 +193,70 @@ const generationFunctions = {
         },
         [[]] as AMap.Vector2[][],
       ) as any,
-      strokeColor: Mock.Random.color(),
-      strokeOpacity: Mock.Random.float(0.1, 1),
-      strokeWeight: Mock.Random.integer(2, 10),
-      borderWeight: Mock.Random.integer(2, 10),
-      isOutline: Mock.Random.boolean(),
-      outlineColor: Mock.Random.color(),
-      strokeStyle: Mock.Random.boolean() ? 'solid' : 'dashed',
-      lineJoin: (['miter', 'round', 'bevel'] as any)[Mock.Random.integer(0, 2)],
-      lineCap: (['butt', 'round', 'square'] as any)[Mock.Random.integer(0, 2)],
-      geodesic: Mock.Random.boolean(),
-      showDir: Mock.Random.boolean(),
+      strokeColor: Random.color(),
+      strokeOpacity: Random.float(0.1, 1),
+      strokeWeight: Random.integer(2, 10),
+      borderWeight: Random.integer(2, 10),
+      isOutline: Random.boolean(),
+      outlineColor: Random.color(),
+      strokeStyle: Random.boolean() ? 'solid' : 'dashed',
+      lineJoin: (['miter', 'round', 'bevel'] as any)[Random.integer(0, 2)],
+      lineCap: (['butt', 'round', 'square'] as any)[Random.integer(0, 2)],
+      geodesic: Random.boolean(),
+      showDir: Random.boolean(),
     }
   },
   Circle(): CircleProps {
     return {
       center: generatePoints()[0],
       radius: 100,
-      strokeColor: Mock.Random.color(),
-      strokeOpacity: Mock.Random.float(0.1, 1),
-      strokeWeight: Mock.Random.integer(2, 10),
-      strokeStyle: Mock.Random.boolean() ? 'solid' : 'dashed',
-      extrusionHeight: Mock.Random.integer(0, 100),
-      wallColor: Mock.Random.color(),
-      roofColor: Mock.Random.color(),
-      fillColor: Mock.Random.color(),
-      fillOpacity: Mock.Random.float(0.1, 1),
+      strokeColor: Random.color(),
+      strokeOpacity: Random.float(0.1, 1),
+      strokeWeight: Random.integer(2, 10),
+      strokeStyle: Random.boolean() ? 'solid' : 'dashed',
+      extrusionHeight: Random.integer(0, 100),
+      wallColor: Random.color(),
+      roofColor: Random.color(),
+      fillColor: Random.color(),
+      fillOpacity: Random.float(0.1, 1),
     }
   },
   Ellipse(): EllipseProps {
     return {
       center: generatePoints()[0],
       radius: [50, 100],
-      strokeColor: Mock.Random.color(),
-      strokeOpacity: Mock.Random.float(0.1, 1),
-      strokeWeight: Mock.Random.integer(2, 10),
-      strokeStyle: Mock.Random.boolean() ? 'solid' : 'dashed',
-      extrusionHeight: Mock.Random.integer(0, 100),
-      wallColor: Mock.Random.color(),
-      roofColor: Mock.Random.color(),
-      fillColor: Mock.Random.color(),
-      fillOpacity: Mock.Random.float(0.1, 1),
+      strokeColor: Random.color(),
+      strokeOpacity: Random.float(0.1, 1),
+      strokeWeight: Random.integer(2, 10),
+      strokeStyle: Random.boolean() ? 'solid' : 'dashed',
+      extrusionHeight: Random.integer(0, 100),
+      wallColor: Random.color(),
+      roofColor: Random.color(),
+      fillColor: Random.color(),
+      fillOpacity: Random.float(0.1, 1),
     }
   },
   Rectangle(): RectangleProps {
     const points = generatePoints(2, 500)
     return {
       bounds: [points[0], points[1]],
-      strokeColor: Mock.Random.color(),
-      strokeOpacity: Mock.Random.float(0.1, 1),
-      strokeWeight: Mock.Random.integer(2, 10),
-      fillColor: Mock.Random.color(),
-      fillOpacity: Mock.Random.float(0.1, 1),
-      extrusionHeight: Mock.Random.integer(0, 100),
-      wallColor: Mock.Random.color(),
-      roofColor: Mock.Random.color(),
-      strokeStyle: Mock.Random.boolean() ? 'solid' : 'dashed',
+      strokeColor: Random.color(),
+      strokeOpacity: Random.float(0.1, 1),
+      strokeWeight: Random.integer(2, 10),
+      fillColor: Random.color(),
+      fillOpacity: Random.float(0.1, 1),
+      extrusionHeight: Random.integer(0, 100),
+      wallColor: Random.color(),
+      roofColor: Random.color(),
+      strokeStyle: Random.boolean() ? 'solid' : 'dashed',
     }
   },
   ImageLayer(): AMap.ImageLayerOptions {
     const points = generatePoints(2, 500)
     return {
       bounds: [...points[0], ...points[1]],
-      url: Mock.Random.dataImage('40x40', '贴图'),
-      opacity: Mock.Random.float(0.1, 1),
+      url: Random.dataImage('40x40', '贴图'),
+      opacity: Random.float(0.1, 1),
     }
   },
 }

@@ -1,5 +1,5 @@
 import { defineMock } from '@alova/mock'
-import mockjs from 'mockjs'
+import { Random } from 'mockjs'
 
 export default defineMock({
   '[POST]/user/login': ({ data: { name, password } }) => {
@@ -26,8 +26,8 @@ export default defineMock({
       body: {
         code: 1,
         data: {
-          id: mockjs.Random.id(),
-          name: mockjs.Random.name(),
+          id: Random.id(),
+          name: Random.name(),
         },
         message: 'ok',
       },

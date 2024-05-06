@@ -1,5 +1,5 @@
 import { defineMock } from '@alova/mock'
-import Mock from 'mockjs'
+import { Random } from 'mockjs'
 import materialStrategies from './materialStrategies'
 import type { GetSiderParams } from '#/business'
 
@@ -23,16 +23,16 @@ export default defineMock({
 function genList(min: number, max: number, params: GetSiderParams) {
   if (!['11', '121', '122', '13'].includes(params.menuId)) return []
   const strategies = Object.values(materialStrategies)
-  return Array.from({ length: Mock.Random.natural(min, max) }).map(() => {
-    const material = strategies[Mock.Random.natural(0, strategies.length - 1)]()
+  return Array.from({ length: Random.natural(min, max) }).map(() => {
+    const material = strategies[Random.natural(0, strategies.length - 1)]()
     return {
       ...material,
-      id: Mock.Random.id(),
-      materialId: Mock.Random.id(),
+      id: Random.id(),
+      materialId: Random.id(),
       status:
         (params.filter as unknown as string) === 'true'
           ? undefined
-          : Mock.Random.boolean(),
+          : Random.boolean(),
       // position: params.position,
       createTime: new Date().toLocaleString(),
       updateTime: new Date().toLocaleString(),

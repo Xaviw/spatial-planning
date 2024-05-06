@@ -1,11 +1,11 @@
 import { defineMock } from '@alova/mock'
-import mockjs from 'mockjs'
+import { Random } from 'mockjs'
 
 export default defineMock({
   '[POST]/attachment': () => {
     return {
       code: 1,
-      data: mockjs.Random.image() + '.png',
+      data: Random.image() + '.png',
       message: 'ok',
     }
   },
@@ -18,7 +18,7 @@ export default defineMock({
   '/attachment/merge': () => {
     return {
       code: 1,
-      data: mockjs.Random.image() + '.png',
+      data: Random.image() + '.png',
       message: 'ok',
     }
   },

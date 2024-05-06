@@ -1,11 +1,11 @@
-import Mock from 'mockjs'
+import { Random } from 'mockjs'
 
 export default {
   genTitle() {
     return {
       type: 'Title',
       props: {
-        title: Mock.Random.ctitle(),
+        title: Random.ctitle(),
       },
     }
   },
@@ -14,7 +14,7 @@ export default {
     return {
       type: 'SubTitle',
       props: {
-        title: Mock.Random.ctitle(),
+        title: Random.ctitle(),
       },
     }
   },
@@ -23,44 +23,42 @@ export default {
     return {
       type: 'DataCard',
       props: {
-        title: Mock.Random.ctitle(),
-        content: Mock.Random.natural(1, 999),
+        title: Random.ctitle(),
+        content: Random.natural(1, 999),
         img:
-          Mock.Random.image(
-            `${Mock.Random.natural(300, 400)}x${Mock.Random.natural(200, 300)}`,
-            Mock.Random.color(),
-            Mock.Random.color(),
+          Random.image(
+            `${Random.natural(300, 400)}x${Random.natural(200, 300)}`,
+            Random.color(),
+            Random.color(),
           ) + '.png',
       },
     }
   },
 
   genDescription() {
-    const column = Mock.Random.natural(2, 3)
+    const column = Random.natural(2, 3)
     return {
       type: 'Description',
       props: {
         layout: 'horizontal',
         column,
-        data: Array.from({ length: Mock.Random.natural(4, 10) }).map(() => ({
-          label: Mock.Random.cword(2, 4),
-          value: Mock.Random.csentence(2, 6),
+        data: Array.from({ length: Random.natural(4, 10) }).map(() => ({
+          label: Random.cword(2, 4),
+          value: Random.csentence(2, 6),
         })),
       },
     }
   },
 
   genTable() {
-    const column = Mock.Random.natural(3, 8)
+    const column = Random.natural(3, 8)
     return {
       type: 'Table',
       props: {
         data: [
-          Array.from({ length: column }).map(() => Mock.Random.ctitle(1, 4)),
-          ...Array.from({ length: Mock.Random.natural(3, 10) }).map(() =>
-            Array.from({ length: column }).map(() =>
-              Mock.Random.natural(1, 999),
-            ),
+          Array.from({ length: column }).map(() => Random.ctitle(1, 4)),
+          ...Array.from({ length: Random.natural(3, 10) }).map(() =>
+            Array.from({ length: column }).map(() => Random.natural(1, 999)),
           ),
         ],
       },
@@ -97,15 +95,12 @@ export default {
     return {
       type: 'Carousel',
       props: {
-        data: Array.from({ length: Mock.Random.natural(3, 5) }).map(
+        data: Array.from({ length: Random.natural(3, 5) }).map(
           () =>
-            Mock.Random.image(
-              `${Mock.Random.natural(300, 400)}x${Mock.Random.natural(
-                200,
-                300,
-              )}`,
-              Mock.Random.color(),
-              Mock.Random.color(),
+            Random.image(
+              `${Random.natural(300, 400)}x${Random.natural(200, 300)}`,
+              Random.color(),
+              Random.color(),
             ) + '.png',
         ),
       },
@@ -116,8 +111,8 @@ export default {
     return {
       type: 'Collapse',
       props: {
-        title: Mock.Random.ctitle(),
-        content: `<p>${Mock.Random.cparagraph()}</p>`,
+        title: Random.ctitle(),
+        content: `<p>${Random.cparagraph()}</p>`,
       },
     }
   },
@@ -126,9 +121,9 @@ export default {
     return {
       type: 'Timeline',
       props: {
-        data: Array.from({ length: Mock.Random.natural(3, 7) }).map(() => ({
-          content: Mock.Random.ctitle(),
-          color: Mock.Random.color(),
+        data: Array.from({ length: Random.natural(3, 7) }).map(() => ({
+          content: Random.ctitle(),
+          color: Random.color(),
         })),
       },
     }
@@ -138,43 +133,39 @@ export default {
     return {
       type: 'PieChart',
       props: {
-        data: Array.from({ length: Mock.Random.natural(3, 8) }).map(() => ({
-          name: Mock.Random.cword(2, 4),
-          value: Mock.Random.natural(1, 99),
+        data: Array.from({ length: Random.natural(3, 8) }).map(() => ({
+          name: Random.cword(2, 4),
+          value: Random.natural(1, 99),
         })),
       },
     }
   },
 
   genLineChart() {
-    const num = Mock.Random.natural(4, 10)
+    const num = Random.natural(4, 10)
     return {
       type: 'LineChart',
       props: {
-        xAxis: Array.from({ length: num }).map(() => Mock.Random.cword(1, 4)),
-        series: Array.from({ length: Mock.Random.natural(1, 4) }).map(() => ({
-          name: Mock.Random.cword(1, 4),
-          data: Array.from({ length: num }).map(() =>
-            Mock.Random.natural(1, 99),
-          ),
-          stack: Mock.Random.boolean(),
-          smooth: Mock.Random.boolean(),
+        xAxis: Array.from({ length: num }).map(() => Random.cword(1, 4)),
+        series: Array.from({ length: Random.natural(1, 4) }).map(() => ({
+          name: Random.cword(1, 4),
+          data: Array.from({ length: num }).map(() => Random.natural(1, 99)),
+          stack: Random.boolean(),
+          smooth: Random.boolean(),
         })),
       },
     }
   },
 
   genBarChart() {
-    const num = Mock.Random.natural(4, 10)
+    const num = Random.natural(4, 10)
     return {
       type: 'BarChart',
       props: {
-        xAxis: Array.from({ length: num }).map(() => Mock.Random.cword(1, 4)),
-        series: Array.from({ length: Mock.Random.natural(1, 4) }).map(() => ({
-          name: Mock.Random.cword(1, 4),
-          data: Array.from({ length: num }).map(() =>
-            Mock.Random.natural(1, 99),
-          ),
+        xAxis: Array.from({ length: num }).map(() => Random.cword(1, 4)),
+        series: Array.from({ length: Random.natural(1, 4) }).map(() => ({
+          name: Random.cword(1, 4),
+          data: Array.from({ length: num }).map(() => Random.natural(1, 99)),
         })),
       },
     }
@@ -184,9 +175,9 @@ export default {
     return {
       type: 'Progress',
       props: {
-        data: Array.from({ length: Mock.Random.natural(3, 10) }).map(() => ({
-          name: Mock.Random.ctitle(),
-          value: Mock.Random.natural(0, 100),
+        data: Array.from({ length: Random.natural(3, 10) }).map(() => ({
+          name: Random.ctitle(),
+          value: Random.natural(0, 100),
         })),
       },
     }
