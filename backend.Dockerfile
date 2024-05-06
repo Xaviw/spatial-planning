@@ -29,10 +29,10 @@ COPY .env.local .
 COPY .env.production .
 COPY .env.production.local .
 WORKDIR /app/backend
-RUN pnpm generate
+RUN pnpm prisma-generate
 # 打包
 RUN pnpm build
 VOLUME [ "/app" ]
 EXPOSE 3000
 # 启动服务
-CMD ["pnpm", "deploy&seed&start"]
+CMD ["pnpm", "deploy-start"]
