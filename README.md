@@ -2,6 +2,9 @@
 
 > 提供数据信息和地图覆盖物展示与编辑的前台+后台+后端全栈项目（pnpm monorepo）
 
+[前台预览](https://xaviw.github.io/spatial-planning/client)
+[后台预览](https://xaviw.github.io/spatial-planning/manage)
+
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
   <img src="./readme_images/client.png" alt="前台示例" />
   <img src="./readme_images/map-manage.png" alt="地图管理示例" />

@@ -74,9 +74,12 @@ export class UserController {
       throw new HttpException('用户名或密码错误！', 200)
     }
 
-    const accessToken = await this.jwtService.signAsync(findUser, {
-      expiresIn: '1h',
-    })
+    const accessToken = await this.jwtService.signAsync(
+      { id: findUser.id },
+      {
+        expiresIn: '1h',
+      },
+    )
 
     const refreshToken = await this.jwtService.signAsync(
       { id: findUser.id },
