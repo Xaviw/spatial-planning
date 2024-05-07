@@ -40,17 +40,24 @@ export default function (name) {
         viteCompression(),
         visualizer({
           open: true,
+          filename: './node_modules/.vite/stats.html',
         }),
       ],
       build: {
         target: 'esnext',
+        outDir: path.resolve('../dist', name),
         rollupOptions: {
           output: {
             manualChunks: {
               vue: ['vue', 'vue-router', 'pinia'],
+              antd: ['ant-design-vue'],
+              echarts: ['echarts'],
+              mockjs: ['mockjs'],
+              wangEditor: ['@wangeditor/editor', '@wangeditor/editor-for-vue'],
             },
           },
         },
+        emptyOutDir: true,
       },
       json: {
         stringify: true,

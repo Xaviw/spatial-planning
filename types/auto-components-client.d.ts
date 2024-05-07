@@ -46,6 +46,5 @@ declare module 'vue' {
     RouterLink: (typeof import('vue-router'))['RouterLink']
     RouterView: (typeof import('vue-router'))['RouterView']
     Sider: (typeof import('./../client/src/components/Sider.vue'))['default']
-    Weather: (typeof import('./../client/src/components/Weather.vue'))['default']
   }
 }

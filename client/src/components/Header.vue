@@ -18,7 +18,7 @@
         closable
         showIcon
         message="当前为mock环境，仅作演示！"
-        class="mr-8"
+        class="mr-4"
       />
 
       <div class="search-box">
@@ -26,12 +26,12 @@
           class="search-input"
           ref="searchInput"
           v-model="searchValue"
+          @focus="searchFocused = '#ffffff'"
+          @blur="searchFocused = '#ffffff00'"
           placeholder="搜索覆盖物名称"
         />
         <i class="search-btn i-ant-design:search-outlined" @click="onSearch" />
       </div>
-
-      <Weather />
 
       <div class="ml-2 flex flex-col items-center tracking-wide">
         <span class="mb-1 text-xl font-bold">{{ currentTime }}</span>
@@ -47,6 +47,7 @@ import { useMainStore } from '../stores/main'
 
 const AppTitle = import.meta.env.VITE_TITLE
 const enableMock = import.meta.env.VITE_MOCK_ENABLE === 'true'
+const searchFocused = ref('#ffffff00')
 
 const currentTime = ref<string>()
 const currentDate = ref<string>()
@@ -117,7 +118,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  border: 1px solid #ffffff00;
+  border: 1px solid v-bind(searchFocused);
   transition: all 0.3s ease-in-out;
 }
 
@@ -125,7 +126,8 @@ onMounted(() => {
   border-color: #fff;
 }
 
-.search-box:hover > .search-input {
+.search-box:hover > .search-input,
+.search-input:focus {
   width: 7rem;
 }
 
