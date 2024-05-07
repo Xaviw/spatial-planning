@@ -45,7 +45,6 @@ export default function (name) {
       ],
       build: {
         target: 'esnext',
-        outDir: path.resolve('../dist', name),
         rollupOptions: {
           output: {
             manualChunks: {
