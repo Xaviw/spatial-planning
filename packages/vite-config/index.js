@@ -48,11 +48,11 @@ export default function (name) {
         rollupOptions: {
           output: {
             manualChunks: {
-              // vue: ['vue', 'vue-router', 'pinia'],
-              // antd: ['ant-design-vue'],
-              // echarts: ['echarts'],
-              // mockjs: ['mockjs'],
-              // wangEditor: ['@wangeditor/editor', '@wangeditor/editor-for-vue'],
+              vue: ['vue', 'vue-router', 'pinia'],
+              antd: ['ant-design-vue'],
+              echarts: ['echarts'],
+              mockjs: ['mockjs'],
+              wangEditor: ['@wangeditor/editor', '@wangeditor/editor-for-vue'],
             },
           },
         },
