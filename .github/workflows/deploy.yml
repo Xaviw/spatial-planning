@@ -56,6 +56,7 @@ jobs:
           mkdir dist
           cp -r client/dist dist/client
           cp -r manage/dist dist/manage
+          cp -r .github/index.html dist/index.html
       - name: 准备部署
         uses: actions/configure-pages@v4
       - name: 上传
